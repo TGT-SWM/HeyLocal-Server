@@ -1,4 +1,4 @@
-package com.tgt.heylocal;
+package com.heylocal.api;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

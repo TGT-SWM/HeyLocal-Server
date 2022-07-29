@@ -1,4 +1,4 @@
-package com.tgt.heylocal;
+package com.heylocal.api;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
