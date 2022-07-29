@@ -64,6 +64,7 @@ hs_err_pid*
 # *.iml
 # *.ipr
 .gradle/**
+.gradle/*
 
 # CMake
 cmake-build-*/
@@ -98,6 +99,7 @@ fabric.properties
 # Android studio 3.1+ serialized cache file
 .idea/caches/build_file_checksums.ser
 build/**
+build/*
 
 ### macOS template
 # General
