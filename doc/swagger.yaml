@@ -1,0 +1,904 @@
+swagger: "2.0"
+info:
+  description: "현지야 서버 Application API Document"
+  version: "1.0.0"
+  title: "현지야"
+  contact:
+    email: "dnxprbs@gmail.com"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+host: "traveler.heylocal.test"
+tags:
+- name: "signin"
+  description: "로그인"
+- name: "signup"
+  description: "회원가입"
+- name: "user"
+  description: "사용자 정보"
+- name: "search"
+  description: "검색"
+- name: "post"
+  description: "포스트"
+- name: "manager"
+  description: "매니저"
+- name: "order"
+  description: "매칭 요청"
+- name: "ordersheet"
+  description: "여행 의뢰서"
+- name: "travel"
+  description: "여행"
+- name: "chat"
+  description: "채팅"
+- name: "policy"
+  description: "정책"
+schemes:
+- "http"
+- "https"
+paths:
+  /signin:
+    post:
+      tags:
+      - "signin"
+      summary: "로그인"
+      description: ""
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: ""
+        required: true
+        schema:
+          $ref: "#/definitions/Sample"
+      responses:
+        "405":
+          description: "Invalid input"
+  /signup:
+    post:
+      tags:
+      - "signup"
+      summary: "회원가입"
+      description: ""
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: ""
+        required: true
+        schema:
+          $ref: "#/definitions/Sample"
+      responses:
+        "405":
+          description: "Invalid input"
+  /signup/id:
+    get:
+      tags:
+      - "signup"
+      summary: "아이디 중복 확인"
+      description: ""
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "query"
+        name: "id"
+        description: "확인할 아이디"
+        required: true
+        type: string
+      responses:
+        "405":
+          description: "Invalid input"
+  /signup/phone-num:
+    get:
+      tags:
+      - "signup"
+      summary: "전화번호가 매니저로 등록되어 있는지 확인"
+      description: ""
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "query"
+        name: "phoneNumber"
+        description: "확인할 전화번호 (- 제외)"
+        required: true
+        type: string
+      responses:
+        "405":
+          description: "Invalid input"
+  /search/managers:
+    get:
+      tags:
+      - "search"
+      summary: "매니저 검색"
+      description: "지역 정보 및 테마로 매니저 검색, 모든 쿼리 파라미터에 입력된 정보가 없다면 4xx 오류 발생"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "query"
+        name: "state"
+        description: "시/도"
+        required: false
+        type: string
+      - in: "query"
+        name: "city"
+        description: "시"
+        required: false
+        type: string
+      - in: "query"
+        name: "themeId"
+        description: "테마 id"
+        required: false
+        type: integer
+      responses:
+        "405":
+          description: "Invalid input"
+  /search/random-managers:
+    get:
+      tags:
+      - "search"
+      summary: "랜덤 매니저 조회"
+      description: ""
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "query"
+        name: "page"
+        description: "조회할 페이지 번호"
+        required: true
+        type: integer
+      responses:
+        "405":
+          description: "Invalid input"
+  /search/popular-city:
+    get:
+      tags:
+      - "search"
+      summary: "현재 가장 인기있는 여행 도시 조회"
+      description: ""
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "query"
+        name: "page"
+        description: "조회할 페이지 번호"
+        required: true
+        type: integer
+      responses:
+        "405":
+          description: "Invalid input"
+  /search/theme:
+    get:
+      tags:
+      - "search"
+      summary: "키워드로 테마 조회"
+      description: "테마 추가일 내림차순으로 응답"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "query"
+        name: "themeName"
+        description: "검색할 테마 이름 키워드 (공란가능)"
+        required: false
+        type: string
+      - in: "query"
+        name: "page"
+        description: "조회할 페이지 번호"
+        required: true
+        type: integer
+      responses:
+        "405":
+          description: "Invalid input"
+  /user/notifications:
+    get:
+      tags:
+      - "user"
+      summary: "사용자 푸쉬 알림 리스트 조회"
+      description: "로그인한 사용자가 받은 모든 푸쉬 알림 리스트 조회"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      responses:
+        "405":
+          description: "Invalid input"
+  /user/profile:
+    get:
+      tags:
+      - "user"
+      summary: "사용자 프로필 사진, 닉네임 조회"
+      description: "로그인한 사용자의 프로필 사진과 닉네임 조회"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      responses:
+        "405":
+          description: "Invalid input"
+  /user/profile/nickname:
+    put:
+      tags:
+      - "user"
+      summary: "사용자 닉네임 수정"
+      description: "로그인한 사용자의 닉네임 수정"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "수정할 닉네임"
+        required: true
+        schema:
+          $ref: "#/definitions/Sample"
+      responses:
+        "405":
+          description: "Invalid input"
+  /user/profile/img:
+    put:
+      tags:
+      - "user"
+      summary: "사용자 프로필 사진 수정"
+      description: "로그인한 사용자의 프로필 사진 수정"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "s3에 업로드한 사진 주소"
+        required: true
+        schema:
+          $ref: "#/definitions/Sample"
+      responses:
+        "405":
+          description: "Invalid input"
+  /user/manager-reviews:
+    get:
+      tags:
+      - "user"
+      summary: "사용자가 남긴 매니저 평가 리스트 조회"
+      description: "로그인한 사용자가 남긴 매니저 평가 리스트 조회"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "query"
+        name: "page"
+        description: "조회할 페이지 번호"
+        required: true
+        type: integer
+      responses:
+        "405":
+          description: "Invalid input"
+  /user/visit-reviews:
+    get:
+      tags:
+      - "user"
+      summary: "사용자가 남긴 방문 리뷰 리스트 조회"
+      description: "로그인한 사용자가 남긴 방문 리뷰 리스트 조회"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "query"
+        name: "page"
+        description: "조회할 페이지 번호"
+        required: true
+        type: integer
+      responses:
+        "405":
+          description: "Invalid input"
+  /user/payment:
+    get:
+      tags:
+      - "user"
+      summary: "사용자의 결제 내역과 남은 포인트 조회"
+      description: "로그인한 사용자의 결제 내역과 남은 포인트 조회"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "query"
+        name: "page"
+        description: "조회할 페이지 번호"
+        required: true
+        type: integer
+      responses:
+        "405":
+          description: "Invalid input"
+  /posts:
+    get:
+      tags:
+      - "post"
+      summary: "테마 관련 포스트 리스트 조회"
+      description: ""
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "query"
+        name: "themeid"
+        description: "테마 id"
+        required: true
+        type: integer
+      - in: "query"
+        name: "onlysenior"
+        description: "시니어 매니저의 포스트만 조회 옵션: true/false"
+        required: true
+        type: boolean
+      - in: "query"
+        name: "page"
+        description: "조회할 페이지 번호"
+        required: true
+        type: integer
+      responses:
+        "405":
+          description: "Invalid input"
+  /posts/{postId}:
+    get:
+      tags:
+      - "post"
+      summary: "포스트 상세 조회"
+      description: ""
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "postId"
+        description: "포스트 id"
+        required: true
+        type: integer
+      responses:
+        "405":
+          description: "Invalid input"
+  /posts/{postId}/visit-reviews:
+    get:
+      tags:
+      - "post"
+      summary: "해당 포스트에 관련된 방문 리뷰 리스트 조회"
+      description: ""
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "postId"
+        description: "포스트 id"
+        required: true
+        type: integer
+      - in: "query"
+        name: "page"
+        description: "조회할 페이지 번호"
+        required: true
+        type: integer
+      responses:
+        "405":
+          description: "Invalid input"
+    post:
+      tags:
+      - "post"
+      summary: "해당 포스트에 방문 리뷰 등록"
+      description: ""
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "postId"
+        description: "포스트 id"
+        required: true
+        type: integer
+      - in: "body"
+        name: "body"
+        description: "방문 리뷰 정보"
+        required: true
+        schema:
+          $ref: "#/definitions/Sample"
+      responses:
+        "405":
+          description: "Invalid input"
+  /posts/{postId}/visit-reviews/{visitReviewId}:
+    delete:
+      tags:
+      - "post"
+      summary: "해당 포스트의 자신의 방문 리뷰 삭제"
+      description: ""
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "postId"
+        description: "포스트 id"
+        required: true
+        type: integer
+      - in: "path"
+        name: "visitReviewId"
+        description: "삭제할 방문리뷰 id"
+        required: true
+        type: integer
+      responses:
+        "405":
+          description: "Invalid input"
+  /managers/{managerId}/profile:
+    get:
+      tags:
+      - "manager"
+      summary: "해당 매니저의 프로필 조회"
+      description: ""
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "managerId"
+        description: "매니저 id"
+        required: true
+        type: integer
+      - in: "query"
+        name: "simple"
+        description: "간단한(상단 영역) 프로필 정보만 조회: true/false"
+        required: true
+        type: boolean
+      responses:
+        "405":
+          description: "Invalid input"
+  /managers/{managerId}/reviews:
+    post:
+      tags:
+      - "manager"
+      summary: "해당 매니저에게 매니저 리뷰 등록"
+      description: ""
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "managerId"
+        description: "매니저 id"
+        required: true
+        type: integer
+      - in: "body"
+        name: "body"
+        description: "매니저 리뷰 내용 + 리뷰할 여행 id"
+        required: true
+        schema:
+          $ref: "#/definitions/Sample"
+      responses:
+        "405":
+          description: "Invalid input"
+  /managers/{managerId}/notes:
+    get:
+      tags:
+      - "manager"
+      summary: "해당 매니저의 꿀팁노트 리스트 조회"
+      description: ""
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "managerId"
+        description: "매니저 id"
+        required: true
+        type: integer
+      - in: "query"
+        name: "page"
+        description: "조회할 페이지"
+        required: true
+        type: integer
+      responses:
+        "405":
+          description: "Invalid input"
+  /managers/{managerId}/notes/{noteId}:
+    get:
+      tags:
+      - "manager"
+      summary: "해당 매니저의 꿀팁노트 상세 조회"
+      description: ""
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "managerId"
+        description: "매니저 id"
+        required: true
+        type: integer
+      - in: "path"
+        name: "noteId"
+        description: "조회할 꿀팁노트 id"
+        required: true
+        type: integer
+      responses:
+        "405":
+          description: "Invalid input"
+  /orders:
+    post:
+      tags:
+      - "order"
+      summary: "해당 매니저에게 특정 의뢰서로 매칭 요청"
+      description: ""
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "매칭 요청할 매니저 id / 매칭 요청할 의뢰서 id"
+        required: true
+        schema:
+          $ref: "#/definitions/Sample"
+      responses:
+        "405":
+          description: "Invalid input"
+  /orders/{orderId}/statuses:
+    get:
+      tags:
+      - "order"
+      summary: "내 매칭 요청 현황 리스트 조회"
+      description: ""
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "orderId"
+        description: "매칭 요청 id"
+        required: true
+        type: integer
+      - in: "query"
+        name: "from"
+        description: "traveler:내가 보낸 매칭 요청, manager: 받은 매칭 요청"
+        required: true
+        type: string
+      responses:
+        "405":
+          description: "Invalid input"
+  /ordersheets:
+    get:
+      tags:
+      - "ordersheet"
+      summary: "여행 의뢰서 리스트 조회"
+      description: ""
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "query"
+        name: "status"
+        description: "현재 의뢰서: now, 지난 의뢰서: past"
+        required: true
+        type: string
+      - in: "query"
+        name: "page"
+        description: "조회할 페이지 번호"
+        required: true
+        type: integer
+      responses:
+        "405":
+          description: "Invalid input"
+    post:
+      tags:
+      - "ordersheet"
+      summary: "여행 의뢰서 등록"
+      description: "의뢰비를 응답받는다."
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "등록할 여행 의뢰서 정보"
+        required: true
+        schema:
+          $ref: "#/definitions/Sample"
+      responses:
+        "405":
+          description: "Invalid input"
+  /ordersheets/{orderSheetId}:
+    get:
+      tags:
+      - "ordersheet"
+      summary: "여행 의뢰서 상세 조회"
+      description: ""
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "orderSheetId"
+        description: "조회할 여행 의뢰서 id"
+        required: true
+        type: string
+      responses:
+        "405":
+          description: "Invalid input"
+  /travels:
+    get:
+      tags:
+      - "travel"
+      summary: "다가오는 여행, 진행 중인 여행, 지난 여행 리스트 조회"
+      description: ""
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "query"
+        name: "futureTravelPage"
+        description: "조회할 페이지 번호 (다가오는 여행)"
+        required: true
+        type: integer
+      - in: "query"
+        name: "nowTravelPage"
+        description: "조회할 페이지 번호 (진행중인 여행)"
+        required: true
+        type: integer
+      - in: "query"
+        name: "pastTravelPage"
+        description: "조회할 페이지 번호 (지난 여행)"
+        required: true
+        type: integer
+      responses:
+        "405":
+          description: "Invalid input"
+  /travels/{travelId}:
+    get:
+      tags:
+      - "travel"
+      summary: "여행 상세 조회"
+      description: ""
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "travelId"
+        description: "조회할 여행 id"
+        required: true
+        type: integer
+      responses:
+        "405":
+          description: "Invalid input"
+  /travels/{travelId}/schedules/{scheduleId}:
+    post:
+      tags:
+      - "travel"
+      summary: "스케줄표 확정"
+      description: ""
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "travelId"
+        description: "조회할 여행 id"
+        required: true
+        type: integer
+      - in: "path"
+        name: "scheduleId"
+        description: "확정할 스케줄표 id"
+        required: true
+        type: integer
+      responses:
+        "405":
+          description: "Invalid input"
+  /chatrooms:
+    get:
+      tags:
+      - "chat"
+      summary: "채팅방 리스트 조회"
+      description: ""
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      responses:
+        "405":
+          description: "Invalid input"
+  /chatrooms/{chatroomId}:
+    get:
+      tags:
+      - "chat"
+      summary: "채팅방 상세 조회"
+      description: ""
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "chatroomId"
+        description: "조회할 채팅방 id"
+        required: true
+        type: integer
+      responses:
+        "405":
+          description: "Invalid input"
+  /policies/price:
+    get:
+      tags:
+      - "policy"
+      summary: "가격 정책 정보"
+      description: ""
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      responses:
+        "405":
+          description: "Invalid input"
+securityDefinitions:
+  petstore_auth:
+    type: "oauth2"
+    authorizationUrl: "http://petstore.swagger.io/oauth/dialog"
+    flow: "implicit"
+    scopes:
+      write:pets: "modify pets in your account"
+      read:pets: "read your pets"
+  api_key:
+    type: "apiKey"
+    name: "api_key"
+    in: "header"
+definitions:
+  Sample:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int64"
+      petId:
+        type: "integer"
+        format: "int64"
+      quantity:
+        type: "integer"
+        format: "int32"
+      shipDate:
+        type: "string"
+        format: "date-time"
+      status:
+        type: "string"
+        description: "Order Status"
+        enum:
+        - "placed"
+        - "approved"
+        - "delivered"
+      complete:
+        type: "boolean"
+        default: false
+    xml:
+      name: "Order"
+  Category:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int64"
+      name:
+        type: "string"
+    xml:
+      name: "Category"
+  User:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int64"
+      username:
+        type: "string"
+      firstName:
+        type: "string"
+      lastName:
+        type: "string"
+      email:
+        type: "string"
+      password:
+        type: "string"
+      phone:
+        type: "string"
+      userStatus:
+        type: "integer"
+        format: "int32"
+        description: "User Status"
+    xml:
+      name: "User"
+  Tag:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int64"
+      name:
+        type: "string"
+    xml:
+      name: "Tag"
+  Pet:
+    type: "object"
+    required:
+    - "name"
+    - "photoUrls"
+    properties:
+      id:
+        type: "integer"
+        format: "int64"
+      category:
+        $ref: "#/definitions/Category"
+      name:
+        type: "string"
+        example: "doggie"
+      photoUrls:
+        type: "array"
+        xml:
+          name: "photoUrl"
+          wrapped: true
+        items:
+          type: "string"
+      tags:
+        type: "array"
+        xml:
+          name: "tag"
+          wrapped: true
+        items:
+          $ref: "#/definitions/Tag"
+      status:
+        type: "string"
+        description: "pet status in the store"
+        enum:
+        - "available"
+        - "pending"
+        - "sold"
+    xml:
+      name: "Pet"
+  ApiResponse:
+    type: "object"
+    properties:
+      code:
+        type: "integer"
+        format: "int32"
+      type:
+        type: "string"
+      message:
+        type: "string"
+externalDocs:
+  description: "Find out more about Swagger"
+  url: "http://swagger.io"
