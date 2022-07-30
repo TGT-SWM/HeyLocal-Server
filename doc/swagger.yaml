@@ -99,7 +99,7 @@ paths:
     get:
       tags:
       - "signup"
-      summary: "전화번호가 매니저로 등록되어 있는지 확인"
+      summary: "전화번호 중복 확인 및 매니저로 등록되어 있는지 확인"
       description: ""
       consumes:
       - "application/json"
