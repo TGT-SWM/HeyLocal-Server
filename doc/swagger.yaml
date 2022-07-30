@@ -185,7 +185,7 @@ paths:
     get:
       tags:
       - "search"
-      summary: "키워드로 테마 조회"
+      summary: "워드로 테마 조회"
       description: "테마 추가일 내림차순으로 응답"
       consumes:
       - "application/json"
@@ -231,12 +231,11 @@ paths:
       responses:
         "405":
           description: "Invalid input"
-  /user/profile/nickname:
-    put:
+    patch:
       tags:
       - "user"
-      summary: "사용자 닉네임 수정"
-      description: "로그인한 사용자의 닉네임 수정"
+      summary: "사용자 프로필 사진, 닉네임 수정"
+      description: "로그인한 사용자 프로필 사진, 닉네임 수정"
       consumes:
       - "application/json"
       produces:
@@ -244,27 +243,7 @@ paths:
       parameters:
       - in: "body"
         name: "body"
-        description: "수정할 닉네임"
-        required: true
-        schema:
-          $ref: "#/definitions/Sample"
-      responses:
-        "405":
-          description: "Invalid input"
-  /user/profile/img:
-    put:
-      tags:
-      - "user"
-      summary: "사용자 프로필 사진 수정"
-      description: "로그인한 사용자의 프로필 사진 수정"
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-      parameters:
-      - in: "body"
-        name: "body"
-        description: "s3에 업로드한 사진 주소"
+        description: "수정할 닉네임 or 수정할 사진"
         required: true
         schema:
           $ref: "#/definitions/Sample"
@@ -325,6 +304,18 @@ paths:
         description: "조회할 페이지 번호"
         required: true
         type: integer
+      responses:
+        "405":
+          description: "Invalid input"
+  /user/withdrawal:
+    post:
+      tags:
+      - "user"
+      summary: "회원탈퇴"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
       responses:
         "405":
           description: "Invalid input"
@@ -545,7 +536,7 @@ paths:
       responses:
         "405":
           description: "Invalid input"
-  /orders:
+  /orders/request:
     post:
       tags:
       - "order"
@@ -565,7 +556,7 @@ paths:
       responses:
         "405":
           description: "Invalid input"
-  /orders/{orderId}/statuses:
+  /orders/statuses:
     get:
       tags:
       - "order"
@@ -576,11 +567,11 @@ paths:
       produces:
       - "application/json"
       parameters:
-      - in: "path"
-        name: "orderId"
-        description: "매칭 요청 id"
+      - in: "query"
+        name: "orderSheetId"
+        description: "매칭 현황을 확인할 여행 의뢰서 id"
         required: true
-        type: integer
+        type: string
       - in: "query"
         name: "from"
         description: "traveler:내가 보낸 매칭 요청, manager: 받은 매칭 요청"
@@ -759,7 +750,7 @@ paths:
     get:
       tags:
       - "policy"
-      summary: "가격 정책 정보"
+      summary: "가격 정책 정보 조회"
       description: ""
       consumes:
       - "application/json"
