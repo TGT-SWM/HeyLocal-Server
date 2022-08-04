@@ -2,6 +2,7 @@ plugins {
 	id 'org.springframework.boot' version '2.6.10'
 	id 'io.spring.dependency-management' version '1.0.12.RELEASE'
 	id 'java'
+	id 'checkstyle'
 }
 
 group = 'com.heylocal'
