@@ -1,24 +1,29 @@
 package com.heylocal.traveler.domain.travel;
 
-import com.heylocal.traveler.domain.place.Place;
+import com.heylocal.traveler.domain.BaseTimeEntity;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.List;
 
 /**
  * 스케줄표
- * TODO - 장소 오더링
  */
-public class Schedule {
+@Entity
+@Table(name = "SCHEDULE")
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+public class Schedule extends BaseTimeEntity {
+  @Id @GeneratedValue
   private Long id;
-  private LocalDateTime dateTime; //스케줄 날짜
-  private List<Place> placeList; //방문 장소
 
-  /**
-   * 장소+순서
-   */
-  public static class PlaceItem {
-    private Place place;
-    private Integer order; //오름차순
-  }
+  @Column(nullable = false)
+  private LocalDateTime dateTime; //스케줄 날짜
+
+  @ManyToOne
+  @JoinColumn(nullable = false)
+  private Travel travel;
 }

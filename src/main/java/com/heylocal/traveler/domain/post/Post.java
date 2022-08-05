@@ -1,23 +1,46 @@
 package com.heylocal.traveler.domain.post;
 
+import com.heylocal.traveler.domain.BaseTimeEntity;
 import com.heylocal.traveler.domain.theme.Theme;
 import com.heylocal.traveler.domain.place.Place;
+import com.heylocal.traveler.domain.user.Manager;
 import com.heylocal.traveler.domain.visitreview.VisitReview;
-import com.heylocal.traveler.domain.user.User;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+import javax.persistence.*;
 import java.util.List;
 
 /**
  * 포스트
  */
-public class Post {
+
+@Entity
+@Table(name = "POST")
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+public class Post extends BaseTimeEntity {
+  @Id @GeneratedValue
   private Long id;
+
+  @ManyToOne
+  @JoinColumn(nullable = false)
   private Theme theme;
-  private Place place; // TODO https://swm13-tgt.atlassian.net/browse/S3T-306
+
+  @ManyToOne
+  @JoinColumn(nullable = false)
+  private Place place;
+
   private String title;
+
+  @Lob
   private String textBody;
-  private List<PostImage> postImageList; //유니크 키
+
+  @ManyToOne
+  @JoinColumn(nullable = false)
+  private Manager writer;
+
   private Long views;
-  private User writer;
-  private List<VisitReview> visitReviewList;
 }

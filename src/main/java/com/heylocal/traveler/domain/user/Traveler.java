@@ -1,23 +1,21 @@
-package com.heylocal.traveler.domain.profile;
+package com.heylocal.traveler.domain.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-/**
- * 여행자 프로필
- */
-
 @Entity
-@Table(name = "TRAVELER_PROFILE")
+@Table(name = "TRAVELER")
 @DiscriminatorValue("TRAVELER")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-public class TravelerProfile extends UserProfile {
-  private String imageUrl;
+public class Traveler extends User {
+  @Column(length = 20, nullable = false)
+  private String nickname;
 }

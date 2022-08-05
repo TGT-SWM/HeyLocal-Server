@@ -1,24 +1,23 @@
-package com.heylocal.traveler.domain.visitreview;
+package com.heylocal.traveler.domain.post;
 
 import com.heylocal.traveler.domain.BaseTimeEntity;
-import com.heylocal.traveler.domain.post.Post;
-import com.heylocal.traveler.domain.user.Traveler;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 
 /**
- * 방문리뷰
+ * 포스트에 포함되는 이미지
  */
 
 @Entity
-@Table(name = "VISIT_REVIEW")
+@Table(name = "IMAGE_CONTENT")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-public class VisitReview extends BaseTimeEntity {
+public class ImageContent extends BaseTimeEntity {
   @Id @GeneratedValue
   private Long id;
 
@@ -26,12 +25,10 @@ public class VisitReview extends BaseTimeEntity {
   @JoinColumn(nullable = false)
   private Post post;
 
-  @ManyToOne
-  @JoinColumn(nullable = false)
-  private Traveler writer;
-
-  private String imageUrl;
+  @Column(nullable = false)
+  private String url;
 
   @Column(nullable = false)
-  private String body;
+  @ColumnDefault("0")
+  private Integer placedLineIndex;
 }

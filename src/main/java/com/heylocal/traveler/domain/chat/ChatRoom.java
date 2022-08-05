@@ -1,17 +1,26 @@
 package com.heylocal.traveler.domain.chat;
 
+import com.heylocal.traveler.domain.BaseTimeEntity;
 import com.heylocal.traveler.domain.travel.Travel;
-import com.heylocal.traveler.domain.user.User;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
-import java.util.List;
+import javax.persistence.*;
 
 /**
  * 채팅방
  */
-public class ChatRoom {
+@Entity
+@Table(name = "CHAT_ROOM")
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+public class ChatRoom extends BaseTimeEntity {
+  @Id @GeneratedValue
   private Long id;
-  private User traveler;
-  private User manager;
-  private List<ChatMessage> chatMessageList = new ArrayList<>();
+
+  @OneToOne
+  @JoinColumn(nullable = false)
+  private Travel travel;
 }

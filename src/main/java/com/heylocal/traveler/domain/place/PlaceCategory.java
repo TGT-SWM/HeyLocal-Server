@@ -3,7 +3,6 @@ package com.heylocal.traveler.domain.place;
 /**
  * 카카오 장소 검색 API 기반의 장소 카테고리
  * - https://developers.kakao.com/docs/latest/ko/local/dev-guide#search-by-category-request-category-group-code
- * - TODO 이슈: https://swm13-tgt.atlassian.net/browse/S3T-304
  */
 public enum PlaceCategory {
   MT1("대형마트"),

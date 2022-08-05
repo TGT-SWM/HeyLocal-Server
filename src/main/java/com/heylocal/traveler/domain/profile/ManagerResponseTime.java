@@ -1,8 +1,11 @@
 package com.heylocal.traveler.domain.profile;
 
+import lombok.Getter;
+
 /**
  * 매니저 평균 응답 시간 단위
  */
+
 public enum ManagerResponseTime {
   MINUTE_1(1), MINUTE_10(10), HOUR_1(60), HOUR_2(120),
   HOUR_3(180), HOUR_4(240), HOUR_5(300), HOUR_6(360),
