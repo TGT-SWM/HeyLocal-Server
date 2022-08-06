@@ -1,22 +1,25 @@
 package com.heylocal.traveler.domain.travel;
 
 import com.heylocal.traveler.domain.BaseTimeEntity;
+import com.heylocal.traveler.domain.travel.list.PlaceItem;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * 스케줄표
+ * 특정 일자 (하루) 스케줄표
  */
 @Entity
 @Table(name = "SCHEDULE")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-public class Schedule extends BaseTimeEntity {
+public class DaySchedule extends BaseTimeEntity {
   @Id @GeneratedValue
   private Long id;
 
@@ -26,4 +29,9 @@ public class Schedule extends BaseTimeEntity {
   @ManyToOne
   @JoinColumn(nullable = false)
   private Travel travel;
+
+  //양방향 설정
+
+  @OneToMany(mappedBy = "schedule", cascade = CascadeType.ALL)
+  private List<PlaceItem> placeItemList = new ArrayList<>();
 }

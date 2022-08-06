@@ -2,7 +2,7 @@ package com.heylocal.traveler.domain.travel.list;
 
 import com.heylocal.traveler.domain.BaseTimeEntity;
 import com.heylocal.traveler.domain.place.Place;
-import com.heylocal.traveler.domain.travel.Schedule;
+import com.heylocal.traveler.domain.travel.DaySchedule;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,7 +25,7 @@ public class PlaceItem extends BaseTimeEntity {
 
   @ManyToOne
   @JoinColumn(nullable = false)
-  private Schedule schedule;
+  private DaySchedule schedule;
 
   @Enumerated(EnumType.STRING)
   @Column(nullable = false)

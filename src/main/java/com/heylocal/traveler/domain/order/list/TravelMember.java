@@ -17,7 +17,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-public class HopeTravelMember extends BaseTimeEntity {
+public class TravelMember extends BaseTimeEntity {
   @Id @GeneratedValue
   private Long id;
 

@@ -2,6 +2,13 @@ package com.heylocal.traveler.domain.order;
 
 import com.heylocal.traveler.domain.BaseTimeEntity;
 import com.heylocal.traveler.domain.Region;
+import com.heylocal.traveler.domain.order.list.HopeAccommodation;
+import com.heylocal.traveler.domain.order.list.HopePlace;
+import com.heylocal.traveler.domain.order.list.HopeTheme;
+import com.heylocal.traveler.domain.order.list.TravelMember;
+import com.heylocal.traveler.domain.travel.Travel;
+import com.heylocal.traveler.domain.user.Traveler;
+import com.heylocal.traveler.domain.user.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,6 +16,8 @@ import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 여행 의뢰서
@@ -26,6 +35,9 @@ public class OrderSheet extends BaseTimeEntity {
   @ManyToOne
   @JoinColumn(nullable = false)
   private Region region;
+
+  @ManyToOne
+  private Traveler writer;
 
   @Column(nullable = false)
   private String travelStartAddress;
@@ -50,4 +62,24 @@ public class OrderSheet extends BaseTimeEntity {
   private Boolean afterCare;
 
   private Integer cost;
+
+  //양방향 설정
+
+  @OneToMany(mappedBy = "orderSheet", cascade = CascadeType.ALL)
+  private List<HopeAccommodation> hopeAccommodationList = new ArrayList<>();
+
+  @OneToMany(mappedBy = "orderSheet", cascade = CascadeType.ALL)
+  private List<HopePlace> hopePlaceList = new ArrayList<>();
+
+  @OneToMany(mappedBy = "orderSheet", cascade = CascadeType.ALL)
+  private List<HopeTheme> hopeThemeList = new ArrayList<>();
+
+  @OneToMany(mappedBy = "orderSheet", cascade = CascadeType.ALL)
+  private List<TravelMember> travelMemberList = new ArrayList<>();
+
+  @OneToMany(mappedBy = "orderSheet", cascade = CascadeType.ALL)
+  private List<OrderRequest> orderRequestList = new ArrayList<>();
+
+  @OneToOne(mappedBy = "orderSheet", cascade = CascadeType.ALL)
+  private Travel travel;
 }
