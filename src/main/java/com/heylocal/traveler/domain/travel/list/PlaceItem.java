@@ -36,7 +36,7 @@ public class PlaceItem extends BaseTimeEntity {
   private Place place;
 
   @Column(nullable = false)
-  private Integer order; //오름차순
+  private Integer itemIndex; //오름차순
 
   private Long originalPlaceId; // 현재 대체장소일때, 원장소의 id
 }

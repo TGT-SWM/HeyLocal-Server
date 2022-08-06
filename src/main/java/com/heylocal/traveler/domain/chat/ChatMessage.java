@@ -39,5 +39,5 @@ public class ChatMessage extends BaseTimeEntity {
 
   @Column(nullable = false)
   @ColumnDefault("false")
-  private Boolean read;
+  private Boolean readMessage;
 }

@@ -7,7 +7,7 @@ For further reference, please consider the following sections:
 * [Spring Boot Gradle Plugin Reference Guide](https://docs.spring.io/spring-boot/docs/2.6.10/gradle-plugin/reference/html/)
 * [Create an OCI image](https://docs.spring.io/spring-boot/docs/2.6.10/gradle-plugin/reference/html/#build-image)
 * [Spring Web](https://docs.spring.io/spring-boot/docs/2.6.10/reference/htmlsingle/#web)
-* [Spring Data JPA](https://docs.spring.io/spring-boot/docs/2.6.10/reference/htmlsingle/#data.sql.jpa-and-spring-data)
+* [Spring Data JPA](https://docs.spring.io/spring-boot/docs/2.6.10/reference/htmlsingle/#data-h2.sql.jpa-and-spring-data)
 * [Validation](https://docs.spring.io/spring-boot/docs/2.6.10/reference/htmlsingle/#io.validation)
 * [Thymeleaf](https://docs.spring.io/spring-boot/docs/2.6.10/reference/htmlsingle/#web.servlet.spring-mvc.template-engines)
 
