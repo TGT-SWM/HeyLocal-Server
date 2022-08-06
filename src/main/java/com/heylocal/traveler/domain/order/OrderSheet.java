@@ -8,7 +8,6 @@ import com.heylocal.traveler.domain.order.list.HopeTheme;
 import com.heylocal.traveler.domain.order.list.TravelMember;
 import com.heylocal.traveler.domain.travel.Travel;
 import com.heylocal.traveler.domain.user.Traveler;
-import com.heylocal.traveler.domain.user.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
