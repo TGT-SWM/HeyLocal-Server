@@ -122,4 +122,4 @@ Network Trash Folder
 Temporary Items
 .apdisk
 
-/src/main/resources/application-private-stage.properties
+/src/main/resources/stage-db.properties
