@@ -42,5 +42,5 @@ jobs:
       - name: Code Deploy
         run: aws deploy create-deployment --application-name test-traveler-heylocal
           --deployment-config-name CodeDeployDefault.OneAtATime
-          --deployment-group-name dev
+          --deployment-group-name test-traveler-heylocal-group
           --s3-location bucket=heylocal-codedeploy,bundleType=zip,key=$GITHUB_SHA.zip
