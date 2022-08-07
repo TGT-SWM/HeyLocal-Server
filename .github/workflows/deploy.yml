@@ -40,7 +40,7 @@ jobs:
         run: aws s3 cp --region ap-northeast-2 ./$GITHUB_SHA.zip s3://heylocal-codedeploy/$GITHUB_SHA.zip
 
       - name: Code Deploy
-        run: aws deploy create-deployment --application-name heylocal-traveler
+        run: aws deploy create-deployment --application-name test-traveler-heylocal
           --deployment-config-name CodeDeployDefault.OneAtATime
           --deployment-group-name dev
           --s3-location bucket=heylocal-codedeploy,bundleType=zip,key=$GITHUB_SHA.zip
