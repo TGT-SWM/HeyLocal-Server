@@ -25,7 +25,7 @@ fi
 
 echo "> 새 애플리케이션 배포" >> /home/ec2-user/app/log/heylocal/deploy.log
 nohup java -jar \
-  -Dspring.config.location=classpath:/ \
+  -Dspring.config.location=/home/ec2-user/app/src/main/resources/ \
   -Dspring.profiles.active=stage \
   /home/ec2-user/app/build/libs/heylocal-traveler-*-SNAPSHOT.jar \
   >> /home/ec2-user/app/log/heylocal/application.log 2>&1 &
