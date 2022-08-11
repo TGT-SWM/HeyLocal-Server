@@ -2,7 +2,7 @@
 - 본 저장소는 SW Maestro 13기 과정에서 진행하는 '현지야 서비스'의 서버 Application을 관리하는 저장소이다.
 
 ## 팀 정보
-- SW Maestro 13기 TGT팀 
+- SW Maestro 13기 TGT팀  
 
 | 이름  | 역할  |업무|
 |-----|-----|---|
