@@ -1,4 +1,4 @@
-package com.heylocal.traveler.util;
+package com.heylocal.traveler.util.jpa;
 
 import org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy;
 import org.hibernate.boot.model.naming.Identifier;
