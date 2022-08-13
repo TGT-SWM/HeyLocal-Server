@@ -18,8 +18,9 @@ import static org.mockito.BDDMockito.willReturn;
 
 @Slf4j
 class SignupControllerTest {
-
+  //계정 ID 검증 - 영문, 숫자 조합인지 (숫자 없어도 됨)
   private String accountIdPattern = "^[a-zA-Z0-9]*$";
+  //휴대폰 번호 검증 - 13자리, 하이픈 필수
   private String phoneNumberPattern = "^01([0|1|6|7|8|9])-([0-9]{3,4})-([0-9]{4})$";
 
   @Mock
