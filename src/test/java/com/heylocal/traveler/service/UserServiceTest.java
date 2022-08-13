@@ -2,22 +2,17 @@ package com.heylocal.traveler.service;
 
 import com.heylocal.traveler.domain.user.User;
 import com.heylocal.traveler.domain.user.UserType;
-import com.heylocal.traveler.dto.SignupDto;
 import com.heylocal.traveler.repository.UserRepository;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
 import static com.heylocal.traveler.dto.SignupDto.*;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
 
 class UserServiceTest {
@@ -49,15 +44,45 @@ class UserServiceTest {
     willReturn(Optional.of(existUser)).given(userRepository).findByAccountId(eq(existAccountId)); //existAccountId 전달 시, 기존의 user 반환
 
     //WHEN
-    IdCheckResponse notExistResult = userService.checkAccountIdExist(newAccountId);
-    IdCheckResponse existResult = userService.checkAccountIdExist(existAccountId);
+    UserInfoCheckResponse notExistResult = userService.checkAccountIdExist(newAccountId);
+    UserInfoCheckResponse existResult = userService.checkAccountIdExist(existAccountId);
 
     //THEN
-    //성공 케이스 - 1 - 존재하지 않는 account id 인 경우
-    assertFalse(notExistResult.isAlreadyExist());
+    assertAll(
+        //성공 케이스 - 1 - 존재하지 않는 account id 인 경우
+        () -> assertFalse(notExistResult.isAlreadyExist()),
+        //실패 케이스 - 1 - 존재하는 account id 인 경우
+        () -> assertTrue(existResult.isAlreadyExist())
+    );
+  }
 
-    //실패 케이스 - 1 - 존재하는 account id 인 경우
-    assertTrue(existResult.isAlreadyExist());
+  @Test
+  @DisplayName("전화번호 중복 확인")
+  void checkPhoneNumberExistTest() {
+    //GIVEN
+    String newPhoneNumber = "010-2222-2222";
+    String existPhoneNumber = "010-1111-1111";
+
+    String accountId = "testAccountId";
+    String password = "testPassword123!";
+    UserType userType = UserType.TRAVELER;
+    User existUser = new User(accountId, password, existPhoneNumber, userType);
+
+    //Mock 행동 정의
+    willReturn(Optional.empty()).given(userRepository).findByPhoneNumber(eq(newPhoneNumber)); //newPhoneNumber 전달 시, Optional.empty() 반환
+    willReturn(Optional.of(existUser)).given(userRepository).findByPhoneNumber(eq(existPhoneNumber)); //existPhoneNumber 전달 시, 기존의 user 반환
+
+    //WHEN
+    UserInfoCheckResponse notExistResult = userService.checkPhoneNumberExist(newPhoneNumber);
+    UserInfoCheckResponse existResult = userService.checkPhoneNumberExist(existPhoneNumber);
+
+    //THEN
+    assertAll(
+        //성공 케이스 - 1 - 존재하지 않는 Phone Number 인 경우
+        () -> assertFalse(notExistResult.isAlreadyExist()),
+        //실패 케이스 - 1 - 존재하는 Phone Number 인 경우
+        () -> assertTrue(existResult.isAlreadyExist())
+    );
   }
 
 }

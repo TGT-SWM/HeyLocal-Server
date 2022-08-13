@@ -27,33 +27,32 @@ class JwtTokenProviderTest {
 
     //WHEN
     String accessToken = jwtTokenProvider.createAccessToken(userPk, accountId, nickname);
-
-    //THEN
-    //성공 케이스 - 1
-    assertDoesNotThrow(() -> {
-      Jwts.parser()
-          .setSigningKey(secretKey)
-          .parseClaimsJws(accessToken)
-          .getBody();
-    });
-
-    //성공 케이스 - 2
     Claims claims = Jwts.parser()
         .setSigningKey(secretKey)
         .parseClaimsJws(accessToken)
         .getBody();
 
-    assertEquals(String.valueOf(userPk), String.valueOf(claims.get("userPk")));
-    assertEquals(accountId, claims.get("accountId"));
-    assertEquals(nickname, claims.get("nickname"));
-
-    //실패 케이스 - 1
-    assertThrows(Exception.class, () -> {
-      Jwts.parser()
-          .setSigningKey("invalid-secret-key")
-          .parseClaimsJws(accessToken)
-          .getBody();
-    });
+    //THEN
+    assertAll(
+      //성공 케이스 - 1
+      () -> assertDoesNotThrow(() -> {
+        Jwts.parser()
+            .setSigningKey(secretKey)
+            .parseClaimsJws(accessToken)
+            .getBody();
+      }),
+      //성공 케이스 - 2
+        () -> assertEquals(String.valueOf(userPk), String.valueOf(claims.get("userPk"))),
+        () -> assertEquals(accountId, claims.get("accountId")),
+        () -> assertEquals(nickname, claims.get("nickname")),
+      //실패 케이스 - 1
+        () -> assertThrows(Exception.class, () -> {
+        Jwts.parser()
+            .setSigningKey("invalid-secret-key")
+            .parseClaimsJws(accessToken)
+            .getBody();
+      })
+    );
   }
 
   @Test
@@ -64,29 +63,28 @@ class JwtTokenProviderTest {
 
     //WHEN
     String refreshToken = jwtTokenProvider.createRefreshToken();
-
-    //THEN
-    //성공 케이스 - 1
-    assertDoesNotThrow(() -> {
-      Jwts.parser()
-          .setSigningKey(secretKey)
-          .parseClaimsJws(refreshToken)
-          .getBody();
-    });
-
-    //성공 케이스 - 2
     Date expiration = Jwts.parser()
         .setSigningKey(secretKey)
         .parseClaimsJws(refreshToken)
         .getBody().getExpiration();
 
-    assertTrue(expiration.after(minExpiration)); //토큰 유효 기간이 minExpiration 보다 나중이어야 한다.
-
-    //실패 케이스
-    assertThrows(Exception.class, () -> {
-      Jwts.parser()
-          .setSigningKey("invalid-secret-key")
-          .parseClaimsJws(refreshToken);
-    });
+    //THEN
+    assertAll(
+      //성공 케이스 - 1
+      () -> assertDoesNotThrow(() -> {
+        Jwts.parser()
+            .setSigningKey(secretKey)
+            .parseClaimsJws(refreshToken)
+            .getBody();
+      }),
+      //성공 케이스 - 2
+      () -> assertTrue(expiration.after(minExpiration)), //토큰 유효 기간이 minExpiration 보다 나중이어야 한다.
+      //실패 케이스
+      () -> assertThrows(Exception.class, () -> {
+        Jwts.parser()
+            .setSigningKey("invalid-secret-key")
+            .parseClaimsJws(refreshToken);
+      })
+    );
   }
 }
