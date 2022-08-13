@@ -5,20 +5,27 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
 public class UserRepository {
   private final EntityManager em;
 
-  public List<User> findByAccountId(String accountId) {
+  public Optional<User> findByAccountId(String accountId) {
     String jpql = "select u from User u where u.accountId = :accountId";
+    User user;
 
-    List<User> resultList = em.createQuery(jpql, User.class)
-        .setParameter("accountId", accountId)
-        .getResultList();
+    try {
+      user = em.createQuery(jpql, User.class)
+          .setParameter("accountId", accountId)
+          .getSingleResult();
+    } catch (NoResultException noResultException) {
+      return Optional.empty();
+    }
 
-    return resultList;
+    return Optional.of(user);
   }
 }

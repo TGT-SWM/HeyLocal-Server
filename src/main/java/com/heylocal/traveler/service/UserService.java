@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -23,10 +24,11 @@ public class UserService {
    */
   public IdCheckResponse checkAccountIdExist(String accountId) {
     boolean isExist;
-    List<User> users;
+    Optional<User> result;
 
-    users = userRepository.findByAccountId(accountId);
-    isExist = !users.isEmpty();
+    result = userRepository.findByAccountId(accountId);
+    isExist = result.isPresent();
+
 
     return new IdCheckResponse(isExist);
   }
