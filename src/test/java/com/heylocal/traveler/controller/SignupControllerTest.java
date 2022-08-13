@@ -2,11 +2,13 @@ package com.heylocal.traveler.controller;
 
 import com.heylocal.traveler.controller.exception.BadRequestException;
 import com.heylocal.traveler.service.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import static com.heylocal.traveler.dto.SignupDto.UserInfoCheckResponse;
 import static org.junit.jupiter.api.Assertions.*;
@@ -14,7 +16,12 @@ import static org.mockito.AdditionalMatchers.not;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.willReturn;
 
+@Slf4j
 class SignupControllerTest {
+
+  private String accountIdPattern = "^[a-zA-Z0-9]*$";
+  private String phoneNumberPattern = "^01([0|1|6|7|8|9])-([0-9]{3,4})-([0-9]{4})$";
+
   @Mock
   private UserService userService;
   private SignupController signupController;
@@ -23,6 +30,18 @@ class SignupControllerTest {
   void setUp() {
     MockitoAnnotations.openMocks(this); //여러 test code 실행 시, mock 객체의 정의된 행동이 꼬일 수 있으므로 초기화한다.
     this.signupController = new SignupController(userService);
+
+    //단위테스트인 경우, @Value 를 통해 값을 주입하지 못하므로 Reflection 을 통해 필드 값을 설정한다.
+    ReflectionTestUtils.setField(
+        signupController,
+        "accountIdPattern",
+        accountIdPattern
+    );
+    ReflectionTestUtils.setField(
+        signupController,
+        "phoneNumberPattern",
+        phoneNumberPattern
+    );
   }
 
   @Test

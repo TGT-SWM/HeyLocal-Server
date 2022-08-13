@@ -15,7 +15,6 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -42,7 +41,7 @@ public interface SignupApi {
 
     @Operation(summary = "회원가입", description = "", tags = {"Signup"})
     @PostMapping(consumes = { "application/json" })
-    ResponseEntity<Void> signupPost(
+    void signupPost(
         @Parameter(in = ParameterIn.DEFAULT, description = "", required = true) @Validated @RequestBody Sample body);
 
 }

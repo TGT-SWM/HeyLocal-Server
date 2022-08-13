@@ -7,7 +7,7 @@ import com.heylocal.traveler.service.UserService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.regex.Pattern;
@@ -19,7 +19,13 @@ import static com.heylocal.traveler.dto.SignupDto.UserInfoCheckResponse;
 @RestController
 @RequiredArgsConstructor
 public class SignupController implements SignupApi {
+
   private final UserService userService;
+
+  @Value("${heylocal.signup.pattern.account-id}")
+  private String accountIdPattern;
+  @Value("${heylocal.signup.pattern.phone-number}")
+  private String phoneNumberPattern;
 
   @Override
   public UserInfoCheckResponse signupIdGet(String accountId) throws BadRequestException {
@@ -42,8 +48,8 @@ public class SignupController implements SignupApi {
   }
 
   @Override
-  public ResponseEntity<Void> signupPost(Sample body) {
-    return null;
+  public void signupPost(Sample body) {
+
   }
 
   /**
@@ -57,12 +63,10 @@ public class SignupController implements SignupApi {
    * </pre>
    */
   private boolean validateAccountIdFormat(String accountId) throws BadRequestException {
-    String pattern = "^[a-zA-Z0-9]*$";
-
     if (accountId.length() < 5 || accountId.length() > 20) {
       throw new BadRequestException("계정 아이디는 5자 이상, 20자 이하이어야 합니다.");
     }
-    if (!Pattern.matches(pattern, accountId)) {
+    if (!Pattern.matches(accountIdPattern, accountId)) {
       throw new BadRequestException("계정 아이디는 영문, 숫자 조합이어야 합니다.");
     }
 
@@ -81,7 +85,7 @@ public class SignupController implements SignupApi {
   private boolean validatePhoneNumberFormat(String phoneNumber) throws BadRequestException {
     String pattern = "^01([0|1|6|7|8|9])-([0-9]{3,4})-([0-9]{4})$";
 
-    if (!Pattern.matches(pattern, phoneNumber)) {
+    if (!Pattern.matches(phoneNumberPattern, phoneNumber)) {
       throw new BadRequestException("휴대폰 번호 형식이 틀립니다. 하이픈 문자를 포함합니다.");
     }
 
