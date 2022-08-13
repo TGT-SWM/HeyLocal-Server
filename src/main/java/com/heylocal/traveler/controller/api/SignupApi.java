@@ -6,34 +6,41 @@
 package com.heylocal.traveler.controller.api;
 
 import com.heylocal.traveler.controller.exception.BadRequestException;
+import com.heylocal.traveler.dto.ErrorMessageResponse;
 import com.heylocal.traveler.dto.Sample;
-import com.heylocal.traveler.dto.SignupDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import static com.heylocal.traveler.dto.SignupDto.*;
+import static com.heylocal.traveler.dto.SignupDto.IdCheckResponse;
 
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2022-08-12T04:12:44.357Z[GMT]")
 @RequestMapping("/signup")
 public interface SignupApi {
 
-    @Operation(summary = "아이디 중복 확인", description = "", tags={ "signup" })
+    @Operation(summary = "아이디 중복 확인", description = "")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "400", description = "잘못된 아이디 형식", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessageResponse.class)))
+    })
     @GetMapping("/accountid")
     IdCheckResponse signupIdGet(
         @Parameter(in = ParameterIn.QUERY, description = "확인할 아이디", required = true) @RequestParam String accountId) throws BadRequestException;
 
 
-    @Operation(summary = "전화번호 중복 확인 및 매니저로 등록되어 있는지 확인", description = "", tags={ "signup" })
+    @Operation(summary = "전화번호 중복 확인 및 매니저로 등록되어 있는지 확인", description = "")
     @GetMapping("/phone-num")
     ResponseEntity<Void> signupPhoneNumGet(
         @Parameter(in = ParameterIn.QUERY, description = "확인할 전화번호 (- 제외)", required = true) @RequestParam String phoneNumber);
 
 
-    @Operation(summary = "회원가입", description = "", tags={ "signup" })
+    @Operation(summary = "회원가입", description = "")
     @PostMapping(consumes = { "application/json" })
     ResponseEntity<Void> signupPost(
         @Parameter(in = ParameterIn.DEFAULT, description = "", required = true) @Validated @RequestBody Sample body);

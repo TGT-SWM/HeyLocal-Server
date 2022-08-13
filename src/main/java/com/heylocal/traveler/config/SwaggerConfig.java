@@ -1,5 +1,8 @@
 package com.heylocal.traveler.config;
 
+import com.fasterxml.classmate.TypeResolver;
+import com.heylocal.traveler.dto.ErrorMessageResponse;
+import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
@@ -12,16 +15,24 @@ import springfox.documentation.service.Contact;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2022-08-12T04:12:44.357Z[GMT]")
 @Configuration
 public class SwaggerConfig {
 
   @Bean
-  public Docket customImplementation(){
+  public Docket customImplementation(TypeResolver typeResolver){
     return new Docket(DocumentationType.OAS_30)
+        .additionalModels(
+            typeResolver.resolve(ErrorMessageResponse.class)
+        )
         .select()
         .apis(RequestHandlerSelectors.basePackage("com.heylocal.traveler.controller"))
         .build()
+        .directModelSubstitute(LocalDate.class, java.sql.Date.class)
+        .directModelSubstitute(LocalDateTime.class, java.util.Date.class)
         .apiInfo(apiInfo());
   }
 
@@ -49,7 +60,8 @@ public class SwaggerConfig {
                 .name("Apache 2.0")
                 .url("http://www.apache.org/licenses/LICENSE-2.0.html"))
             .contact(new io.swagger.v3.oas.models.info.Contact()
-                .email("dnxprbs@gmail.com")));
+                .email("dnxprbs@gmail.com")))
+            .components(new Components());
   }
 
 }
