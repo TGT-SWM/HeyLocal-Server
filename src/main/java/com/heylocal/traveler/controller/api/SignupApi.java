@@ -5,7 +5,9 @@
  */
 package com.heylocal.traveler.controller.api;
 
+import com.heylocal.traveler.controller.exception.BadRequestException;
 import com.heylocal.traveler.dto.Sample;
+import com.heylocal.traveler.dto.SignupDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -13,14 +15,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import static com.heylocal.traveler.dto.SignupDto.*;
+
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2022-08-12T04:12:44.357Z[GMT]")
 @RequestMapping("/signup")
 public interface SignupApi {
 
     @Operation(summary = "아이디 중복 확인", description = "", tags={ "signup" })
-    @GetMapping("/id")
-    ResponseEntity<Void> signupIdGet(
-        @Parameter(in = ParameterIn.QUERY, description = "확인할 아이디", required = true) @RequestParam String id);
+    @GetMapping("/accountid")
+    IdCheckResponse signupIdGet(
+        @Parameter(in = ParameterIn.QUERY, description = "확인할 아이디", required = true) @RequestParam String accountId) throws BadRequestException;
 
 
     @Operation(summary = "전화번호 중복 확인 및 매니저로 등록되어 있는지 확인", description = "", tags={ "signup" })
