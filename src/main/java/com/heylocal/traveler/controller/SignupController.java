@@ -4,6 +4,7 @@ import com.heylocal.traveler.controller.api.SignupApi;
 import com.heylocal.traveler.controller.exception.BadRequestException;
 import com.heylocal.traveler.dto.Sample;
 import com.heylocal.traveler.service.UserService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +15,7 @@ import java.util.regex.Pattern;
 import static com.heylocal.traveler.dto.SignupDto.IdCheckResponse;
 
 @Slf4j
+@Tag(name = "Signup")
 @RestController
 @RequiredArgsConstructor
 public class SignupController implements SignupApi {

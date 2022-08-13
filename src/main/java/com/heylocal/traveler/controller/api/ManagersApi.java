@@ -17,28 +17,28 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/managers")
 public interface ManagersApi {
 
-    @Operation(summary = "해당 매니저의 꿀팁노트 리스트 조회", description = "")
+    @Operation(summary = "해당 매니저의 꿀팁노트 리스트 조회", description = "", tags = {"Managers"})
     @GetMapping(value = "/{managerId}/notes")
     ResponseEntity<Void> managersManagerIdNotesGet(
         @Parameter(in = ParameterIn.PATH, description = "매니저 id", required = true) @PathVariable long managerId,
         @Parameter(in = ParameterIn.QUERY, description = "조회할 페이지", required = true) @Validated @RequestParam int page);
 
 
-    @Operation(summary = "해당 매니저의 꿀팁노트 상세 조회", description = "")
+    @Operation(summary = "해당 매니저의 꿀팁노트 상세 조회", description = "", tags = {"Managers"})
     @GetMapping(value = "/{managerId}/notes/{noteId}")
     ResponseEntity<Void> managersManagerIdNotesNoteIdGet(
         @Parameter(in = ParameterIn.PATH, description = "매니저 id", required = true) @PathVariable long managerId,
         @Parameter(in = ParameterIn.PATH, description = "조회할 꿀팁노트 id", required = true) @PathVariable long noteId);
 
 
-    @Operation(summary = "해당 매니저의 프로필 조회", description = "")
+    @Operation(summary = "해당 매니저의 프로필 조회", description = "", tags = {"Managers"})
     @GetMapping(value = "/{managerId}/profile")
     ResponseEntity<Void> managersManagerIdProfileGet(
         @Parameter(in = ParameterIn.PATH, description = "매니저 id", required = true) @PathVariable long managerId,
         @Parameter(in = ParameterIn.QUERY, description = "간단한(상단 영역) 프로필 정보만 조회: true/false", required = true) @RequestParam boolean simple);
 
 
-    @Operation(summary = "해당 매니저에게 매니저 리뷰 등록", description = "")
+    @Operation(summary = "해당 매니저에게 매니저 리뷰 등록", description = "", tags = {"Managers"})
     @PostMapping(value = "/{managerId}/reviews", consumes = { "application/json" })
     ResponseEntity<Void> managersManagerIdReviewsPost(
         @Parameter(in = ParameterIn.PATH, description = "매니저 id", required = true) @PathVariable long managerId,

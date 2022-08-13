@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RequestMapping("/search")
 public interface SearchApi {
 
-    @Operation(summary = "매니저 검색", description = "지역 정보 및 테마로 매니저 검색, 모든 쿼리 파라미터에 입력된 정보가 없다면 4xx 오류 발생")
+    @Operation(summary = "매니저 검색", description = "지역 정보 및 테마로 매니저 검색, 모든 쿼리 파라미터에 입력된 정보가 없다면 4xx 오류 발생", tags = {"Search"})
     @GetMapping("/managers")
     ResponseEntity<Void> searchManagersGet(
         @Parameter(in = ParameterIn.QUERY, description = "시/도") @RequestParam String state,
@@ -31,13 +31,13 @@ public interface SearchApi {
         @Parameter(in = ParameterIn.QUERY, description = "조회할 페이지 번호", required = true) @RequestParam int page);
 
 
-    @Operation(summary = "랜덤 매니저 조회", description = "")
+    @Operation(summary = "랜덤 매니저 조회", description = "", tags = {"Search"})
     @GetMapping("/random-managers")
     ResponseEntity<Void> searchRandomManagersGet(
         @Parameter(in = ParameterIn.QUERY, description = "조회할 페이지 번호", required = true) @RequestParam int page);
 
 
-    @Operation(summary = "키워드로 테마 조회", description = "테마 추가일 내림차순으로 응답")
+    @Operation(summary = "키워드로 테마 조회", description = "테마 추가일 내림차순으로 응답", tags = {"Search"})
     @GetMapping("/theme")
     ResponseEntity<Void> searchThemeGet(
         @Parameter(in = ParameterIn.QUERY, description = "조회할 페이지 번호", required = true) @RequestParam int page,

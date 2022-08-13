@@ -25,7 +25,7 @@ import static com.heylocal.traveler.dto.SignupDto.IdCheckResponse;
 @RequestMapping("/signup")
 public interface SignupApi {
 
-    @Operation(summary = "아이디 중복 확인", description = "")
+    @Operation(summary = "아이디 중복 확인", description = "", tags = {"Signup"})
     @ApiResponses(value = {
         @ApiResponse(responseCode = "400", description = "잘못된 아이디 형식", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessageResponse.class)))
     })
@@ -34,13 +34,13 @@ public interface SignupApi {
         @Parameter(in = ParameterIn.QUERY, description = "확인할 아이디", required = true) @RequestParam String accountId) throws BadRequestException;
 
 
-    @Operation(summary = "전화번호 중복 확인 및 매니저로 등록되어 있는지 확인", description = "")
+    @Operation(summary = "전화번호 중복 확인 및 매니저로 등록되어 있는지 확인", description = "", tags = {"Signup"})
     @GetMapping("/phone-num")
     ResponseEntity<Void> signupPhoneNumGet(
         @Parameter(in = ParameterIn.QUERY, description = "확인할 전화번호 (- 제외)", required = true) @RequestParam String phoneNumber);
 
 
-    @Operation(summary = "회원가입", description = "")
+    @Operation(summary = "회원가입", description = "", tags = {"Signup"})
     @PostMapping(consumes = { "application/json" })
     ResponseEntity<Void> signupPost(
         @Parameter(in = ParameterIn.DEFAULT, description = "", required = true) @Validated @RequestBody Sample body);

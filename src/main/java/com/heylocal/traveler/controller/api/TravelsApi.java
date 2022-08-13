@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/travels")
 public interface TravelsApi {
 
-    @Operation(summary = "다가오는 여행, 진행 중인 여행, 지난 여행 리스트 조회", description = "")
+    @Operation(summary = "다가오는 여행, 진행 중인 여행, 지난 여행 리스트 조회", description = "", tags = {"Travels"})
     @GetMapping()
     ResponseEntity<Void> travelsGet(
         @Parameter(in = ParameterIn.QUERY, description = "조회할 페이지 번호 (다가오는 여행)", required = true) @RequestParam int futureTravelPage,
@@ -23,13 +23,13 @@ public interface TravelsApi {
         @Parameter(in = ParameterIn.QUERY, description = "조회할 페이지 번호 (지난 여행)", required = true) @RequestParam int pastTravelPage);
 
 
-    @Operation(summary = "여행 상세 조회", description = "")
+    @Operation(summary = "여행 상세 조회", description = "", tags = {"Travels"})
     @GetMapping("/{travelId}")
     ResponseEntity<Void> travelsTravelIdGet(
         @Parameter(in = ParameterIn.PATH, description = "조회할 여행 id", required = true) @PathVariable long travelId);
 
 
-    @Operation(summary = "스케줄표 확정", description = "")
+    @Operation(summary = "스케줄표 확정", description = "", tags = {"Travels"})
     @PostMapping("/{travelId}/schedules/{scheduleId}")
     ResponseEntity<Void> travelsTravelIdSchedulesScheduleIdPost(
         @Parameter(in = ParameterIn.PATH, description = "조회할 여행 id", required = true) @PathVariable long travelId,

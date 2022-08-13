@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/policies")
 public interface PoliciesApi {
 
-    @Operation(summary = "가격 정책 정보 조회", description = "")
+    @Operation(summary = "가격 정책 정보 조회", description = "", tags = {"Policies"})
     @GetMapping("/price")
     ResponseEntity<Void> policiesPriceGet();
 

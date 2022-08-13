@@ -17,13 +17,13 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/orders")
 public interface OrdersApi {
 
-    @Operation(summary = "해당 매니저에게 특정 의뢰서로 매칭 요청", description = "")
+    @Operation(summary = "해당 매니저에게 특정 의뢰서로 매칭 요청", description = "", tags = {"Orders"})
     @PostMapping(value = "/request", consumes = { "application/json" })
     ResponseEntity<Void> ordersRequestPost(
         @Parameter(in = ParameterIn.DEFAULT, description = "매칭 요청할 매니저 id / 매칭 요청할 의뢰서 id", required = true) @Validated @RequestBody Sample body);
 
 
-    @Operation(summary = "내 매칭 요청 현황 리스트 조회", description = "")
+    @Operation(summary = "내 매칭 요청 현황 리스트 조회", description = "", tags = {"Orders"})
     @GetMapping("/orders/statuses")
     ResponseEntity<Void> ordersStatusesGet(
         @Parameter(in = ParameterIn.QUERY, description = "매칭 현황을 확인할 여행 의뢰서 id", required = true) @RequestParam long orderSheetId,
