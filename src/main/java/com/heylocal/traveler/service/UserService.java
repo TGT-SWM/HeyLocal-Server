@@ -1,13 +1,11 @@
 package com.heylocal.traveler.service;
 
-import com.heylocal.traveler.controller.exception.BadRequestException;
 import com.heylocal.traveler.domain.user.User;
 import com.heylocal.traveler.dto.SignupDto.IdCheckResponse;
 import com.heylocal.traveler.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
