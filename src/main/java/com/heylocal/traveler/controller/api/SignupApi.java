@@ -19,7 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import static com.heylocal.traveler.dto.SignupDto.IdCheckResponse;
+import static com.heylocal.traveler.dto.SignupDto.UserInfoCheckResponse;
 
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2022-08-12T04:12:44.357Z[GMT]")
 @RequestMapping("/signup")
@@ -30,14 +30,14 @@ public interface SignupApi {
         @ApiResponse(responseCode = "400", description = "잘못된 아이디 형식", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessageResponse.class)))
     })
     @GetMapping("/accountid")
-    IdCheckResponse signupIdGet(
+    UserInfoCheckResponse signupIdGet(
         @Parameter(in = ParameterIn.QUERY, description = "확인할 아이디", required = true) @RequestParam String accountId) throws BadRequestException;
 
 
-    @Operation(summary = "전화번호 중복 확인 및 매니저로 등록되어 있는지 확인", description = "", tags = {"Signup"})
+    @Operation(summary = "전화번호 중복 확인 및 매니저로 등록되어 있는지 확인", description = "서비스 관리자도 중복 불가능", tags = {"Signup"})
     @GetMapping("/phone-num")
-    ResponseEntity<Void> signupPhoneNumGet(
-        @Parameter(in = ParameterIn.QUERY, description = "확인할 전화번호 (- 제외)", required = true) @RequestParam String phoneNumber);
+    UserInfoCheckResponse signupPhoneNumGet(
+        @Parameter(in = ParameterIn.QUERY, description = "확인할 전화번호 (하이픈 필수)", required = true) @RequestParam String phoneNumber) throws BadRequestException;
 
 
     @Operation(summary = "회원가입", description = "", tags = {"Signup"})

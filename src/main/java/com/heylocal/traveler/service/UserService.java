@@ -1,7 +1,7 @@
 package com.heylocal.traveler.service;
 
 import com.heylocal.traveler.domain.user.User;
-import com.heylocal.traveler.dto.SignupDto.IdCheckResponse;
+import com.heylocal.traveler.dto.SignupDto.UserInfoCheckResponse;
 import com.heylocal.traveler.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,7 +20,7 @@ public class UserService {
    * @param accountId 확인할 아이디
    * @return IdCheckResponse 의 속성 isAlreadyExist 이 true 면 중복
    */
-  public IdCheckResponse checkAccountIdExist(String accountId) {
+  public UserInfoCheckResponse checkAccountIdExist(String accountId) {
     boolean isExist;
     Optional<User> result;
 
@@ -28,6 +28,25 @@ public class UserService {
     isExist = result.isPresent();
 
 
-    return new IdCheckResponse(isExist);
+    return new UserInfoCheckResponse(isExist);
+  }
+
+  /**
+   * <pre>
+   * 휴대폰 번호 중복 확인 메서드
+   * 매니저 계정까지 검사
+   * </pre>
+   * @param phoneNumber 확인할 전화번호
+   * @return IdCheckResponse 의 속성 isAlreadyExist 이 true 면 중복
+   */
+  public UserInfoCheckResponse checkPhoneNumberExist(String phoneNumber) {
+    boolean isExist;
+    Optional<User> result;
+
+    result = userRepository.findByPhoneNumber(phoneNumber);
+    isExist = result.isPresent();
+
+
+    return new UserInfoCheckResponse(isExist);
   }
 }

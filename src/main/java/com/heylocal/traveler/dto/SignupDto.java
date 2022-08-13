@@ -10,7 +10,7 @@ public class SignupDto {
   @Setter
   @NoArgsConstructor
   @AllArgsConstructor
-  public static class IdCheckResponse {
+  public static class UserInfoCheckResponse {
     private boolean isAlreadyExist;
   }
 }

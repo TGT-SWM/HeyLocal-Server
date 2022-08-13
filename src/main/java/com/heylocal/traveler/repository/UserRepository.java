@@ -6,7 +6,6 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
-import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -14,6 +13,11 @@ import java.util.Optional;
 public class UserRepository {
   private final EntityManager em;
 
+  /**
+   * 계정id로 사용자 찾기
+   * @param accountId
+   * @return
+   */
   public Optional<User> findByAccountId(String accountId) {
     String jpql = "select u from User u where u.accountId = :accountId";
     User user;
@@ -28,4 +32,25 @@ public class UserRepository {
 
     return Optional.of(user);
   }
+
+  /**
+   * 휴대폰 번호로 사용자 찾기
+   * @param phoneNumber
+   * @return
+   */
+  public Optional<User> findByPhoneNumber(String phoneNumber) {
+    String jpql = "select u from User u where u.phoneNumber = :phoneNumber";
+    User user;
+
+    try {
+      user = em.createQuery(jpql, User.class)
+          .setParameter("phoneNumber", phoneNumber)
+          .getSingleResult();
+    } catch (NoResultException noResultException) {
+      return Optional.empty();
+    }
+
+    return Optional.of(user);
+  }
+
 }
