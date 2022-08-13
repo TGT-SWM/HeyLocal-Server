@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/signin")
 public interface SigninApi {
 
-    @Operation(summary = "로그인", description = "", tags={ "signin" })
+    @Operation(summary = "로그인", description = "")
     @PostMapping(consumes = { "application/json" })
     ResponseEntity<Void> signinPost(
         @Parameter(in = ParameterIn.DEFAULT, description = "", required=true) @Validated @RequestBody Sample body);

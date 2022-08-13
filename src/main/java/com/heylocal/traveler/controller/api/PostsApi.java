@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/posts")
 public interface PostsApi {
 
-    @Operation(summary = "테마 관련 포스트 리스트 조회", description = "", tags={ "post" })
+    @Operation(summary = "테마 관련 포스트 리스트 조회", description = "")
     @GetMapping("/posts")
     ResponseEntity<Void> postsGet(
         @Parameter(in = ParameterIn.QUERY, description = "테마 id", required = true) @RequestParam long themeId,
@@ -25,27 +25,27 @@ public interface PostsApi {
         @Parameter(in = ParameterIn.QUERY, description = "조회할 페이지 번호", required = true) @RequestParam int page);
 
 
-    @Operation(summary = "포스트 상세 조회", description = "", tags={ "post" })
+    @Operation(summary = "포스트 상세 조회", description = "")
     @GetMapping("/{postId}")
     ResponseEntity<Void> postsPostIdGet(
         @Parameter(in = ParameterIn.PATH, description = "포스트 id", required = true) @PathVariable long postId);
 
 
-    @Operation(summary = "해당 포스트에 관련된 방문 리뷰 리스트 조회", description = "", tags={ "post" })
+    @Operation(summary = "해당 포스트에 관련된 방문 리뷰 리스트 조회", description = "")
     @GetMapping("/{postId}/visit-reviews")
     ResponseEntity<Void> postsPostIdVisitReviewsGet(
         @Parameter(in = ParameterIn.PATH, description = "포스트 id", required = true) @PathVariable long postId,
         @Parameter(in = ParameterIn.QUERY, description = "조회할 페이지 번호", required = true) @RequestParam int page);
 
 
-    @Operation(summary = "해당 포스트에 방문 리뷰 등록", description = "", tags={ "post" })
+    @Operation(summary = "해당 포스트에 방문 리뷰 등록", description = "")
     @PostMapping(value = "/{postId}/visit-reviews", consumes = { "application/json" })
     ResponseEntity<Void> postsPostIdVisitReviewsPost(
         @Parameter(in = ParameterIn.PATH, description = "포스트 id", required = true) @PathVariable long postId,
         @Parameter(in = ParameterIn.DEFAULT, description = "방문 리뷰 정보", required = true) @Validated @RequestBody Sample body);
 
 
-    @Operation(summary = "해당 포스트의 자신의 방문 리뷰 삭제", description = "", tags={ "post" })
+    @Operation(summary = "해당 포스트의 자신의 방문 리뷰 삭제", description = "")
     @DeleteMapping("/{postId}/visit-reviews/{visitReviewId}")
     ResponseEntity<Void> postsPostIdVisitReviewsVisitReviewIdDelete(
         @Parameter(in = ParameterIn.PATH, description = "포스트 id", required = true) @PathVariable long postId,
