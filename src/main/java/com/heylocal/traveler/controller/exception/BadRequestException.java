@@ -4,7 +4,7 @@ import lombok.NoArgsConstructor;
 
 /**
  * <pre>
- * 400 Bad Rquest 관련 예외
+ * 400 Bad Request 관련 예외
  * </pre>
  */
 @NoArgsConstructor
