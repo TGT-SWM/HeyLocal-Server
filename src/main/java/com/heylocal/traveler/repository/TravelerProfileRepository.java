@@ -1,6 +1,7 @@
 package com.heylocal.traveler.repository;
 
 import com.heylocal.traveler.domain.profile.TravelerProfile;
+import com.heylocal.traveler.domain.user.Traveler;
 import com.heylocal.traveler.domain.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.lang.Nullable;
@@ -15,14 +16,14 @@ public class TravelerProfileRepository {
 
   /**
    * 사용자(여행자)프로필 저장 메서드
-   * @param user 관련 User(Traveler)
+   * @param traveler 관련 User(Traveler)
    * @param possessionPoint 보유 포인트
-   * @param imageUrl 프로필 이미지 S3 주소
+   * @param imageUrl 프로필 이미지 S3 주소 (nullable)
    * @return 저장된 TravelerProfile 엔티티
    */
-  public TravelerProfile saveTravelerProfile(User user, int possessionPoint, @Nullable String imageUrl) {
+  public TravelerProfile saveTravelerProfile(Traveler traveler, int possessionPoint, @Nullable String imageUrl) {
     TravelerProfile travelerProfile = TravelerProfile.builder()
-        .user(user)
+        .user(traveler)
         .possessionPoint(possessionPoint)
         .imageUrl(imageUrl)
         .build();
