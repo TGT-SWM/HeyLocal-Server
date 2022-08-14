@@ -3,9 +3,9 @@ package com.heylocal.traveler.domain.user;
 import com.heylocal.traveler.domain.order.OrderSheet;
 import com.heylocal.traveler.domain.visitreview.VisitReview;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -17,7 +17,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-@Builder
+@SuperBuilder
 public class Traveler extends User {
   @Column(length = 20, nullable = false)
   private String nickname;

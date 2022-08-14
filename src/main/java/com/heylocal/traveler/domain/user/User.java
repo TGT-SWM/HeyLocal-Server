@@ -1,15 +1,14 @@
 package com.heylocal.traveler.domain.user;
 
 import com.heylocal.traveler.domain.BaseTimeEntity;
-import com.heylocal.traveler.domain.chat.ChatMessage;
 import com.heylocal.traveler.domain.notification.Notification;
 import com.heylocal.traveler.domain.order.OrderRequest;
 import com.heylocal.traveler.domain.profile.UserProfile;
 import com.heylocal.traveler.domain.userreview.UserReview;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -26,7 +25,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-@Builder
+@SuperBuilder
 public class User extends BaseTimeEntity {
   @Id @GeneratedValue
   private long id;

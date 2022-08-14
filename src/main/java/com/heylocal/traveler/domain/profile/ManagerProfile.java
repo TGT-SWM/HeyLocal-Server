@@ -2,9 +2,9 @@ package com.heylocal.traveler.domain.profile;
 
 import com.heylocal.traveler.domain.Region;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
@@ -19,7 +19,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-@Builder
+@SuperBuilder
 public class ManagerProfile extends UserProfile {
   @Enumerated(EnumType.STRING)
   @Column(nullable = false)
