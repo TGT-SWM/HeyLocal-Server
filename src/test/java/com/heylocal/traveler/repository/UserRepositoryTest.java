@@ -32,7 +32,12 @@ class UserRepositoryTest {
     String pw = "testPw123123!";
     String phoneNum = "010-1234-1234";
     UserType userType = UserType.TRAVELER;
-    User user = new User(accountId, pw, phoneNum, userType);
+    User user = User.builder()
+        .accountId(accountId)
+        .password(pw)
+        .phoneNumber(phoneNum)
+        .userType(userType)
+        .build();
     em.persist(user);
 
     //WHEN
@@ -56,7 +61,12 @@ class UserRepositoryTest {
     String pw = "testPw123123!";
     String phoneNum = "010-1234-1234";
     UserType userType = UserType.TRAVELER;
-    User user = new User(accountId, pw, phoneNum, userType);
+    User user = User.builder()
+        .accountId(accountId)
+        .password(pw)
+        .phoneNumber(phoneNum)
+        .userType(userType)
+        .build();
     em.persist(user);
 
     //WHEN
