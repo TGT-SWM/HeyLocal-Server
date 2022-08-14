@@ -1,6 +1,7 @@
 package com.heylocal.traveler.domain.user;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -14,6 +15,7 @@ import javax.persistence.Table;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
+@Builder
 public class ServiceManager extends User {
   private String nickname;
 }

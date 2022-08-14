@@ -4,6 +4,7 @@ import com.heylocal.traveler.domain.BaseTimeEntity;
 import com.heylocal.traveler.domain.order.AccommodationType;
 import com.heylocal.traveler.domain.order.OrderSheet;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -18,6 +19,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
+@Builder
 public class HopeAccommodation extends BaseTimeEntity {
   @Id @GeneratedValue
   private Long id;

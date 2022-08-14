@@ -2,6 +2,7 @@ package com.heylocal.traveler.domain.userreview;
 
 import com.heylocal.traveler.domain.travel.Travel;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -17,6 +18,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
+@Builder
 public class TravelerReview extends UserReview {
   @OneToOne
   @JoinColumn(nullable = false)

@@ -9,6 +9,7 @@ import com.heylocal.traveler.domain.order.list.TravelMember;
 import com.heylocal.traveler.domain.travel.Travel;
 import com.heylocal.traveler.domain.user.Traveler;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
@@ -27,6 +28,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
+@Builder
 public class OrderSheet extends BaseTimeEntity {
   @Id @GeneratedValue
   private Long id;

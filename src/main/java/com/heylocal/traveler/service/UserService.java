@@ -1,12 +1,15 @@
 package com.heylocal.traveler.service;
 
 import com.heylocal.traveler.domain.user.User;
+import com.heylocal.traveler.dto.SignupDto;
 import com.heylocal.traveler.dto.SignupDto.UserInfoCheckResponse;
 import com.heylocal.traveler.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+
+import static com.heylocal.traveler.dto.SignupDto.*;
 
 @Service
 @RequiredArgsConstructor
@@ -48,5 +51,15 @@ public class UserService {
 
 
     return new UserInfoCheckResponse(isExist);
+  }
+
+  /**
+   * <pre>
+   * 사용자(여행자)를 회원가입 시키는 메서드
+   * </pre>
+   * @param request
+   */
+  public void signupTraveler(SignupRequest request) {
+
   }
 }

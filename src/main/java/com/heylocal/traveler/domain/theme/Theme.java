@@ -3,6 +3,7 @@ package com.heylocal.traveler.domain.theme;
 import com.heylocal.traveler.domain.BaseTimeEntity;
 import com.heylocal.traveler.domain.post.Post;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -19,6 +20,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
+@Builder
 public class Theme extends BaseTimeEntity {
   @Id @GeneratedValue
   private Long id;

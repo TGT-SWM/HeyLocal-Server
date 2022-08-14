@@ -3,6 +3,7 @@ package com.heylocal.traveler.domain.payment;
 import com.heylocal.traveler.domain.BaseTimeEntity;
 import com.heylocal.traveler.domain.travel.Travel;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -18,6 +19,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
+@Builder
 public class Payment extends BaseTimeEntity {
   @Id @GeneratedValue
   private long id;

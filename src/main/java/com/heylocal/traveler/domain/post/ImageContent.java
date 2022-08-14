@@ -2,6 +2,7 @@ package com.heylocal.traveler.domain.post;
 
 import com.heylocal.traveler.domain.BaseTimeEntity;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
@@ -17,6 +18,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
+@Builder
 public class ImageContent extends BaseTimeEntity {
   @Id @GeneratedValue
   private Long id;
