@@ -7,17 +7,18 @@ import com.heylocal.traveler.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
 import static com.heylocal.traveler.dto.SignupDto.SignupRequest;
 
 /**
- * User, Traveler 관련 서비스 계층
+ * 회원가입 관련 서비스
  */
 @Service
 @RequiredArgsConstructor
-public class UserService {
+public class SignupService {
   private final UserRepository userRepository;
   private final TravelerRepository travelerRepository;
   private final PasswordEncoder passwordEncoder;
@@ -29,6 +30,7 @@ public class UserService {
    * @param accountId 확인할 아이디
    * @return IdCheckResponse 의 속성 isAlreadyExist 이 true 면 중복
    */
+  @Transactional
   public UserInfoCheckResponse checkAccountIdExist(String accountId) {
     boolean isExist;
     Optional<User> result;
@@ -48,6 +50,7 @@ public class UserService {
    * @param phoneNumber 확인할 전화번호
    * @return IdCheckResponse 의 속성 isAlreadyExist 이 true 면 중복
    */
+  @Transactional
   public UserInfoCheckResponse checkPhoneNumberExist(String phoneNumber) {
     boolean isExist;
     Optional<User> result;
@@ -65,6 +68,7 @@ public class UserService {
    * </pre>
    * @param request
    */
+  @Transactional
   public void signupTraveler(SignupRequest request) {
     String accountId = request.getAccountId();
     String nickname = request.getNickname();

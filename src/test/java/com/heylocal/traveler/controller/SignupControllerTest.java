@@ -1,7 +1,7 @@
 package com.heylocal.traveler.controller;
 
 import com.heylocal.traveler.controller.exception.BadRequestException;
-import com.heylocal.traveler.service.UserService;
+import com.heylocal.traveler.service.SignupService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -24,13 +24,13 @@ class SignupControllerTest {
   private String phoneNumberPattern = "^01([0|1|6|7|8|9])-([0-9]{3,4})-([0-9]{4})$";
 
   @Mock
-  private UserService userService;
+  private SignupService signupService;
   private SignupController signupController;
 
   @BeforeEach
   void setUp() {
     MockitoAnnotations.openMocks(this); //여러 test code 실행 시, mock 객체의 정의된 행동이 꼬일 수 있으므로 초기화한다.
-    this.signupController = new SignupController(userService);
+    this.signupController = new SignupController(signupService);
 
     //단위테스트인 경우, @Value 를 통해 값을 주입하지 못하므로 Reflection 을 통해 필드 값을 설정한다.
     ReflectionTestUtils.setField(
@@ -60,8 +60,8 @@ class SignupControllerTest {
     UserInfoCheckResponse notExistResponse = new UserInfoCheckResponse(false);
 
     //Mock 행동 정의
-    willReturn(notExistResponse).given(userService).checkAccountIdExist(not(eq(exist_RightAccountId))); //exist_RightAccountId 가 아닌 모든 경우, notExistResponse 반환
-    willReturn(existResponse).given(userService).checkAccountIdExist(eq(exist_RightAccountId)); //exist_RightAccountId 인 경우, existResponse 반환
+    willReturn(notExistResponse).given(signupService).checkAccountIdExist(not(eq(exist_RightAccountId))); //exist_RightAccountId 가 아닌 모든 경우, notExistResponse 반환
+    willReturn(existResponse).given(signupService).checkAccountIdExist(eq(exist_RightAccountId)); //exist_RightAccountId 인 경우, existResponse 반환
 
     //WHEN-THEN
     assertAll(
@@ -104,8 +104,8 @@ class SignupControllerTest {
     UserInfoCheckResponse existResponse = new UserInfoCheckResponse(true);
 
     //Mock 행동 정의
-    willReturn(notExistResponse).given(userService).checkPhoneNumberExist(not(eq(exist_RightPhoneNumber))); //exist_RightPhoneNumber 가 아닌 모든 경우에 notExistResponse 반환
-    willReturn(existResponse).given(userService).checkPhoneNumberExist(eq(exist_RightPhoneNumber)); //exist_RightPhoneNumber 인 경우에 existResponse 반환
+    willReturn(notExistResponse).given(signupService).checkPhoneNumberExist(not(eq(exist_RightPhoneNumber))); //exist_RightPhoneNumber 가 아닌 모든 경우에 notExistResponse 반환
+    willReturn(existResponse).given(signupService).checkPhoneNumberExist(eq(exist_RightPhoneNumber)); //exist_RightPhoneNumber 인 경우에 existResponse 반환
 
     //WHEN-THEN
     assertAll(

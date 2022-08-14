@@ -17,20 +17,20 @@ import static com.heylocal.traveler.dto.SignupDto.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
 
-class UserServiceTest {
+class SignupServiceTest {
   @Mock
   private UserRepository userRepository;
   @Mock
   private TravelerRepository travelerRepository;
   @Mock
   private PasswordEncoder passwordEncoder;
-  private UserService userService;
+  private SignupService signupService;
 
   @BeforeEach
   void setUp() {
     //MockitoAnnotations.initMocks(this); //deprecated
     MockitoAnnotations.openMocks(this); //여러 test code 실행 시, mock 객체의 정의된 행동이 꼬일 수 있으므로 초기화한다.
-    this.userService = new UserService(userRepository, travelerRepository, passwordEncoder);
+    this.signupService = new SignupService(userRepository, travelerRepository, passwordEncoder);
   }
 
   @Test
@@ -55,8 +55,8 @@ class UserServiceTest {
     willReturn(Optional.of(existUser)).given(userRepository).findByAccountId(eq(existAccountId)); //existAccountId 전달 시, 기존의 user 반환
 
     //WHEN
-    UserInfoCheckResponse notExistResult = userService.checkAccountIdExist(newAccountId);
-    UserInfoCheckResponse existResult = userService.checkAccountIdExist(existAccountId);
+    UserInfoCheckResponse notExistResult = signupService.checkAccountIdExist(newAccountId);
+    UserInfoCheckResponse existResult = signupService.checkAccountIdExist(existAccountId);
 
     //THEN
     assertAll(
@@ -89,8 +89,8 @@ class UserServiceTest {
     willReturn(Optional.of(existUser)).given(userRepository).findByPhoneNumber(eq(existPhoneNumber)); //existPhoneNumber 전달 시, 기존의 user 반환
 
     //WHEN
-    UserInfoCheckResponse notExistResult = userService.checkPhoneNumberExist(newPhoneNumber);
-    UserInfoCheckResponse existResult = userService.checkPhoneNumberExist(existPhoneNumber);
+    UserInfoCheckResponse notExistResult = signupService.checkPhoneNumberExist(newPhoneNumber);
+    UserInfoCheckResponse existResult = signupService.checkPhoneNumberExist(existPhoneNumber);
 
     //THEN
     assertAll(

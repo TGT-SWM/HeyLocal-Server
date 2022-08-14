@@ -7,7 +7,7 @@ package com.heylocal.traveler.controller.api;
 
 import com.heylocal.traveler.controller.exception.BadRequestException;
 import com.heylocal.traveler.dto.ErrorMessageResponse;
-import com.heylocal.traveler.dto.Sample;
+import com.heylocal.traveler.dto.SignupDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -18,6 +18,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import static com.heylocal.traveler.dto.SignupDto.*;
 import static com.heylocal.traveler.dto.SignupDto.UserInfoCheckResponse;
 
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2022-08-12T04:12:44.357Z[GMT]")
@@ -42,7 +43,7 @@ public interface SignupApi {
     @Operation(summary = "회원가입", description = "", tags = {"Signup"})
     @PostMapping(consumes = { "application/json" })
     void signupPost(
-        @Parameter(in = ParameterIn.DEFAULT, description = "", required = true) @Validated @RequestBody Sample body);
+        @Parameter(in = ParameterIn.DEFAULT, description = "", required = true) @RequestBody SignupRequest request) throws BadRequestException;
 
 }
 
