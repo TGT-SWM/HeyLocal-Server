@@ -59,11 +59,4 @@ public class User extends BaseTimeEntity {
 
   @OneToMany(mappedBy = "writer", cascade = CascadeType.ALL)
   private List<UserReview> userReview = new ArrayList<>();
-
-  public User(String accountId, String password, String phoneNumber, UserType userType) {
-    this.accountId = accountId;
-    this.password = password;
-    this.phoneNumber = phoneNumber;
-    this.userType = userType;
-  }
 }

@@ -1,20 +1,26 @@
 package com.heylocal.traveler.service;
 
 import com.heylocal.traveler.domain.user.User;
-import com.heylocal.traveler.dto.SignupDto;
 import com.heylocal.traveler.dto.SignupDto.UserInfoCheckResponse;
+import com.heylocal.traveler.repository.TravelerRepository;
 import com.heylocal.traveler.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
-import static com.heylocal.traveler.dto.SignupDto.*;
+import static com.heylocal.traveler.dto.SignupDto.SignupRequest;
 
+/**
+ * User, Traveler 관련 서비스 계층
+ */
 @Service
 @RequiredArgsConstructor
 public class UserService {
   private final UserRepository userRepository;
+  private final TravelerRepository travelerRepository;
+  private final PasswordEncoder passwordEncoder;
 
   /**
    * <pre>
@@ -60,6 +66,22 @@ public class UserService {
    * @param request
    */
   public void signupTraveler(SignupRequest request) {
+    String accountId = request.getAccountId();
+    String nickname = request.getNickname();
+    String phoneNumber = request.getPhoneNumber();
+    String encodedPassword;
 
+    encodedPassword = encodePassword(request.getPassword());
+    request.setPassword(encodedPassword);
+    travelerRepository.saveTraveler(accountId, encodedPassword, nickname, phoneNumber);
+  }
+
+  /**
+   * 비밀번호 암호화 메서드
+   * @param rawPassword 암호화시킬 원본 비밀번호
+   * @return 암호화된 비밀번호
+   */
+  private String encodePassword(String rawPassword) {
+    return passwordEncoder.encode(rawPassword);
   }
 }
