@@ -21,7 +21,11 @@ jobs:
         shell: bash
 
       - name: Build with Gradle
-        run: ./gradlew build
+        run: ./gradlew build -x test
+        shell: bash
+
+      - name: Test with Gradle
+        run: SPRING_PROFILES_ACTIVE=[test] ./gradlew test
         shell: bash
 
       # 추가
