@@ -6,6 +6,7 @@ import com.heylocal.traveler.domain.travel.Travel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -17,6 +18,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
+@SuperBuilder
 public class Manager extends User {
   @Column(length = 20, nullable = false)
   private String realName;

@@ -5,6 +5,7 @@ import com.heylocal.traveler.domain.user.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
 
@@ -19,6 +20,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
+@SuperBuilder
 public class UserReview extends BaseTimeEntity {
   @Id @GeneratedValue
   private Long id;

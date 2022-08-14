@@ -23,8 +23,10 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation("org.mariadb.jdbc:mariadb-java-client")
 	implementation 'io.springfox:springfox-boot-starter:3.0.0'
+	implementation 'io.jsonwebtoken:jjwt:0.9.1'
 
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'com.h2database:h2'
@@ -33,6 +35,9 @@ dependencies {
 
 	testAnnotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'io.jsonwebtoken:jjwt:0.9.1'
+
+	testCompileOnly 'org.projectlombok:lombok'
 }
 
 tasks.named('test') {

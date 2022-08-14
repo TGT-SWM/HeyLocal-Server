@@ -17,13 +17,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/chatrooms")
 public interface ChatRoomsApi {
 
-    @Operation(summary = "채팅방 상세 조회", description = "", tags={ "chat" })
+    @Operation(summary = "채팅방 상세 조회", description = "", tags = {"ChatRooms"})
     @GetMapping("/{chatroomId}")
     ResponseEntity<Void> chatRoomsChatroomIdGet(
         @Parameter(in = ParameterIn.PATH, description = "조회할 채팅방 id", required = true) @PathVariable long chatroomId);
 
 
-    @Operation(summary = "채팅방 리스트 조회", description = "", tags={ "chat" })
+    @Operation(summary = "채팅방 리스트 조회", description = "", tags = {"ChatRooms"})
     @GetMapping()
     ResponseEntity<Void> chatRoomsGet();
 

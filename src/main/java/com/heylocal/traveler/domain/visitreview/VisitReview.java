@@ -4,8 +4,10 @@ import com.heylocal.traveler.domain.BaseTimeEntity;
 import com.heylocal.traveler.domain.post.Post;
 import com.heylocal.traveler.domain.user.Traveler;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
 
@@ -18,6 +20,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
+@SuperBuilder
 public class VisitReview extends BaseTimeEntity {
   @Id @GeneratedValue
   private Long id;

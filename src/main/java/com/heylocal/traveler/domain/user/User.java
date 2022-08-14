@@ -1,7 +1,6 @@
 package com.heylocal.traveler.domain.user;
 
 import com.heylocal.traveler.domain.BaseTimeEntity;
-import com.heylocal.traveler.domain.chat.ChatMessage;
 import com.heylocal.traveler.domain.notification.Notification;
 import com.heylocal.traveler.domain.order.OrderRequest;
 import com.heylocal.traveler.domain.profile.UserProfile;
@@ -9,6 +8,7 @@ import com.heylocal.traveler.domain.userreview.UserReview;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -25,6 +25,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
+@SuperBuilder
 public class User extends BaseTimeEntity {
   @Id @GeneratedValue
   private long id;
@@ -32,7 +33,7 @@ public class User extends BaseTimeEntity {
   @Column(length = 20, nullable = false, unique = true)
   private String accountId;
 
-  @Column(length = 50, nullable = false)
+  @Column(nullable = false)
   private String password;
 
   @Column(length = 13, nullable = false, unique = true)

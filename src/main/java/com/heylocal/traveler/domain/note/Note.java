@@ -5,8 +5,10 @@ import com.heylocal.traveler.domain.StarScore;
 import com.heylocal.traveler.domain.place.Place;
 import com.heylocal.traveler.domain.user.Manager;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
 
@@ -19,6 +21,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
+@SuperBuilder
 public class Note extends BaseTimeEntity {
   @Id @GeneratedValue
   private Long id;

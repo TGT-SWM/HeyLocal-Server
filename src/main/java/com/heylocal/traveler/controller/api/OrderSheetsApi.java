@@ -17,20 +17,20 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/ordersheets")
 public interface OrderSheetsApi {
 
-    @Operation(summary = "여행 의뢰서 리스트 조회", description = "", tags={ "ordersheet" })
+    @Operation(summary = "여행 의뢰서 리스트 조회", description = "", tags = {"OrderSheets"})
     @GetMapping()
     ResponseEntity<Void> orderSheetsGet(
         @Parameter(in = ParameterIn.QUERY, description = "현재 의뢰서: now, 지난 의뢰서: past", required = true) @RequestParam String status,
         @Parameter(in = ParameterIn.QUERY, description = "조회할 페이지 번호", required = true) @RequestParam int page);
 
 
-    @Operation(summary = "여행 의뢰서 상세 조회", description = "", tags={ "ordersheet" })
+    @Operation(summary = "여행 의뢰서 상세 조회", description = "", tags = {"OrderSheets"})
     @GetMapping(value = "/{orderSheetId}")
     ResponseEntity<Void> ordersheetsOrderSheetIdGet(
         @Parameter(in = ParameterIn.PATH, description = "조회할 여행 의뢰서 id", required = true) @PathVariable long orderSheetId);
 
 
-    @Operation(summary = "여행 의뢰서 등록", description = "의뢰비를 응답받는다.", tags={ "ordersheet" })
+    @Operation(summary = "여행 의뢰서 등록", description = "의뢰비를 응답받는다.", tags = {"OrderSheets"})
     @PostMapping(consumes = { "application/json" })
     ResponseEntity<Void> ordersheetsPost(
         @Parameter(in = ParameterIn.DEFAULT, description = "등록할 여행 의뢰서 정보", required = true) @Validated @RequestBody Sample body);

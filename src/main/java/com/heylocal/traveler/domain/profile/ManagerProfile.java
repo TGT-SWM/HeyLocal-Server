@@ -4,6 +4,7 @@ import com.heylocal.traveler.domain.Region;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
@@ -18,6 +19,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
+@SuperBuilder
 public class ManagerProfile extends UserProfile {
   @Enumerated(EnumType.STRING)
   @Column(nullable = false)
