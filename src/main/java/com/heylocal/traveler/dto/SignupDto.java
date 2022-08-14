@@ -1,17 +1,13 @@
 package com.heylocal.traveler.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
-import javax.validation.constraints.NotEmpty;
+import lombok.*;
 
 public class SignupDto {
   @Getter
   @Setter
   @NoArgsConstructor
   @AllArgsConstructor
+  @Builder
   public static class UserInfoCheckResponse {
     private boolean isAlreadyExist;
   }
@@ -20,6 +16,7 @@ public class SignupDto {
   @Setter
   @NoArgsConstructor
   @AllArgsConstructor
+  @Builder
   public static class SignupRequest {
     /*
      * 이 DTO 클래스에 한정하여,
