@@ -2,6 +2,7 @@ package com.heylocal.traveler.service;
 
 import com.heylocal.traveler.domain.user.User;
 import com.heylocal.traveler.domain.user.UserType;
+import com.heylocal.traveler.dto.SignupDto;
 import com.heylocal.traveler.repository.TravelerRepository;
 import com.heylocal.traveler.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -9,6 +10,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
@@ -99,6 +101,32 @@ class SignupServiceTest {
         //실패 케이스 - 1 - 존재하는 Phone Number 인 경우
         () -> assertTrue(existResult.isAlreadyExist())
     );
+  }
+
+  @Test
+  @DisplayName("여행자 회원가입")
+  void signupTravelerTest() {
+    //GIVEN
+    String encodedPassword = "$2a$10$Cb/jltJ1KJkcWiylzKrOOuX/9R4r15QJ5V9snp6yfXqr2wB06WdHS";
+    String accountId = "testAccountId";
+    String rawPassword = "testPassword123!";
+    String nickname = "testNickname";
+    String phoneNumber = "010-1111-1111";
+    SignupRequest request = SignupRequest.builder()
+        .accountId(accountId)
+        .password(rawPassword)
+        .nickname(nickname)
+        .phoneNumber(phoneNumber)
+        .build();
+
+    //Mock 행동 정의
+    willReturn(encodedPassword).given(passwordEncoder).encode(eq(rawPassword));
+
+    //WHEN
+
+    //THEN
+    //성공 케이스 - 1
+    assertDoesNotThrow(() -> signupService.signupTraveler(request));
   }
 
 }

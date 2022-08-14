@@ -1,6 +1,7 @@
 package com.heylocal.traveler.controller;
 
 import com.heylocal.traveler.controller.exception.BadRequestException;
+import com.heylocal.traveler.dto.SignupDto;
 import com.heylocal.traveler.service.SignupService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,6 +23,10 @@ class SignupControllerTest {
   private String accountIdPattern = "^[a-zA-Z0-9]*$";
   //휴대폰 번호 검증 - 13자리, 하이픈 필수
   private String phoneNumberPattern = "^01([0|1|6|7|8|9])-([0-9]{3,4})-([0-9]{4})$";
+  //비밀번호 검증 - 숫자 + 영어 + 특수문자 포함된 8자 이상
+  private String passwordPattern = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d@$!%*#?&]{8,}$";
+  //닉네임 검증 - 2자 이상, 20자 이하
+  private String nicknamePattern = "^[a-zA-Z0-9]{2,20}$";
 
   @Mock
   private SignupService signupService;
@@ -42,6 +47,16 @@ class SignupControllerTest {
         signupController,
         "phoneNumberPattern",
         phoneNumberPattern
+    );
+    ReflectionTestUtils.setField(
+        signupController,
+        "passwordPattern",
+        passwordPattern
+    );
+    ReflectionTestUtils.setField(
+        signupController,
+        "nicknamePattern",
+        nicknamePattern
     );
   }
 
@@ -130,6 +145,66 @@ class SignupControllerTest {
         //실패 케이스 - 5 - 존재하지 않고, 짧고 하이픈이 없는 번호인 경우
         () -> assertThrows(BadRequestException.class, () -> signupController.signupPhoneNumGet(notExist_ShortNoHyphenPhoneNumber))
     );
+  }
 
+  @Test
+  @DisplayName("회원가입 컨트롤러")
+  void signupPostTest() {
+    //GIVEN
+    String rightAccountId = "testAccountId";
+    String wrongAccountId = "testAccountId!@#";
+    String rightRawPassword = "testPassword123!@#";
+    String wrongRawPassword = "testPassword";
+    String rightNickname = "testNickname";
+    String wrongNickname = "testNickname#@!";
+    String rightPhoneNumber = "010-1111-1111";
+    String wrongPhoneNumber = "01011111111";
+    SignupDto.SignupRequest rightRequest = SignupDto.SignupRequest.builder()
+        .accountId(rightAccountId)
+        .password(rightRawPassword)
+        .nickname(rightNickname)
+        .phoneNumber(rightPhoneNumber)
+        .build();
+    SignupDto.SignupRequest wrongAccountIdRequest = SignupDto.SignupRequest.builder()
+        .accountId(wrongAccountId)
+        .password(rightRawPassword)
+        .nickname(rightNickname)
+        .phoneNumber(rightPhoneNumber)
+        .build();
+    SignupDto.SignupRequest wrongPasswordRequest = SignupDto.SignupRequest.builder()
+        .accountId(rightAccountId)
+        .password(wrongRawPassword)
+        .nickname(rightNickname)
+        .phoneNumber(rightPhoneNumber)
+        .build();
+    SignupDto.SignupRequest wrongNicknameRequest = SignupDto.SignupRequest.builder()
+        .accountId(rightAccountId)
+        .password(rightRawPassword)
+        .nickname(wrongNickname)
+        .phoneNumber(rightPhoneNumber)
+        .build();
+    SignupDto.SignupRequest wrongPhoneNumberRequest = SignupDto.SignupRequest.builder()
+        .accountId(rightAccountId)
+        .password(rightRawPassword)
+        .nickname(rightNickname)
+        .phoneNumber(wrongPhoneNumber)
+        .build();
+
+    //WHEN
+
+
+    //THEN
+    assertAll(
+        //성공 케이스 - 1
+        () -> assertDoesNotThrow(() -> signupController.signupPost(rightRequest)),
+        //실패 케이스 - 1 - 잘못된 포맷의 계정 ID 인 경우
+        () -> assertThrows(BadRequestException.class, () -> signupController.signupPost(wrongAccountIdRequest)),
+        //실패 케이스 - 2 - 잘못된 포맷의 비밀번호 인 경우
+        () -> assertThrows(BadRequestException.class, () -> signupController.signupPost(wrongPasswordRequest)),
+        //실패 케이스 - 3 - 잘못된 포맷의 닉네임 인 경우
+        () -> assertThrows(BadRequestException.class, () -> signupController.signupPost(wrongNicknameRequest)),
+        //실패 케이스 - 4 - 잘못된 포맷의 휴대폰 번호 인 경우
+        () -> assertThrows(BadRequestException.class, () -> signupController.signupPost(wrongPhoneNumberRequest))
+    );
   }
 }
