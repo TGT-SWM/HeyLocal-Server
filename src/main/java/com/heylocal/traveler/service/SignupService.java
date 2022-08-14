@@ -21,7 +21,7 @@ import static com.heylocal.traveler.dto.SignupDto.SignupRequest;
 @Service
 @RequiredArgsConstructor
 public class SignupService {
-  private static final int signupPointInit = 10000; //회원가입 시, 지급하는 초기 포인트
+  private static final int signupPointInit = 100000; //회원가입 시, 지급하는 초기 포인트
   private final UserRepository userRepository;
   private final TravelerRepository travelerRepository;
   private final TravelerProfileRepository travelerProfileRepository;
