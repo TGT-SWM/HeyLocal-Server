@@ -18,8 +18,9 @@ public class TravelerRepository {
    * @param encodedPw 암호화된 비밀번호
    * @param nickname 닉네임
    * @param phoneNumber 휴대폰 번호
+   * @return 저장된 Traveler 엔티티
    */
-  public void saveTraveler(String accountId, String encodedPw, String nickname, String phoneNumber) {
+  public Traveler saveTraveler(String accountId, String encodedPw, String nickname, String phoneNumber) {
     Traveler traveler = Traveler.builder()
         .accountId(accountId)
         .password(encodedPw)
@@ -28,5 +29,7 @@ public class TravelerRepository {
         .nickname(nickname)
         .build();
     em.persist(traveler);
+
+    return traveler;
   }
 }

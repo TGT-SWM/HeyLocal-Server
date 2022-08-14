@@ -2,7 +2,7 @@ package com.heylocal.traveler.service;
 
 import com.heylocal.traveler.domain.user.User;
 import com.heylocal.traveler.domain.user.UserType;
-import com.heylocal.traveler.dto.SignupDto;
+import com.heylocal.traveler.repository.TravelerProfileRepository;
 import com.heylocal.traveler.repository.TravelerRepository;
 import com.heylocal.traveler.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -10,20 +10,23 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
 
-import static com.heylocal.traveler.dto.SignupDto.*;
+import static com.heylocal.traveler.dto.SignupDto.SignupRequest;
+import static com.heylocal.traveler.dto.SignupDto.UserInfoCheckResponse;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.BDDMockito.*;
+import static org.mockito.BDDMockito.eq;
+import static org.mockito.BDDMockito.willReturn;
 
 class SignupServiceTest {
   @Mock
   private UserRepository userRepository;
   @Mock
   private TravelerRepository travelerRepository;
+  @Mock
+  private TravelerProfileRepository travelerProfileRepository;
   @Mock
   private PasswordEncoder passwordEncoder;
   private SignupService signupService;
@@ -32,7 +35,7 @@ class SignupServiceTest {
   void setUp() {
     //MockitoAnnotations.initMocks(this); //deprecated
     MockitoAnnotations.openMocks(this); //여러 test code 실행 시, mock 객체의 정의된 행동이 꼬일 수 있으므로 초기화한다.
-    this.signupService = new SignupService(userRepository, travelerRepository, passwordEncoder);
+    this.signupService = new SignupService(userRepository, travelerRepository, travelerProfileRepository, passwordEncoder);
   }
 
   @Test

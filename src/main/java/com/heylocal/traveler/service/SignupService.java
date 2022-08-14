@@ -1,7 +1,9 @@
 package com.heylocal.traveler.service;
 
+import com.heylocal.traveler.domain.user.Traveler;
 import com.heylocal.traveler.domain.user.User;
 import com.heylocal.traveler.dto.SignupDto.UserInfoCheckResponse;
+import com.heylocal.traveler.repository.TravelerProfileRepository;
 import com.heylocal.traveler.repository.TravelerRepository;
 import com.heylocal.traveler.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -19,8 +21,10 @@ import static com.heylocal.traveler.dto.SignupDto.SignupRequest;
 @Service
 @RequiredArgsConstructor
 public class SignupService {
+  private static final int signupPointInit = 10000; //회원가입 시, 지급하는 초기 포인트
   private final UserRepository userRepository;
   private final TravelerRepository travelerRepository;
+  private final TravelerProfileRepository travelerProfileRepository;
   private final PasswordEncoder passwordEncoder;
 
   /**
@@ -58,7 +62,6 @@ public class SignupService {
     result = userRepository.findByPhoneNumber(phoneNumber);
     isExist = result.isPresent();
 
-
     return new UserInfoCheckResponse(isExist);
   }
 
@@ -77,7 +80,8 @@ public class SignupService {
 
     encodedPassword = encodePassword(request.getPassword());
     request.setPassword(encodedPassword);
-    travelerRepository.saveTraveler(accountId, encodedPassword, nickname, phoneNumber);
+    Traveler traveler = travelerRepository.saveTraveler(accountId, encodedPassword, nickname, phoneNumber);
+    travelerProfileRepository.saveTravelerProfile(traveler, signupPointInit, null);
   }
 
   /**
