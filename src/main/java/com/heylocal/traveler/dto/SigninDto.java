@@ -29,5 +29,7 @@ public class SigninDto {
     private String nickname;
     private String phoneNumber;
     private UserType userType;
+    private String accessToken;
+    private String refreshToken;
   }
 }

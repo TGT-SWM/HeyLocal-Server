@@ -1,11 +1,14 @@
 package com.heylocal.traveler.util.jwt;
 
+import com.heylocal.traveler.util.date.LocalDateTimeTransformer;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.Optional;
 
 /**
@@ -15,13 +18,15 @@ import java.util.Optional;
 public class JwtTokenParser {
 
   private final String secretKey;
+  private final LocalDateTimeTransformer localDateTimeTransformer;
 
   /**
    * 생성자를 통해, auth-secret.properties 에 정의된 값을 final 필드에 바인딩
    * @param secretKey 비밀키
    */
-  public JwtTokenParser(@Value("${jwt.secret}") String secretKey) {
+  public JwtTokenParser(@Value("${jwt.secret}") String secretKey, LocalDateTimeTransformer localDateTimeTransformer) {
     this.secretKey = secretKey;
+    this.localDateTimeTransformer = localDateTimeTransformer;
   }
 
   /**
@@ -41,6 +46,20 @@ public class JwtTokenParser {
             .setSigningKey(secretKey)
             .parseClaimsJws(token)
             .getBody());
+  }
+
+  /**
+   * 토큰 만료기간 추출 메서드
+   * @param tokenValue 토큰 값
+   * @return 만료기간을 LocalDateTime 으로 반환
+   */
+  public LocalDateTime extractExpiration(String tokenValue) {
+    Date expiration = Jwts.parser()
+        .setSigningKey(secretKey)
+        .parseClaimsJws(tokenValue)
+        .getBody()
+        .getExpiration();
+    return localDateTimeTransformer.dateToLocalDateTime(expiration);
   }
 
 

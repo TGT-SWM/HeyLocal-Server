@@ -18,7 +18,7 @@ public class ErrorMessageResponse {
     this.dateTime = LocalDateTime.now();
   }
 
-  @Schema(example = "계정 아이디는 5자 이상, 20자 이하이어야 합니다.", description = "오류 발생 이유")
+  @Schema(example = "오류가 발생한 이유", description = "오류 발생 이유")
   public String getReason() {
     return reason;
   }

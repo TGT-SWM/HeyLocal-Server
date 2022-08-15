@@ -27,4 +27,6 @@ class TravelerRepositoryTest {
     //성공 케이스 - 1
     assertDoesNotThrow(() -> travelerRepository.saveTraveler(accountId, encodedPw, nickname, phoneNumber));
   }
+
+  //TODO - findByAccountId 테스트
 }

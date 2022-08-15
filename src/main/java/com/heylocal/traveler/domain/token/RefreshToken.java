@@ -22,11 +22,13 @@ public class RefreshToken extends BaseTimeEntity {
   @Id
   @GeneratedValue
   private long id;
+  @Column(length = 510, nullable = false)
   private String tokenValue;
+  @Column(nullable = false)
   private LocalDateTime expiredDateTime;
 
-  @OneToOne
-  @JoinColumn(nullable = false)
+  //양방향 설정
+  @OneToOne(mappedBy = "refreshToken", cascade = CascadeType.ALL)
   private AccessToken accessToken;
 
   public void associateAccessToken(AccessToken accessToken) {
