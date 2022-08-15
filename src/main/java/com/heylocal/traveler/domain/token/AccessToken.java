@@ -9,6 +9,9 @@ import lombok.experimental.SuperBuilder;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
+/**
+ * Access Token 엔티티
+ */
 @Entity
 @Table(name = "ACCESS_TOKEN")
 @NoArgsConstructor
@@ -24,4 +27,12 @@ public class AccessToken extends BaseTimeEntity {
   //양방향 설정
   @OneToOne(mappedBy = "accessToken", cascade = CascadeType.ALL)
   private RefreshToken refreshToken;
+
+  public void associateRefreshToken(RefreshToken refreshToken) {
+    this.refreshToken = refreshToken;
+
+    if (refreshToken.getAccessToken() != this) {
+      refreshToken.associateAccessToken(this);
+    }
+  }
 }

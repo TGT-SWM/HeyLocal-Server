@@ -9,6 +9,9 @@ import lombok.experimental.SuperBuilder;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
+/**
+ * Refresh Token 엔티티
+ */
 @Entity
 @Table(name = "REFRESH_TOKEN")
 @NoArgsConstructor
@@ -25,4 +28,11 @@ public class RefreshToken extends BaseTimeEntity {
   @OneToOne
   @JoinColumn(nullable = false)
   private AccessToken accessToken;
+
+  public void associateAccessToken(AccessToken accessToken) {
+    this.accessToken = accessToken;
+    if (accessToken.getRefreshToken() != this) {
+      accessToken.associateRefreshToken(this);
+    }
+  }
 }
