@@ -1,12 +1,13 @@
 package com.heylocal.traveler.service;
 
-import com.heylocal.traveler.domain.profile.ManagerProfile;
+import com.heylocal.traveler.domain.post.Post;
 import com.heylocal.traveler.domain.user.Manager;
-import com.heylocal.traveler.repository.ManagerProfileRepository;
 import com.heylocal.traveler.repository.ManagerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 import static com.heylocal.traveler.dto.ManagerDto.*;
 
@@ -14,17 +15,44 @@ import static com.heylocal.traveler.dto.ManagerDto.*;
 @RequiredArgsConstructor
 public class ManagerService {
 	private final ManagerRepository managerRepository;
-	private final ManagerProfileRepository managerProfileRepository;
 
+	/**
+	 * <pre>
+	 * 매니저 프로필의 함축된 정보를 조회
+	 * </pre>
+	 * @param userId 매니저의 아이디(PK)
+	 * @return 매니저 프로필의 함축 버전인 ManagerProfileSimpleResponse 객체
+	 */
 	@Transactional
-	public ManagerProfileResponse findProfileById(Long userId) {
+	public ManagerProfileSimpleResponse findSimpleProfileById(Long userId) {
+		// 매니저 조회
 		Manager manager = managerRepository.findOne(userId);
 		if (manager == null) {
 			return null;
 		}
 
-		ManagerProfile profile = (ManagerProfile) manager.getUserProfile();
+		return ManagerProfileSimpleResponse.from(manager);
+	}
 
-		return ManagerProfileResponse.from(manager, profile);
+	/**
+	 * <pre>
+	 * 매니저 프로필을 조회
+	 * </pre>
+	 * @param userId 매니저의 아이디(PK)
+	 * @return 매니저 프로필 정보를 담은 ManagerProfileResponse 객체
+	 */
+	@Transactional
+	public ManagerProfileResponse findProfileById(Long userId) {
+		// 매니저 조회
+		Manager manager = managerRepository.findOne(userId);
+		if (manager == null) {
+			return null;
+		}
+
+		// 매니저 포스트 조회
+		List<Post> postList = manager.getPostList();
+		List<Post> shortPostList = postList.subList(0, Math.min(2, postList.size()));
+
+		return ManagerProfileResponse.from(manager, shortPostList);
 	}
 }
