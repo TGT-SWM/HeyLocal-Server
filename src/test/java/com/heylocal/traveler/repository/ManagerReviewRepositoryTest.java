@@ -1,5 +1,7 @@
 package com.heylocal.traveler.repository;
 
+import com.heylocal.traveler.dto.ManagerDto;
+import com.heylocal.traveler.dto.ManagerDto.ManagerReviewRequest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -18,11 +20,14 @@ class ManagerReviewRepositoryTest {
 	void findByManagerIdTest() {
 		// GIVEN
 		// 매니저 리뷰 등록하도록 수정
-		Long managerId = 1L;
+		long managerId = 1L;
+		int page = 1;
+		int pageSize = 10;
+		ManagerReviewRequest request = new ManagerReviewRequest(managerId, page, pageSize);
 
 		// WHEN & THEN
 		Assertions.assertDoesNotThrow(
-				() -> managerReviewRepository.findByManagerId(managerId)
+				() -> managerReviewRepository.findAll(request)
 		);
 	}
 }

@@ -4,8 +4,12 @@ import com.heylocal.traveler.controller.exception.NotFoundException;
 import com.heylocal.traveler.domain.post.Post;
 import com.heylocal.traveler.domain.profile.ManagerProfile;
 import com.heylocal.traveler.domain.user.Manager;
+import com.heylocal.traveler.domain.userreview.ManagerReview;
+import com.heylocal.traveler.dto.ManagerDto;
 import com.heylocal.traveler.dto.ManagerDto.ManagerProfileResponse;
 import com.heylocal.traveler.dto.ManagerDto.ManagerProfileSimpleResponse;
+import com.heylocal.traveler.dto.ManagerDto.ManagerReviewRequest;
+import com.heylocal.traveler.dto.ManagerDto.ManagerReviewResponse;
 import com.heylocal.traveler.service.ManagerService;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,6 +22,9 @@ import org.mockito.MockitoAnnotations;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.mockito.BDDMockito.given;
 
 class ManagerControllerTest {
 	@Mock
@@ -40,7 +47,7 @@ class ManagerControllerTest {
 		Manager manager = createManager(managerId);
 		List<Post> postList = new ArrayList<>();
 		ManagerProfileResponse response = ManagerProfileResponse.from(manager, postList);
-		BDDMockito.given(managerService.findProfileById(managerId)).willReturn(response);
+		given(managerService.findProfileById(managerId)).willReturn(response);
 
 		// WHEN - THEN
 		try {
@@ -61,7 +68,7 @@ class ManagerControllerTest {
 		Long managerId = 1L;
 		Manager manager = createManager(managerId);
 		ManagerProfileSimpleResponse response = ManagerProfileSimpleResponse.from(manager);
-		BDDMockito.given(managerService.findSimpleProfileById(managerId)).willReturn(response);
+		given(managerService.findSimpleProfileById(managerId)).willReturn(response);
 
 		// WHEN - THEN
 		try {
@@ -72,6 +79,31 @@ class ManagerControllerTest {
 			// 1. NotFoundException이 발생하지 않는지
 			Assertions.fail("예외 발생: " + e.getMessage());
 		}
+	}
+
+	@Test
+	@DisplayName("매니저 리뷰 조회 컨트롤러")
+	void managersManagerReviews() {
+		// GIVEN
+		// 매니저 리뷰 등록하도록 수정
+		long managerId = 1L;
+		int page = 1;
+		int pageSize = 10;
+		ManagerReviewRequest request = new ManagerReviewRequest(managerId, page, pageSize);
+
+		// 가짜 ManagerReviewResponse 반환
+		List<ManagerReview> reviews = new ArrayList<>();
+		for (int i = 0; i < pageSize; i++) {
+			reviews.add(new ManagerReview());
+		}
+		ManagerReviewResponse response = new ManagerReviewResponse(reviews);
+		given(managerService.findReviews(request)).willReturn(response);
+
+		// WHEN
+		ManagerReviewResponse actual = managerController.managersManagerReviews(request);
+
+		// THEN
+		Assertions.assertThat(actual.getReviews().size()).isEqualTo(response.getReviews().size());
 	}
 
 	// 매니저 객체 생성해 반환

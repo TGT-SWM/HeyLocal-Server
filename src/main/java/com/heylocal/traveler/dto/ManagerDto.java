@@ -68,4 +68,22 @@ public class ManagerDto {
 					.build();
 		}
 	}
+
+	@Getter
+	@NoArgsConstructor
+	@AllArgsConstructor
+	public static class ManagerReviewRequest {
+		long managerId;
+		int page;
+		int pageSize;
+	}
+
+	@Getter
+	@Setter
+	@NoArgsConstructor
+	@AllArgsConstructor
+	@Builder
+	public static class ManagerReviewResponse {
+		List<ManagerReview> reviews;
+	}
 }

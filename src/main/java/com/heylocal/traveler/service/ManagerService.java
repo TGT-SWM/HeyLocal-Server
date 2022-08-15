@@ -2,7 +2,9 @@ package com.heylocal.traveler.service;
 
 import com.heylocal.traveler.domain.post.Post;
 import com.heylocal.traveler.domain.user.Manager;
+import com.heylocal.traveler.domain.userreview.ManagerReview;
 import com.heylocal.traveler.repository.ManagerRepository;
+import com.heylocal.traveler.repository.ManagerReviewRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,6 +17,8 @@ import static com.heylocal.traveler.dto.ManagerDto.*;
 @RequiredArgsConstructor
 public class ManagerService {
 	private final ManagerRepository managerRepository;
+
+	private final ManagerReviewRepository managerReviewRepository;
 
 	/**
 	 * <pre>
@@ -54,5 +58,18 @@ public class ManagerService {
 		List<Post> shortPostList = postList.subList(0, Math.min(2, postList.size()));
 
 		return ManagerProfileResponse.from(manager, shortPostList);
+	}
+
+	/**
+	 * <pre>
+	 * 매니저 리뷰들을 조회
+	 * </pre>
+	 * @param request ManagerReviewRequest 객체
+	 * @return 매니저 리뷰 리스트가 담긴 ManagerReviewResponse 객체
+	 */
+	@Transactional
+	public ManagerReviewResponse findReviews(ManagerReviewRequest request) {
+		List<ManagerReview> reviews = managerReviewRepository.findAll(request);
+		return new ManagerReviewResponse(reviews);
 	}
 }

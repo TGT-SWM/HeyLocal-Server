@@ -3,10 +3,15 @@ package com.heylocal.traveler.controller;
 import com.heylocal.traveler.controller.api.ManagersApi;
 import com.heylocal.traveler.controller.exception.NotFoundException;
 import com.heylocal.traveler.dto.ManagerDto.ManagerProfileResponse;
+import com.heylocal.traveler.dto.ManagerDto.ManagerReviewRequest;
+import com.heylocal.traveler.dto.ManagerDto.ManagerReviewResponse;
 import com.heylocal.traveler.dto.Sample;
 import com.heylocal.traveler.service.ManagerService;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -48,5 +53,11 @@ public class ManagerController implements ManagersApi {
 	@Override
 	public ResponseEntity<Void> managersManagerIdReviewsPost(long managerId, Sample body) {
 		return null;
+	}
+
+	// 매니저 리뷰 리스트 조회
+	@GetMapping(value = "/{managerId}/reviews")
+	public ManagerReviewResponse managersManagerReviews(ManagerReviewRequest request) {
+		return managerService.findReviews(request);
 	}
 }
