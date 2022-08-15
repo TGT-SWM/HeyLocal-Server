@@ -8,6 +8,6 @@ class ManagerServiceTest {
 
 	@Test
 	@DisplayName("매니저 프로필 조회")
-	void findByUserIdTest() {
+	void findProfileByIdTest() {
 	}
 }

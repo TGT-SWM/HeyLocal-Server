@@ -43,7 +43,7 @@ public class ManagerController implements ManagersApi {
 	 */
 	@Override
 	public ManagerProfileResponse managersManagerIdProfileGet(long managerId, boolean simple) throws NotFoundException {
-		ManagerProfileResponse response = managerService.findByUserId(managerId);
+		ManagerProfileResponse response = managerService.findProfileById(managerId);
 		if (response == null) {
 			throw new NotFoundException("정보가 존재하지 않습니다.");
 		}

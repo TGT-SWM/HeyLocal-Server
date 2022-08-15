@@ -17,7 +17,7 @@ public class ManagerService {
 	private final ManagerProfileRepository managerProfileRepository;
 
 	@Transactional
-	public ManagerProfileResponse findByUserId(Long userId) {
+	public ManagerProfileResponse findProfileById(Long userId) {
 		Manager manager = managerRepository.findOne(userId);
 		ManagerProfile profile = managerProfileRepository.findByUserId(userId);
 
