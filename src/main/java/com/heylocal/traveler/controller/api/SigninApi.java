@@ -6,6 +6,7 @@
 package com.heylocal.traveler.controller.api;
 
 import com.heylocal.traveler.controller.exception.BadRequestException;
+import com.heylocal.traveler.controller.exception.UnauthorizedException;
 import com.heylocal.traveler.dto.ErrorMessageResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -29,12 +30,13 @@ public interface SigninApi {
 
     @Operation(summary = "로그인", description = "", tags = {"Signin"})
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "400", description = "로그인 정보가 일치하지 않을 때", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessageResponse.class)))
+        @ApiResponse(responseCode = "400", description = "Request Value가 올바르지 않을 때", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessageResponse.class))),
+        @ApiResponse(responseCode = "401", description = "로그인 정보가 틀렸을 때", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessageResponse.class)))
     })
     @PostMapping(consumes = { "application/json" })
     SigninResponse signinPost(
         @Parameter(in = ParameterIn.DEFAULT, description = "", required=true) @Validated @RequestBody SigninRequest request,
-        BindingResult bindingResult) throws BadRequestException;
+        BindingResult bindingResult) throws BadRequestException, UnauthorizedException;
 
 }
 

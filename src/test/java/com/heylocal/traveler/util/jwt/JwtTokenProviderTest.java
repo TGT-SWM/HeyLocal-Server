@@ -1,5 +1,6 @@
 package com.heylocal.traveler.util.jwt;
 
+import com.heylocal.traveler.domain.user.UserType;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import lombok.extern.slf4j.Slf4j;
@@ -24,9 +25,11 @@ class JwtTokenProviderTest {
     long userPk = 1L;
     String accountId = "testAccountId";
     String nickname = "testNickname";
+    String phoneNumber = "010-1234-1234";
+    UserType userType = UserType.TRAVELER;
 
     //WHEN
-    String accessToken = jwtTokenProvider.createAccessToken(userPk, accountId, nickname);
+    String accessToken = jwtTokenProvider.createAccessToken(userPk, accountId, nickname, phoneNumber, userType);
     Claims claims = Jwts.parser()
         .setSigningKey(secretKey)
         .parseClaimsJws(accessToken)
@@ -45,6 +48,8 @@ class JwtTokenProviderTest {
         () -> assertEquals(String.valueOf(userPk), String.valueOf(claims.get("userPk"))),
         () -> assertEquals(accountId, claims.get("accountId")),
         () -> assertEquals(nickname, claims.get("nickname")),
+        () -> assertEquals(phoneNumber, claims.get("phoneNumber")),
+        () -> assertEquals(userType.toString(), claims.get("userType")),
       //실패 케이스 - 1
         () -> assertThrows(Exception.class, () -> {
         Jwts.parser()

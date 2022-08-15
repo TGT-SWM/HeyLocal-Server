@@ -1,5 +1,6 @@
 package com.heylocal.traveler.util.jwt;
 
+import com.heylocal.traveler.domain.user.UserType;
 import io.jsonwebtoken.Header;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -38,7 +39,7 @@ public class JwtTokenProvider {
    * @param nickname 사용자 닉네임
    * @return jwt Access Token
    */
-  public String createAccessToken(long userPk, String accountId, String nickname) {
+  public String createAccessToken(long userPk, String accountId, String nickname, String phoneNumber, UserType userType) {
     Date now = new Date();
 
     return Jwts.builder()
@@ -49,6 +50,8 @@ public class JwtTokenProvider {
         .claim("userPk", userPk) //토큰을 받을 사용자 pk를 비공개 클레임으로 설정
         .claim("accountId", accountId) //토큰을 받을 사용자의 계정 아이디를 비공개 클레임으로 설정
         .claim("nickname", nickname) //토큰을 받을 사용자의 닉네임를 비공개 클레임으로 설정
+        .claim("phoneNumber", phoneNumber) //토큰을 받을 사용자의 전화번호를 비공개 클레임으로 설정
+        .claim("userType", userType) //토큰을 받을 사용자의 유저타입을 비공개 클레임으로 설정
         .signWith(SignatureAlgorithm.HS512, secretKey) //해싱 알고리즘으로 HS512를 사용하기 때문에, secretKey가 512비트 이상이어야 함
         .compact();
   }

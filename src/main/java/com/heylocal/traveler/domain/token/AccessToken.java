@@ -21,11 +21,11 @@ import java.time.LocalDateTime;
 public class AccessToken extends BaseTimeEntity {
   @Id @GeneratedValue
   private long id;
+  @Column(length = 510, nullable = false)
   private String tokenValue;
+  @Column(nullable = false)
   private LocalDateTime expiredDateTime;
-
-  //양방향 설정
-  @OneToOne(mappedBy = "accessToken", cascade = CascadeType.ALL)
+  @OneToOne
   private RefreshToken refreshToken;
 
   public void associateRefreshToken(RefreshToken refreshToken) {
