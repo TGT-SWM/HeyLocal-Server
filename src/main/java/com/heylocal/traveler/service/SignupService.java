@@ -72,12 +72,20 @@ public class SignupService {
    * @param request
    */
   @Transactional
-  public void signupTraveler(SignupRequest request) {
+  public void signupTraveler(SignupRequest request) throws IllegalArgumentException {
     String accountId = request.getAccountId();
     String nickname = request.getNickname();
     String phoneNumber = request.getPhoneNumber();
     String encodedPassword;
 
+    //중복 확인
+    UserInfoCheckResponse accountIdCheckRes = checkAccountIdExist(accountId);
+    UserInfoCheckResponse phoneNumCheckRes = checkPhoneNumberExist(phoneNumber);
+    if (accountIdCheckRes.isAlreadyExist() || phoneNumCheckRes.isAlreadyExist()) {
+      throw new IllegalArgumentException("계정 ID 나, 휴대폰 번호가 이미 존재합니다.");
+    }
+
+    //사용자 저장
     encodedPassword = encodePassword(request.getPassword());
     request.setPassword(encodedPassword);
     Traveler traveler = travelerRepository.saveTraveler(accountId, encodedPassword, nickname, phoneNumber);
