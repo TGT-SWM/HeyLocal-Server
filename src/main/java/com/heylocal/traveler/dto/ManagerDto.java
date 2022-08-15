@@ -6,14 +6,15 @@ import com.heylocal.traveler.domain.profile.ManagerProfile;
 import com.heylocal.traveler.domain.profile.ManagerResponseTime;
 import com.heylocal.traveler.domain.user.Manager;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 public class ManagerDto {
 	@Getter
 	@Setter
 	@NoArgsConstructor
 	@AllArgsConstructor
-	@Builder
-	public static class ManagerProfileResponse {
+	@SuperBuilder
+	public static class ManagerProfileSimpleResponse {
 		Long id;
 		String name;
 		ManagerGrade grade;
@@ -24,8 +25,20 @@ public class ManagerDto {
 		Float notePrecisionAvg;
 		Integer totalMatchNum;
 		ManagerResponseTime responseTime;
-		private Region activeRegion1;
-		private Region activeRegion2;
+		Region activeRegion1;
+		Region activeRegion2;
+
+		public static ManagerProfileSimpleResponse from(Manager manager, ManagerProfile profile) {
+			return ManagerProfileResponse.from(manager, profile);
+		}
+	}
+
+	@Getter
+	@Setter
+	@NoArgsConstructor
+	@AllArgsConstructor
+	@SuperBuilder
+	public static class ManagerProfileResponse extends ManagerProfileSimpleResponse {
 		String introduction;
 
 		public static ManagerProfileResponse from(Manager manager, ManagerProfile profile) {
@@ -42,7 +55,6 @@ public class ManagerDto {
 					.responseTime(profile.getResponseTime())
 					.activeRegion1(profile.getActiveRegion1())
 					.activeRegion2(profile.getActiveRegion2())
-					.introduction(profile.getIntroduction())
 					.build();
 		}
 	}
