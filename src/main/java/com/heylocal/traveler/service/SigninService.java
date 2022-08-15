@@ -5,7 +5,6 @@ import com.heylocal.traveler.domain.user.UserType;
 import com.heylocal.traveler.repository.TokenRepository;
 import com.heylocal.traveler.repository.TravelerRepository;
 import com.heylocal.traveler.service.exception.AuthArgumentException;
-import com.heylocal.traveler.service.exception.BadArgumentException;
 import com.heylocal.traveler.util.jwt.JwtTokenParser;
 import com.heylocal.traveler.util.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
