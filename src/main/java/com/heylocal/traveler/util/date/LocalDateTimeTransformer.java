@@ -11,9 +11,6 @@ import java.util.Date;
 @Component
 public class LocalDateTimeTransformer {
   public LocalDateTime dateToLocalDateTime(Date date) {
-    LocalDate localDate = date.toInstant()
-        .atZone(ZoneId.systemDefault())
-        .toLocalDate();
     LocalDateTime localDateTime = date.toInstant()
         .atZone(ZoneId.systemDefault())
         .toLocalDateTime();

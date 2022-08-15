@@ -4,6 +4,7 @@ import com.heylocal.traveler.util.date.LocalDateTimeTransformer;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -14,6 +15,7 @@ import java.util.Optional;
 /**
  * Jwt Token 파싱 및 유효성 검증 클래스
  */
+@Slf4j
 @Component
 public class JwtTokenParser {
 
