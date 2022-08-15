@@ -22,7 +22,7 @@ import javax.persistence.*;
 @SuperBuilder
 public class ManagerReview extends UserReview {
   @OneToOne
-  @JoinColumn(nullable = false)
+  @JoinColumn(nullable = true)
   private Travel travel;
 
   @Enumerated(EnumType.STRING)

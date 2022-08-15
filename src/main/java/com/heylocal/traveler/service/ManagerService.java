@@ -3,6 +3,7 @@ package com.heylocal.traveler.service;
 import com.heylocal.traveler.domain.post.Post;
 import com.heylocal.traveler.domain.user.Manager;
 import com.heylocal.traveler.domain.userreview.ManagerReview;
+import com.heylocal.traveler.dto.PageDto.PageRequest;
 import com.heylocal.traveler.repository.ManagerRepository;
 import com.heylocal.traveler.repository.ManagerReviewRepository;
 import lombok.RequiredArgsConstructor;
@@ -64,12 +65,14 @@ public class ManagerService {
 	 * <pre>
 	 * 매니저 리뷰들을 조회
 	 * </pre>
-	 * @param request ManagerReviewRequest 객체
+	 * @param managerId 매니저 ID
+	 * @param pageRequest PageRequest 객체
 	 * @return 매니저 리뷰 리스트가 담긴 ManagerReviewResponse 객체
 	 */
 	@Transactional
-	public ManagerReviewResponse findReviews(ManagerReviewRequest request) {
-		List<ManagerReview> reviews = managerReviewRepository.findAll(request);
+	public ManagerReviewResponse findReviews(long managerId, PageRequest pageRequest) {
+		List<ManagerReview> reviews = managerReviewRepository.findAll(managerId, pageRequest);
+		System.out.println("reviews = " + reviews);
 		return new ManagerReviewResponse(reviews);
 	}
 }

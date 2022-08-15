@@ -5,17 +5,15 @@ import com.heylocal.traveler.domain.post.Post;
 import com.heylocal.traveler.domain.profile.ManagerProfile;
 import com.heylocal.traveler.domain.user.Manager;
 import com.heylocal.traveler.domain.userreview.ManagerReview;
-import com.heylocal.traveler.dto.ManagerDto;
 import com.heylocal.traveler.dto.ManagerDto.ManagerProfileResponse;
 import com.heylocal.traveler.dto.ManagerDto.ManagerProfileSimpleResponse;
-import com.heylocal.traveler.dto.ManagerDto.ManagerReviewRequest;
 import com.heylocal.traveler.dto.ManagerDto.ManagerReviewResponse;
+import com.heylocal.traveler.dto.PageDto.PageRequest;
 import com.heylocal.traveler.service.ManagerService;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -23,7 +21,6 @@ import org.mockito.MockitoAnnotations;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.BDDMockito.given;
 
 class ManagerControllerTest {
@@ -89,7 +86,7 @@ class ManagerControllerTest {
 		long managerId = 1L;
 		int page = 1;
 		int pageSize = 10;
-		ManagerReviewRequest request = new ManagerReviewRequest(managerId, page, pageSize);
+		PageRequest pageRequest = new PageRequest(page, pageSize);
 
 		// 가짜 ManagerReviewResponse 반환
 		List<ManagerReview> reviews = new ArrayList<>();
@@ -97,10 +94,10 @@ class ManagerControllerTest {
 			reviews.add(new ManagerReview());
 		}
 		ManagerReviewResponse response = new ManagerReviewResponse(reviews);
-		given(managerService.findReviews(request)).willReturn(response);
+		given(managerService.findReviews(managerId, pageRequest)).willReturn(response);
 
 		// WHEN
-		ManagerReviewResponse actual = managerController.managersManagerReviews(request);
+		ManagerReviewResponse actual = managerController.managersManagerReviews(managerId, pageRequest);
 
 		// THEN
 		Assertions.assertThat(actual.getReviews().size()).isEqualTo(response.getReviews().size());

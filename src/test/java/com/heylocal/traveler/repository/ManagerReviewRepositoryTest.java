@@ -1,7 +1,6 @@
 package com.heylocal.traveler.repository;
 
-import com.heylocal.traveler.dto.ManagerDto;
-import com.heylocal.traveler.dto.ManagerDto.ManagerReviewRequest;
+import com.heylocal.traveler.dto.PageDto.PageRequest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -23,11 +22,11 @@ class ManagerReviewRepositoryTest {
 		long managerId = 1L;
 		int page = 1;
 		int pageSize = 10;
-		ManagerReviewRequest request = new ManagerReviewRequest(managerId, page, pageSize);
+		PageRequest pageRequest = new PageRequest(page, pageSize);
 
 		// WHEN & THEN
 		Assertions.assertDoesNotThrow(
-				() -> managerReviewRepository.findAll(request)
+				() -> managerReviewRepository.findAll(managerId, pageRequest)
 		);
 	}
 }

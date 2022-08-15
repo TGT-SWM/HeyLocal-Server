@@ -1,7 +1,7 @@
 package com.heylocal.traveler.repository;
 
 import com.heylocal.traveler.domain.userreview.ManagerReview;
-import com.heylocal.traveler.dto.ManagerDto.ManagerReviewRequest;
+import com.heylocal.traveler.dto.PageDto.PageRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -13,15 +13,15 @@ import java.util.List;
 public class ManagerReviewRepository {
 	private final EntityManager em;
 
-	public List<ManagerReview> findAll(ManagerReviewRequest request) {
+	public List<ManagerReview> findAll(long managerId, PageRequest pageRequest) {
 		String jpql = "select r from ManagerReview r where r.writer.id = :id order by r.createdDate desc";
 
-		int page = request.getPage();
-		int pageSize = request.getPageSize();
+		int page = pageRequest.getPage();
+		int pageSize = pageRequest.getPageSize();
 		int firstResult = (page - 1) * pageSize;
 
 		return em.createQuery(jpql, ManagerReview.class)
-				.setParameter("id", request.getManagerId())
+				.setParameter("id", managerId)
 				.setFirstResult(firstResult)
 				.setMaxResults(pageSize)
 				.getResultList();

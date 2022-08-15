@@ -3,13 +3,11 @@ package com.heylocal.traveler.service;
 import com.heylocal.traveler.domain.profile.ManagerProfile;
 import com.heylocal.traveler.domain.user.Manager;
 import com.heylocal.traveler.domain.userreview.ManagerReview;
-import com.heylocal.traveler.dto.ManagerDto;
 import com.heylocal.traveler.dto.ManagerDto.ManagerProfileSimpleResponse;
-import com.heylocal.traveler.dto.ManagerDto.ManagerReviewRequest;
 import com.heylocal.traveler.dto.ManagerDto.ManagerReviewResponse;
+import com.heylocal.traveler.dto.PageDto.PageRequest;
 import com.heylocal.traveler.repository.ManagerRepository;
 import com.heylocal.traveler.repository.ManagerReviewRepository;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -21,7 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
 
 class ManagerServiceTest {
@@ -83,17 +80,17 @@ class ManagerServiceTest {
 		long managerId = 1L;
 		int page = 1;
 		int pageSize = 10;
-		ManagerReviewRequest request = new ManagerReviewRequest(managerId, page, pageSize);
+		PageRequest pageRequest = new PageRequest(page, pageSize);
 
 		// 가짜 리뷰 리스트 반환
 		List<ManagerReview> reviews = new ArrayList<>();
 		for (int i = 0; i < page * pageSize; i++) {
 			reviews.add(new ManagerReview());
 		}
-		given(managerReviewRepository.findAll(request)).willReturn(reviews);
+		given(managerReviewRepository.findAll(managerId, pageRequest)).willReturn(reviews);
 
 		// WHEN
-		ManagerReviewResponse response = managerService.findReviews(request);
+		ManagerReviewResponse response = managerService.findReviews(managerId, pageRequest);
 
 		// THEN
 		// 해당 페이지 조회 시 pageSize 만큼의 매니저 리뷰를 반환하는지

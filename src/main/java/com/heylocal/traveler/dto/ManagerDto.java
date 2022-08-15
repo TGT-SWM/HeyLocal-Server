@@ -1,6 +1,7 @@
 package com.heylocal.traveler.dto;
 
 import com.heylocal.traveler.domain.Region;
+import com.heylocal.traveler.domain.StarScore;
 import com.heylocal.traveler.domain.post.Post;
 import com.heylocal.traveler.domain.profile.ManagerGrade;
 import com.heylocal.traveler.domain.profile.ManagerProfile;
@@ -67,15 +68,6 @@ public class ManagerDto {
 					.postList(postList)
 					.build();
 		}
-	}
-
-	@Getter
-	@NoArgsConstructor
-	@AllArgsConstructor
-	public static class ManagerReviewRequest {
-		long managerId;
-		int page;
-		int pageSize;
 	}
 
 	@Getter
