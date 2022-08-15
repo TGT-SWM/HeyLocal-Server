@@ -5,24 +5,36 @@
  */
 package com.heylocal.traveler.controller.api;
 
-import com.heylocal.traveler.dto.Sample;
+import com.heylocal.traveler.controller.exception.BadRequestException;
+import com.heylocal.traveler.dto.ErrorMessageResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
-import org.springframework.http.ResponseEntity;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import static com.heylocal.traveler.dto.SigninDto.SigninRequest;
+import static com.heylocal.traveler.dto.SigninDto.SigninResponse;
 
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2022-08-12T04:12:44.357Z[GMT]")
 @RequestMapping("/signin")
 public interface SigninApi {
 
     @Operation(summary = "로그인", description = "", tags = {"Signin"})
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "400", description = "로그인 정보가 일치하지 않을 때", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessageResponse.class)))
+    })
     @PostMapping(consumes = { "application/json" })
-    ResponseEntity<Void> signinPost(
-        @Parameter(in = ParameterIn.DEFAULT, description = "", required=true) @Validated @RequestBody Sample body);
+    SigninResponse signinPost(
+        @Parameter(in = ParameterIn.DEFAULT, description = "", required=true) @Validated @RequestBody SigninRequest request,
+        BindingResult bindingResult) throws BadRequestException;
 
 }
 
