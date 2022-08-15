@@ -52,13 +52,17 @@ public class SignupController implements SignupApi {
   }
 
   @Override
-    public void signupPost(SignupRequest request) throws BadRequestException {
+  public void signupPost(SignupRequest request) throws BadRequestException {
     validateAccountIdFormat(request.getAccountId()); //계정 포맷 검증
     validatePasswordFormat(request.getPassword()); //비밀번호 포맷 검증
     validateNicknameFormat(request.getNickname()); //닉네임 포맷 검증
     validatePhoneNumberFormat(request.getPhoneNumber()); //전화번호 포맷 검증
 
-    signupService.signupTraveler(request);
+    try {
+      signupService.signupTraveler(request);
+    } catch (IllegalArgumentException exception) {
+      throw new BadRequestException(exception.getMessage());
+    }
   }
 
   /**
