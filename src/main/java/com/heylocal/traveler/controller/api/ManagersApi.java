@@ -5,10 +5,17 @@
  */
 package com.heylocal.traveler.controller.api;
 
+import com.heylocal.traveler.controller.exception.NotFoundException;
+import com.heylocal.traveler.dto.ErrorMessageResponse;
+import com.heylocal.traveler.dto.ManagerDto.ManagerProfileResponse;
 import com.heylocal.traveler.dto.Sample;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -32,10 +39,13 @@ public interface ManagersApi {
 
 
     @Operation(summary = "해당 매니저의 프로필 조회", description = "", tags = {"Managers"})
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "404", description = "정보가 존재하지 않음", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessageResponse.class)))
+    })
     @GetMapping(value = "/{managerId}/profile")
-    ResponseEntity<Void> managersManagerIdProfileGet(
+    ManagerProfileResponse managersManagerIdProfileGet(
         @Parameter(in = ParameterIn.PATH, description = "매니저 id", required = true) @PathVariable long managerId,
-        @Parameter(in = ParameterIn.QUERY, description = "간단한(상단 영역) 프로필 정보만 조회: true/false", required = true) @RequestParam boolean simple);
+        @Parameter(in = ParameterIn.QUERY, description = "간단한(상단 영역) 프로필 정보만 조회: true/false", required = true) @RequestParam boolean simple) throws NotFoundException;
 
 
     @Operation(summary = "해당 매니저에게 매니저 리뷰 등록", description = "", tags = {"Managers"})
