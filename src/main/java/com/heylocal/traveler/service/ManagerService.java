@@ -19,11 +19,11 @@ public class ManagerService {
 	@Transactional
 	public ManagerProfileResponse findProfileById(Long userId) {
 		Manager manager = managerRepository.findOne(userId);
-		ManagerProfile profile = managerProfileRepository.findByUserId(userId);
-
-		if (manager == null || profile == null) {
+		if (manager == null) {
 			return null;
 		}
+
+		ManagerProfile profile = (ManagerProfile) manager.getUserProfile();
 
 		return ManagerProfileResponse.from(manager, profile);
 	}
