@@ -1,9 +1,7 @@
 package com.heylocal.traveler.util.jwt;
 
 import com.heylocal.traveler.util.date.LocalDateTimeTransformer;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.JwtException;
-import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -32,21 +30,16 @@ public class JwtTokenParser {
   }
 
   /**
-   * 유효한 JWT 토큰인지 확인하고, 클레임을 파싱하는 메서드
+   * 유효한 JWT 토큰 클레임을 파싱하는 메서드
    * 반환된 Optional이 null이라면, 유효하지 않은 토큰
-   * @param authHttpHeader 헤더 중 Authorization 헤더 값 (Access Token)
+   * @param tokenValue 토큰값
    * @return 토큰이 정상적인 형태라면, 토큰의 클레임들을 Optional로 Wrapping하여 반환
    */
-  public Optional<Claims> parseJwtToken(String authHttpHeader) throws JwtException {
-    String token;
-
-    validateAuthorizationHeader(authHttpHeader); //Authorization 헤더 값을 전달하여, 올바른 형식인지 확인
-    token = extractToken(authHttpHeader); //실제 토큰값 가져오기
-
+  public Optional<Claims> parseJwtToken(String tokenValue) throws JwtException {
     return Optional.ofNullable(
             Jwts.parser()
             .setSigningKey(secretKey)
-            .parseClaimsJws(token)
+            .parseClaimsJws(tokenValue)
             .getBody());
   }
 
