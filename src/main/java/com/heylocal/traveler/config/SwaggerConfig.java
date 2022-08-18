@@ -81,7 +81,8 @@ public class SwaggerConfig {
             .components(new Components());
   }
 
-  private HttpAuthenticationScheme httpAuthenticationScheme() {
+  @Bean
+  public HttpAuthenticationScheme httpAuthenticationScheme() {
     return new HttpAuthenticationScheme("Authorization", "인가", "http", "bearer", "JWT", new ArrayList<>());
   }
 
