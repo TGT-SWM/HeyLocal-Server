@@ -2,7 +2,6 @@ package com.heylocal.traveler.repository;
 
 import com.heylocal.traveler.domain.profile.TravelerProfile;
 import com.heylocal.traveler.domain.user.Traveler;
-import com.heylocal.traveler.domain.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Repository;

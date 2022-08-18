@@ -1,6 +1,7 @@
 package com.heylocal.traveler.interceptor.notfound;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.DispatcherServlet;
@@ -12,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Objects;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class NotFoundInterceptor implements HandlerInterceptor {
@@ -30,8 +32,7 @@ public class NotFoundInterceptor implements HandlerInterceptor {
   private boolean is404NotFound(HttpServletRequest request) throws Exception {
     String uri = request.getRequestURI();
 
-    if (Objects.isNull(dispatcherServlet.getHandlerMappings() != null)) { // [if-start]
-
+    if (!Objects.isNull(dispatcherServlet.getHandlerMappings())) { // [if-start]
       //DispatcherServlet 이 매핑해줄 수 있는 핸들러마다 반복
       for (HandlerMapping mapping : dispatcherServlet.getHandlerMappings()) { // [for-start]
         HandlerExecutionChain handlerExecutionChain = mapping.getHandler(request); //요청받은 request 객체를 처리할 수 있는 핸들러 get

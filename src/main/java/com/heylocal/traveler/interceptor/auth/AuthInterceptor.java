@@ -10,10 +10,7 @@ import io.jsonwebtoken.JwtException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
-import org.springframework.web.servlet.DispatcherServlet;
-import org.springframework.web.servlet.HandlerExecutionChain;
 import org.springframework.web.servlet.HandlerInterceptor;
-import org.springframework.web.servlet.HandlerMapping;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -29,7 +26,6 @@ import java.util.Optional;
 public class AuthInterceptor implements HandlerInterceptor {
   private final JwtTokenParser jwtTokenParser;
   private final TravelerRepository travelerRepository;
-  private final DispatcherServlet dispatcherServlet;
 
   @Override
   public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
@@ -54,43 +50,12 @@ public class AuthInterceptor implements HandlerInterceptor {
     }
 
     /*
-     * Request 객체의 attribute 에 LoginUser 담기.
+     * Request 객체의 attribute 에 로그인한 사용자의 id값(pk) 담기.
      * 스프링 Argument Resolver 에서 사용될 수 있도록, HttpServletRequest 객체에 추가해야 한다.
      */
-    addLoginUserToRequest(request, claims);
+    request.setAttribute("userId", claims.get("userPk", Long.class));
 
     return true;
-  }
-
-  /**
-   * HttpServletRequest 객체에 로그인한 사용자(여행자) DTO 객체를 담는 메서드
-   * @param request setAttribute() 로 담을 요청 객체
-   * @param claims 토큰 파싱 결과 (로그인한 유저의 pk값이 들어있음)
-   */
-  private void addLoginUserToRequest(HttpServletRequest request, Claims claims) {
-    Traveler traveler;
-    Optional<Traveler> travelerOptional;
-    LoginUser loginUser;
-
-    /*
-     * claim에 저장된 사용자 id(pk값)으로 DB에서 조회한다.
-     * 사용자의 계정 id 나 닉네임이 변경될 수 있으므로, 매 요청마다 DB에서 조회해야 한다.
-     */
-    travelerOptional = travelerRepository.findById(claims.get("userPk", Long.class));
-    if (travelerOptional.isEmpty()) {
-      throw new IllegalArgumentException("존재하지 않는 사용자에 대한 pk값입니다.");
-    }
-    traveler = travelerOptional.get();
-
-    //스프링 Argument Resolver에서 사용될 수 있도록, HttpServletRequest 객체에 추가한다.
-    loginUser = LoginUser.builder()
-        .id(traveler.getId())
-        .accountId(traveler.getAccountId())
-        .nickname(traveler.getNickname())
-        .phoneNumber(traveler.getPhoneNumber())
-        .userType(traveler.getUserType())
-        .build();
-    request.setAttribute("loginUser", loginUser);
   }
 
   /**
