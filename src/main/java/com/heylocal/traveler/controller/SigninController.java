@@ -4,6 +4,7 @@ import com.heylocal.traveler.controller.api.SigninApi;
 import com.heylocal.traveler.controller.exception.BadRequestException;
 import com.heylocal.traveler.controller.exception.UnauthorizedException;
 import com.heylocal.traveler.service.SigninService;
+import io.swagger.annotations.ResponseHeader;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
