@@ -10,14 +10,16 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.RequestHandlerSelectors;
-import springfox.documentation.service.ApiInfo;
-import springfox.documentation.service.Contact;
-import springfox.documentation.service.Tag;
+import springfox.documentation.service.*;
 import springfox.documentation.spi.DocumentationType;
+import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.plugins.Docket;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2022-08-12T04:12:44.357Z[GMT]")
 @Configuration
@@ -29,6 +31,8 @@ public class SwaggerConfig {
         .additionalModels(
             typeResolver.resolve(ErrorMessageResponse.class)
         )
+        .securityContexts(Arrays.asList(securityContext()))
+        .securitySchemes(Arrays.asList(httpAuthenticationScheme()))
         .select()
         .apis(RequestHandlerSelectors.basePackage("com.heylocal.traveler.controller"))
         .build()
@@ -76,6 +80,23 @@ public class SwaggerConfig {
             .contact(new io.swagger.v3.oas.models.info.Contact()
                 .email("dnxprbs@gmail.com")))
             .components(new Components());
+  }
+
+  private SecurityContext securityContext() {
+    return SecurityContext.builder()
+        .securityReferences(defaultAuth())
+        .build();
+  }
+
+  private List<SecurityReference> defaultAuth() {
+    AuthorizationScope authorizationScope = new AuthorizationScope("global", "accessEverything");
+    AuthorizationScope[] authorizationScopes = new AuthorizationScope[1];
+    authorizationScopes[0] = authorizationScope;
+    return Arrays.asList(new SecurityReference("Authorization", authorizationScopes));
+  }
+
+  private HttpAuthenticationScheme httpAuthenticationScheme() {
+    return new HttpAuthenticationScheme("Authorization", "인가", "http", "bearer", "JWT", new ArrayList<>());
   }
 
 }
