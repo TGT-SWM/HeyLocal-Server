@@ -31,7 +31,6 @@ public class SwaggerConfig {
         .additionalModels(
             typeResolver.resolve(ErrorMessageResponse.class)
         )
-        .securityContexts(Arrays.asList(securityContext()))
         .securitySchemes(Arrays.asList(httpAuthenticationScheme()))
         .select()
         .apis(RequestHandlerSelectors.basePackage("com.heylocal.traveler.controller"))
@@ -80,19 +79,6 @@ public class SwaggerConfig {
             .contact(new io.swagger.v3.oas.models.info.Contact()
                 .email("dnxprbs@gmail.com")))
             .components(new Components());
-  }
-
-  private SecurityContext securityContext() {
-    return SecurityContext.builder()
-        .securityReferences(defaultAuth())
-        .build();
-  }
-
-  private List<SecurityReference> defaultAuth() {
-    AuthorizationScope authorizationScope = new AuthorizationScope("global", "accessEverything");
-    AuthorizationScope[] authorizationScopes = new AuthorizationScope[1];
-    authorizationScopes[0] = authorizationScope;
-    return Arrays.asList(new SecurityReference("Authorization", authorizationScopes));
   }
 
   private HttpAuthenticationScheme httpAuthenticationScheme() {
