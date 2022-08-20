@@ -35,4 +35,8 @@ public class AccessToken extends BaseTimeEntity {
       refreshToken.associateAccessToken(this);
     }
   }
+
+  public void updateTokenValue(String newTokenValue) {
+    this.tokenValue = newTokenValue;
+  }
 }

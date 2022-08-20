@@ -4,7 +4,10 @@ import com.heylocal.traveler.domain.user.Traveler;
 import com.heylocal.traveler.domain.user.UserType;
 import com.heylocal.traveler.dto.LoginUser;
 import com.heylocal.traveler.exception.service.TokenException;
+import com.heylocal.traveler.repository.TokenRepository;
 import com.heylocal.traveler.repository.TravelerRepository;
+import com.heylocal.traveler.util.jwt.JwtTokenParser;
+import com.heylocal.traveler.util.jwt.JwtTokenProvider;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -19,12 +22,18 @@ import static org.mockito.BDDMockito.willReturn;
 class AuthServiceTest {
   @Mock
   private TravelerRepository travelerRepository;
+  @Mock
+  private TokenRepository tokenRepository;
+  @Mock
+  private JwtTokenParser jwtTokenParser;
+  @Mock
+  private JwtTokenProvider jwtTokenProvider;
   private AuthService authService;
 
   @BeforeEach
   void setUp() {
     MockitoAnnotations.openMocks(this); //여러 test code 실행 시, mock 객체의 정의된 행동이 꼬일 수 있으므로 초기화한다.
-    authService = new AuthService(travelerRepository);
+    authService = new AuthService(travelerRepository, tokenRepository, jwtTokenParser, jwtTokenProvider);
   }
 
   @Test
@@ -66,4 +75,6 @@ class AuthServiceTest {
         () -> assertThrows(TokenException.class, () -> authService.findLoginTraveler(notExistId))
     );
   }
+
+  //TODO - reissueTokenPair
 }

@@ -89,7 +89,7 @@ class SigninServiceTest {
     willReturn(true).given(passwordEncoder).matches(eq(rightRawPassword), eq(existEncodedPassword));
 
     //Mock 행동 정의 - jwtTokenProvider
-    willReturn(accessTokenValue).given(jwtTokenProvider).createAccessToken(eq(existId), eq(rightAccountId), eq(existNickname), eq(existPhoneNumber), eq(UserType.TRAVELER));
+    willReturn(accessTokenValue).given(jwtTokenProvider).createAccessToken(existId);
     willReturn(refreshTokenValue).given(jwtTokenProvider).createRefreshToken();
 
     //Mock 행동 정의 - jwtTokenParser
