@@ -2,9 +2,10 @@ package com.heylocal.traveler.service;
 
 import com.heylocal.traveler.domain.user.Traveler;
 import com.heylocal.traveler.domain.user.UserType;
+import com.heylocal.traveler.exception.code.SigninCode;
+import com.heylocal.traveler.exception.service.SigninArgumentException;
 import com.heylocal.traveler.repository.TokenRepository;
 import com.heylocal.traveler.repository.TravelerRepository;
-import com.heylocal.traveler.service.exception.AuthArgumentException;
 import com.heylocal.traveler.util.jwt.JwtTokenParser;
 import com.heylocal.traveler.util.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
@@ -37,7 +38,7 @@ public class SigninService {
    * @throws IllegalArgumentException 로그인 실패 시
    */
   @Transactional
-  public SigninResponse signin(SigninRequest request) throws AuthArgumentException {
+  public SigninResponse signin(SigninRequest request) throws SigninArgumentException {
     String accountId = request.getAccountId();
     String rawPassword = request.getPassword();
     Traveler traveler;
@@ -69,12 +70,12 @@ public class SigninService {
    * @return 해당 계정 ID를 가지고 있는 Traveler 엔티티
    * @throws IllegalArgumentException 존재하지 않는 계정 ID인 경우
    */
-  private Traveler checkAccountId(String accountId) throws AuthArgumentException {
+  private Traveler checkAccountId(String accountId) throws SigninArgumentException {
     Optional<Traveler> travelerByAccountId;
 
     travelerByAccountId = travelerRepository.findByAccountId(accountId);
     if (travelerByAccountId.isEmpty()) {
-      throw new AuthArgumentException("존재하지 않는 계정 정보입니다.");
+      throw new SigninArgumentException(SigninCode.NOT_EXIST_SIGNIN_ACCOUNT_ID);
     }
 
     return travelerByAccountId.get();
@@ -87,14 +88,14 @@ public class SigninService {
    * @return 비밀번호가 일치하는 경우 해당 Traveler 엔티티 반환
    * @exception IllegalArgumentException 비밀번호가 일치하지 않는 경우
    */
-  private Traveler checkPassword(String rawPassword, Traveler travelerByAccountId) throws AuthArgumentException {
+  private Traveler checkPassword(String rawPassword, Traveler travelerByAccountId) throws SigninArgumentException {
     String encodedPasswordOfFoundTraveler;
     boolean isMatchedPassword;
 
     encodedPasswordOfFoundTraveler = travelerByAccountId.getPassword();
     isMatchedPassword = checkPasswordMatch(rawPassword, encodedPasswordOfFoundTraveler);
     if (!isMatchedPassword) {
-      throw new AuthArgumentException("존재하지 않는 계정 정보입니다.");
+      throw new SigninArgumentException(SigninCode.WRONG_SIGNIN_PASSWORD);
     }
 
     return travelerByAccountId;

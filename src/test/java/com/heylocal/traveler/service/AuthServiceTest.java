@@ -3,8 +3,8 @@ package com.heylocal.traveler.service;
 import com.heylocal.traveler.domain.user.Traveler;
 import com.heylocal.traveler.domain.user.UserType;
 import com.heylocal.traveler.dto.LoginUser;
+import com.heylocal.traveler.exception.service.TokenException;
 import com.heylocal.traveler.repository.TravelerRepository;
-import com.heylocal.traveler.service.exception.AuthArgumentException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -29,7 +29,7 @@ class AuthServiceTest {
 
   @Test
   @DisplayName("id값으로 Traveler 조회")
-  void findLoginTravelerTest() throws AuthArgumentException {
+  void findLoginTravelerTest() throws TokenException {
     //GIVEN
     long userId = 1L;
     long notExistId = 3L;
@@ -63,7 +63,7 @@ class AuthServiceTest {
         () -> assertEquals(traveler.getPhoneNumber(), loginTraveler.getPhoneNumber()),
         () -> assertEquals(UserType.TRAVELER, loginTraveler.getUserType()),
         //실패 케이스 - 1 - 존재하지 않는 pk일 때
-        () -> assertThrows(AuthArgumentException.class, () -> authService.findLoginTraveler(notExistId))
+        () -> assertThrows(TokenException.class, () -> authService.findLoginTraveler(notExistId))
     );
   }
 }

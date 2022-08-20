@@ -3,10 +3,11 @@ package com.heylocal.traveler.service;
 import com.heylocal.traveler.domain.user.Traveler;
 import com.heylocal.traveler.domain.user.User;
 import com.heylocal.traveler.dto.SignupDto.UserInfoCheckResponse;
+import com.heylocal.traveler.exception.code.SignupCode;
+import com.heylocal.traveler.exception.service.BadArgumentException;
 import com.heylocal.traveler.repository.TravelerProfileRepository;
 import com.heylocal.traveler.repository.TravelerRepository;
 import com.heylocal.traveler.repository.UserRepository;
-import com.heylocal.traveler.service.exception.BadArgumentException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -83,7 +84,7 @@ public class SignupService {
     UserInfoCheckResponse accountIdCheckRes = checkAccountIdExist(accountId);
     UserInfoCheckResponse phoneNumCheckRes = checkPhoneNumberExist(phoneNumber);
     if (accountIdCheckRes.isAlreadyExist() || phoneNumCheckRes.isAlreadyExist()) {
-      throw new BadArgumentException("계정 ID 나, 휴대폰 번호가 이미 존재합니다.");
+      throw new BadArgumentException(SignupCode.ALREADY_EXIST_USER_INFO);
     }
 
     //사용자 저장

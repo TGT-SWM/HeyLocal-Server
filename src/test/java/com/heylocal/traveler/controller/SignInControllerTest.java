@@ -1,10 +1,11 @@
 package com.heylocal.traveler.controller;
 
-import com.heylocal.traveler.controller.exception.BadRequestException;
-import com.heylocal.traveler.controller.exception.UnauthorizedException;
 import com.heylocal.traveler.domain.user.UserType;
+import com.heylocal.traveler.exception.code.SigninCode;
+import com.heylocal.traveler.exception.controller.BadRequestException;
+import com.heylocal.traveler.exception.controller.UnauthorizedException;
+import com.heylocal.traveler.exception.service.SigninArgumentException;
 import com.heylocal.traveler.service.SigninService;
-import com.heylocal.traveler.service.exception.AuthArgumentException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -33,7 +34,7 @@ class SignInControllerTest {
 
   @Test
   @DisplayName("로그인 컨트롤러")
-  void signinPostTest() throws AuthArgumentException {
+  void signinPostTest() throws SigninArgumentException {
     //GIVEN
     String rightAccountId = "testAccountId";
     String rightRawPassword = "testPassword123!";
@@ -72,7 +73,7 @@ class SignInControllerTest {
         .refreshToken(rightRefreshToken)
         .build();
     willReturn(rightResponse).given(signinService).signin(rightRequest);
-    willThrow(new AuthArgumentException("존재하지 않는 계정 정보입니다.")).given(signinService).signin(wrongPwRequest);
+    willThrow(new SigninArgumentException(SigninCode.WRONG_SIGNIN_PASSWORD)).given(signinService).signin(wrongPwRequest);
 
     //WHEN
 

@@ -10,16 +10,17 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.RequestHandlerSelectors;
-import springfox.documentation.service.*;
+import springfox.documentation.service.ApiInfo;
+import springfox.documentation.service.Contact;
+import springfox.documentation.service.HttpAuthenticationScheme;
+import springfox.documentation.service.Tag;
 import springfox.documentation.spi.DocumentationType;
-import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.plugins.Docket;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2022-08-12T04:12:44.357Z[GMT]")
 @Configuration
@@ -41,15 +42,16 @@ public class SwaggerConfig {
         .tags(
             new Tag("Signup", "여행자 회원가입", 1),
             new Tag("Signin", "여행자 로그인", 2),
-            new Tag("User", "사용자(여행자)", 3),
-            new Tag("OrderSheets", "여행 의뢰서", 4),
-            new Tag("Orders", "매칭", 5),
-            new Tag("Travels", "여행", 6),
-            new Tag("Managers", "매니저", 7),
-            new Tag("Posts", "포스트", 8),
-            new Tag("Search", "검색", 9),
-            new Tag("ChatRooms", "채팅방", 10),
-            new Tag("Policies", "정책", 11)
+            new Tag("Auth", "인가(Authorization)", 3),
+            new Tag("User", "사용자(여행자)", 4),
+            new Tag("OrderSheets", "여행 의뢰서", 5),
+            new Tag("Orders", "매칭", 6),
+            new Tag("Travels", "여행", 7),
+            new Tag("Managers", "매니저", 8),
+            new Tag("Posts", "포스트", 9),
+            new Tag("Search", "검색", 10),
+            new Tag("ChatRooms", "채팅방", 11),
+            new Tag("Policies", "정책", 12)
         );
   }
 

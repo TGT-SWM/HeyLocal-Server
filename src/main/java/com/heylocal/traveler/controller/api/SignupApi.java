@@ -5,9 +5,8 @@
  */
 package com.heylocal.traveler.controller.api;
 
-import com.heylocal.traveler.controller.exception.BadRequestException;
 import com.heylocal.traveler.dto.ErrorMessageResponse;
-import com.heylocal.traveler.dto.SignupDto;
+import com.heylocal.traveler.exception.controller.BadRequestException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -16,10 +15,11 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import static com.heylocal.traveler.dto.SignupDto.*;
+import static com.heylocal.traveler.dto.SignupDto.SignupRequest;
 import static com.heylocal.traveler.dto.SignupDto.UserInfoCheckResponse;
 
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2022-08-12T04:12:44.357Z[GMT]")
@@ -51,7 +51,8 @@ public interface SignupApi {
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(consumes = { "application/json" })
     void signupPost(
-        @Parameter(in = ParameterIn.DEFAULT, description = "", required = true) @RequestBody SignupRequest request) throws BadRequestException;
+        @Parameter(in = ParameterIn.DEFAULT, description = "", required = true) @Validated @RequestBody SignupRequest request,
+        BindingResult bindingResult) throws BadRequestException;
 
 }
 
