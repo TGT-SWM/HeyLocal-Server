@@ -1,15 +1,14 @@
 package com.heylocal.traveler.controller;
 
 import com.heylocal.traveler.controller.api.ManagersApi;
-import com.heylocal.traveler.controller.exception.NotFoundException;
+import com.heylocal.traveler.exception.code.NotFoundCode;
+import com.heylocal.traveler.exception.controller.NotFoundException;
 import com.heylocal.traveler.dto.ManagerDto.ManagerProfileResponse;
 import com.heylocal.traveler.dto.Sample;
 import com.heylocal.traveler.service.ManagerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -45,7 +44,7 @@ public class ManagerController implements ManagersApi {
 	public ManagerProfileResponse managersManagerIdProfileGet(long managerId, boolean simple) throws NotFoundException {
 		ManagerProfileResponse response = managerService.findProfileById(managerId);
 		if (response == null) {
-			throw new NotFoundException("정보가 존재하지 않습니다.");
+			throw new NotFoundException(NotFoundCode.NO_INFO);
 		}
 
 		return response;

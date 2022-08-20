@@ -5,7 +5,7 @@
  */
 package com.heylocal.traveler.controller.api;
 
-import com.heylocal.traveler.controller.exception.NotFoundException;
+import com.heylocal.traveler.exception.controller.NotFoundException;
 import com.heylocal.traveler.dto.ErrorMessageResponse;
 import com.heylocal.traveler.dto.ManagerDto.ManagerProfileResponse;
 import com.heylocal.traveler.dto.Sample;

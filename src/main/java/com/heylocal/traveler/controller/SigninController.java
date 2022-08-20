@@ -1,6 +1,7 @@
 package com.heylocal.traveler.controller;
 
 import com.heylocal.traveler.controller.api.SigninApi;
+import com.heylocal.traveler.exception.code.BadRequestCode;
 import com.heylocal.traveler.exception.controller.BadRequestException;
 import com.heylocal.traveler.exception.controller.UnauthorizedException;
 import com.heylocal.traveler.exception.service.SigninArgumentException;

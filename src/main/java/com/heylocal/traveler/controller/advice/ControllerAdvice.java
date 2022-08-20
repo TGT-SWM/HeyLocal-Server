@@ -1,6 +1,6 @@
 package com.heylocal.traveler.controller.advice;
 
-import com.heylocal.traveler.controller.exception.NotFoundException;
+import com.heylocal.traveler.exception.controller.NotFoundException;
 import com.heylocal.traveler.dto.ErrorMessageResponse;
 import com.heylocal.traveler.exception.controller.BadRequestException;
 import com.heylocal.traveler.exception.controller.UnauthorizedException;
@@ -33,7 +33,7 @@ public class ControllerAdvice {
   @ExceptionHandler(NotFoundException.class)
   @ResponseStatus(value = HttpStatus.NOT_FOUND)
   public ErrorMessageResponse notFoundException(NotFoundException ex) {
-    ErrorMessageResponse message = new ErrorMessageResponse(ex.getMessage());
+    ErrorMessageResponse message = new ErrorMessageResponse(ex.getCode());
     return message;
   }
 }
