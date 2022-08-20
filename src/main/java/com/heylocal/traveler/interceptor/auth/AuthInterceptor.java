@@ -1,6 +1,8 @@
 package com.heylocal.traveler.interceptor.auth;
 
-import com.heylocal.traveler.repository.TravelerRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.heylocal.traveler.dto.ErrorMessageResponse;
+import com.heylocal.traveler.exception.code.UnauthorizedCode;
 import com.heylocal.traveler.util.jwt.JwtTokenParser;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -21,8 +23,8 @@ import java.util.Objects;
 @Component
 @RequiredArgsConstructor
 public class AuthInterceptor implements HandlerInterceptor {
+  private final ObjectMapper objectMapper;
   private final JwtTokenParser jwtTokenParser;
-  private final TravelerRepository travelerRepository;
 
   @Override
   public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
@@ -41,9 +43,9 @@ public class AuthInterceptor implements HandlerInterceptor {
     try {
       claims = jwtTokenParser.parseJwtToken(accessTokenValue).get();
     } catch (ExpiredJwtException ex) {
-      responseError(response, AuthErrorStatus.EXPIRED_TOKEN);
+      responseError(response, UnauthorizedCode.EXPIRED_TOKEN);
     } catch (JwtException ex) {
-      responseError(response, AuthErrorStatus.BAD_TOKEN);
+      responseError(response, UnauthorizedCode.BAD_TOKEN);
     }
 
     /*
@@ -64,13 +66,14 @@ public class AuthInterceptor implements HandlerInterceptor {
    */
   private String getAuthHeaderValue(HttpServletRequest request, HttpServletResponse response) throws IOException {
     String authHeaderValue;
+
     authHeaderValue = request.getHeader("Authorization");
     if (Objects.isNull(authHeaderValue)) { //Authorization 헤더가 빈 경우
-      responseError(response, AuthErrorStatus.NO_HTTP_HEADER_VALUE);
+      responseError(response, UnauthorizedCode.NO_HTTP_HEADER_VALUE);
       return null;
     }
     if (!authHeaderValue.startsWith("Bearer ")) { //Bearer 로 시작하지 않는 경우
-      responseError(response, AuthErrorStatus.NOT_STARTS_WITH_BEARER);
+      responseError(response, UnauthorizedCode.NOT_STARTS_WITH_BEARER);
       return null;
     }
     return authHeaderValue;
@@ -81,20 +84,22 @@ public class AuthInterceptor implements HandlerInterceptor {
    * 인가 오류 응답 메시지를 만드는 메서드
    * </pre>
    * @param response 오류 응답 Response 객체
-   * @param status 오류 종류
+   * @param code 오류 종류
    * @throws IOException
    */
-  private void responseError(HttpServletResponse response, AuthErrorStatus status) throws IOException {
+  private void responseError(HttpServletResponse response, UnauthorizedCode code) throws IOException {
+    ErrorMessageResponse errorResponse;
+    String responseBody;
+
     response.setStatus(HttpStatus.UNAUTHORIZED.value());
     response.setContentType("application/json");
     response.setCharacterEncoding("UTF-8");
 
+    errorResponse = new ErrorMessageResponse(code);
+    responseBody = objectMapper.writeValueAsString(errorResponse);
+
+
     //JSON 형식으로 응답
-    response.getWriter().write(
-        "{" +
-            "\"status\": \"" + status + "\",\n" +
-            "\"msg\": \"" + status.getValue() + "\"" +
-            "}"
-    );
+    response.getWriter().write(responseBody);
   }
 }
