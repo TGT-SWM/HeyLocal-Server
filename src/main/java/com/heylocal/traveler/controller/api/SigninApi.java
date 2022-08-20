@@ -30,8 +30,8 @@ public interface SigninApi {
 
     @Operation(summary = "로그인", description = "", tags = {"Signin"})
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "400", description = "Request Value가 올바르지 않을 때", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessageResponse.class))),
-        @ApiResponse(responseCode = "401", description = "로그인 정보가 틀렸을 때", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessageResponse.class)))
+        @ApiResponse(responseCode = "400", description = "- `EMPTY_FIELD`: input 필드가 비어 있을 때", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessageResponse.class))),
+        @ApiResponse(responseCode = "401", description = "- `NOT_EXIST_SIGNIN_ACCOUNT_ID`: 아이디 오류\n\n- `WRONG_SIGNIN_PASSWORD`: 비밀번호 오류", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessageResponse.class)))
     })
     @PostMapping(consumes = { "application/json" })
     SigninResponse signinPost(
