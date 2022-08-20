@@ -23,7 +23,7 @@ public class AuthService {
    * @return 로그인된 유저의 정보
    */
   @Transactional
-  public LoginUser findLoginUser(long travelerId) throws AuthArgumentException {
+  public LoginUser findLoginTraveler(long travelerId) throws AuthArgumentException {
     Traveler traveler = travelerRepository.findById(travelerId).orElseThrow(
         () -> new AuthArgumentException("Token 클레임의 사용자 pk값이 올바르지 않습니다.")
     );
