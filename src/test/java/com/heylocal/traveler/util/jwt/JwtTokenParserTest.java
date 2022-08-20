@@ -58,13 +58,9 @@ class JwtTokenParserTest {
         .claim(claimName, claimValue)
         .signWith(SignatureAlgorithm.HS512, secretKey)
         .compact();
-    String validAuthHttpHeader = "Bearer " + validToken;
-    String expiredAuthHttpHeader = "Bearer " + expiredToken;
-    String wrongFormatAuthHttpHeader = validToken;
-    String wrongValueAuthHttpHeader = "Bearer " + "this is not token value";
 
     //WHEN
-    Optional<Claims> claimsOptional = jwtTokenParser.parseJwtToken(validAuthHttpHeader);
+    Optional<Claims> claimsOptional = jwtTokenParser.parseJwtToken(validToken);
 
     //THEN
     assertAll(
@@ -73,11 +69,7 @@ class JwtTokenParserTest {
       //성공 케이스 - 2
         () -> assertEquals(claimValue, claimsOptional.get().get(claimName)),
       //실패 케이스 - 1 - 유효기간이 만료된 경우
-        () -> assertThrows(ExpiredJwtException.class, () -> jwtTokenParser.parseJwtToken(expiredAuthHttpHeader)),
-      //실패 케이스 - 2 - 잘못된 Authorization HTTP 헤더 형식 (Bearer 가 없는) 으로 값이 전달된 경우
-        () -> assertThrows(JwtException.class, () -> jwtTokenParser.parseJwtToken(wrongFormatAuthHttpHeader)),
-      //실패 케이스 - 3 - jwt 토큰이 아닌 값이 전달된 경우
-        () -> assertThrows(MalformedJwtException.class, () -> jwtTokenParser.parseJwtToken(wrongValueAuthHttpHeader))
+        () -> assertThrows(ExpiredJwtException.class, () -> jwtTokenParser.parseJwtToken(expiredToken))
     );
   }
 
