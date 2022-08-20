@@ -2,7 +2,6 @@ package com.heylocal.traveler.domain.post;
 
 import com.heylocal.traveler.domain.BaseTimeEntity;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;

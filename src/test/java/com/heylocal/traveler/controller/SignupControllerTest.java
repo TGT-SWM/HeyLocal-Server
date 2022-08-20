@@ -1,7 +1,7 @@
 package com.heylocal.traveler.controller;
 
-import com.heylocal.traveler.controller.exception.BadRequestException;
 import com.heylocal.traveler.dto.SignupDto;
+import com.heylocal.traveler.exception.controller.BadRequestException;
 import com.heylocal.traveler.service.SignupService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.validation.BindingResult;
 
 import static com.heylocal.traveler.dto.SignupDto.UserInfoCheckResponse;
 import static org.junit.jupiter.api.Assertions.*;
@@ -30,6 +31,8 @@ class SignupControllerTest {
 
   @Mock
   private SignupService signupService;
+  @Mock
+  private BindingResult bindingResult;
   private SignupController signupController;
 
   @BeforeEach
@@ -196,15 +199,15 @@ class SignupControllerTest {
     //THEN
     assertAll(
         //성공 케이스 - 1
-        () -> assertDoesNotThrow(() -> signupController.signupPost(rightRequest)),
+        () -> assertDoesNotThrow(() -> signupController.signupPost(rightRequest, bindingResult)),
         //실패 케이스 - 1 - 잘못된 포맷의 계정 ID 인 경우
-        () -> assertThrows(BadRequestException.class, () -> signupController.signupPost(wrongAccountIdRequest)),
+        () -> assertThrows(BadRequestException.class, () -> signupController.signupPost(wrongAccountIdRequest, bindingResult)),
         //실패 케이스 - 2 - 잘못된 포맷의 비밀번호 인 경우
-        () -> assertThrows(BadRequestException.class, () -> signupController.signupPost(wrongPasswordRequest)),
+        () -> assertThrows(BadRequestException.class, () -> signupController.signupPost(wrongPasswordRequest, bindingResult)),
         //실패 케이스 - 3 - 잘못된 포맷의 닉네임 인 경우
-        () -> assertThrows(BadRequestException.class, () -> signupController.signupPost(wrongNicknameRequest)),
+        () -> assertThrows(BadRequestException.class, () -> signupController.signupPost(wrongNicknameRequest, bindingResult)),
         //실패 케이스 - 4 - 잘못된 포맷의 휴대폰 번호 인 경우
-        () -> assertThrows(BadRequestException.class, () -> signupController.signupPost(wrongPhoneNumberRequest))
+        () -> assertThrows(BadRequestException.class, () -> signupController.signupPost(wrongPhoneNumberRequest, bindingResult))
     );
   }
 }

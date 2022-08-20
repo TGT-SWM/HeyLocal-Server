@@ -1,7 +1,5 @@
 package com.heylocal.traveler.interceptor.auth;
 
-import com.heylocal.traveler.domain.user.Traveler;
-import com.heylocal.traveler.dto.LoginUser;
 import com.heylocal.traveler.repository.TravelerRepository;
 import com.heylocal.traveler.util.jwt.JwtTokenParser;
 import io.jsonwebtoken.Claims;
@@ -16,7 +14,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Objects;
-import java.util.Optional;
 
 /**
  * 인가 관련 인터셉터

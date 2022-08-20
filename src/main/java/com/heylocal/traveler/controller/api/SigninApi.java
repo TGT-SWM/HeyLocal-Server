@@ -5,9 +5,9 @@
  */
 package com.heylocal.traveler.controller.api;
 
-import com.heylocal.traveler.controller.exception.BadRequestException;
-import com.heylocal.traveler.controller.exception.UnauthorizedException;
 import com.heylocal.traveler.dto.ErrorMessageResponse;
+import com.heylocal.traveler.exception.controller.BadRequestException;
+import com.heylocal.traveler.exception.controller.UnauthorizedException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;

@@ -1,7 +1,9 @@
 package com.heylocal.traveler.util.jwt;
 
 import com.heylocal.traveler.util.date.LocalDateTimeTransformer;
-import io.jsonwebtoken.*;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.Jwts;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -55,28 +57,5 @@ public class JwtTokenParser {
         .getBody()
         .getExpiration();
     return localDateTimeTransformer.dateToLocalDateTime(expiration);
-  }
-
-
-  /**
-   * authorization 헤더가 올바른 형식을 가지고 있는지 확인하는 메서드
-   * @param authorizationHeader 요청 메시지의 헤더 중 Token이 담겨있는 Authorization 헤더의 값
-   */
-  private void validateAuthorizationHeader(String authorizationHeader) {
-    if (authorizationHeader == null) {
-      throw new JwtException("Authorization HTTP 헤더에 값이 없습니다.");
-    }
-    if (!authorizationHeader.startsWith("Bearer ")) {
-      throw new JwtException("Authorization HTTP 헤더의 값이 Bearer 로 시작하지 않습니다.");
-    }
-  }
-
-  /**
-   * 검증된 토큰의 실제 토큰부분을 추출하는 메서드
-   * @param authorizationHeader 검증된 JwtToken
-   * @return "Bearer"를 제외한 실제 토큰부분 반환함
-   */
-  private String extractToken(String authorizationHeader) {
-    return authorizationHeader.substring("Bearer ".length());
   }
 }

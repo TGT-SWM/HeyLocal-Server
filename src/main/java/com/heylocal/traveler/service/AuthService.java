@@ -3,8 +3,9 @@ package com.heylocal.traveler.service;
 import com.heylocal.traveler.domain.user.Traveler;
 import com.heylocal.traveler.domain.user.UserType;
 import com.heylocal.traveler.dto.LoginUser;
+import com.heylocal.traveler.exception.code.TokenCode;
+import com.heylocal.traveler.exception.service.TokenException;
 import com.heylocal.traveler.repository.TravelerRepository;
-import com.heylocal.traveler.service.exception.AuthArgumentException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,9 +24,9 @@ public class AuthService {
    * @return 로그인된 유저의 정보
    */
   @Transactional
-  public LoginUser findLoginTraveler(long travelerId) throws AuthArgumentException {
+  public LoginUser findLoginTraveler(long travelerId) throws TokenException {
     Traveler traveler = travelerRepository.findById(travelerId).orElseThrow(
-        () -> new AuthArgumentException("Token 클레임의 사용자 pk값이 올바르지 않습니다.")
+        () -> new TokenException(TokenCode.NOT_EXIST_TOKEN_USER_ID)
     );
 
     return LoginUser.builder()
