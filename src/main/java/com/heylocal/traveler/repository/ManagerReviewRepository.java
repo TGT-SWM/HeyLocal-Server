@@ -14,7 +14,7 @@ public class ManagerReviewRepository {
 	private final EntityManager em;
 
 	public List<ManagerReview> findAll(long managerId, PageRequest pageRequest) {
-		String jpql = "select r from ManagerReview r where r.writer.id = :id order by r.createdDate desc";
+		String jpql = "select r from ManagerReview r where r.travel.manager.id = :id order by r.createdDate desc";
 
 		int page = pageRequest.getPage();
 		int pageSize = pageRequest.getPageSize();

@@ -76,6 +76,12 @@ public class ManagerDto {
 	@AllArgsConstructor
 	@Builder
 	public static class ManagerReviewResponse {
-		List<ManagerReview> reviews;
+		String writerNickname;
+		String writerImageUrl;
+		StarScore kindness;
+		StarScore responsiveness;
+		StarScore noteDetail;
+		StarScore notePrecision;
+		String otherOpinion;
 	}
 }

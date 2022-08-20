@@ -10,9 +10,10 @@ import com.heylocal.traveler.service.ManagerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -57,7 +58,7 @@ public class ManagerController implements ManagersApi {
 
 	// 매니저 리뷰 리스트 조회
 	@GetMapping(value = "/{managerId}/reviews")
-	public ManagerReviewResponse managersManagerReviews(@PathVariable long managerId, PageRequest pageRequest) {
+	public List<ManagerReviewResponse> managersManagerReviews(@PathVariable long managerId, PageRequest pageRequest) {
 		return managerService.findReviews(managerId, pageRequest);
 	}
 }

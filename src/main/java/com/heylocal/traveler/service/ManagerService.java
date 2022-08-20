@@ -1,7 +1,9 @@
 package com.heylocal.traveler.service;
 
 import com.heylocal.traveler.domain.post.Post;
+import com.heylocal.traveler.domain.profile.TravelerProfile;
 import com.heylocal.traveler.domain.user.Manager;
+import com.heylocal.traveler.domain.user.Traveler;
 import com.heylocal.traveler.domain.userreview.ManagerReview;
 import com.heylocal.traveler.dto.PageDto.PageRequest;
 import com.heylocal.traveler.repository.ManagerRepository;
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.heylocal.traveler.dto.ManagerDto.*;
 
@@ -67,12 +70,27 @@ public class ManagerService {
 	 * </pre>
 	 * @param managerId 매니저 ID
 	 * @param pageRequest PageRequest 객체
-	 * @return 매니저 리뷰 리스트가 담긴 ManagerReviewResponse 객체
+	 * @return 매니저 리뷰들이 담긴 List<ManagerReviewResponse> 객체
 	 */
 	@Transactional
-	public ManagerReviewResponse findReviews(long managerId, PageRequest pageRequest) {
+	public List<ManagerReviewResponse> findReviews(long managerId, PageRequest pageRequest) {
+		// 매니저 리뷰 조회
 		List<ManagerReview> reviews = managerReviewRepository.findAll(managerId, pageRequest);
-		System.out.println("reviews = " + reviews);
-		return new ManagerReviewResponse(reviews);
+
+		// DTO 변환 로직
+		return reviews.stream().map(r -> {
+			Traveler writer = r.getTravel().getOrderSheet().getWriter();
+			TravelerProfile profile = (TravelerProfile) writer.getUserProfile();
+
+			return ManagerReviewResponse.builder()
+					.writerNickname(writer.getNickname())
+					.writerImageUrl(profile.getImageUrl())
+					.kindness(r.getKindness())
+					.responsiveness(r.getResponsiveness())
+					.noteDetail(r.getNoteDetail())
+					.notePrecision(r.getNotePrecision())
+					.otherOpinion(r.getOtherOpinion())
+					.build();
+		}).collect(Collectors.toList());
 	}
 }
