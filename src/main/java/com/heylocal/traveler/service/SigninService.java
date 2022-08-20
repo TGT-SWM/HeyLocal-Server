@@ -127,7 +127,7 @@ public class SigninService {
     String refreshTokenValue;
 
     //토큰 발급
-    accessTokenValue = jwtTokenProvider.createAccessToken(id, accountId, nickname, phoneNumber, UserType.TRAVELER);
+    accessTokenValue = jwtTokenProvider.createAccessToken(id);
     refreshTokenValue = jwtTokenProvider.createRefreshToken();
 
     //토큰 DB 저장
