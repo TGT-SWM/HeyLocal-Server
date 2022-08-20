@@ -4,7 +4,7 @@ import com.heylocal.traveler.exception.code.ErrorCode;
 
 /**
  * <pre>
- * 컨트롤러에서 뱉는 모든 예외는 이 클래스를 상속받아야 함
+ * 모든 예외는 이 클래스를 상속받아야 함
  * <pre/>
  */
 public class AllException extends Exception {
