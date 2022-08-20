@@ -32,8 +32,7 @@ public class LoginUserResolver implements HandlerMethodArgumentResolver {
     HttpServletRequest httpServletRequest = (HttpServletRequest) webRequest.getNativeRequest();
 
     userId = (long) httpServletRequest.getAttribute("userId");
-    log.info("resolver: {}", userId);
-    loginUser = authService.findLoginUser(userId);
+    loginUser = authService.findLoginTraveler(userId);
 
     return loginUser;
   }
