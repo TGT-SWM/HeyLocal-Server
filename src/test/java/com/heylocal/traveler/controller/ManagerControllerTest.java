@@ -89,18 +89,17 @@ class ManagerControllerTest {
 		PageRequest pageRequest = new PageRequest(page, pageSize);
 
 		// 가짜 ManagerReviewResponse 반환
-		List<ManagerReview> reviews = new ArrayList<>();
+		List<ManagerReviewResponse> response = new ArrayList<>();
 		for (int i = 0; i < pageSize; i++) {
-			reviews.add(new ManagerReview());
+			response.add(new ManagerReviewResponse());
 		}
-		ManagerReviewResponse response = new ManagerReviewResponse(reviews);
 		given(managerService.findReviews(managerId, pageRequest)).willReturn(response);
 
 		// WHEN
-		ManagerReviewResponse actual = managerController.managersManagerReviews(managerId, pageRequest);
+		List<ManagerReviewResponse> actual = managerController.managersManagerReviews(managerId, pageRequest);
 
 		// THEN
-		Assertions.assertThat(actual.getReviews().size()).isEqualTo(response.getReviews().size());
+		Assertions.assertThat(actual.size()).isEqualTo(response.size());
 	}
 
 	// 매니저 객체 생성해 반환
