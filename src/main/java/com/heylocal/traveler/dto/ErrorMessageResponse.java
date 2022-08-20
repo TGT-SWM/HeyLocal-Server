@@ -10,11 +10,6 @@ public class ErrorMessageResponse {
   private String description;
   private LocalDateTime dateTime;
 
-  public ErrorMessageResponse() {
-    this.description = "";
-    this.dateTime = LocalDateTime.now();
-  }
-
   public ErrorMessageResponse(ErrorCode code) {
     this.code = code;
     this.description = code.getDescription();

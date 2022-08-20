@@ -28,7 +28,7 @@ public interface SignupApi {
 
     @Operation(summary = "아이디 중복 확인", description = "", tags = {"Signup"})
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "400", description = "잘못된 아이디 형식", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessageResponse.class)))
+        @ApiResponse(responseCode = "400", description = "- `SHORT_OR_LONG_ACCOUNT_ID_LENGTH`: 계정 아이디가 너무 짧거나 길 경우\n\n- `WRONG_ACCOUNT_ID_FORMAT`: 계정 아이디 문자 조합이 틀린 경우", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessageResponse.class)))
     })
     @GetMapping("/accountid")
     UserInfoCheckResponse signupIdGet(
@@ -37,7 +37,7 @@ public interface SignupApi {
 
     @Operation(summary = "전화번호 중복 확인 및 매니저로 등록되어 있는지 확인", description = "서비스 관리자도 중복 불가능", tags = {"Signup"})
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "400", description = "잘못된 전화번호 형식이거나 중복인 경우", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessageResponse.class)))
+        @ApiResponse(responseCode = "400", description = "- `WRONG_PHONE_NUMBER_FORMAT`: 휴대폰 번호 형식이 틀린 경우", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessageResponse.class)))
     })
     @GetMapping("/phone-num")
     UserInfoCheckResponse signupPhoneNumGet(
@@ -46,7 +46,7 @@ public interface SignupApi {
 
     @Operation(summary = "회원가입", description = "", tags = {"Signup"})
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "400", description = "입력 값이 잘못된 형식이거나 중복인 경우", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessageResponse.class)))
+        @ApiResponse(responseCode = "400", description = "- `WRONG_PASSWORD_FORMAT`: 비밀번호 형식이 틀린 경우\n\n- `WRONG_NICKNAME_FORMAT`: 닉네임 형식이 틀린 경우\n\n- `ALREADY_EXIST_USER_INFO`: 이미 존재하는 사용자 정보인 경우", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessageResponse.class)))
     })
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(consumes = { "application/json" })
