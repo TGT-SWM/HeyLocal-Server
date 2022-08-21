@@ -1,12 +1,14 @@
 package com.heylocal.traveler.controller;
 
 import com.heylocal.traveler.controller.api.ManagersApi;
-import com.heylocal.traveler.controller.exception.NotFoundException;
+import com.heylocal.traveler.exception.code.NotFoundCode;
+import com.heylocal.traveler.exception.controller.NotFoundException;
 import com.heylocal.traveler.dto.ManagerDto.ManagerProfileResponse;
 import com.heylocal.traveler.dto.ManagerDto.ManagerReviewResponse;
 import com.heylocal.traveler.dto.PageDto.PageRequest;
 import com.heylocal.traveler.dto.Sample;
 import com.heylocal.traveler.service.ManagerService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,6 +18,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
+@Tag(name = "Managers")
 @RequiredArgsConstructor
 public class ManagerController implements ManagersApi {
 	private final ManagerService managerService;

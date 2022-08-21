@@ -1,17 +1,21 @@
 package com.heylocal.traveler.controller;
 
 import com.heylocal.traveler.controller.api.SignupApi;
-import com.heylocal.traveler.controller.exception.BadRequestException;
+import com.heylocal.traveler.exception.code.BadRequestCode;
+import com.heylocal.traveler.exception.code.SignupCode;
+import com.heylocal.traveler.exception.controller.BadRequestException;
+import com.heylocal.traveler.exception.service.BadArgumentException;
 import com.heylocal.traveler.service.SignupService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.regex.Pattern;
 
-import static com.heylocal.traveler.dto.SignupDto.*;
+import static com.heylocal.traveler.dto.SignupDto.SignupRequest;
 import static com.heylocal.traveler.dto.SignupDto.UserInfoCheckResponse;
 
 @Slf4j
@@ -52,13 +56,20 @@ public class SignupController implements SignupApi {
   }
 
   @Override
-    public void signupPost(SignupRequest request) throws BadRequestException {
+  public void signupPost(SignupRequest request, BindingResult bindingResult) throws BadRequestException {
+    if (bindingResult.hasFieldErrors()) {
+      throw new BadRequestException(BadRequestCode.EMPTY_FIELD);
+    }
     validateAccountIdFormat(request.getAccountId()); //계정 포맷 검증
     validatePasswordFormat(request.getPassword()); //비밀번호 포맷 검증
     validateNicknameFormat(request.getNickname()); //닉네임 포맷 검증
     validatePhoneNumberFormat(request.getPhoneNumber()); //전화번호 포맷 검증
 
-    signupService.signupTraveler(request);
+    try {
+      signupService.signupTraveler(request);
+    } catch (BadArgumentException e) {
+      throw new BadRequestException(e.getCode());
+    }
   }
 
   /**
@@ -73,10 +84,10 @@ public class SignupController implements SignupApi {
    */
   private boolean validateAccountIdFormat(String accountId) throws BadRequestException {
     if (accountId.length() < 5 || accountId.length() > 20) {
-      throw new BadRequestException("계정 아이디는 5자 이상, 20자 이하이어야 합니다.");
+      throw new BadRequestException(SignupCode.SHORT_OR_LONG_ACCOUNT_ID_LENGTH);
     }
     if (!Pattern.matches(accountIdPattern, accountId)) {
-      throw new BadRequestException("계정 아이디는 영문, 숫자 조합이어야 합니다.");
+      throw new BadRequestException(SignupCode.WRONG_ACCOUNT_ID_FORMAT);
     }
 
     return true;
@@ -93,7 +104,7 @@ public class SignupController implements SignupApi {
    */
   private boolean validatePhoneNumberFormat(String phoneNumber) throws BadRequestException {
     if (!Pattern.matches(phoneNumberPattern, phoneNumber)) {
-      throw new BadRequestException("휴대폰 번호 형식이 틀립니다. 하이픈 문자를 포함합니다.");
+      throw new BadRequestException(SignupCode.WRONG_PHONE_NUMBER_FORMAT);
     }
 
     return true;
@@ -110,7 +121,7 @@ public class SignupController implements SignupApi {
    */
   private boolean validatePasswordFormat(String rawPassword) throws BadRequestException {
     if (!Pattern.matches(passwordPattern, rawPassword)) {
-      throw new BadRequestException("비밀번호 형식이 틀립니다.");
+      throw new BadRequestException(SignupCode.WRONG_PASSWORD_FORMAT);
     }
 
     return true;
@@ -127,7 +138,7 @@ public class SignupController implements SignupApi {
    */
   private boolean validateNicknameFormat(String nickname) throws BadRequestException {
     if (!Pattern.matches(nicknamePattern, nickname)) {
-      throw new BadRequestException("비밀번호 형식이 틀립니다.");
+      throw new BadRequestException(SignupCode.WRONG_NICKNAME_FORMAT);
     }
 
     return true;

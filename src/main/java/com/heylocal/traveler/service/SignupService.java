@@ -3,6 +3,8 @@ package com.heylocal.traveler.service;
 import com.heylocal.traveler.domain.user.Traveler;
 import com.heylocal.traveler.domain.user.User;
 import com.heylocal.traveler.dto.SignupDto.UserInfoCheckResponse;
+import com.heylocal.traveler.exception.code.SignupCode;
+import com.heylocal.traveler.exception.service.BadArgumentException;
 import com.heylocal.traveler.repository.TravelerProfileRepository;
 import com.heylocal.traveler.repository.TravelerRepository;
 import com.heylocal.traveler.repository.UserRepository;
@@ -72,12 +74,20 @@ public class SignupService {
    * @param request
    */
   @Transactional
-  public void signupTraveler(SignupRequest request) {
+  public void signupTraveler(SignupRequest request) throws BadArgumentException {
     String accountId = request.getAccountId();
     String nickname = request.getNickname();
     String phoneNumber = request.getPhoneNumber();
     String encodedPassword;
 
+    //중복 확인
+    UserInfoCheckResponse accountIdCheckRes = checkAccountIdExist(accountId);
+    UserInfoCheckResponse phoneNumCheckRes = checkPhoneNumberExist(phoneNumber);
+    if (accountIdCheckRes.isAlreadyExist() || phoneNumCheckRes.isAlreadyExist()) {
+      throw new BadArgumentException(SignupCode.ALREADY_EXIST_USER_INFO);
+    }
+
+    //사용자 저장
     encodedPassword = encodePassword(request.getPassword());
     request.setPassword(encodedPassword);
     Traveler traveler = travelerRepository.saveTraveler(accountId, encodedPassword, nickname, phoneNumber);

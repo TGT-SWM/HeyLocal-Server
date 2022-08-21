@@ -1,7 +1,5 @@
 package com.heylocal.traveler.domain.profile;
 
-import lombok.Getter;
-
 /**
  * 매니저 평균 응답 시간 단위
  */
