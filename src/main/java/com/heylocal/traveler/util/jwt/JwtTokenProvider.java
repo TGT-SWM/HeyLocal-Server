@@ -1,5 +1,6 @@
 package com.heylocal.traveler.util.jwt;
 
+import com.heylocal.traveler.domain.user.UserType;
 import io.jsonwebtoken.Header;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -34,11 +35,9 @@ public class JwtTokenProvider {
   /**
    * Access Token 발급 메서드
    * @param userPk 사용자 계정 pk값
-   * @param accountId 사용자 계정 id
-   * @param nickname 사용자 닉네임
    * @return jwt Access Token
    */
-  public String createAccessToken(long userPk, String accountId, String nickname) {
+  public String createAccessToken(long userPk) {
     Date now = new Date();
 
     return Jwts.builder()
@@ -47,8 +46,6 @@ public class JwtTokenProvider {
         .setIssuedAt(now) //토큰 발급 시간(iat) 설정
         .setExpiration(new Date(now.getTime() + accessTokenValidMilliSec)) // 만료시간 설정
         .claim("userPk", userPk) //토큰을 받을 사용자 pk를 비공개 클레임으로 설정
-        .claim("accountId", accountId) //토큰을 받을 사용자의 계정 아이디를 비공개 클레임으로 설정
-        .claim("nickname", nickname) //토큰을 받을 사용자의 닉네임를 비공개 클레임으로 설정
         .signWith(SignatureAlgorithm.HS512, secretKey) //해싱 알고리즘으로 HS512를 사용하기 때문에, secretKey가 512비트 이상이어야 함
         .compact();
   }
@@ -57,7 +54,7 @@ public class JwtTokenProvider {
    * Refresh Token 발급 메서드
    * @return jwt Refresh Token
    */
-  public String createRefreshToken() {
+  public String createRefreshToken(long userPk) {
     Date now = new Date();
 
     return Jwts.builder()
@@ -65,6 +62,7 @@ public class JwtTokenProvider {
         .setIssuer("http://traveler.heylocal.p-e.kr") //토큰 발급자(iss) 설정
         .setIssuedAt(now) //토큰 발급 시간(iat) 설정
         .setExpiration(new Date(now.getTime() + refreshTokenValidMilliSec)) // 만료시간 설정
+        .claim("userPk", userPk) //토큰을 받을 사용자 pk를 비공개 클레임으로 설정
         .signWith(SignatureAlgorithm.HS512, secretKey) //해싱 알고리즘으로 HS512를 사용하기 때문에, secretKey가 512비트 이상이어야 함
         .compact();
   }

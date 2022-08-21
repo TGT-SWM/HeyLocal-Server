@@ -1,8 +1,6 @@
 package com.heylocal.traveler.repository;
 
-import com.heylocal.traveler.domain.profile.TravelerProfile;
 import com.heylocal.traveler.domain.user.Traveler;
-import com.heylocal.traveler.domain.user.User;
 import com.heylocal.traveler.domain.user.UserType;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -12,7 +10,7 @@ import org.springframework.context.annotation.Import;
 
 import javax.persistence.EntityManager;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 @Import({TravelerProfileRepository.class})
 @DataJpaTest

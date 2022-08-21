@@ -5,7 +5,6 @@ import com.heylocal.traveler.domain.Region;
 import com.heylocal.traveler.domain.note.Note;
 import com.heylocal.traveler.domain.post.Post;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;

@@ -1,26 +1,29 @@
 package com.heylocal.traveler.dto;
 
+import com.heylocal.traveler.exception.code.ErrorCode;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.time.LocalDateTime;
 
 public class ErrorMessageResponse {
-  private String reason;
+  private ErrorCode code;
+  private String description;
   private LocalDateTime dateTime;
 
-  public ErrorMessageResponse() {
-    this.reason = "";
+  public ErrorMessageResponse(ErrorCode code) {
+    this.code = code;
+    this.description = code.getDescription();
     this.dateTime = LocalDateTime.now();
   }
 
-  public ErrorMessageResponse(String reason) {
-    this.reason = reason;
-    this.dateTime = LocalDateTime.now();
+  @Schema(example = "코드", description = "오류 코드")
+  public ErrorCode getCode() {
+    return code;
   }
 
-  @Schema(example = "계정 아이디는 5자 이상, 20자 이하이어야 합니다.", description = "오류 발생 이유")
-  public String getReason() {
-    return reason;
+  @Schema(example = "오류가 발생한 이유", description = "오류 발생 이유")
+  public String getDescription() {
+    return description;
   }
 
   @Schema(example = "2022-08-13T15:03:45.45704", description = "오류 발생 시각")
