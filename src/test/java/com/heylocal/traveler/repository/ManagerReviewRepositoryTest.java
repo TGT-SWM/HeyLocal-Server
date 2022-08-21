@@ -25,6 +25,7 @@ class ManagerReviewRepositoryTest {
 		PageRequest pageRequest = new PageRequest(page, pageSize);
 
 		// WHEN & THEN
+		// 성공 케이스 - 1 - 매니저 조회 성공
 		Assertions.assertDoesNotThrow(
 				() -> managerReviewRepository.findAll(managerId, pageRequest)
 		);

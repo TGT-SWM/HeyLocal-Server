@@ -69,23 +69,35 @@ class ManagerControllerTest {
 	void managersManagerReviews() {
 		// GIVEN
 		// 매니저 리뷰 등록하도록 수정
-		long managerId = 1L;
+		long id = 1L;
+		long notExistsId = id + 1;
 		int page = 1;
 		int pageSize = 10;
 		PageRequest pageRequest = new PageRequest(page, pageSize);
 
-		// 가짜 ManagerReviewResponse 반환
+		// Mock - 조회 결과가 존재하는 경우
 		List<ManagerReviewResponse> response = new ArrayList<>();
 		for (int i = 0; i < pageSize; i++) {
 			response.add(new ManagerReviewResponse());
 		}
-		given(managerService.findReviews(managerId, pageRequest)).willReturn(response);
+		given(managerService.findReviews(id, pageRequest)).willReturn(response);
+
+		// Mock - 조회 결과가 존재하지 않는 경우
+		given(managerService.findReviews(notExistsId, pageRequest)).willReturn(new ArrayList<>());
 
 		// WHEN
-		List<ManagerReviewResponse> actual = managerController.managersManagerReviews(managerId, pageRequest);
+		List<ManagerReviewResponse> result = managerController.managersManagerReviews(id, pageRequest);
+		List<ManagerReviewResponse> notExistsResult = managerController.managersManagerReviews(notExistsId, pageRequest);
 
 		// THEN
-		assertThat(actual.size()).isEqualTo(response.size());
+		Assertions.assertAll(
+				// 성공 케이스 - 1 - 저장되어 있는 매니저 리뷰를 조회하는 경우
+				() -> assertThat(result.size()).isEqualTo(response.size()),
+				// 실패 케이스 - 1 - 매니저 리뷰 조회 결과가 존재하지 않는 경우
+				() -> Assertions.assertTrue(notExistsResult.isEmpty())
+		);
+
+
 	}
 
 	// 매니저 객체 생성해 반환
