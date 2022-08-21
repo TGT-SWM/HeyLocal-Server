@@ -13,6 +13,14 @@ import java.util.List;
 public class ManagerReviewRepository {
 	private final EntityManager em;
 
+	/**
+	 * <pre>
+	 * 매니저 리뷰 리스트 조회
+	 * </pre>
+	 * @param managerId 조회하고자 하는 매니저의 ID(PK)
+	 * @param pageRequest 페이지, 한 페이지의 크기
+	 * @return 매니저 리뷰 리스트
+	 */
 	public List<ManagerReview> findAll(long managerId, PageRequest pageRequest) {
 		String jpql = "select r from ManagerReview r where r.travel.manager.id = :id order by r.createdDate desc";
 
