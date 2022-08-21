@@ -4,6 +4,8 @@ import com.heylocal.traveler.domain.BaseTimeEntity;
 import com.heylocal.traveler.domain.notification.Notification;
 import com.heylocal.traveler.domain.order.OrderRequest;
 import com.heylocal.traveler.domain.profile.UserProfile;
+import com.heylocal.traveler.domain.token.AccessToken;
+import com.heylocal.traveler.domain.token.RefreshToken;
 import com.heylocal.traveler.domain.userreview.UserReview;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -59,4 +61,10 @@ public class User extends BaseTimeEntity {
 
   @OneToMany(mappedBy = "writer", cascade = CascadeType.ALL)
   private List<UserReview> userReview = new ArrayList<>();
+
+  @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+  private RefreshToken refreshToken;
+
+  @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+  private AccessToken accessToken;
 }

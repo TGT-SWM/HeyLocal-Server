@@ -1,6 +1,7 @@
 package com.heylocal.traveler.domain.token;
 
 import com.heylocal.traveler.domain.BaseTimeEntity;
+import com.heylocal.traveler.domain.user.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,6 +28,8 @@ public class AccessToken extends BaseTimeEntity {
   private LocalDateTime expiredDateTime;
   @OneToOne
   private RefreshToken refreshToken;
+  @OneToOne
+  private User user;
 
   public void associateRefreshToken(RefreshToken refreshToken) {
     this.refreshToken = refreshToken;

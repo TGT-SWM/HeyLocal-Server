@@ -2,8 +2,11 @@ package com.heylocal.traveler.repository;
 
 import com.heylocal.traveler.domain.token.AccessToken;
 import com.heylocal.traveler.domain.token.RefreshToken;
+import com.heylocal.traveler.domain.user.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.Session;
+import org.hibernate.stat.Statistics;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -25,14 +28,21 @@ public class TokenRepository {
    * @param accessValue Access Token 값
    * @param refreshValue Refresh Token 값
    */
-  public RefreshToken saveTokenPair(String accessValue, LocalDateTime accessExpired, String refreshValue, LocalDateTime refreshExpired) {
-    RefreshToken refreshToken = RefreshToken.builder()
+  public RefreshToken saveTokenPair(long userId, String accessValue, LocalDateTime accessExpired, String refreshValue, LocalDateTime refreshExpired) {
+    RefreshToken refreshToken;
+    AccessToken accessToken;
+    User user;
+
+    user = em.find(User.class, userId);
+    refreshToken = RefreshToken.builder()
         .tokenValue(refreshValue)
         .expiredDateTime(refreshExpired)
+        .user(user)
         .build();
-    AccessToken accessToken = AccessToken.builder()
+    accessToken = AccessToken.builder()
         .tokenValue(accessValue)
         .expiredDateTime(accessExpired)
+        .user(user)
         .build();
     refreshToken.associateAccessToken(accessToken);
 
@@ -82,6 +92,35 @@ public class TokenRepository {
     }
 
     return Optional.of(accessToken);
+  }
+
+  /**
+   * <pre>
+   * 사용자 id(pk)로 관련된 Access·Refresh 토큰을 제거하는 메서드
+   * 비즈니스 로직상 토큰을 삭제하고, 새 토큰을 저장할 때 사용됨.
+   * 하지만 하나의 트랜잭션에서 동일한 클래스의 엔티티를 삭제하고 추가하는 것이 문제를 일으킴.
+   * 따라서 `em.remove()` 를 사용하지 않고, 직접 JPQL을 실행하는 방식으로 작성함.
+   *
+   * 유사 이슈 보고: <a href="https://github.com/spring-projects/spring-data-jpa/issues/1100">Github Issue</a>
+   * 관련 Jira Issue: <a href="https://swm13-tgt.atlassian.net/browse/S3T-359">Jira Issue</a>
+   * </pre>
+   * @param userId
+   * @exception NoResultException 해당 userId를 갖는 Refresh 토큰이 없는 경우
+   */
+  public void removeTokenPairByUserId(long userId) throws NoResultException {
+    String jpql = "delete from AccessToken a" +
+        " where a.user.id = :userId";
+
+    em.createQuery(jpql)
+        .setParameter("userId", userId)
+        .executeUpdate();
+
+    jpql = "delete from RefreshToken r" +
+        " where r.user.id = :userId";
+
+    em.createQuery(jpql)
+        .setParameter("userId", userId)
+        .executeUpdate();
   }
 
   /**

@@ -14,6 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.NoResultException;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -50,7 +51,7 @@ public class SigninService {
     //비밀번호 확인
     traveler = checkPassword(rawPassword, traveler);
     //Access Token, Refresh Token 발급
-    tokenAry = issueTokens(traveler.getId(), traveler.getAccountId(), traveler.getNickname(), traveler.getPhoneNumber());
+    tokenAry = issueTokens(traveler.getId());
 
     response = SigninResponse.builder()
         .id(traveler.getId())
@@ -111,18 +112,14 @@ public class SigninService {
     return passwordEncoder.matches(rawPassword, encodedPassword);
   }
 
-
   /**
    * <pre>
    * Access Token, Refresh Token 발급 메서드
    * </pre>
    * @param id 사용자(여행자)의 pk값
-   * @param accountId 사용자(여행자)의 계정 id
-   * @param nickname 사용자(여행자)의 닉네임
-   * @param phoneNumber 사용자(여행자)의 휴대폰 번호
    * @return Access Token, Refresh Token 이 담긴 배열
    */
-  private String[] issueTokens(long id, String accountId, String nickname, String phoneNumber) {
+  private String[] issueTokens(long id) {
     String accessTokenValue;
     String refreshTokenValue;
 
@@ -131,7 +128,7 @@ public class SigninService {
     refreshTokenValue = jwtTokenProvider.createRefreshToken(id);
 
     //토큰 DB 저장
-    saveTokenPairToDb(accessTokenValue, refreshTokenValue);
+    saveTokenPairToDb(id, accessTokenValue, refreshTokenValue);
 
     return new String[]{accessTokenValue, refreshTokenValue};
   }
@@ -140,15 +137,22 @@ public class SigninService {
    * <pre>
    * DB에 Access·Refresh Token 을 저장하는 메서드
    * </pre>
+   * @param userId 관련 사용자 id(pk)
    * @param accessTokenValue Access Token 값
    * @param refreshTokenValue Refresh Token 값
    */
-  private void saveTokenPairToDb(String accessTokenValue, String refreshTokenValue) {
+  private void saveTokenPairToDb(long userId, String accessTokenValue, String refreshTokenValue) {
     LocalDateTime refreshExpiration;
     LocalDateTime accessExpiration;
 
     accessExpiration = jwtTokenParser.extractExpiration(accessTokenValue);
     refreshExpiration = jwtTokenParser.extractExpiration(refreshTokenValue);
-    tokenRepository.saveTokenPair(accessTokenValue, accessExpiration, refreshTokenValue, refreshExpiration);
+
+    try {
+      tokenRepository.removeTokenPairByUserId(userId); //기존 토큰들이 있다면 제거
+    } catch (NoResultException e) {
+      //ignored (관련 토큰을 가지고 있지 않아도, 문제될 것이 없으므로 무시)
+    }
+    tokenRepository.saveTokenPair(userId, accessTokenValue, accessExpiration, refreshTokenValue, refreshExpiration);
   }
 }
