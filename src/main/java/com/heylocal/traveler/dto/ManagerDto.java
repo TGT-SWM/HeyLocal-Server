@@ -9,7 +9,6 @@ import com.heylocal.traveler.domain.profile.ManagerResponseTime;
 import com.heylocal.traveler.domain.user.Manager;
 import com.heylocal.traveler.domain.userreview.ManagerReview;
 import lombok.*;
-import lombok.experimental.SuperBuilder;
 
 import java.util.List;
 
@@ -18,8 +17,8 @@ public class ManagerDto {
 	@Setter
 	@NoArgsConstructor
 	@AllArgsConstructor
-	@SuperBuilder
-	public static class ManagerProfileSimpleResponse {
+	@Builder
+	public static class ManagerProfileResponse {
 		long id;
 		String name;
 		ManagerGrade grade;
@@ -32,21 +31,8 @@ public class ManagerDto {
 		ManagerResponseTime responseTime;
 		Region activeRegion1;
 		Region activeRegion2;
-
-		public static ManagerProfileSimpleResponse from(Manager manager) {
-			return ManagerProfileResponse.from(manager, null);
-		}
-	}
-
-	@Getter
-	@Setter
-	@NoArgsConstructor
-	@AllArgsConstructor
-	@SuperBuilder
-	public static class ManagerProfileResponse extends ManagerProfileSimpleResponse {
 		String introduction;
 		List<Post> postList;
-		List<ManagerReview> reviewList;
 
 		public static ManagerProfileResponse from(Manager manager, List<Post> postList) {
 			ManagerProfile profile = (ManagerProfile) manager.getUserProfile();

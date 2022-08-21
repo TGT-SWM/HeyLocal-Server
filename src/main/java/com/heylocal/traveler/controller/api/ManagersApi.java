@@ -48,8 +48,7 @@ public interface ManagersApi {
     })
     @GetMapping(value = "/{managerId}/profile")
     ManagerProfileResponse managersManagerIdProfileGet(
-        @Parameter(in = ParameterIn.PATH, description = "매니저 id", required = true) @PathVariable long managerId,
-        @Parameter(in = ParameterIn.QUERY, description = "간단한(상단 영역) 프로필 정보만 조회: true/false", required = true) @RequestParam boolean simple) throws NotFoundException;
+        @Parameter(in = ParameterIn.PATH, description = "매니저 id", required = true) @PathVariable long managerId) throws NotFoundException;
 
 
     @Operation(summary = "해당 매니저에게 매니저 리뷰 등록", description = "", tags = {"Managers"})

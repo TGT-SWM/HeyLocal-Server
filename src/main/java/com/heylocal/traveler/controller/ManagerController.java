@@ -31,7 +31,7 @@ public class ManagerController implements ManagersApi {
 	}
 
 	@Override
-	public ManagerProfileResponse managersManagerIdProfileGet(long managerId, boolean simple) throws NotFoundException {
+	public ManagerProfileResponse managersManagerIdProfileGet(long managerId) throws NotFoundException {
 		// 매니저 프로필 조회
 		Optional<ManagerProfileResponse> optResponse = managerService.findProfileById(managerId);
 

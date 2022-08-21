@@ -27,26 +27,6 @@ public class ManagerService {
 
 	/**
 	 * <pre>
-	 * 매니저 프로필의 함축된 정보를 조회
-	 * </pre>
-	 * @param userId 매니저의 아이디(PK)
-	 * @return 매니저 프로필의 함축 버전인 ManagerProfileSimpleResponse 객체
-	 */
-	@Transactional
-	public Optional<ManagerProfileSimpleResponse> findSimpleProfileById(long userId) {
-		// 매니저 조회
-		Optional<Manager> optManager = managerRepository.findOne(userId);
-		if (optManager.isEmpty()) {
-			return Optional.empty();
-		}
-
-		// DTO 변환
-		ManagerProfileSimpleResponse response = ManagerProfileSimpleResponse.from(optManager.get());
-		return Optional.ofNullable(response);
-	}
-
-	/**
-	 * <pre>
 	 * 매니저 프로필을 조회
 	 * </pre>
 	 * @param userId 매니저의 아이디(PK)

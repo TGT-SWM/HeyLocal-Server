@@ -4,9 +4,7 @@ import com.heylocal.traveler.controller.exception.NotFoundException;
 import com.heylocal.traveler.domain.post.Post;
 import com.heylocal.traveler.domain.profile.ManagerProfile;
 import com.heylocal.traveler.domain.user.Manager;
-import com.heylocal.traveler.domain.userreview.ManagerReview;
 import com.heylocal.traveler.dto.ManagerDto.ManagerProfileResponse;
-import com.heylocal.traveler.dto.ManagerDto.ManagerProfileSimpleResponse;
 import com.heylocal.traveler.dto.ManagerDto.ManagerReviewResponse;
 import com.heylocal.traveler.dto.PageDto.PageRequest;
 import com.heylocal.traveler.service.ManagerService;
@@ -41,7 +39,6 @@ class ManagerControllerTest {
 	@DisplayName("매니저 프로필 조회 컨트롤러")
 	void managersManagerIdProfileGetTest() {
 		// GIVEN
-		boolean simple = false; // 매니저의 전체 프로필 조회
 		long id = 1L;
 		long notExistsId = id + 1;
 
@@ -53,14 +50,14 @@ class ManagerControllerTest {
 		// WHEN - THEN
 		// 성공 케이스 - 1 - 저장되어 있는 프로필을 성공적으로 조회하는 경우
 		Assertions.assertDoesNotThrow(() -> {
-			ManagerProfileResponse actual = managerController.managersManagerIdProfileGet(id, simple);
+			ManagerProfileResponse actual = managerController.managersManagerIdProfileGet(id);
 			assertThat(actual.getId()).isEqualTo(id);
 		});
 
 		// 실패 케이스 - 1 - 매니저 프로필 조회에 실패한 경우
 		Assertions.assertThrows(
 				NotFoundException.class,
-				() -> managerController.managersManagerIdProfileGet(notExistsId, simple)
+				() -> managerController.managersManagerIdProfileGet(notExistsId)
 		);
 	}
 
