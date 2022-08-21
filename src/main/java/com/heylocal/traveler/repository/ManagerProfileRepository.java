@@ -13,7 +13,7 @@ import java.util.Optional;
 public class ManagerProfileRepository {
 	private final EntityManager em;
 
-	public ManagerProfile findByUserId(Long userId) {
+	public ManagerProfile findByUserId(long userId) {
 		String jpql = "select m from ManagerProfile m where m.user.id = :id";
 		ManagerProfile profile;
 

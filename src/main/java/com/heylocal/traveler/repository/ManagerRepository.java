@@ -11,7 +11,7 @@ import javax.persistence.EntityManager;
 public class ManagerRepository {
 	private final EntityManager em;
 
-	public Manager findOne(Long id) {
+	public Manager findOne(long id) {
 		return em.find(Manager.class, id);
 	}
 }

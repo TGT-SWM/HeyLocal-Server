@@ -32,7 +32,7 @@ public class ManagerService {
 	 * @return 매니저 프로필의 함축 버전인 ManagerProfileSimpleResponse 객체
 	 */
 	@Transactional
-	public ManagerProfileSimpleResponse findSimpleProfileById(Long userId) {
+	public ManagerProfileSimpleResponse findSimpleProfileById(long userId) {
 		// 매니저 조회
 		Manager manager = managerRepository.findOne(userId);
 		if (manager == null) {
@@ -50,7 +50,7 @@ public class ManagerService {
 	 * @return 매니저 프로필 정보를 담은 ManagerProfileResponse 객체
 	 */
 	@Transactional
-	public ManagerProfileResponse findProfileById(Long userId) {
+	public ManagerProfileResponse findProfileById(long userId) {
 		// 매니저 조회
 		Manager manager = managerRepository.findOne(userId);
 		if (manager == null) {

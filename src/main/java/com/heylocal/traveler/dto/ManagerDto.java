@@ -20,7 +20,7 @@ public class ManagerDto {
 	@AllArgsConstructor
 	@SuperBuilder
 	public static class ManagerProfileSimpleResponse {
-		Long id;
+		long id;
 		String name;
 		ManagerGrade grade;
 		String imageUrl;
