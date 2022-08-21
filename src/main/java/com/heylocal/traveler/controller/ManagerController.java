@@ -30,6 +30,14 @@ public class ManagerController implements ManagersApi {
 		return null;
 	}
 
+	/**
+	 * <pre>
+	 * 매니저 프로필 조회
+	 * </pre>
+	 * @param managerId 조회하고자 하는 매니저의 ID(PK)
+	 * @return 매니저 프로필 정보
+	 * @throws NotFoundException HTTP 404 오류
+	 */
 	@Override
 	public ManagerProfileResponse managersManagerIdProfileGet(long managerId) throws NotFoundException {
 		// 매니저 프로필 조회
@@ -48,6 +56,14 @@ public class ManagerController implements ManagersApi {
 		return null;
 	}
 
+	/**
+	 * <pre>
+	 * 매니저 리뷰 조회
+	 * </pre>
+	 * @param managerId 리뷰를 조회하고자 하는 매니저의 ID(PK)
+	 * @param pageRequest 페이지, 한 페이지에 들어가는 아이템 개수
+	 * @return 매니저 리뷰 리스트
+	 */
 	@Override
 	public List<ManagerReviewResponse> managersManagerReviews(@PathVariable long managerId, PageRequest pageRequest) {
 		return managerService.findReviews(managerId, pageRequest);
