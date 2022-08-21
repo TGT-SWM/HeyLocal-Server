@@ -39,9 +39,9 @@ public interface ManagersApi {
 
 
     @Operation(summary = "해당 매니저의 프로필 조회", description = "", tags = {"Managers"})
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "404", description = "정보가 존재하지 않음", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessageResponse.class)))
-    })
+    @ApiResponses(
+        @ApiResponse(responseCode = "404", description = "- `NO_INFO`: 존재하지 않는 정보(resource)인 경우", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessageResponse.class)))
+    )
     @GetMapping(value = "/{managerId}/profile")
     ManagerProfileResponse managersManagerIdProfileGet(
         @Parameter(in = ParameterIn.PATH, description = "매니저 id", required = true) @PathVariable long managerId,
