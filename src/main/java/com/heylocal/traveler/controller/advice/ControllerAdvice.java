@@ -23,7 +23,7 @@ public class ControllerAdvice {
   }
 
   @ExceptionHandler(NotFoundException.class)
-  @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+  @ResponseStatus(value = HttpStatus.NOT_FOUND)
   public ErrorMessageResponse notFoundException(NotFoundException ex) {
     ErrorMessageResponse message = new ErrorMessageResponse(ex.getMessage());
     return message;
