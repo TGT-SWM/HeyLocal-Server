@@ -1,13 +1,18 @@
 package com.heylocal.traveler.service;
 
+import com.heylocal.traveler.domain.order.OrderSheet;
 import com.heylocal.traveler.domain.profile.ManagerProfile;
+import com.heylocal.traveler.domain.profile.TravelerProfile;
+import com.heylocal.traveler.domain.travel.Travel;
 import com.heylocal.traveler.domain.user.Manager;
+import com.heylocal.traveler.domain.user.Traveler;
 import com.heylocal.traveler.domain.userreview.ManagerReview;
 import com.heylocal.traveler.dto.ManagerDto.ManagerProfileSimpleResponse;
 import com.heylocal.traveler.dto.ManagerDto.ManagerReviewResponse;
 import com.heylocal.traveler.dto.PageDto.PageRequest;
 import com.heylocal.traveler.repository.ManagerRepository;
 import com.heylocal.traveler.repository.ManagerReviewRepository;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -78,23 +83,53 @@ class ManagerServiceTest {
 		// GIVEN
 		// 요청 객체
 		long managerId = 1L;
+		long notExistsManagerId = 2L;
 		int page = 1;
 		int pageSize = 10;
 		PageRequest pageRequest = new PageRequest(page, pageSize);
 
+		// Manager
+		Manager manager = Manager.builder().id(managerId).build();
+
+		// Traveler
+		Traveler writer = Traveler.builder()
+				.nickname("nickname")
+				.userProfile(new TravelerProfile("imageUrl"))
+				.build();
+
+		// OrderSheet
+		OrderSheet orderSheet = OrderSheet.builder().writer(writer).build();
+
+		// Travel
+		Travel travel = Travel.builder()
+				.orderSheet(orderSheet)
+				.manager(manager)
+				.build();
+
+		// ManagerReview
+		ManagerReview managerReview = new ManagerReview(travel, null, null, null, null, null);
+
 		// 가짜 리뷰 리스트 반환
 		List<ManagerReview> reviews = new ArrayList<>();
 		for (int i = 0; i < page * pageSize; i++) {
-			reviews.add(new ManagerReview());
+			reviews.add(managerReview);
 		}
 		given(managerReviewRepository.findAll(managerId, pageRequest)).willReturn(reviews);
 
 		// WHEN
-		ManagerReviewResponse response = managerService.findReviews(managerId, pageRequest);
+		List<ManagerReviewResponse> existsResponse = managerService.findReviews(managerId, pageRequest);
+		List<ManagerReviewResponse> notExistsResponse = managerService.findReviews(notExistsManagerId, pageRequest);
+
 
 		// THEN
 		// 해당 페이지 조회 시 pageSize 만큼의 매니저 리뷰를 반환하는지
-		assertThat(response.getReviews().size()).isEqualTo(pageSize);
+		Assertions.assertAll(
+				// 성공 케이스 - 1 - 등록된 매니저 리뷰를 성공적으로 조회하는지
+				() -> assertThat(existsResponse.size()).isEqualTo(pageSize),
+				// 실패 케이스 - 1 - 매니저에게 등록된 리뷰가 존재하지 않는 경우
+				() -> Assertions.assertTrue(notExistsResponse.isEmpty())
+		);
+
 	}
 
 	// 매니저 객체 생성해 반환
