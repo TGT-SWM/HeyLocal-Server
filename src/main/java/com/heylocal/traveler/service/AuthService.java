@@ -69,15 +69,18 @@ public class AuthService {
     //Refresh Token 검증
     storedRefreshToken = validateRefreshToken(request);
 
+    //Refresh Token 으로부터 userPk 추출
+    userId = getUserIdFromRefreshToken(storedRefreshToken);
+
     //request 받은 AccessToken과 DB에 저장된 AccessToken의 값이 같은지 확인
     storedAccessToken = isSameAccessTokenValue(storedRefreshToken.getAccessToken(), request.getAccessToken());
 
-    //조회한 AccessToken이 정말 만료되었는지 확인 및 user id(pk) 추출
-    userId = validateExpiredAccessToken(storedAccessToken);
+    //조회한 AccessToken이 정말 만료되었는지 확인
+    validateExpiredAccessToken(storedAccessToken);
 
     //Access Token 과 Refresh Token 발급
     String newAccessTokenValue = jwtTokenProvider.createAccessToken(userId);
-    String newRefreshTokenValue = jwtTokenProvider.createRefreshToken();
+    String newRefreshTokenValue = jwtTokenProvider.createRefreshToken(userId);
 
     //새로운 Access Token, Refresh Token 으로 업데이트
     storedAccessToken.updateTokenValue(newAccessTokenValue);
@@ -118,6 +121,21 @@ public class AuthService {
   }
 
   /**
+   * Refresh Token 에 담긴 사용자 id(pk)값을 추출하는 메서드
+   * @param refreshToken 추출할 토큰 엔티티
+   * @return 추출한 사용자 id(pk)
+   * @throws AuthException 존재하지 않는 토큰 값일 경우
+   */
+  private long getUserIdFromRefreshToken(RefreshToken refreshToken) throws AuthException {
+    Claims claims = jwtTokenParser.parseJwtToken(refreshToken.getTokenValue())
+        .orElseThrow(
+            () -> new AuthException(AuthCode.NOT_EXIST_REFRESH_TOKEN)
+        );
+
+    return claims.get("userPk", Long.class);
+  }
+
+  /**
    * 같은 Access Token 값 인지 확인하는 메서드
    * @param storedAccessToken 확인할 Access Token
    * @param requestAccessToken 요청받은 Access Token
@@ -138,13 +156,11 @@ public class AuthService {
    * @return 만료된 Access Token 의 클레임에 바인딩된 유저 id(pk)
    * @throws AuthException 검증 실패 시
    */
-  private long validateExpiredAccessToken(AccessToken accessToken) throws AuthException {
+  private void validateExpiredAccessToken(AccessToken accessToken) throws AuthException {
     boolean isExpiredAccessToken = false;
-    long userId = 0;
 
     try {
-      Claims claims = jwtTokenParser.parseJwtToken(accessToken.getTokenValue()).get();
-      userId = claims.get("userPk", Long.class);
+      jwtTokenParser.parseJwtToken(accessToken.getTokenValue());
     } catch (ExpiredJwtException expiredJwtException) {
       isExpiredAccessToken = true;
     }
@@ -152,7 +168,5 @@ public class AuthService {
       tokenRepository.removeTokenPairByAccessValue(accessToken.getTokenValue()); //비정상 접근이므로, 모든 토큰 쌍 제거
       throw new AuthException(AuthCode.NOT_EXPIRED_ACCESS_TOKEN);
     }
-
-    return userId;
   }
 }

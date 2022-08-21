@@ -56,14 +56,18 @@ class JwtTokenProviderTest {
   @DisplayName("Refresh Token 생성")
   void createRefreshTokenTest() {
     //GIVEN
+    long userPk = 1L;
     Date minExpiration = new Date(new Date().getTime() + refreshTokenValidMilliSec - 1000);
 
     //WHEN
-    String refreshToken = jwtTokenProvider.createRefreshToken();
-    Date expiration = Jwts.parser()
+    String refreshToken = jwtTokenProvider.createRefreshToken(userPk);
+    Claims claims = Jwts.parser()
         .setSigningKey(secretKey)
         .parseClaimsJws(refreshToken)
-        .getBody().getExpiration();
+        .getBody();
+    Date expiration = claims.getExpiration();
+    long userPkResult = claims.get("userPk", Long.class);
+
 
     //THEN
     assertAll(
@@ -76,6 +80,8 @@ class JwtTokenProviderTest {
       }),
       //성공 케이스 - 2
       () -> assertTrue(expiration.after(minExpiration)), //토큰 유효 기간이 minExpiration 보다 나중이어야 한다.
+      //성공 케이스 - 3 - Claim에 저장된 사용자 id(pk)가 같아야 한다.
+      () -> assertEquals(userPk, userPkResult),
       //실패 케이스
       () -> assertThrows(Exception.class, () -> {
         Jwts.parser()

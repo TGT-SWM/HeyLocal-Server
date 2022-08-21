@@ -89,7 +89,9 @@ public class TokenRepository {
    * @param refreshTokenValue 삭제할 Refresh Token 값
    */
   public void removeTokenPairByRefreshValue(String refreshTokenValue) {
-    RefreshToken refreshToken = findRefreshTokenByValue(refreshTokenValue).get();
+    RefreshToken refreshToken = findRefreshTokenByValue(refreshTokenValue).orElseThrow(
+        () -> new IllegalArgumentException("존재하지 않는 Refresh Token 값입니다.")
+    );
     em.remove(refreshToken);
   }
 
@@ -98,7 +100,9 @@ public class TokenRepository {
    * @param accessTokenValue 삭제할 Access Token 값
    */
   public void removeTokenPairByAccessValue(String accessTokenValue) {
-    AccessToken accessToken = findAccessTokenByValue(accessTokenValue).get();
+    AccessToken accessToken = findAccessTokenByValue(accessTokenValue).orElseThrow(
+        () -> new IllegalArgumentException("존재하지 않는 Access Token 값입니다.")
+    );
     em.remove(accessToken.getRefreshToken());
   }
 }

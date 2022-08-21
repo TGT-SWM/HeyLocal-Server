@@ -128,7 +128,7 @@ public class SigninService {
 
     //토큰 발급
     accessTokenValue = jwtTokenProvider.createAccessToken(id);
-    refreshTokenValue = jwtTokenProvider.createRefreshToken();
+    refreshTokenValue = jwtTokenProvider.createRefreshToken(id);
 
     //토큰 DB 저장
     saveTokenPairToDb(accessTokenValue, refreshTokenValue);

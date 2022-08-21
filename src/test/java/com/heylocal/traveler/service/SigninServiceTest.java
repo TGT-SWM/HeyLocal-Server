@@ -90,7 +90,7 @@ class SigninServiceTest {
 
     //Mock 행동 정의 - jwtTokenProvider
     willReturn(accessTokenValue).given(jwtTokenProvider).createAccessToken(existId);
-    willReturn(refreshTokenValue).given(jwtTokenProvider).createRefreshToken();
+    willReturn(refreshTokenValue).given(jwtTokenProvider).createRefreshToken(existId);
 
     //Mock 행동 정의 - jwtTokenParser
     willReturn(accessExpiration).given(jwtTokenParser).extractExpiration(eq(accessTokenValue));
