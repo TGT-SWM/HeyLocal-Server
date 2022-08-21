@@ -7,6 +7,8 @@ import com.heylocal.traveler.domain.travel.Travel;
 import com.heylocal.traveler.domain.user.Manager;
 import com.heylocal.traveler.domain.user.Traveler;
 import com.heylocal.traveler.domain.userreview.ManagerReview;
+import com.heylocal.traveler.dto.ManagerDto;
+import com.heylocal.traveler.dto.ManagerDto.ManagerProfileResponse;
 import com.heylocal.traveler.dto.ManagerDto.ManagerProfileSimpleResponse;
 import com.heylocal.traveler.dto.ManagerDto.ManagerReviewResponse;
 import com.heylocal.traveler.dto.PageDto.PageRequest;
@@ -22,6 +24,7 @@ import org.mockito.MockitoAnnotations;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
@@ -42,39 +45,28 @@ class ManagerServiceTest {
 	}
 
 	@Test
-	@DisplayName("매니저 간단 프로필 조회")
-	void findSimpleProfileById() {
-		// GIVEN
-		Long managerId = 1L;
-		Manager manager = createManager(managerId);
-		given(managerRepository.findOne(managerId)).willReturn(manager);
-
-		// WHEN
-		ManagerProfileSimpleResponse response = managerService.findSimpleProfileById(managerId);
-
-		// THEN
-		// 1. 유효한 결과 반환 (해당 ID의 매니저가 존재)
-		assertThat(response).isNotNull();
-		// 2. 의도한 결과 반환 (매니저 ID가 일치)
-		assertThat(response.getId()).isEqualTo(managerId);
-	}
-
-	@Test
 	@DisplayName("매니저 프로필 조회")
 	void findProfileById() {
 		// GIVEN
-		Long managerId = 1L;
-		Manager manager = createManager(managerId);
-		given(managerRepository.findOne(managerId)).willReturn(manager);
+		long id = 1L;
+		long notExistsId = id + 1;
+		Manager manager = createManager(id);
+
+		given(managerRepository.findOne(id)).willReturn(Optional.ofNullable(manager));
+		given(managerRepository.findOne(notExistsId)).willReturn(Optional.empty());
 
 		// WHEN
-		ManagerProfileSimpleResponse response = managerService.findSimpleProfileById(managerId);
+		Optional<ManagerProfileResponse> optResponse = managerService.findProfileById(id);
+		Optional<ManagerProfileResponse> optNotExistsResponse = managerService.findProfileById(notExistsId);
 
 		// THEN
-		// 1. 유효한 결과 반환 (해당 ID의 매니저가 존재)
-		assertThat(response).isNotNull();
-		// 2. 의도한 결과 반환 (매니저 ID가 일치)
-		assertThat(response.getId()).isEqualTo(managerId);
+		// 성공 케이스 - 1 - 매니저 프로필 조회 결과가 존재하는 경우
+		Assertions.assertTrue(optResponse.isPresent());
+		// 성공 케이스 - 2 - 매니저 프로필 조회 결과가 저장한 것과 일치하는 경우
+		assertThat(optResponse.get().getId()).isEqualTo(id);
+
+		// 실패 케이스 - 1 - 매니저 프로필 조회 결과가 존재하지 않는 경우
+		Assertions.assertTrue(optNotExistsResponse.isEmpty());
 	}
 
 	@Test
@@ -133,11 +125,12 @@ class ManagerServiceTest {
 	}
 
 	// 매니저 객체 생성해 반환
-	private Manager createManager(Long id) {
+	private Manager createManager(long id) {
 		return Manager.builder()
 				.id(id)
 				.realName("김현지")
 				.userProfile(new ManagerProfile())
+				.postList(new ArrayList<>())
 				.build();
 	}
 }

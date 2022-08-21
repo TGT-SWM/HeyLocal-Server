@@ -10,7 +10,7 @@ import com.heylocal.traveler.dto.ManagerDto.ManagerProfileSimpleResponse;
 import com.heylocal.traveler.dto.ManagerDto.ManagerReviewResponse;
 import com.heylocal.traveler.dto.PageDto.PageRequest;
 import com.heylocal.traveler.service.ManagerService;
-import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -20,7 +20,9 @@ import org.mockito.MockitoAnnotations;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
 
 class ManagerControllerTest {
@@ -36,46 +38,30 @@ class ManagerControllerTest {
 	}
 
 	@Test
-	@DisplayName("매니저 프로필 조회 컨트롤러 (simple=false)")
+	@DisplayName("매니저 프로필 조회 컨트롤러")
 	void managersManagerIdProfileGetTest() {
 		// GIVEN
 		boolean simple = false; // 매니저의 전체 프로필 조회
-		Long managerId = 1L;
-		Manager manager = createManager(managerId);
+		long id = 1L;
+		long notExistsId = id + 1;
+
+		Manager manager = createManager(id);
 		List<Post> postList = new ArrayList<>();
 		ManagerProfileResponse response = ManagerProfileResponse.from(manager, postList);
-		given(managerService.findProfileById(managerId)).willReturn(response);
+		given(managerService.findProfileById(id)).willReturn(Optional.ofNullable(response));
 
 		// WHEN - THEN
-		try {
-			ManagerProfileResponse actual = managerController.managersManagerIdProfileGet(managerId, simple);
-			// 2. 의도한 결과를 반환하는지 (매니저 ID 일치)
-			Assertions.assertThat(actual.getId()).isEqualTo(managerId);
-		} catch (NotFoundException e) {
-			// 1. NotFoundException이 발생하지 않는지
-			Assertions.fail("예외 발생: " + e.getMessage());
-		}
-	}
+		// 성공 케이스 - 1 - 저장되어 있는 프로필을 성공적으로 조회하는 경우
+		Assertions.assertDoesNotThrow(() -> {
+			ManagerProfileResponse actual = managerController.managersManagerIdProfileGet(id, simple);
+			assertThat(actual.getId()).isEqualTo(id);
+		});
 
-	@Test
-	@DisplayName("매니저 프로필 조회 컨트롤러 (simple=true)")
-	void managersManagerIdProfileGetSimpleTest() {
-		// GIVEN
-		boolean simple = true; // 매니저의 간단 프로필 조회
-		Long managerId = 1L;
-		Manager manager = createManager(managerId);
-		ManagerProfileSimpleResponse response = ManagerProfileSimpleResponse.from(manager);
-		given(managerService.findSimpleProfileById(managerId)).willReturn(response);
-
-		// WHEN - THEN
-		try {
-			ManagerProfileSimpleResponse actual = managerController.managersManagerIdProfileGet(managerId, simple);
-			// 2. 의도한 결과를 반환하는지 (매니저 ID 일치)
-			Assertions.assertThat(actual.getId()).isEqualTo(managerId);
-		} catch (NotFoundException e) {
-			// 1. NotFoundException이 발생하지 않는지
-			Assertions.fail("예외 발생: " + e.getMessage());
-		}
+		// 실패 케이스 - 1 - 매니저 프로필 조회에 실패한 경우
+		Assertions.assertThrows(
+				NotFoundException.class,
+				() -> managerController.managersManagerIdProfileGet(notExistsId, simple)
+		);
 	}
 
 	@Test
@@ -99,7 +85,7 @@ class ManagerControllerTest {
 		List<ManagerReviewResponse> actual = managerController.managersManagerReviews(managerId, pageRequest);
 
 		// THEN
-		Assertions.assertThat(actual.size()).isEqualTo(response.size());
+		assertThat(actual.size()).isEqualTo(response.size());
 	}
 
 	// 매니저 객체 생성해 반환
