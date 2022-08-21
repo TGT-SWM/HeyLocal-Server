@@ -28,18 +28,19 @@ class TokenRepositoryTest {
   @DisplayName("토큰 쌍 저장")
   void saveTokenPairTest() {
     //GIVEN
+    long userId = 3L;
     String accessValue = "Access Token Value";
     LocalDateTime accessExpired = LocalDateTime.now().plusHours(1);
     String refreshValue = "Access Token Value";
     LocalDateTime refreshExpired = LocalDateTime.now().plusWeeks(2);
 
     //WHEN
-    RefreshToken refreshToken = tokenRepository.saveTokenPair(accessValue, accessExpired, refreshValue, refreshExpired);
+    RefreshToken refreshToken = tokenRepository.saveTokenPair(userId, accessValue, accessExpired, refreshValue, refreshExpired);
 
     //THEN
     assertAll(
         //성공 케이스
-        () -> assertDoesNotThrow(() -> tokenRepository.saveTokenPair(accessValue, accessExpired, refreshValue, refreshExpired)),
+        () -> assertDoesNotThrow(() -> tokenRepository.saveTokenPair(userId, accessValue, accessExpired, refreshValue, refreshExpired)),
         () -> assertEquals(refreshValue, refreshToken.getTokenValue()),
         () -> assertEquals(accessValue, refreshToken.getAccessToken().getTokenValue())
     );

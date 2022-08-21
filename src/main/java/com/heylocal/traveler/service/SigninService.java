@@ -131,7 +131,7 @@ public class SigninService {
     refreshTokenValue = jwtTokenProvider.createRefreshToken(id);
 
     //토큰 DB 저장
-    saveTokenPairToDb(accessTokenValue, refreshTokenValue);
+    saveTokenPairToDb(id, accessTokenValue, refreshTokenValue);
 
     return new String[]{accessTokenValue, refreshTokenValue};
   }
@@ -140,15 +140,16 @@ public class SigninService {
    * <pre>
    * DB에 Access·Refresh Token 을 저장하는 메서드
    * </pre>
+   * @param userId 관련 사용자 id(pk)
    * @param accessTokenValue Access Token 값
    * @param refreshTokenValue Refresh Token 값
    */
-  private void saveTokenPairToDb(String accessTokenValue, String refreshTokenValue) {
+  private void saveTokenPairToDb(long userId, String accessTokenValue, String refreshTokenValue) {
     LocalDateTime refreshExpiration;
     LocalDateTime accessExpiration;
 
     accessExpiration = jwtTokenParser.extractExpiration(accessTokenValue);
     refreshExpiration = jwtTokenParser.extractExpiration(refreshTokenValue);
-    tokenRepository.saveTokenPair(accessTokenValue, accessExpiration, refreshTokenValue, refreshExpiration);
+    tokenRepository.saveTokenPair(userId, accessTokenValue, accessExpiration, refreshTokenValue, refreshExpiration);
   }
 }

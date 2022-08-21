@@ -2,6 +2,7 @@ package com.heylocal.traveler.repository;
 
 import com.heylocal.traveler.domain.token.AccessToken;
 import com.heylocal.traveler.domain.token.RefreshToken;
+import com.heylocal.traveler.domain.user.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
@@ -25,14 +26,21 @@ public class TokenRepository {
    * @param accessValue Access Token 값
    * @param refreshValue Refresh Token 값
    */
-  public RefreshToken saveTokenPair(String accessValue, LocalDateTime accessExpired, String refreshValue, LocalDateTime refreshExpired) {
-    RefreshToken refreshToken = RefreshToken.builder()
+  public RefreshToken saveTokenPair(long userId, String accessValue, LocalDateTime accessExpired, String refreshValue, LocalDateTime refreshExpired) {
+    RefreshToken refreshToken;
+    AccessToken accessToken;
+    User user;
+
+    user = em.find(User.class, userId);
+    refreshToken = RefreshToken.builder()
         .tokenValue(refreshValue)
         .expiredDateTime(refreshExpired)
+        .user(user)
         .build();
-    AccessToken accessToken = AccessToken.builder()
+    accessToken = AccessToken.builder()
         .tokenValue(accessValue)
         .expiredDateTime(accessExpired)
+        .user(user)
         .build();
     refreshToken.associateAccessToken(accessToken);
 
