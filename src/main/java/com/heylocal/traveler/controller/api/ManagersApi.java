@@ -8,6 +8,8 @@ package com.heylocal.traveler.controller.api;
 import com.heylocal.traveler.controller.exception.NotFoundException;
 import com.heylocal.traveler.dto.ErrorMessageResponse;
 import com.heylocal.traveler.dto.ManagerDto.ManagerProfileResponse;
+import com.heylocal.traveler.dto.ManagerDto.ManagerReviewResponse;
+import com.heylocal.traveler.dto.PageDto.PageRequest;
 import com.heylocal.traveler.dto.Sample;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -19,6 +21,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2022-08-12T04:12:44.357Z[GMT]")
 @RequestMapping("/managers")
@@ -53,6 +57,12 @@ public interface ManagersApi {
     ResponseEntity<Void> managersManagerIdReviewsPost(
         @Parameter(in = ParameterIn.PATH, description = "매니저 id", required = true) @PathVariable long managerId,
         @Parameter(in = ParameterIn.DEFAULT, description = "매니저 리뷰 내용 + 리뷰할 여행 id", required = true) @Validated @RequestBody Sample body);
+
+    @Operation(summary = "해당 매니저의 매니저 리뷰 조회", description = "", tags = {"Managers"})
+    @GetMapping(value = "/{managerId}/reviews")
+    List<ManagerReviewResponse> managersManagerReviews(
+            @Parameter(in = ParameterIn.PATH, description = "매니저 id", required = true) @PathVariable long managerId,
+            @Parameter(in = ParameterIn.QUERY, description = "페이지 + 한 페이지의 크기", required = true) PageRequest pageRequest);
 
 }
 
