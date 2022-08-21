@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.heylocal.traveler.dto.ManagerDto.*;
@@ -32,14 +33,16 @@ public class ManagerService {
 	 * @return 매니저 프로필의 함축 버전인 ManagerProfileSimpleResponse 객체
 	 */
 	@Transactional
-	public ManagerProfileSimpleResponse findSimpleProfileById(long userId) {
+	public Optional<ManagerProfileSimpleResponse> findSimpleProfileById(long userId) {
 		// 매니저 조회
-		Manager manager = managerRepository.findOne(userId);
-		if (manager == null) {
-			return null;
+		Optional<Manager> optManager = managerRepository.findOne(userId);
+		if (optManager.isEmpty()) {
+			return Optional.empty();
 		}
 
-		return ManagerProfileSimpleResponse.from(manager);
+		// DTO 변환
+		ManagerProfileSimpleResponse response = ManagerProfileSimpleResponse.from(optManager.get());
+		return Optional.ofNullable(response);
 	}
 
 	/**
@@ -50,18 +53,22 @@ public class ManagerService {
 	 * @return 매니저 프로필 정보를 담은 ManagerProfileResponse 객체
 	 */
 	@Transactional
-	public ManagerProfileResponse findProfileById(long userId) {
+	public Optional<ManagerProfileResponse> findProfileById(long userId) {
 		// 매니저 조회
-		Manager manager = managerRepository.findOne(userId);
-		if (manager == null) {
-			return null;
+		Optional<Manager> optManager = managerRepository.findOne(userId);
+		if (optManager.isEmpty()) {
+			return Optional.empty();
 		}
 
 		// 매니저 포스트 조회
+		Manager manager = optManager.get();
 		List<Post> postList = manager.getPostList();
+		System.out.println("postList = " + postList);
 		List<Post> shortPostList = postList.subList(0, Math.min(2, postList.size()));
 
-		return ManagerProfileResponse.from(manager, shortPostList);
+		// DTO 변환
+		ManagerProfileResponse response = ManagerProfileResponse.from(manager, shortPostList);
+		return Optional.ofNullable(response);
 	}
 
 	/**

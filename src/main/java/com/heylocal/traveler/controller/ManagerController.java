@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -32,23 +33,15 @@ public class ManagerController implements ManagersApi {
 
 	@Override
 	public ManagerProfileResponse managersManagerIdProfileGet(long managerId, boolean simple) throws NotFoundException {
-		ManagerProfileResponse response;
-
 		// 매니저 프로필 조회
-		// simple 파라미터 값에 따라 관련 서비스 호출
-		// simple 쿼리 파라미터로 구분하는 대신 경로와 컨트롤러로 구분하는게 어떨지?
-		if (simple) {
-			response = (ManagerProfileResponse) managerService.findSimpleProfileById(managerId);
-		} else {
-			response = managerService.findProfileById(managerId);
-		}
+		Optional<ManagerProfileResponse> optResponse = managerService.findProfileById(managerId);
 
 		// 매니저 프로필 정보가 없는 경우
-		if (response == null) {
+		if (optResponse.isEmpty()) {
 			throw new NotFoundException("정보가 존재하지 않습니다.");
 		}
 
-		return response;
+		return optResponse.get();
 	}
 
 	@Override

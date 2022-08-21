@@ -13,7 +13,7 @@ import java.util.Optional;
 public class ManagerProfileRepository {
 	private final EntityManager em;
 
-	public ManagerProfile findByUserId(long userId) {
+	public Optional<ManagerProfile> findByUserId(long userId) {
 		String jpql = "select m from ManagerProfile m where m.user.id = :id";
 		ManagerProfile profile;
 
@@ -22,9 +22,9 @@ public class ManagerProfileRepository {
 					.setParameter("id", userId)
 					.getSingleResult();
 		} catch (NoResultException e) {
-			return null;
+			return Optional.empty();
 		}
 
-		return profile;
+		return Optional.ofNullable(profile);
 	}
 }
