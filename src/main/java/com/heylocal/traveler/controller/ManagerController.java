@@ -6,11 +6,13 @@ import com.heylocal.traveler.exception.controller.NotFoundException;
 import com.heylocal.traveler.dto.ManagerDto.ManagerProfileResponse;
 import com.heylocal.traveler.dto.Sample;
 import com.heylocal.traveler.service.ManagerService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@Tag(name = "Managers")
 @RequiredArgsConstructor
 public class ManagerController implements ManagersApi {
 	private final ManagerService managerService;
