@@ -12,7 +12,15 @@ import java.util.Optional;
 public class ManagerRepository {
 	private final EntityManager em;
 
-	public Manager findOne(Long id) {
-		return em.find(Manager.class, id);
+	/**
+	 * <pre>
+	 * 매니저 ID를 통해 조회
+	 * </pre>
+	 * @param id 조회하고자 하는 매니저의 ID
+	 * @return 매니저의 Optional 객체
+	 */
+	public Optional<Manager> findOne(long id) {
+		Manager manager = em.find(Manager.class, id);
+		return Optional.ofNullable(manager);
 	}
 }

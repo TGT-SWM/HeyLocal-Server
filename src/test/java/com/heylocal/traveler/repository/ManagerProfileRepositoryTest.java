@@ -5,6 +5,7 @@ import com.heylocal.traveler.domain.profile.ManagerProfile;
 import com.heylocal.traveler.domain.profile.ManagerResponseTime;
 import com.heylocal.traveler.domain.user.Manager;
 import com.heylocal.traveler.domain.user.UserType;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,8 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 
 import javax.persistence.EntityManager;
+
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -31,12 +34,22 @@ class ManagerProfileRepositoryTest {
 		Manager manager = createManager();
 		ManagerProfile profile = createManagerProfile(manager);
 
+		long id = profile.getUser().getId();
+		long notExistsId = id + 1;
+
 		// WHEN
-		Long id = profile.getUser().getId();
-		ManagerProfile foundProfile = managerProfileRepository.findByUserId(id);
+		Optional<ManagerProfile> optResult = managerProfileRepository.findByUserId(id);
+		Optional<ManagerProfile> optNotExistsResult = managerProfileRepository.findByUserId(notExistsId);
 
 		// THEN
-		assertThat(foundProfile).isEqualTo(profile);
+		// 성공 케이스 - 1 - 프로필 조회 결과가 존재하는 경우
+		Assertions.assertTrue(optResult.isPresent());
+		// 성공 케이스 - 2 - 프로필 조회 결과가 저장한 것과 일치하는 경우
+		// 성공 케이스 1 통과하는 경우에만 실행
+		assertThat(optResult.get()).isEqualTo(profile);
+
+		// 실패 케이스 - 1 - 존재하지 않는 매니저의 프로필을 조회하는 경우
+		Assertions.assertTrue(optNotExistsResult.isEmpty());
 	}
 
 	private Manager createManager() {
