@@ -1,12 +1,12 @@
 package com.heylocal.traveler.controller;
 
-import com.heylocal.traveler.controller.exception.NotFoundException;
 import com.heylocal.traveler.domain.post.Post;
 import com.heylocal.traveler.domain.profile.ManagerProfile;
 import com.heylocal.traveler.domain.user.Manager;
 import com.heylocal.traveler.dto.ManagerDto.ManagerProfileResponse;
 import com.heylocal.traveler.dto.ManagerDto.ManagerReviewResponse;
 import com.heylocal.traveler.dto.PageDto.PageRequest;
+import com.heylocal.traveler.exception.controller.NotFoundException;
 import com.heylocal.traveler.service.ManagerService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

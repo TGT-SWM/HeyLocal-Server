@@ -48,7 +48,7 @@ public class ManagerController implements ManagersApi {
 
 		// 매니저 프로필 정보가 없는 경우
 		if (optResponse.isEmpty()) {
-			throw new NotFoundException("정보가 존재하지 않습니다.");
+			throw new NotFoundException(NotFoundCode.NO_INFO);
 		}
 
 		return optResponse.get();
