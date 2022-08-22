@@ -25,12 +25,12 @@ public class Manager extends User {
 
   //양방향 설정
 
-  @OneToMany(mappedBy = "writer", cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "writer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   private List<Note> noteList = new ArrayList<>();
 
-  @OneToMany(mappedBy = "writer", cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "writer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   private List<Post> postList = new ArrayList<>();
 
-  @OneToMany(mappedBy = "manager", cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "manager", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   private List<Travel> travelList = new ArrayList<>();
 }

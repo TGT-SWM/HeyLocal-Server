@@ -21,7 +21,7 @@ import javax.persistence.*;
 @Getter
 @SuperBuilder
 public class ManagerReview extends UserReview {
-  @OneToOne
+  @OneToOne(fetch = FetchType.LAZY)
   @JoinColumn(nullable = false)
   private Travel travel;
 

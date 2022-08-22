@@ -50,9 +50,9 @@ public class Post extends BaseTimeEntity {
 
   //양방향 설정
 
-  @OneToMany(mappedBy = "post") //포스트 삭제 시, S3에 저장된 이미지 파일를 따로 작업하여 제거해야하므로 cascade 설정 X
+  @OneToMany(mappedBy = "post", fetch = FetchType.LAZY) //포스트 삭제 시, S3에 저장된 이미지 파일를 따로 작업하여 제거해야하므로 cascade 설정 X
   private List<ImageContent> imageContentList = new ArrayList<>();
 
-  @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   private List<VisitReview> visitReviewList = new ArrayList<>();
 }

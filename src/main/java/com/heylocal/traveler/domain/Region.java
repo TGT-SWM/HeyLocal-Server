@@ -34,15 +34,15 @@ public class Region {
 
   //양방향 설정
 
-  @OneToMany(mappedBy = "region", cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "region", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   private List<OrderSheet> orderSheetList = new ArrayList<>();
 
-  @OneToMany(mappedBy = "region", cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "region", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   private List<Place> placeList = new ArrayList<>();
 
-  @OneToMany(mappedBy = "activeRegion1") //region 이 제거되어도 profile은 제거되면 안되므로, cascade 설정 X
+  @OneToMany(mappedBy = "activeRegion1", fetch = FetchType.LAZY) //region 이 제거되어도 profile은 제거되면 안되므로, cascade 설정 X
   private List<ManagerProfile> managerProfileList1 = new ArrayList<>();
 
-  @OneToMany(mappedBy = "activeRegion2") //region 이 제거되어도 profile은 제거되면 안되므로, cascade 설정 X
+  @OneToMany(mappedBy = "activeRegion2", fetch = FetchType.LAZY) //region 이 제거되어도 profile은 제거되면 안되므로, cascade 설정 X
   private List<ManagerProfile> managerProfileList2 = new ArrayList<>();
 }

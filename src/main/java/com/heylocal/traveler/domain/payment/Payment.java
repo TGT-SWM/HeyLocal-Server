@@ -27,7 +27,7 @@ public class Payment extends BaseTimeEntity {
   @Enumerated(EnumType.STRING)
   private PaymentType type;
 
-  @OneToOne
+  @OneToOne(fetch = FetchType.LAZY)
   @JoinColumn(nullable = true)
   private Travel travel; //만약 단순 포인트 충전이라면 null
 

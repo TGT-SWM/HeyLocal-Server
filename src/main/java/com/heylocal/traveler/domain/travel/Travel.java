@@ -40,7 +40,7 @@ public class Travel extends BaseTimeEntity {
   @ColumnDefault("false")
   private Boolean isFixed;
 
-  @OneToOne
+  @OneToOne(fetch = FetchType.LAZY)
   @JoinColumn(nullable = false)
   private OrderSheet orderSheet;
 
@@ -50,18 +50,18 @@ public class Travel extends BaseTimeEntity {
 
   //양방향 설정
 
-  @OneToOne(mappedBy = "travel", cascade = CascadeType.ALL)
+  @OneToOne(mappedBy = "travel", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   private ChatRoom chatRoom;
 
-  @OneToOne(mappedBy = "travel", cascade = CascadeType.ALL)
+  @OneToOne(mappedBy = "travel", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   private Payment payment;
 
   @OneToMany(mappedBy = "travel", cascade = CascadeType.ALL)
   private List<DaySchedule> dayScheduleList = new ArrayList<>();
 
-  @OneToOne(mappedBy = "travel", cascade = CascadeType.ALL)
+  @OneToOne(mappedBy = "travel", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   private ManagerReview managerReview;
 
-  @OneToOne(mappedBy = "travel", cascade = CascadeType.ALL)
+  @OneToOne(mappedBy = "travel", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   private TravelerReview travelerReview;
 }

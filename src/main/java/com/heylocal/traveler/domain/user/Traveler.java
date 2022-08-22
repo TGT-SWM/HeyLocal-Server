@@ -24,9 +24,9 @@ public class Traveler extends User {
 
   //양방향 설정
 
-  @OneToMany(mappedBy = "writer", cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "writer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   private List<OrderSheet> orderSheetList = new ArrayList<>();
 
-  @OneToMany(mappedBy = "writer", cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "writer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   private List<VisitReview> visitReviewList = new ArrayList<>();
 }

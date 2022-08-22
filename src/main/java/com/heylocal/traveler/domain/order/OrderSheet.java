@@ -37,7 +37,7 @@ public class OrderSheet extends BaseTimeEntity {
   @JoinColumn(nullable = false)
   private Region region;
 
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   private Traveler writer;
 
   @Column(nullable = false)

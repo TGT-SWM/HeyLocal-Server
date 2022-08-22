@@ -23,7 +23,7 @@ public class TravelMember extends BaseTimeEntity {
   @Id @GeneratedValue
   private Long id;
 
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(nullable = false)
   private OrderSheet orderSheet;
 
