@@ -24,12 +24,12 @@ public class ChatRoom extends BaseTimeEntity {
   @Id @GeneratedValue
   private Long id;
 
-  @OneToOne
+  @OneToOne(fetch = FetchType.LAZY)
   @JoinColumn(nullable = false)
   private Travel travel;
 
   //양방향 설정
 
-  @OneToMany(mappedBy= "chatRoom", cascade = CascadeType.ALL)
+  @OneToMany(mappedBy= "chatRoom", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   private List<ChatMessage> chatMessageList = new ArrayList<>();
 }

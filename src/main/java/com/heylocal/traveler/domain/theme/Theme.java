@@ -33,6 +33,6 @@ public class Theme extends BaseTimeEntity {
 
   //양방향 설정
 
-  @OneToMany(mappedBy = "theme") //테마를 제거해도 포스트는 그대로 있어야 하므로, cascade 설정 X
+  @OneToMany(mappedBy = "theme", fetch = FetchType.LAZY) //테마를 제거해도 포스트는 그대로 있어야 하므로, cascade 설정 X
   private List<Post> postList = new ArrayList<>();
 }

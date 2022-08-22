@@ -51,9 +51,9 @@ public class Place extends BaseTimeEntity {
 
   //양방향 설정
 
-  @OneToMany(mappedBy = "place", cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "place", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   private List<Note> noteList = new ArrayList<>();
 
-  @OneToMany(mappedBy = "place", cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "place", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   private List<Post> postList = new ArrayList<>();
 }

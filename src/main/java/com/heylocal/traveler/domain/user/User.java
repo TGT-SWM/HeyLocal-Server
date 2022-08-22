@@ -47,24 +47,38 @@ public class User extends BaseTimeEntity {
 
   //양방향 설정
 
-  @OneToMany(mappedBy = "receiver", cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "receiver", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   private List<Notification> notificationList = new ArrayList<>();
 
-  @OneToMany(mappedBy = "requester", cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "requester", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   private List<OrderRequest> sentOrderRequestList = new ArrayList<>(); //보낸 요청 리스트
 
-  @OneToMany(mappedBy = "receiver", cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "receiver", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   private List<OrderRequest> receivedOrderRequestList = new ArrayList<>(); //받은 요청 리스트
 
-  @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+  @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   private UserProfile userProfile;
 
-  @OneToMany(mappedBy = "writer", cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "writer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   private List<UserReview> userReview = new ArrayList<>();
 
-  @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+  @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   private RefreshToken refreshToken;
 
-  @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+  @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   private AccessToken accessToken;
+
+  public void registerRefreshToken(RefreshToken refreshToken) {
+    this.refreshToken = refreshToken;
+    if (refreshToken.getUser() != this) {
+      refreshToken.associateUser(this);
+    }
+  }
+
+  public void registerAccessToken(AccessToken accessToken) {
+    this.accessToken = accessToken;
+    if (accessToken.getUser() != this) {
+      accessToken.associateUser(this);
+    }
+  }
 }
