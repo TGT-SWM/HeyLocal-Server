@@ -5,13 +5,12 @@ import com.heylocal.traveler.domain.token.RefreshToken;
 import com.heylocal.traveler.domain.user.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.Session;
-import org.hibernate.stat.Statistics;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -37,14 +36,15 @@ public class TokenRepository {
     refreshToken = RefreshToken.builder()
         .tokenValue(refreshValue)
         .expiredDateTime(refreshExpired)
-        .user(user)
         .build();
     accessToken = AccessToken.builder()
         .tokenValue(accessValue)
         .expiredDateTime(accessExpired)
-        .user(user)
         .build();
+
     refreshToken.associateAccessToken(accessToken);
+    refreshToken.associateUser(user);
+    accessToken.associateUser(user);
 
     //Cascade.ALL 옵션 때문에, 부모 엔티티(RefreshToken)이 영속화될 때, 자식 엔티티(Access Token)도 영속화된다.
     em.persist(refreshToken);
@@ -107,20 +107,12 @@ public class TokenRepository {
    * @param userId
    * @exception NoResultException 해당 userId를 갖는 Refresh 토큰이 없는 경우
    */
-  public void removeTokenPairByUserId(long userId) throws NoResultException {
-    String jpql = "delete from AccessToken a" +
-        " where a.user.id = :userId";
-
-    em.createQuery(jpql)
-        .setParameter("userId", userId)
-        .executeUpdate();
-
-    jpql = "delete from RefreshToken r" +
-        " where r.user.id = :userId";
-
-    em.createQuery(jpql)
-        .setParameter("userId", userId)
-        .executeUpdate();
+  public User removeTokenPairByUserId(long userId) throws NoResultException {
+    User user = em.find(User.class, userId);
+    if (!Objects.isNull(user.getRefreshToken())) {
+      em.remove(user.getRefreshToken());
+    }
+    return user;
   }
 
   /**

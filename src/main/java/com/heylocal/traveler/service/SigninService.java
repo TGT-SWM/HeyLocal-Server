@@ -1,6 +1,7 @@
 package com.heylocal.traveler.service;
 
 import com.heylocal.traveler.domain.user.Traveler;
+import com.heylocal.traveler.domain.user.User;
 import com.heylocal.traveler.domain.user.UserType;
 import com.heylocal.traveler.exception.code.SigninCode;
 import com.heylocal.traveler.exception.service.SigninArgumentException;
