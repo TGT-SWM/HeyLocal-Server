@@ -55,7 +55,6 @@ public class SignupService {
   public void signupTraveler(SignupRequest request) throws BadArgumentException {
     String accountId = request.getAccountId();
     String nickname = request.getNickname();
-    String phoneNumber = request.getPhoneNumber();
     String encodedPassword;
 
     //중복 확인

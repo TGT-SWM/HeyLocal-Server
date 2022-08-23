@@ -28,8 +28,6 @@ public class SignupController implements SignupApi {
 
   @Value("${heylocal.signup.pattern.account-id}")
   private String accountIdPattern;
-  @Value("${heylocal.signup.pattern.phone-number}")
-  private String phoneNumberPattern;
   @Value("${heylocal.signup.pattern.password}")
   private String passwordPattern;
   @Value("${heylocal.signup.pattern.nickname}")
@@ -53,7 +51,6 @@ public class SignupController implements SignupApi {
     validateAccountIdFormat(request.getAccountId()); //계정 포맷 검증
     validatePasswordFormat(request.getPassword()); //비밀번호 포맷 검증
     validateNicknameFormat(request.getNickname()); //닉네임 포맷 검증
-    validatePhoneNumberFormat(request.getPhoneNumber()); //전화번호 포맷 검증
 
     try {
       signupService.signupTraveler(request);
@@ -78,23 +75,6 @@ public class SignupController implements SignupApi {
     }
     if (!Pattern.matches(accountIdPattern, accountId)) {
       throw new BadRequestException(SignupCode.WRONG_ACCOUNT_ID_FORMAT);
-    }
-
-    return true;
-  }
-
-  /**
-   * <pre>
-   * 휴대폰 번호 형식 검증
-   * 13자리, 하이픈 필수
-   * </pre>
-   * @param phoneNumber 검증할 휴대폰 번호
-   * @return 조건에 부합하면 true 반환
-   * @throws BadRequestException 조건에 부합하지 않는다면, 발생하는 예외
-   */
-  private boolean validatePhoneNumberFormat(String phoneNumber) throws BadRequestException {
-    if (!Pattern.matches(phoneNumberPattern, phoneNumber)) {
-      throw new BadRequestException(SignupCode.WRONG_PHONE_NUMBER_FORMAT);
     }
 
     return true;
