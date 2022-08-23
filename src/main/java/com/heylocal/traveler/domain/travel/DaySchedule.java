@@ -16,7 +16,7 @@ import java.util.List;
  * 특정 일자 (하루) 스케줄표
  */
 @Entity
-@Table(name = "SCHEDULE")
+@Table(name = "DAY_SCHEDULE")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter

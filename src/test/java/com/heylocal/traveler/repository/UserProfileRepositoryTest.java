@@ -1,7 +1,7 @@
 package com.heylocal.traveler.repository;
 
 import com.heylocal.traveler.domain.user.Traveler;
-import com.heylocal.traveler.domain.user.UserType;
+import com.heylocal.traveler.domain.user.UserRole;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,11 +13,11 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@Import({TravelerRepository.class})
+@Import({UserProfileRepository.class})
 @DataJpaTest
-class TravelerRepositoryTest {
+class UserProfileRepositoryTest {
   @Autowired
-  private TravelerRepository travelerRepository;
+  private UserProfileRepository userProfileRepository;
   @Autowired
   private EntityManager em;
 
@@ -32,7 +32,7 @@ class TravelerRepositoryTest {
 
     //WHEN - THEN
     //성공 케이스 - 1
-    assertDoesNotThrow(() -> travelerRepository.saveTraveler(accountId, encodedPw, nickname, phoneNumber));
+    assertDoesNotThrow(() -> userProfileRepository.saveTraveler(accountId, encodedPw, nickname, phoneNumber));
   }
 
   @Test
@@ -50,7 +50,7 @@ class TravelerRepositoryTest {
         .password(encodedPw)
         .nickname(nickname)
         .phoneNumber(phoneNumber)
-        .userType(UserType.TRAVELER)
+        .userType(UserRole.TRAVELER)
         .build();
 
     em.persist(traveler);
@@ -58,8 +58,8 @@ class TravelerRepositoryTest {
     notExistUserId = userId + 1;
 
     //WHEN
-    Optional<Traveler> succeedResult = travelerRepository.findById(userId);
-    Optional<Traveler> failResult = travelerRepository.findById(notExistUserId);
+    Optional<Traveler> succeedResult = userProfileRepository.findById(userId);
+    Optional<Traveler> failResult = userProfileRepository.findById(notExistUserId);
 
     //THEN
     assertAll(
@@ -81,14 +81,14 @@ class TravelerRepositoryTest {
         .password("testPassword123!")
         .phoneNumber("010-1234-1234")
         .nickname("testNickname")
-        .userType(UserType.TRAVELER)
+        .userType(UserRole.TRAVELER)
         .build();
 
     em.persist(traveler);
 
     //WHEN
-    Optional<Traveler> existResult = travelerRepository.findByAccountId(existAccountId);
-    Optional<Traveler> notExistResult = travelerRepository.findByAccountId(notExistAccountId);
+    Optional<Traveler> existResult = userProfileRepository.findByAccountId(existAccountId);
+    Optional<Traveler> notExistResult = userProfileRepository.findByAccountId(notExistAccountId);
 
     //THEN
     assertAll(

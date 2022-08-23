@@ -8,8 +8,6 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * 채팅방
@@ -30,6 +28,4 @@ public class ChatRoom extends BaseTimeEntity {
 
   //양방향 설정
 
-  @OneToMany(mappedBy= "chatRoom", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-  private List<ChatMessage> chatMessageList = new ArrayList<>();
 }

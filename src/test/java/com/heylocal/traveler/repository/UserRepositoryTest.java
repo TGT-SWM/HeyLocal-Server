@@ -1,7 +1,7 @@
 package com.heylocal.traveler.repository;
 
 import com.heylocal.traveler.domain.user.User;
-import com.heylocal.traveler.domain.user.UserType;
+import com.heylocal.traveler.domain.user.UserRole;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -31,12 +31,12 @@ class UserRepositoryTest {
     String accountId = "testAccountId";
     String pw = "testPw123123!";
     String phoneNum = "010-1234-1234";
-    UserType userType = UserType.TRAVELER;
+    UserRole userRole = UserRole.TRAVELER;
     User user = User.builder()
         .accountId(accountId)
         .password(pw)
         .phoneNumber(phoneNum)
-        .userType(userType)
+        .userType(userRole)
         .build();
     em.persist(user);
 
@@ -60,12 +60,12 @@ class UserRepositoryTest {
     String accountId = "testAccountId";
     String pw = "testPw123123!";
     String phoneNum = "010-1234-1234";
-    UserType userType = UserType.TRAVELER;
+    UserRole userRole = UserRole.TRAVELER;
     User user = User.builder()
         .accountId(accountId)
         .password(pw)
         .phoneNumber(phoneNum)
-        .userType(userType)
+        .userType(userRole)
         .build();
     em.persist(user);
 

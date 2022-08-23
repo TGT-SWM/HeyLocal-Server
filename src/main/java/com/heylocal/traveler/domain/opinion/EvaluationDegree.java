@@ -1,4 +1,4 @@
-package com.heylocal.traveler.domain.note;
+package com.heylocal.traveler.domain.opinion;
 
 /**
  * 5단계 평가

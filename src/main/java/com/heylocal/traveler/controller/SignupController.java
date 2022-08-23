@@ -46,16 +46,6 @@ public class SignupController implements SignupApi {
   }
 
   @Override
-  public UserInfoCheckResponse signupPhoneNumGet(String phoneNumber) throws BadRequestException {
-    UserInfoCheckResponse response;
-
-    validatePhoneNumberFormat(phoneNumber);
-    response = signupService.checkPhoneNumberExist(phoneNumber);
-
-    return response;
-  }
-
-  @Override
   public void signupPost(SignupRequest request, BindingResult bindingResult) throws BadRequestException {
     if (bindingResult.hasFieldErrors()) {
       throw new BadRequestException(BadRequestCode.EMPTY_FIELD);

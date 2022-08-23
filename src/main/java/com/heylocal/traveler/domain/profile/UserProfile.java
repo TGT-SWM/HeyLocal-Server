@@ -11,13 +11,11 @@ import org.hibernate.annotations.ColumnDefault;
 import javax.persistence.*;
 
 /**
- * 사용자(여행자, 매니저) 프로필 부모 클래스
+ * 사용자 프로필
  */
 
 @Entity
 @Table(name = "USER_PROFILE")
-@Inheritance(strategy = InheritanceType.JOINED)
-@DiscriminatorColumn(name = "DTYPE")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -26,10 +24,12 @@ public class UserProfile extends BaseTimeEntity {
   @Id @GeneratedValue
   private Long id;
 
+  private String imageUrl;
+
   @OneToOne
   @JoinColumn(nullable = false)
   private User user;
 
   @ColumnDefault("0")
-  private Integer possessionPoint; //보유 포인트
+  private Integer knowHow; //Redis로 이동해야함
 }

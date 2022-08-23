@@ -1,6 +1,6 @@
 package com.heylocal.traveler.util.jwt;
 
-import com.heylocal.traveler.domain.user.UserType;
+import com.heylocal.traveler.domain.user.UserRole;
 import com.heylocal.traveler.util.date.LocalDateTimeTransformer;
 import io.jsonwebtoken.*;
 import lombok.extern.slf4j.Slf4j;
@@ -80,7 +80,7 @@ class JwtTokenParserTest {
     String accountId = "testAccountId";
     String nickname = "testNickname";
     String phoneNumber = "010-1234-1234";
-    UserType userType = UserType.TRAVELER;
+    UserRole userRole = UserRole.TRAVELER;
 
     int accessTokenValidMilliSec = 7200000; //2시간
     Date now = new Date();
@@ -97,7 +97,7 @@ class JwtTokenParserTest {
         .claim("accountId", accountId)
         .claim("nickname", nickname)
         .claim("phoneNumber", phoneNumber)
-        .claim("userType", userType)
+        .claim("userType", userRole)
         .signWith(SignatureAlgorithm.HS512, secretKey)
         .compact();
 

@@ -1,7 +1,7 @@
 package com.heylocal.traveler.repository;
 
 import com.heylocal.traveler.domain.user.Traveler;
-import com.heylocal.traveler.domain.user.UserType;
+import com.heylocal.traveler.domain.user.UserRole;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,11 +12,11 @@ import javax.persistence.EntityManager;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
-@Import({TravelerProfileRepository.class})
+@Import({UserProfileRepository.class})
 @DataJpaTest
 class TravelerProfileRepositoryTest {
   @Autowired
-  private TravelerProfileRepository travelerProfileRepository;
+  private UserProfileRepository travelerProfileRepository;
   @Autowired
   private EntityManager em;
 
@@ -30,7 +30,7 @@ class TravelerProfileRepositoryTest {
         .password("password123!")
         .nickname("nickname")
         .phoneNumber("010-1111-1111")
-        .userType(UserType.TRAVELER)
+        .userType(UserRole.TRAVELER)
         .build();
     em.persist(traveler);
 

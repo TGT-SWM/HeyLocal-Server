@@ -1,36 +1,33 @@
-package com.heylocal.traveler.domain.post;
+package com.heylocal.traveler.domain.travelon.list;
 
 import com.heylocal.traveler.domain.BaseTimeEntity;
+import com.heylocal.traveler.domain.travelon.TravelOn;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
-import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 
 /**
- * 포스트에 포함되는 이미지
+ * 여행 동행인 목록
  */
-
 @Entity
-@Table(name = "IMAGE_CONTENT")
+@Table(name = "TRAVEL_MEMBER")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @SuperBuilder
-public class ImageContent extends BaseTimeEntity {
+public class TravelMember extends BaseTimeEntity {
   @Id @GeneratedValue
   private Long id;
 
+  @Enumerated(EnumType.STRING)
+  private MemberType memberType;
+
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(nullable = false)
-  private Post post;
+  private TravelOn travelOn;
 
-  @Column(nullable = false)
-  private String url;
 
-  @Column(nullable = false)
-  @ColumnDefault("0")
-  private Integer placedLineIndex;
 }

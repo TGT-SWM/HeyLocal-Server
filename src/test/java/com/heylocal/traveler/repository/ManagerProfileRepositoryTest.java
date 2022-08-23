@@ -4,7 +4,7 @@ import com.heylocal.traveler.domain.profile.ManagerGrade;
 import com.heylocal.traveler.domain.profile.ManagerProfile;
 import com.heylocal.traveler.domain.profile.ManagerResponseTime;
 import com.heylocal.traveler.domain.user.Manager;
-import com.heylocal.traveler.domain.user.UserType;
+import com.heylocal.traveler.domain.user.UserRole;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -57,14 +57,14 @@ class ManagerProfileRepositoryTest {
 		String accountId = "accountId";
 		String password = "password";
 		String phoneNumber = "010-0000-0000";
-		UserType userType = UserType.MANAGER;
+		UserRole userRole = UserRole.MANAGER;
 
 		Manager manager = Manager.builder()
 				.realName(realName)
 				.accountId(accountId)
 				.password(password)
 				.phoneNumber(phoneNumber)
-				.userType(userType)
+				.userType(userRole)
 				.build();
 		em.persist(manager);
 		return manager;

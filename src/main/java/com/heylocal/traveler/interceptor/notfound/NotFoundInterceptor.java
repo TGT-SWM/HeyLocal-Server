@@ -3,7 +3,6 @@ package com.heylocal.traveler.interceptor.notfound;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.heylocal.traveler.dto.ErrorMessageResponse;
 import com.heylocal.traveler.exception.code.NotFoundCode;
-import com.heylocal.traveler.exception.code.UnauthorizedCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;

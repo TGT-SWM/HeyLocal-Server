@@ -1,6 +1,6 @@
 package com.heylocal.traveler.service;
 
-import com.heylocal.traveler.domain.order.OrderSheet;
+import com.heylocal.traveler.domain.travelon.TravelOn;
 import com.heylocal.traveler.domain.profile.ManagerProfile;
 import com.heylocal.traveler.domain.profile.TravelerProfile;
 import com.heylocal.traveler.domain.travel.Travel;
@@ -88,11 +88,11 @@ class ManagerServiceTest {
 				.build();
 
 		// OrderSheet
-		OrderSheet orderSheet = OrderSheet.builder().writer(writer).build();
+		TravelOn travelOn = TravelOn.builder().writer(writer).build();
 
 		// Travel
 		Travel travel = Travel.builder()
-				.orderSheet(orderSheet)
+				.travelOn(travelOn)
 				.manager(manager)
 				.build();
 

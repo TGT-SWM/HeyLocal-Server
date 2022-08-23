@@ -12,7 +12,6 @@ import javax.persistence.*;
 /**
  * 알림
  */
-
 @Entity
 @Table(name = "NOTIFICATION")
 @NoArgsConstructor

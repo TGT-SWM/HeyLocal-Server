@@ -1,6 +1,6 @@
 package com.heylocal.traveler.controller;
 
-import com.heylocal.traveler.domain.user.UserType;
+import com.heylocal.traveler.domain.user.UserRole;
 import com.heylocal.traveler.exception.code.SigninCode;
 import com.heylocal.traveler.exception.controller.BadRequestException;
 import com.heylocal.traveler.exception.controller.UnauthorizedException;
@@ -41,7 +41,7 @@ class SignInControllerTest {
     long rightId = 3L;
     String rightNickname = "testNickname";
     String rightPhoneNumber = "010-1234-1234";
-    UserType rightUserType = UserType.TRAVELER;
+    UserRole rightUserRole = UserRole.TRAVELER;
     String rightAccessToken = "accessToken";
     String rightRefreshToken = "refreshToken";
     String emptyAccountId = "";
@@ -68,7 +68,7 @@ class SignInControllerTest {
         .accountId(rightAccountId)
         .nickname(rightNickname)
         .phoneNumber(rightPhoneNumber)
-        .userType(rightUserType)
+        .userRole(rightUserRole)
         .accessToken(rightAccessToken)
         .refreshToken(rightRefreshToken)
         .build();

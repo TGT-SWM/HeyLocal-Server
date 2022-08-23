@@ -4,8 +4,8 @@ package com.heylocal.traveler.domain.notification;
  * 알림 타입
  */
 public enum NotificationType {
-  MATCH_REQUEST("매칭 요청"), MATCH_ACCEPTED("매칭 수락"),
-  MATCH_DONE("매칭 완료"), SERVICE("서비스 공지");
+  NEW_OPINION("새 답변 등록"), ACCEPTED_ANSWER("답변 채택"),
+  TRAVEL("여행 관련 알림"), SERVICE("서비스 공지");
 
   private String value;
 

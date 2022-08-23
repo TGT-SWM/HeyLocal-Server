@@ -1,12 +1,11 @@
 package com.heylocal.traveler.service;
 
-import com.heylocal.traveler.domain.user.Traveler;
 import com.heylocal.traveler.domain.user.User;
-import com.heylocal.traveler.domain.user.UserType;
+import com.heylocal.traveler.domain.user.UserRole;
 import com.heylocal.traveler.exception.code.SigninCode;
 import com.heylocal.traveler.exception.service.SigninArgumentException;
 import com.heylocal.traveler.repository.TokenRepository;
-import com.heylocal.traveler.repository.TravelerRepository;
+import com.heylocal.traveler.repository.UserRepository;
 import com.heylocal.traveler.util.jwt.JwtTokenParser;
 import com.heylocal.traveler.util.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +26,7 @@ import static com.heylocal.traveler.dto.SigninDto.SigninResponse;
 @RequiredArgsConstructor
 public class SigninService {
 
-  private final TravelerRepository travelerRepository;
+  private final UserRepository userRepository;
   private final TokenRepository tokenRepository;
   private final PasswordEncoder passwordEncoder;
   private final JwtTokenProvider jwtTokenProvider;
@@ -43,23 +42,22 @@ public class SigninService {
   public SigninResponse signin(SigninRequest request) throws SigninArgumentException {
     String accountId = request.getAccountId();
     String rawPassword = request.getPassword();
-    Traveler traveler;
+    User user;
     SigninResponse response;
     String[] tokenAry;
 
     //계정 id 확인
-    traveler = checkAccountId(accountId);
+    user = checkAccountId(accountId);
     //비밀번호 확인
-    traveler = checkPassword(rawPassword, traveler);
+    user = checkPassword(rawPassword, user);
     //Access Token, Refresh Token 발급
-    tokenAry = issueTokens(traveler.getId());
+    tokenAry = issueTokens(user.getId());
 
     response = SigninResponse.builder()
-        .id(traveler.getId())
-        .accountId(traveler.getAccountId())
-        .nickname(traveler.getNickname())
-        .phoneNumber(traveler.getPhoneNumber())
-        .userType(UserType.TRAVELER)
+        .id(user.getId())
+        .accountId(user.getAccountId())
+        .nickname(user.getNickname())
+        .userRole(UserRole.TRAVELER)
         .accessToken(tokenAry[0])
         .refreshToken(tokenAry[1])
         .build();
@@ -72,35 +70,35 @@ public class SigninService {
    * @return 해당 계정 ID를 가지고 있는 Traveler 엔티티
    * @throws IllegalArgumentException 존재하지 않는 계정 ID인 경우
    */
-  private Traveler checkAccountId(String accountId) throws SigninArgumentException {
-    Optional<Traveler> travelerByAccountId;
+  private User checkAccountId(String accountId) throws SigninArgumentException {
+    Optional<User> userByAccountId;
 
-    travelerByAccountId = travelerRepository.findByAccountId(accountId);
-    if (travelerByAccountId.isEmpty()) {
+    userByAccountId = userRepository.findByAccountId(accountId);
+    if (userByAccountId.isEmpty()) {
       throw new SigninArgumentException(SigninCode.NOT_EXIST_SIGNIN_ACCOUNT_ID);
     }
 
-    return travelerByAccountId.get();
+    return userByAccountId.get();
   }
 
   /**
    * 비밀번호 확인 메서드
    * @param rawPassword (client가 요청한) 확인할 비밀번호
-   * @param travelerByAccountId 요청받은 계정 ID로 찾은 Traveler 엔티티, 비밀번호를 대조할 엔티티
+   * @param userByAccountId 요청받은 계정 ID로 찾은 Traveler 엔티티, 비밀번호를 대조할 엔티티
    * @return 비밀번호가 일치하는 경우 해당 Traveler 엔티티 반환
    * @exception IllegalArgumentException 비밀번호가 일치하지 않는 경우
    */
-  private Traveler checkPassword(String rawPassword, Traveler travelerByAccountId) throws SigninArgumentException {
+  private User checkPassword(String rawPassword, User userByAccountId) throws SigninArgumentException {
     String encodedPasswordOfFoundTraveler;
     boolean isMatchedPassword;
 
-    encodedPasswordOfFoundTraveler = travelerByAccountId.getPassword();
+    encodedPasswordOfFoundTraveler = userByAccountId.getPassword();
     isMatchedPassword = checkPasswordMatch(rawPassword, encodedPasswordOfFoundTraveler);
     if (!isMatchedPassword) {
       throw new SigninArgumentException(SigninCode.WRONG_SIGNIN_PASSWORD);
     }
 
-    return travelerByAccountId;
+    return userByAccountId;
   }
 
   /**
