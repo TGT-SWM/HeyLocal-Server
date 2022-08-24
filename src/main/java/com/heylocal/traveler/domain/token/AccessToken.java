@@ -26,9 +26,9 @@ public class AccessToken extends BaseTimeEntity {
   private String tokenValue;
   @Column(nullable = false)
   private LocalDateTime expiredDateTime;
-  @OneToOne
+  @OneToOne(optional = false)
   private RefreshToken refreshToken;
-  @OneToOne(fetch = FetchType.LAZY)
+  @OneToOne(optional = false, fetch = FetchType.LAZY)
   private User user;
 
   public void associateRefreshToken(RefreshToken refreshToken) {

@@ -23,10 +23,10 @@ public class TravelMember extends BaseTimeEntity {
   private Long id;
 
   @Enumerated(EnumType.STRING)
+  @Column(nullable = false)
   private MemberType memberType;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(nullable = false)
+  @ManyToOne(optional = false, fetch = FetchType.LAZY)
   private TravelOn travelOn;
 
 

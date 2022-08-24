@@ -1,14 +1,21 @@
 package com.heylocal.traveler.domain.user;
 
 import com.heylocal.traveler.domain.BaseTimeEntity;
+import com.heylocal.traveler.domain.notification.Notification;
+import com.heylocal.traveler.domain.opinion.Opinion;
+import com.heylocal.traveler.domain.profile.UserProfile;
 import com.heylocal.traveler.domain.token.AccessToken;
 import com.heylocal.traveler.domain.token.RefreshToken;
+import com.heylocal.traveler.domain.travel.Travel;
+import com.heylocal.traveler.domain.travelon.TravelOn;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 사용자 & 관리자 클래스
@@ -39,7 +46,20 @@ public class User extends BaseTimeEntity {
 
   //양방향 설정
 
+  @OneToMany(mappedBy = "receiver", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  private List<Notification> notificationList = new ArrayList<>();
 
+  @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  private List<Opinion> opinionList = new ArrayList<>();
+
+  @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  private UserProfile userProfile;
+
+  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  private List<Travel> travelList = new ArrayList<>();
+
+  @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  private List<TravelOn> travelOnList = new ArrayList<>();
 
   @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   private RefreshToken refreshToken;

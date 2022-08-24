@@ -40,15 +40,15 @@ public class TravelOn extends BaseTimeEntity {
   @Lob
   private String description;
 
+  @Column(nullable = false)
   @ColumnDefault("1")
   private Integer views;
 
-  @ManyToOne
-  @JoinColumn(nullable = false)
+  @ManyToOne(optional = false)
   private Region region;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  private User writer;
+  @ManyToOne(optional = false)
+  private User author;
 
   @Column(nullable = false)
   private LocalDate travelStartDate;
@@ -87,13 +87,10 @@ public class TravelOn extends BaseTimeEntity {
   @OneToOne(mappedBy = "travelOn", cascade = CascadeType.ALL)
   private TravelTypeGroup travelTypeGroup;
 
-  @OneToMany(mappedBy = "travelOn", cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "travelOn", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   private List<Opinion> opinionList = new ArrayList<>();
 
   @OneToOne(mappedBy = "travelOn")
   private Travel travel;
 
-  public void setOpinionList(List<Opinion> opinionList) {
-    this.opinionList = opinionList;
-  }
 }

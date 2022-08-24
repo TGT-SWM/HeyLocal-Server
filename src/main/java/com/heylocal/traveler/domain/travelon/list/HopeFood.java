@@ -19,10 +19,11 @@ public class HopeFood extends BaseTimeEntity {
   @Id @GeneratedValue
   private Long id;
 
-  @ManyToOne
-  @JoinColumn(name = "travel_on_id")
+  @Enumerated(EnumType.STRING)
+  @Column(nullable = false)
+  private FoodType type;
+
+  @ManyToOne(optional = false, fetch = FetchType.LAZY)
   private TravelOn travelOn;
 
-  @Enumerated(EnumType.STRING)
-  private FoodType type;
 }

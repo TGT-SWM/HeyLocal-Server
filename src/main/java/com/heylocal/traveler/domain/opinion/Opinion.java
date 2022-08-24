@@ -11,6 +11,8 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 여행On 의 답변(의견)
@@ -28,20 +30,16 @@ public class Opinion extends BaseTimeEntity {
   @Column(length = 785)
   private String description;
 
-  @ManyToOne
-  @JoinColumn(nullable = false)
-  private User writer;
+  @ManyToOne(optional = false)
+  private User author;
 
-  @ManyToOne
-  @JoinColumn(nullable = false)
+  @ManyToOne(optional = false)
   private Region region;
 
-  @ManyToOne
-  @JoinColumn(nullable = false)
+  @ManyToOne(optional = false)
   private Place place;
 
-  @ManyToOne
-  @JoinColumn(name = "travel_on_id")
+  @ManyToOne(optional = false, fetch = FetchType.LAZY)
   private TravelOn travelOn;
 
   // [일반]
@@ -112,4 +110,10 @@ public class Opinion extends BaseTimeEntity {
   private Boolean existsAmenity; //부대시설이 있나요
 
   private Boolean existsStore; //근처에 편의점이 있나요
+
+  // 양방향 설정
+
+  @OneToMany(mappedBy = "opinion", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY) //Opinion 이 삭제되어도, S3에 저장된 경로를 알아야하므로 Cascade를 Persist만 설정
+  private List<ImageContent> imageContentList = new ArrayList<>();
+
 }

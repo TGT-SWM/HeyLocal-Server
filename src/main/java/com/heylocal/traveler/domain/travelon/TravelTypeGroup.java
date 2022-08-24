@@ -13,17 +13,19 @@ public class TravelTypeGroup extends BaseTimeEntity {
   @Id @GeneratedValue
   private Long id;
 
-  @OneToOne(fetch = FetchType.LAZY)
-  @JoinColumn(nullable = false)
+  @OneToOne(optional = false, fetch = FetchType.LAZY)
   private TravelOn travelOn;
 
   @Enumerated(EnumType.STRING)
+  @Column(nullable = false)
   private PlaceTasteType placeTasteType;
 
   @Enumerated(EnumType.STRING)
+  @Column(nullable = false)
   private ActivityTasteType activityTasteType;
 
   @Enumerated(EnumType.STRING)
+  @Column(nullable = false)
   private SnsTasteType snsTasteType;
 
 }

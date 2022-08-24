@@ -1,11 +1,16 @@
 package com.heylocal.traveler.domain;
 
+import com.heylocal.traveler.domain.opinion.Opinion;
+import com.heylocal.traveler.domain.place.Place;
+import com.heylocal.traveler.domain.travelon.TravelOn;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 시/도, 시
@@ -29,4 +34,12 @@ public class Region {
 
   //양방향 설정
 
+  @OneToMany(mappedBy = "region", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  private List<Opinion> opinionList = new ArrayList<>();
+
+  @OneToMany(mappedBy = "region", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  private List<Place> placeList = new ArrayList<>();
+
+  @OneToMany(mappedBy = "region", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  private List<TravelOn> travelOnList = new ArrayList<>();
 }

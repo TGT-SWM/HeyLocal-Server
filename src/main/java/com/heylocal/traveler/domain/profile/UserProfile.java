@@ -26,10 +26,10 @@ public class UserProfile extends BaseTimeEntity {
 
   private String imageUrl;
 
-  @OneToOne
-  @JoinColumn(nullable = false)
+  @OneToOne(optional = false)
   private User user;
 
+  @Column(nullable = false)
   @ColumnDefault("0")
   private Integer knowHow; //Redis로 이동해야함
 }

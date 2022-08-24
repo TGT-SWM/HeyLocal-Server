@@ -22,8 +22,7 @@ public class Notification extends BaseTimeEntity {
   @Id @GeneratedValue
   private Long id;
 
-  @ManyToOne
-  @JoinColumn(nullable = false)
+  @ManyToOne(optional = false)
   private User receiver;
 
   @Enumerated(EnumType.STRING)

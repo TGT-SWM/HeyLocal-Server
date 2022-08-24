@@ -2,12 +2,16 @@ package com.heylocal.traveler.domain.place;
 
 import com.heylocal.traveler.domain.BaseTimeEntity;
 import com.heylocal.traveler.domain.Region;
+import com.heylocal.traveler.domain.opinion.Opinion;
+import com.heylocal.traveler.domain.travel.list.PlaceItem;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 장소 (방문지)
@@ -36,12 +40,19 @@ public class Place extends BaseTimeEntity {
   @Column(nullable = false)
   private String address; //구주소
 
-  @ManyToOne
-  @JoinColumn(nullable = false)
+  @ManyToOne(optional = false)
   private Region region;
 
-  private String imageUrl;
+  private String thumbnailUrl;
 
   @Column(nullable = false)
   private String link; //카카오 장소 상세 정보 페이지 url
+
+  // 양방향 설정
+
+  @OneToMany(mappedBy = "place", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  private List<Opinion> opinionList = new ArrayList<>();
+
+  @OneToMany(mappedBy = "place", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  private List<PlaceItem> placeItemList = new ArrayList<>();
 }

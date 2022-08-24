@@ -25,16 +25,14 @@ public class PlaceItem extends BaseTimeEntity {
   @Id @GeneratedValue
   private Long id;
 
-  @ManyToOne
-  @JoinColumn(nullable = false)
+  @ManyToOne(optional = false, fetch = FetchType.LAZY)
   private DaySchedule schedule;
 
   @Enumerated(EnumType.STRING)
   @Column(nullable = false)
   private PlaceItemType type; // 원장소/대체장소 구분
 
-  @ManyToOne
-  @JoinColumn(nullable = false)
+  @ManyToOne(optional = false)
   private Place place;
 
   @Column(nullable = false)

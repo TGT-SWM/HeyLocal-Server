@@ -23,9 +23,9 @@ public class HopeDrink extends BaseTimeEntity {
   private Long id;
 
   @Enumerated(EnumType.STRING)
+  @Column(nullable = false)
   private DrinkType type;
 
-  @ManyToOne
-  @JoinColumn(name = "travel_on_id")
+  @ManyToOne(optional = false, fetch = FetchType.LAZY)
   private TravelOn travelOn;
 }

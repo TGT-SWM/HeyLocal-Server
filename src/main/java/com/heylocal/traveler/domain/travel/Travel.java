@@ -10,6 +10,8 @@ import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 여행
@@ -34,14 +36,14 @@ public class Travel extends BaseTimeEntity {
   @ColumnDefault("false")
   private Boolean isFixed;
 
-  @OneToOne(fetch = FetchType.LAZY)
-  @JoinColumn(nullable = false)
+  @OneToOne(optional = false, fetch = FetchType.LAZY)
   private TravelOn travelOn;
 
-  @ManyToOne
-  @JoinColumn(nullable = false)
+  @ManyToOne(optional = false)
   private User user;
 
   //양방향 설정
 
+  @OneToMany(mappedBy = "travel", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  private List<DaySchedule> dayScheduleList = new ArrayList<>();
 }

@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,10 +26,9 @@ public class DaySchedule extends BaseTimeEntity {
   private Long id;
 
   @Column(nullable = false)
-  private LocalDateTime dateTime; //스케줄 날짜
+  private LocalDate dateTime; //스케줄 날짜
 
-  @ManyToOne
-  @JoinColumn(nullable = false)
+  @ManyToOne(optional = false, fetch = FetchType.LAZY)
   private Travel travel;
 
   //양방향 설정

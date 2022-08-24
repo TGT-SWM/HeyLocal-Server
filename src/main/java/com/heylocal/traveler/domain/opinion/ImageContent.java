@@ -22,14 +22,12 @@ public class ImageContent extends BaseTimeEntity {
   @Id @GeneratedValue
   private Long id;
 
-  @ManyToOne
-  @JoinColumn(nullable = false)
+  @ManyToOne(optional = false, fetch = FetchType.LAZY)
   private Opinion opinion;
 
   @Column(nullable = false)
   private String url;
 
   @Column(nullable = false)
-  @ColumnDefault("0")
   private Integer placedLineIndex;
 }
