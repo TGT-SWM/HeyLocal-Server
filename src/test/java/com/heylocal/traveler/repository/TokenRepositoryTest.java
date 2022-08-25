@@ -2,6 +2,8 @@ package com.heylocal.traveler.repository;
 
 import com.heylocal.traveler.domain.token.AccessToken;
 import com.heylocal.traveler.domain.token.RefreshToken;
+import com.heylocal.traveler.domain.user.User;
+import com.heylocal.traveler.domain.user.UserRole;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -28,11 +30,24 @@ class TokenRepositoryTest {
   @DisplayName("토큰 쌍 저장")
   void saveTokenPairTest() {
     //GIVEN
-    long userId = 3L;
+    long userId;
+    String accountId = "testAccountId";
+    String encodedPw = "$2a$10$Cb/jltJ1KJkcWiylzKrOOuX/9R4r15QJ5V9snp6yfXqr2wB06WdHS";
+    String nickname = "testNickname";
+    User user = User.builder()
+        .accountId(accountId)
+        .password(encodedPw)
+        .nickname(nickname)
+        .userRole(UserRole.TRAVELER)
+        .build();
     String accessValue = "Access Token Value";
     LocalDateTime accessExpired = LocalDateTime.now().plusHours(1);
     String refreshValue = "Access Token Value";
     LocalDateTime refreshExpired = LocalDateTime.now().plusWeeks(2);
+
+    em.persist(user);
+    userId = user.getId();
+
 
     //WHEN
     RefreshToken refreshToken = tokenRepository.saveTokenPair(userId, accessValue, accessExpired, refreshValue, refreshExpired);
@@ -157,8 +172,22 @@ class TokenRepositoryTest {
         .expiredDateTime(LocalDateTime.now().plusWeeks(2))
         .accessToken(storedAccessToken)
         .build();
+    long userId;
+    String accountId = "testAccountId";
+    String encodedPw = "$2a$10$Cb/jltJ1KJkcWiylzKrOOuX/9R4r15QJ5V9snp6yfXqr2wB06WdHS";
+    String nickname = "testNickname";
+    User user = User.builder()
+        .accountId(accountId)
+        .password(encodedPw)
+        .nickname(nickname)
+        .userRole(UserRole.TRAVELER)
+        .build();
 
+    em.persist(user);
+    userId = user.getId();
     storedRefreshToken.associateAccessToken(storedAccessToken);
+    user.registerAccessToken(storedAccessToken);
+    user.registerRefreshToken(storedRefreshToken);
     em.persist(storedRefreshToken);
 
     return storedRefreshToken;

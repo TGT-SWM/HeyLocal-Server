@@ -12,8 +12,7 @@ import org.springframework.context.annotation.Import;
 import javax.persistence.EntityManager;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 @Slf4j
 @Import({UserRepository.class})
@@ -25,59 +24,75 @@ class UserRepositoryTest {
   private EntityManager em;
 
   @Test
-  @DisplayName("계정 ID로 사용자 조회")
-  void findByAccountIdTest() {
+  @DisplayName("사용자 저장")
+  void saveUserTest() {
     //GIVEN
     String accountId = "testAccountId";
-    String pw = "testPw123123!";
-    String phoneNum = "010-1234-1234";
-    UserRole userRole = UserRole.TRAVELER;
+    String encodedPw = "$2a$10$Cb/jltJ1KJkcWiylzKrOOuX/9R4r15QJ5V9snp6yfXqr2wB06WdHS";
+    String nickname = "testNickname";
+
+    //WHEN - THEN
+    //성공 케이스 - 1
+    assertDoesNotThrow(() -> userRepository.saveUser(accountId, encodedPw, nickname, UserRole.TRAVELER));
+  }
+
+  @Test
+  @DisplayName("pk로 User 찾기")
+  void findByIdTest() {
+    //GIVEN
+    long userId;
+    long notExistUserId;
+    String accountId = "testAccountId";
+    String encodedPw = "$2a$10$Cb/jltJ1KJkcWiylzKrOOuX/9R4r15QJ5V9snp6yfXqr2wB06WdHS";
+    String nickname = "testNickname";
     User user = User.builder()
         .accountId(accountId)
-        .password(pw)
-        .phoneNumber(phoneNum)
-        .userType(userRole)
+        .password(encodedPw)
+        .nickname(nickname)
+        .userRole(UserRole.TRAVELER)
         .build();
+
     em.persist(user);
+    userId = user.getId();
+    notExistUserId = userId + 1;
 
     //WHEN
-    Optional<User> existResult = userRepository.findByAccountId(accountId);
-    Optional<User> notExistResult = userRepository.findByAccountId("new account id");
+    Optional<User> succeedResult = userRepository.findById(userId);
+    Optional<User> failResult = userRepository.findById(notExistUserId);
 
     //THEN
     assertAll(
-        //성공 케이스 - 1 - 존재하는 account id로 조회한 경우
-        () -> assertTrue(existResult.isPresent()),
-        //실패 케이스 - 1 - 존재하지 않는 account id로 조회한 경우
-        () -> assertTrue(notExistResult.isEmpty())
+        //성공 케이스 - 1 - 존재하는 id로 조회하는 경우
+        () -> assertTrue(succeedResult.isPresent()),
+        //실패 케이스 - 1 - 존재하지 않는 id로 조회하는 경우
+        () -> assertFalse(failResult.isPresent())
     );
   }
 
   @Test
-  @DisplayName("휴대폰 번호로 사용자 조회")
-  void findByPhoneNumberTest() {
+  @DisplayName("Account Id 로 User 찾기")
+  void findByAccountIdTest() {
     //GIVEN
-    String accountId = "testAccountId";
-    String pw = "testPw123123!";
-    String phoneNum = "010-1234-1234";
-    UserRole userRole = UserRole.TRAVELER;
+    String existAccountId = "testAccountId1";
+    String notExistAccountId = "testAccountId2";
     User user = User.builder()
-        .accountId(accountId)
-        .password(pw)
-        .phoneNumber(phoneNum)
-        .userType(userRole)
+        .accountId(existAccountId)
+        .password("testPassword123!")
+        .nickname("testNickname")
+        .userRole(UserRole.TRAVELER)
         .build();
+
     em.persist(user);
 
     //WHEN
-    Optional<User> existResult = userRepository.findByPhoneNumber(phoneNum);
-    Optional<User> notExistResult = userRepository.findByPhoneNumber("010-9999-9999");
+    Optional<User> existResult = userRepository.findByAccountId(existAccountId);
+    Optional<User> notExistResult = userRepository.findByAccountId(notExistAccountId);
 
     //THEN
     assertAll(
-        //성공 케이스 - 1 - 존재하는 account id로 조회한 경우
+        //성공 케이스 - 1 - 존재하는 계정 ID로 찾는 경우
         () -> assertTrue(existResult.isPresent()),
-        //실패 케이스 - 1 - 존재하지 않는 account id로 조회한 경우
+        //실패 케이스 - 1 - 없는 계정 ID로 찾는 경우
         () -> assertTrue(notExistResult.isEmpty())
     );
   }

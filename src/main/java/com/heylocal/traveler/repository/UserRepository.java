@@ -34,6 +34,11 @@ public class UserRepository {
     return traveler;
   }
 
+  /**
+   * id(pk)로 사용자를 찾는 메서드
+   * @param userId
+   * @return
+   */
   public Optional<User> findById(long userId) {
     User user;
 

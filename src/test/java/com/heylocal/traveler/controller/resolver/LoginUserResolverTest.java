@@ -68,7 +68,6 @@ class LoginUserResolverTest {
     long userId = 3l;
     LoginUser loginUser = LoginUser.builder()
         .userRole(UserRole.TRAVELER)
-        .phoneNumber(phoneNumber)
         .nickname(nickname)
         .accountId(accountId)
         .id(userId)

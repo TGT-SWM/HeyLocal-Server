@@ -52,7 +52,7 @@ public class SignupService {
    * @param request
    */
   @Transactional
-  public void signupTraveler(SignupRequest request) throws BadArgumentException {
+  public void signupUser(SignupRequest request) throws BadArgumentException {
     String accountId = request.getAccountId();
     String nickname = request.getNickname();
     String encodedPassword;

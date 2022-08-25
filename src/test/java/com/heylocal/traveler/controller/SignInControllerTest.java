@@ -67,7 +67,6 @@ class SignInControllerTest {
         .id(rightId)
         .accountId(rightAccountId)
         .nickname(rightNickname)
-        .phoneNumber(rightPhoneNumber)
         .userRole(rightUserRole)
         .accessToken(rightAccessToken)
         .refreshToken(rightRefreshToken)

@@ -1,10 +1,10 @@
 package com.heylocal.traveler.service;
 
-import com.heylocal.traveler.domain.user.Traveler;
+import com.heylocal.traveler.domain.user.User;
 import com.heylocal.traveler.domain.user.UserRole;
 import com.heylocal.traveler.exception.service.SigninArgumentException;
 import com.heylocal.traveler.repository.TokenRepository;
-import com.heylocal.traveler.repository.UserProfileRepository;
+import com.heylocal.traveler.repository.UserRepository;
 import com.heylocal.traveler.util.jwt.JwtTokenParser;
 import com.heylocal.traveler.util.jwt.JwtTokenProvider;
 import org.junit.jupiter.api.BeforeEach;
@@ -25,7 +25,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.willReturn;
 
 class SigninServiceTest {
-  @Mock private UserProfileRepository userProfileRepository;
+  @Mock private UserRepository userRepository;
   @Mock private TokenRepository tokenRepository;
   @Mock private PasswordEncoder passwordEncoder;
   @Mock private JwtTokenProvider jwtTokenProvider;
@@ -35,7 +35,7 @@ class SigninServiceTest {
   @BeforeEach
   void setUp() {
     MockitoAnnotations.openMocks(this); //여러 test code 실행 시, mock 객체의 정의된 행동이 꼬일 수 있으므로 초기화한다.
-    this.signinService = new SigninService(userProfileRepository, tokenRepository, passwordEncoder, jwtTokenProvider, jwtTokenParser);
+    this.signinService = new SigninService(userRepository, tokenRepository, passwordEncoder, jwtTokenProvider, jwtTokenParser);
   }
 
   @Test
@@ -55,12 +55,11 @@ class SigninServiceTest {
     LocalDateTime accessExpiration = LocalDateTime.now().plusHours(2);
     LocalDateTime refreshExpiration = LocalDateTime.now().plusWeeks(2);
 
-    Traveler travelerFoundByAccountId = Traveler.builder()
+    User userFoundByAccountId = User.builder()
         .id(existId)
         .accountId(rightAccountId)
         .password(existEncodedPassword)
-        .phoneNumber(existPhoneNumber)
-        .userType(UserRole.TRAVELER)
+        .userRole(UserRole.TRAVELER)
         .nickname(existNickname)
         .build();
 
@@ -82,8 +81,8 @@ class SigninServiceTest {
         .build();
 
     //Mock 행동 정의 - travelerRepository
-    willReturn(Optional.of(travelerFoundByAccountId)).given(userProfileRepository).findByAccountId(eq(rightAccountId));
-    willReturn(Optional.empty()).given(userProfileRepository).findByAccountId(not(eq(rightAccountId)));
+    willReturn(Optional.of(userFoundByAccountId)).given(userRepository).findByAccountId(eq(rightAccountId));
+    willReturn(Optional.empty()).given(userRepository).findByAccountId(not(eq(rightAccountId)));
 
     //Mock 행동 정의 - passwordEncoder
     willReturn(true).given(passwordEncoder).matches(eq(rightRawPassword), eq(existEncodedPassword));
@@ -105,7 +104,6 @@ class SigninServiceTest {
         () -> assertEquals(existId, succeedResponse.getId()),
         () -> assertEquals(rightAccountId, succeedResponse.getAccountId()),
         () -> assertEquals(existNickname, succeedResponse.getNickname()),
-        () -> assertEquals(existPhoneNumber, succeedResponse.getPhoneNumber()),
         () -> assertSame(UserRole.TRAVELER, succeedResponse.getUserRole()),
         () -> assertEquals(accessTokenValue, succeedResponse.getAccessToken()),
         () -> assertEquals(refreshTokenValue, succeedResponse.getRefreshToken()),

@@ -53,7 +53,7 @@ public class SignupController implements SignupApi {
     validateNicknameFormat(request.getNickname()); //닉네임 포맷 검증
 
     try {
-      signupService.signupTraveler(request);
+      signupService.signupUser(request);
     } catch (BadArgumentException e) {
       throw new BadRequestException(e.getCode());
     }

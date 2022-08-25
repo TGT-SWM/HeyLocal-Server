@@ -2,14 +2,14 @@ package com.heylocal.traveler.service;
 
 import com.heylocal.traveler.domain.token.AccessToken;
 import com.heylocal.traveler.domain.token.RefreshToken;
-import com.heylocal.traveler.domain.user.Traveler;
+import com.heylocal.traveler.domain.user.User;
 import com.heylocal.traveler.domain.user.UserRole;
 import com.heylocal.traveler.dto.LoginUser;
 import com.heylocal.traveler.exception.code.AuthCode;
 import com.heylocal.traveler.exception.service.AuthException;
 import com.heylocal.traveler.exception.service.TokenException;
 import com.heylocal.traveler.repository.TokenRepository;
-import com.heylocal.traveler.repository.UserProfileRepository;
+import com.heylocal.traveler.repository.UserRepository;
 import com.heylocal.traveler.util.jwt.JwtTokenParser;
 import com.heylocal.traveler.util.jwt.JwtTokenProvider;
 import io.jsonwebtoken.Claims;
@@ -34,7 +34,7 @@ import static org.mockito.BDDMockito.willThrow;
 class AuthServiceTest {
   String secretKey = "H1jo5zWVaJiCiD6B/gpcdD0IspmEBDQ4Q0kxxUTkgU1ea97KF3hblwEHonHG6sy4KsLcv4u6IpfVI5WHcpg4unzhOZExuWCFTiVY2HQK5dnip2YPlCwPs4PeNAw/k2o6vJZvGn5HZ8whEOgqAtCvauxY8rIMptC9QUbh18B8bT5fZDEs5A5NzXx7YEUQuB3+TSI2xhpytDo6bIN3kSn/veuOdEc7DThkQ5xDZw==%";
   @Mock
-  private UserProfileRepository userProfileRepository;
+  private UserRepository userRepository;
   @Mock
   private TokenRepository tokenRepository;
   @Mock
@@ -46,7 +46,7 @@ class AuthServiceTest {
   @BeforeEach
   void setUp() {
     MockitoAnnotations.openMocks(this); //여러 test code 실행 시, mock 객체의 정의된 행동이 꼬일 수 있으므로 초기화한다.
-    authService = new AuthService(userProfileRepository, tokenRepository, jwtTokenParser, jwtTokenProvider);
+    authService = new AuthService(userRepository, tokenRepository, jwtTokenParser, jwtTokenProvider);
   }
 
   @Test
@@ -59,18 +59,17 @@ class AuthServiceTest {
     String encodedPw = "$2a$10$Cb/jltJ1KJkcWiylzKrOOuX/9R4r15QJ5V9snp6yfXqr2wB06WdHS";
     String nickname = "testNickname";
     String phoneNumber = "010-1111-1111";
-    Traveler traveler = Traveler.builder()
+    User user = User.builder()
         .accountId(accountId)
         .password(encodedPw)
         .nickname(nickname)
-        .phoneNumber(phoneNumber)
-        .userType(UserRole.TRAVELER)
+        .userRole(UserRole.TRAVELER)
         .id(userId)
         .build();
 
     //Mock 행동 정의
-    willReturn(Optional.of(traveler)).given(userProfileRepository).findById(userId);
-    willReturn(Optional.empty()).given(userProfileRepository).findById(notExistId);
+    willReturn(Optional.of(user)).given(userRepository).findById(userId);
+    willReturn(Optional.empty()).given(userRepository).findById(notExistId);
 
     //WHEN
     LoginUser loginTraveler = authService.findLoginUser(userId);
@@ -79,10 +78,9 @@ class AuthServiceTest {
     assertAll(
         //성공 케이스 - 1
         () -> assertDoesNotThrow(() -> authService.findLoginUser(userId)),
-        () -> assertEquals(traveler.getId(), loginTraveler.getId()),
-        () -> assertEquals(traveler.getAccountId(), loginTraveler.getAccountId()),
-        () -> assertEquals(traveler.getNickname(), loginTraveler.getNickname()),
-        () -> assertEquals(traveler.getPhoneNumber(), loginTraveler.getPhoneNumber()),
+        () -> assertEquals(user.getId(), loginTraveler.getId()),
+        () -> assertEquals(user.getAccountId(), loginTraveler.getAccountId()),
+        () -> assertEquals(user.getNickname(), loginTraveler.getNickname()),
         () -> assertEquals(UserRole.TRAVELER, loginTraveler.getUserRole()),
         //실패 케이스 - 1 - 존재하지 않는 pk일 때
         () -> assertThrows(TokenException.class, () -> authService.findLoginUser(notExistId))
