@@ -1,4 +1,4 @@
-package com.heylocal.traveler.domain.opinion;
+package com.heylocal.traveler.domain.travelon.opinion;
 
 import com.heylocal.traveler.domain.BaseTimeEntity;
 import com.heylocal.traveler.domain.Region;
@@ -114,6 +114,6 @@ public class Opinion extends BaseTimeEntity {
   // 양방향 설정
 
   @OneToMany(mappedBy = "opinion", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY) //Opinion 이 삭제되어도, S3에 저장된 경로를 알아야하므로 Cascade를 Persist만 설정
-  private List<ImageContent> imageContentList = new ArrayList<>();
+  private List<OpinionImageContent> opinionImageContentList = new ArrayList<>();
 
 }

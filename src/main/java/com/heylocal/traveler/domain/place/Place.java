@@ -2,7 +2,7 @@ package com.heylocal.traveler.domain.place;
 
 import com.heylocal.traveler.domain.BaseTimeEntity;
 import com.heylocal.traveler.domain.Region;
-import com.heylocal.traveler.domain.opinion.Opinion;
+import com.heylocal.traveler.domain.travelon.opinion.Opinion;
 import com.heylocal.traveler.domain.travel.list.PlaceItem;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

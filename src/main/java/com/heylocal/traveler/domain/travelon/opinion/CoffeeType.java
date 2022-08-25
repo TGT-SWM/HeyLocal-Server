@@ -1,4 +1,4 @@
-package com.heylocal.traveler.domain.opinion;
+package com.heylocal.traveler.domain.travelon.opinion;
 
 /**
  * 커피 종류

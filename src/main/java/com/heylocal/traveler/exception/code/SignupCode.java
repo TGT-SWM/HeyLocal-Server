@@ -11,7 +11,7 @@ public enum SignupCode implements ErrorCode {
   WRONG_PHONE_NUMBER_FORMAT("휴대폰 번호 형식이 틀립니다. 하이픈 문자를 포함합니다."),
   WRONG_PASSWORD_FORMAT("비밀번호 형식이 틀립니다. 형식은 숫자 + 영어 + 특수문자 포함된 8자 이상입니다."),
   WRONG_NICKNAME_FORMAT("닉네임 형식이 틀립니다. 형식은 숫자 + 영어 조합, 2자 이상, 20자 이하입니다."),
-  ALREADY_EXIST_USER_INFO("계정 ID 나, 휴대폰 번호가 이미 존재합니다.");
+  ALREADY_EXIST_USER_INFO("계정 ID가 이미 존재합니다.");
 
   private String description;
 

@@ -6,7 +6,7 @@ package com.heylocal.traveler.exception.code;
  * <pre/>
  */
 public enum SigninCode implements ErrorCode {
-  NOT_EXIST_SIGNIN_ACCOUNT_ID("존재하지 않는 계정 ID로 로그인할 수 없습니다."),
+  NOT_EXIST_SIGNIN_ACCOUNT_ID("계정 ID가 존재하지 않습니다."),
   WRONG_SIGNIN_PASSWORD("로그인 비밀번호가 틀립니다.");
 
   private String description;

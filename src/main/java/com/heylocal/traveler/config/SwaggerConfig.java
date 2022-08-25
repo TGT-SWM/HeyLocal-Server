@@ -40,18 +40,16 @@ public class SwaggerConfig {
         .directModelSubstitute(LocalDateTime.class, java.util.Date.class)
         .apiInfo(apiInfo())
         .tags(
-            new Tag("Signup", "여행자 회원가입", 1),
-            new Tag("Signin", "여행자 로그인", 2),
+            new Tag("Signup", "회원가입", 1),
+            new Tag("Signin", "로그인", 2),
             new Tag("Auth", "인가(Authorization)", 3),
-            new Tag("User", "사용자(여행자)", 4),
-            new Tag("OrderSheets", "여행 의뢰서", 5),
-            new Tag("Orders", "매칭", 6),
-            new Tag("Travels", "여행", 7),
-            new Tag("Managers", "매니저", 8),
-            new Tag("Posts", "포스트", 9),
-            new Tag("Search", "검색", 10),
-            new Tag("ChatRooms", "채팅방", 11),
-            new Tag("Policies", "정책", 12)
+            new Tag("User", "사용자", 4),
+            new Tag("TravelOns", "여행On", 5),
+            new Tag("Travels", "여행", 6),
+            new Tag("Search", "검색", 7),
+            new Tag("Articles", "매니저 Article", 8),
+            new Tag("ChatRooms", "채팅방", 9),
+            new Tag("Policies", "정책", 10)
         );
   }
 

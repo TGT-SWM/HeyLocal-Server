@@ -2,7 +2,7 @@ package com.heylocal.traveler.domain.user;
 
 import com.heylocal.traveler.domain.BaseTimeEntity;
 import com.heylocal.traveler.domain.notification.Notification;
-import com.heylocal.traveler.domain.opinion.Opinion;
+import com.heylocal.traveler.domain.travelon.opinion.Opinion;
 import com.heylocal.traveler.domain.profile.UserProfile;
 import com.heylocal.traveler.domain.token.AccessToken;
 import com.heylocal.traveler.domain.token.RefreshToken;

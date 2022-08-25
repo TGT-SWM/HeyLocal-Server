@@ -2,7 +2,7 @@ package com.heylocal.traveler.domain.travelon;
 
 import com.heylocal.traveler.domain.BaseTimeEntity;
 import com.heylocal.traveler.domain.Region;
-import com.heylocal.traveler.domain.opinion.Opinion;
+import com.heylocal.traveler.domain.travelon.opinion.Opinion;
 import com.heylocal.traveler.domain.travel.Travel;
 import com.heylocal.traveler.domain.travelon.list.HopeAccommodation;
 import com.heylocal.traveler.domain.travelon.list.HopeDrink;

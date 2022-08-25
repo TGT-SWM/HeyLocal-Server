@@ -1,11 +1,10 @@
-package com.heylocal.traveler.domain.opinion;
+package com.heylocal.traveler.domain.travelon.opinion;
 
 import com.heylocal.traveler.domain.BaseTimeEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
-import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 
@@ -13,12 +12,12 @@ import javax.persistence.*;
  * 답변에 포함되는 이미지
  */
 @Entity
-@Table(name = "IMAGE_CONTENT")
+@Table(name = "OPINION_IMAGE_CONTENT")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @SuperBuilder
-public class ImageContent extends BaseTimeEntity {
+public class OpinionImageContent extends BaseTimeEntity {
   @Id @GeneratedValue
   private Long id;
 
