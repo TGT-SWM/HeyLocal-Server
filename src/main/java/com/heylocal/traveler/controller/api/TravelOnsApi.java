@@ -3,6 +3,7 @@ package com.heylocal.traveler.controller.api;
 import com.heylocal.traveler.dto.OpinionDto.OpinionRequest;
 import com.heylocal.traveler.dto.OpinionDto.OpinionResponse;
 import com.heylocal.traveler.dto.PageDto;
+import com.heylocal.traveler.dto.PageDto.PageRequest;
 import com.heylocal.traveler.dto.TravelOnDto.TravelOnRequest;
 import com.heylocal.traveler.dto.TravelOnDto.TravelOnResponse;
 import com.heylocal.traveler.dto.TravelOnDto.TravelOnSimpleResponse;
@@ -23,7 +24,7 @@ public interface TravelOnsApi {
             @Parameter(in = ParameterIn.QUERY, description = "지역 ID", required = false) long regionId,
             @Parameter(in = ParameterIn.QUERY, description = "답변 있는 것(true), 없는 것(false), 전체(null)", required = false) Boolean withOpinions,
             @Parameter(in = ParameterIn.QUERY, description = "정렬 기준(DATE, VIEWS, OPINIONS)", required = true) TravelOnSortType sortBy,
-            @Parameter(in = ParameterIn.QUERY, description = "페이징", required = true) PageDto.PageRequest pageRequest
+            @Parameter(in = ParameterIn.QUERY, description = "페이징", required = true) PageRequest pageRequest
     );
 
     @Operation(summary = "여행 On 등록", description = "여행 On을 등록합니다.", tags = {"TravelOns"})
