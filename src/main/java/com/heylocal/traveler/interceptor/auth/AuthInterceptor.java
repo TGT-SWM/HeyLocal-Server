@@ -15,6 +15,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 
 /**
@@ -44,8 +45,13 @@ public class AuthInterceptor implements HandlerInterceptor {
       claims = jwtTokenParser.parseJwtToken(accessTokenValue).get();
     } catch (ExpiredJwtException ex) {
       responseError(response, UnauthorizedCode.EXPIRED_TOKEN);
+      return false;
     } catch (JwtException ex) {
       responseError(response, UnauthorizedCode.BAD_TOKEN);
+      return false;
+    } catch (NoSuchElementException ex) {
+      responseError(response, UnauthorizedCode.BAD_TOKEN);
+      return false;
     }
 
     /*
@@ -53,7 +59,6 @@ public class AuthInterceptor implements HandlerInterceptor {
      * 스프링 Argument Resolver 에서 사용될 수 있도록, HttpServletRequest 객체에 추가해야 한다.
      */
     request.setAttribute("userId", claims.get("userPk", Long.class));
-
     return true;
   }
 
