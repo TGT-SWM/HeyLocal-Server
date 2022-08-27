@@ -1,5 +1,6 @@
 package com.heylocal.traveler.service;
 
+import com.heylocal.traveler.domain.profile.UserProfile;
 import com.heylocal.traveler.domain.user.User;
 import com.heylocal.traveler.domain.user.UserRole;
 import com.heylocal.traveler.dto.SignupDto.UserInfoCheckResponse;
@@ -56,6 +57,8 @@ public class SignupService {
     String accountId = request.getAccountId();
     String nickname = request.getNickname();
     String encodedPassword;
+    User user;
+    UserProfile userProfile;
 
     //중복 확인
     UserInfoCheckResponse accountIdCheckRes = checkAccountIdExist(accountId);
@@ -66,8 +69,21 @@ public class SignupService {
     //사용자 저장
     encodedPassword = encodePassword(request.getPassword());
     request.setPassword(encodedPassword);
-    User user = userRepository.saveUser(accountId, encodedPassword, nickname, UserRole.TRAVELER);
-    userProfileRepository.saveUserProfile(user.getId(), 0, null);
+    user = User.builder()
+        .accountId(accountId)
+        .password(encodedPassword)
+        .nickname(nickname)
+        .userRole(UserRole.TRAVELER)
+        .build();
+    user = userRepository.saveUser(user);
+
+    //프로필 저장
+    userProfile = UserProfile.builder()
+            .user(user)
+            .knowHow(0)
+            .imageUrl(null)
+            .build();
+    userProfileRepository.saveUserProfile(userProfile);
   }
 
   /**

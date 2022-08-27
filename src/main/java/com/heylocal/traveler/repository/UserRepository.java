@@ -16,22 +16,12 @@ public class UserRepository {
 
   /**
    * 사용자를 저장하는 메서드
-   * @param accountId
-   * @param encodedPw
-   * @param nickname
+   * @param user 저장할 사용자 엔티티
    * @return
    */
-  public User saveUser(String accountId, String encodedPw, String nickname, UserRole role) {
-    User traveler = User.builder()
-        .accountId(accountId)
-        .password(encodedPw)
-        .userRole(role)
-        .nickname(nickname)
-        .build();
-
-    em.persist(traveler);
-
-    return traveler;
+  public User saveUser(User user) {
+    em.persist(user);
+    return user;
   }
 
   /**

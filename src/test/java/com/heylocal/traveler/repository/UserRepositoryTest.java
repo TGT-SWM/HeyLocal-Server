@@ -30,10 +30,16 @@ class UserRepositoryTest {
     String accountId = "testAccountId";
     String encodedPw = "$2a$10$Cb/jltJ1KJkcWiylzKrOOuX/9R4r15QJ5V9snp6yfXqr2wB06WdHS";
     String nickname = "testNickname";
+    User user = User.builder()
+        .accountId(accountId)
+        .password(encodedPw)
+        .nickname(nickname)
+        .userRole(UserRole.TRAVELER)
+        .build();
 
     //WHEN - THEN
     //성공 케이스 - 1
-    assertDoesNotThrow(() -> userRepository.saveUser(accountId, encodedPw, nickname, UserRole.TRAVELER));
+    assertDoesNotThrow(() -> userRepository.saveUser(user));
   }
 
   @Test

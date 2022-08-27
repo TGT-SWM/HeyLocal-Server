@@ -91,7 +91,7 @@ class SignupServiceTest {
 
     //Mock 행동 정의
     willReturn(encodedPassword).given(passwordEncoder).encode(eq(rawPassword));
-    willReturn(user).given(userRepository).saveUser(eq(accountId), eq(encodedPassword), eq(nickname), eq(UserRole.TRAVELER));
+    willReturn(user).given(userRepository).saveUser(eq(user));
 
     //WHEN
 

@@ -1,5 +1,7 @@
 package com.heylocal.traveler.service;
 
+import com.heylocal.traveler.domain.token.AccessToken;
+import com.heylocal.traveler.domain.token.RefreshToken;
 import com.heylocal.traveler.domain.user.User;
 import com.heylocal.traveler.domain.user.UserRole;
 import com.heylocal.traveler.exception.code.SigninCode;
@@ -141,17 +143,32 @@ public class SigninService {
    * @param refreshTokenValue Refresh Token 값
    */
   private void saveTokenPairToDb(long userId, String accessTokenValue, String refreshTokenValue) {
+    User user;
+    AccessToken accessToken;
+    RefreshToken refreshToken;
     LocalDateTime refreshExpiration;
     LocalDateTime accessExpiration;
 
     accessExpiration = jwtTokenParser.extractExpiration(accessTokenValue);
     refreshExpiration = jwtTokenParser.extractExpiration(refreshTokenValue);
+    user = userRepository.findById(userId).orElseThrow(
+        () -> new IllegalArgumentException("User 를 찾을 수 없습니다.")
+    );
+    accessToken = AccessToken.builder()
+        .tokenValue(accessTokenValue)
+        .expiredDateTime(accessExpiration)
+        .build();
+    refreshToken = RefreshToken.builder()
+        .tokenValue(refreshTokenValue)
+        .expiredDateTime(refreshExpiration)
+        .build();
 
     try {
       tokenRepository.removeTokenPairByUserId(userId); //기존 토큰들이 있다면 제거
     } catch (NoResultException e) {
       //ignored (관련 토큰을 가지고 있지 않아도, 문제될 것이 없으므로 무시)
     }
-    tokenRepository.saveTokenPair(userId, accessTokenValue, accessExpiration, refreshTokenValue, refreshExpiration);
+
+    tokenRepository.saveTokenPair(user, refreshToken, accessToken);
   }
 }

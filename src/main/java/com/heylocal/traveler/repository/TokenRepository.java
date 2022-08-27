@@ -24,24 +24,12 @@ public class TokenRepository {
 
   /**
    * AccessToken 과 Refresh Token 쌍을 저장하는 메서드
-   * @param accessValue Access Token 값
-   * @param refreshValue Refresh Token 값
+   * @param user 관련된 사용자 엔티티
+   * @param refreshToken 저장할 RefreshToken 엔티티
+   * @param accessToken 저장할 AccessToken 엔티티
+   * @return
    */
-  public RefreshToken saveTokenPair(long userId, String accessValue, LocalDateTime accessExpired, String refreshValue, LocalDateTime refreshExpired) {
-    RefreshToken refreshToken;
-    AccessToken accessToken;
-    User user;
-
-    user = em.find(User.class, userId);
-    refreshToken = RefreshToken.builder()
-        .tokenValue(refreshValue)
-        .expiredDateTime(refreshExpired)
-        .build();
-    accessToken = AccessToken.builder()
-        .tokenValue(accessValue)
-        .expiredDateTime(accessExpired)
-        .build();
-
+  public RefreshToken saveTokenPair(User user, RefreshToken refreshToken, AccessToken accessToken) {
     refreshToken.associateAccessToken(accessToken);
     refreshToken.associateUser(user);
     accessToken.associateUser(user);

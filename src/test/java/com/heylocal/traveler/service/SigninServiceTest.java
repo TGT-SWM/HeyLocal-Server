@@ -80,9 +80,10 @@ class SigninServiceTest {
         .password(wrongRawPassword)
         .build();
 
-    //Mock 행동 정의 - travelerRepository
+    //Mock 행동 정의 - userRepository
     willReturn(Optional.of(userFoundByAccountId)).given(userRepository).findByAccountId(eq(rightAccountId));
     willReturn(Optional.empty()).given(userRepository).findByAccountId(not(eq(rightAccountId)));
+    willReturn(Optional.of(userFoundByAccountId)).given(userRepository).findById(existId);
 
     //Mock 행동 정의 - passwordEncoder
     willReturn(true).given(passwordEncoder).matches(eq(rightRawPassword), eq(existEncodedPassword));

@@ -36,11 +36,16 @@ class UserProfileRepositoryTest {
         .userRole(UserRole.TRAVELER)
         .build();
     int knowHow = 1000;
+    UserProfile userProfile = UserProfile.builder()
+            .user(user)
+            .knowHow(knowHow)
+            .imageUrl(null)
+            .build();
 
     em.persist(user);
 
     //WHEN - THEN
-    UserProfile userProfile = userProfileRepository.saveUserProfile(user.getId(), knowHow, null);
+    userProfileRepository.saveUserProfile(userProfile);
 
     assertAll(
         //성공 케이스 - 1
