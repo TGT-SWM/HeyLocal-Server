@@ -41,7 +41,7 @@ public interface UsersApi {
 	);
 
 	@Operation(summary = "작성한 여행 On 조회", description = "사용자가 작성한 여행 On 목록을 조회합니다.", tags = {"Users"})
-	@GetMapping("/{userId}/travelons")
+	@GetMapping("/{userId}/travel-ons")
 	List<TravelOnSimpleResponse> getUserTravelOns(
 			@Parameter(in = ParameterIn.PATH, description = "사용자 ID", required = true) @PathVariable long userId,
 			@Parameter(in = ParameterIn.QUERY, description = "페이징", required = true) PageRequest pageRequest
