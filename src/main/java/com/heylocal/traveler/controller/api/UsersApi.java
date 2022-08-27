@@ -23,6 +23,7 @@ public interface UsersApi {
 	@Operation(summary = "사용자 프로필 조회", description = "사용자의 프로필을 조회합니다.", tags = {"Users"})
 	@GetMapping("/{userId}/profile")
 	@ApiResponses(
+			// 해당 사용자가 존재하지 않음
 			@ApiResponse(responseCode = "404", description = "", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessageResponse.class))})
 	)
 	UserProfileResponse getUserProfile(
@@ -33,6 +34,7 @@ public interface UsersApi {
 	@Operation(summary = "사용자 프로필 수정", description = "사용자의 프로필을 수정합니다.", tags = {"Users"})
 	@PutMapping("/{userId}/profile")
 	@ApiResponses(
+			// 프로필 수정 권한 없음
 			@ApiResponse(responseCode = "403", description = "", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessageResponse.class))})
 	)
 	ResponseEntity<Void> updateUserProfile(
