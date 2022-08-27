@@ -27,11 +27,11 @@ public class RefreshToken extends BaseTimeEntity {
   private String tokenValue;
   @Column(nullable = false)
   private LocalDateTime expiredDateTime;
-  @OneToOne(optional = false, fetch = FetchType.LAZY)
+  @OneToOne(fetch = FetchType.LAZY)
   private User user;
 
   //양방향 설정
-  @OneToOne(optional = false, mappedBy = "refreshToken", cascade = CascadeType.ALL)
+  @OneToOne(mappedBy = "refreshToken", cascade = CascadeType.ALL)
   private AccessToken accessToken;
 
   public void associateAccessToken(AccessToken accessToken) {
