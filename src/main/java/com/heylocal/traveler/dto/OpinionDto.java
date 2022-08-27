@@ -11,6 +11,6 @@ public class OpinionDto {
 	@Builder
 	@Schema(description = "여행 On에 대한 답변 응답 DTO")
 	public static class OpinionResponse {
-
+		long id;
 	}
 }
