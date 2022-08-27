@@ -172,7 +172,6 @@ class TokenRepositoryTest {
         .expiredDateTime(LocalDateTime.now().plusWeeks(2))
         .accessToken(storedAccessToken)
         .build();
-    long userId;
     String accountId = "testAccountId";
     String encodedPw = "$2a$10$Cb/jltJ1KJkcWiylzKrOOuX/9R4r15QJ5V9snp6yfXqr2wB06WdHS";
     String nickname = "testNickname";
@@ -184,7 +183,6 @@ class TokenRepositoryTest {
         .build();
 
     em.persist(user);
-    userId = user.getId();
     storedRefreshToken.associateAccessToken(storedAccessToken);
     user.registerAccessToken(storedAccessToken);
     user.registerRefreshToken(storedRefreshToken);
@@ -193,5 +191,45 @@ class TokenRepositoryTest {
     return storedRefreshToken;
   }
 
-  //TODO - removeTokenPairByUserId
+  @Test
+  @DisplayName("사용자 id(pk)로 토큰쌍 삭제")
+  void removeTokenPairByUserIdTest() {
+    //GIVEN
+    long userId;
+    String storedUserAccountId = "testAccountId";
+    String storedUserNickname = "testNickname";
+    String storedUserPassword = "encodedPassword123!";
+    User storedUser = User.builder()
+        .accountId(storedUserAccountId)
+        .nickname(storedUserNickname)
+        .password(storedUserPassword)
+        .userRole(UserRole.TRAVELER)
+        .build();
+    String storedAccessTokenValue = "validAccessTokenValue";
+    AccessToken storedAccessToken = AccessToken.builder()
+        .tokenValue(storedAccessTokenValue)
+        .expiredDateTime(LocalDateTime.now().plusHours(2))
+        .build();
+    String storedRefreshTokenValue = "validRefreshTokenValue";
+    RefreshToken storedRefreshToken = RefreshToken.builder()
+        .tokenValue(storedRefreshTokenValue)
+        .expiredDateTime(LocalDateTime.now().plusWeeks(2))
+        .build();
+
+    storedRefreshToken.associateAccessToken(storedAccessToken);
+    storedUser.registerRefreshToken(storedRefreshToken);
+    storedUser.registerAccessToken(storedAccessToken);
+
+    em.persist(storedUser);
+    userId = storedUser.getId();
+
+    //WHEN
+    User resultUser = tokenRepository.removeTokenPairByUserId(userId);
+
+    //THEN
+    assertAll(
+        () -> assertNull(resultUser.getAccessToken()),
+        () -> assertNull(resultUser.getRefreshToken())
+    );
+  }
 }

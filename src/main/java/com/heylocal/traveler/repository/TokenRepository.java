@@ -111,6 +111,7 @@ public class TokenRepository {
     User user = em.find(User.class, userId);
     if (!Objects.isNull(user.getRefreshToken())) {
       em.remove(user.getRefreshToken());
+      user.releaseAllTokens();
     }
     return user;
   }

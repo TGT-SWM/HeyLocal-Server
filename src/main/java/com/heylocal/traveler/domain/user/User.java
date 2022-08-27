@@ -80,4 +80,9 @@ public class User extends BaseTimeEntity {
       accessToken.associateUser(this);
     }
   }
+
+  public void releaseAllTokens() {
+    this.refreshToken = null;
+    this.accessToken = null;
+  }
 }
