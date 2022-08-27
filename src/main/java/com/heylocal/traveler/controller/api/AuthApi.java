@@ -5,7 +5,6 @@
  */
 package com.heylocal.traveler.controller.api;
 
-import com.heylocal.traveler.dto.AuthTokenDto;
 import com.heylocal.traveler.dto.ErrorMessageResponse;
 import com.heylocal.traveler.exception.controller.BadRequestException;
 import com.heylocal.traveler.exception.controller.UnauthorizedException;
@@ -22,9 +21,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import static com.heylocal.traveler.dto.AuthTokenDto.*;
 import static com.heylocal.traveler.dto.AuthTokenDto.TokenPairRequest;
-import static com.heylocal.traveler.dto.SigninDto.SigninResponse;
+import static com.heylocal.traveler.dto.AuthTokenDto.TokenPairResponse;
 
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2022-08-12T04:12:44.357Z[GMT]")
 @RequestMapping("/auth")

@@ -1,12 +1,8 @@
 package com.heylocal.traveler.domain.travel;
 
 import com.heylocal.traveler.domain.BaseTimeEntity;
-import com.heylocal.traveler.domain.chat.ChatRoom;
-import com.heylocal.traveler.domain.order.OrderSheet;
-import com.heylocal.traveler.domain.payment.Payment;
-import com.heylocal.traveler.domain.user.Manager;
-import com.heylocal.traveler.domain.userreview.ManagerReview;
-import com.heylocal.traveler.domain.userreview.TravelerReview;
+import com.heylocal.traveler.domain.travelon.TravelOn;
+import com.heylocal.traveler.domain.user.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -40,28 +36,14 @@ public class Travel extends BaseTimeEntity {
   @ColumnDefault("false")
   private Boolean isFixed;
 
-  @OneToOne(fetch = FetchType.LAZY)
-  @JoinColumn(nullable = false)
-  private OrderSheet orderSheet;
+  @OneToOne(optional = false, fetch = FetchType.LAZY)
+  private TravelOn travelOn;
 
-  @ManyToOne
-  @JoinColumn(nullable = false)
-  private Manager manager;
+  @ManyToOne(optional = false)
+  private User user;
 
   //양방향 설정
 
-  @OneToOne(mappedBy = "travel", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-  private ChatRoom chatRoom;
-
-  @OneToOne(mappedBy = "travel", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-  private Payment payment;
-
-  @OneToMany(mappedBy = "travel", cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "travel", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   private List<DaySchedule> dayScheduleList = new ArrayList<>();
-
-  @OneToOne(mappedBy = "travel", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-  private ManagerReview managerReview;
-
-  @OneToOne(mappedBy = "travel", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-  private TravelerReview travelerReview;
 }

@@ -1,6 +1,5 @@
 package com.heylocal.traveler.util.jwt;
 
-import com.heylocal.traveler.domain.user.UserType;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import lombok.extern.slf4j.Slf4j;

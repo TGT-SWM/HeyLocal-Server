@@ -1,7 +1,7 @@
 package com.heylocal.traveler.domain.chat;
 
 import com.heylocal.traveler.domain.BaseTimeEntity;
-import com.heylocal.traveler.domain.travel.Travel;
+import com.heylocal.traveler.domain.user.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,12 +24,16 @@ public class ChatRoom extends BaseTimeEntity {
   @Id @GeneratedValue
   private Long id;
 
-  @OneToOne(fetch = FetchType.LAZY)
-  @JoinColumn(nullable = false)
-  private Travel travel;
+  @ManyToOne(optional = false)
+  private User userA;
+
+  @ManyToOne(optional = false)
+  private User userB;
+
+  @OneToOne
+  private ChatMessage lastMessage;
 
   //양방향 설정
-
-  @OneToMany(mappedBy= "chatRoom", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  @OneToMany(mappedBy = "chatRoom", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   private List<ChatMessage> chatMessageList = new ArrayList<>();
 }

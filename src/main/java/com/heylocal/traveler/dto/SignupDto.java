@@ -31,7 +31,5 @@ public class SignupDto {
     private String password;
     @NotEmpty
     private String nickname;
-    @NotEmpty
-    private String phoneNumber;
   }
 }

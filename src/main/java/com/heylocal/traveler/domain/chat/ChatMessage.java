@@ -24,16 +24,14 @@ public class ChatMessage extends BaseTimeEntity {
   @Id @GeneratedValue
   private Long id;
 
-  @ManyToOne
-  @JoinColumn(nullable = false)
+  @ManyToOne(optional = false)
   private ChatRoom chatRoom;
 
   @Enumerated(EnumType.STRING)
   @Column(nullable = false)
   private ChatMessageType type;
 
-  @OneToOne
-  @JoinColumn(nullable = false)
+  @OneToOne(optional = false)
   private User sender;
 
   @Column(nullable = false)

@@ -1,8 +1,8 @@
 package com.heylocal.traveler.controller.advice;
 
-import com.heylocal.traveler.exception.controller.NotFoundException;
 import com.heylocal.traveler.dto.ErrorMessageResponse;
 import com.heylocal.traveler.exception.controller.BadRequestException;
+import com.heylocal.traveler.exception.controller.NotFoundException;
 import com.heylocal.traveler.exception.controller.UnauthorizedException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;

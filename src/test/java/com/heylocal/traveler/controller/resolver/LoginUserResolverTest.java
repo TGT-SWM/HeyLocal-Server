@@ -1,6 +1,6 @@
 package com.heylocal.traveler.controller.resolver;
 
-import com.heylocal.traveler.domain.user.UserType;
+import com.heylocal.traveler.domain.user.UserRole;
 import com.heylocal.traveler.dto.LoginUser;
 import com.heylocal.traveler.service.AuthService;
 import org.junit.jupiter.api.BeforeEach;
@@ -67,8 +67,7 @@ class LoginUserResolverTest {
     String accountId = "testAccountId";
     long userId = 3l;
     LoginUser loginUser = LoginUser.builder()
-        .userType(UserType.TRAVELER)
-        .phoneNumber(phoneNumber)
+        .userRole(UserRole.TRAVELER)
         .nickname(nickname)
         .accountId(accountId)
         .id(userId)
@@ -79,7 +78,7 @@ class LoginUserResolverTest {
     //Mock 행동 정의 - NativeWebRequest
     willReturn(request).given(webRequest).getNativeRequest();
     //Mock 행동 정의 - AuthServer
-    willReturn(loginUser).given(authService).findLoginTraveler(userId);
+    willReturn(loginUser).given(authService).findLoginUser(userId);
 
     //WHEN
     LoginUser result = (LoginUser) loginUserResolver.resolveArgument(parameter, mavContainer, webRequest, binderFactory);

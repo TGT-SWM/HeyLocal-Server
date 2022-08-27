@@ -2,15 +2,14 @@ package com.heylocal.traveler.service;
 
 import com.heylocal.traveler.domain.token.AccessToken;
 import com.heylocal.traveler.domain.token.RefreshToken;
-import com.heylocal.traveler.domain.user.Traveler;
-import com.heylocal.traveler.domain.user.UserType;
+import com.heylocal.traveler.domain.user.User;
 import com.heylocal.traveler.dto.LoginUser;
 import com.heylocal.traveler.exception.code.AuthCode;
 import com.heylocal.traveler.exception.code.TokenCode;
 import com.heylocal.traveler.exception.service.AuthException;
 import com.heylocal.traveler.exception.service.TokenException;
 import com.heylocal.traveler.repository.TokenRepository;
-import com.heylocal.traveler.repository.TravelerRepository;
+import com.heylocal.traveler.repository.UserRepository;
 import com.heylocal.traveler.util.jwt.JwtTokenParser;
 import com.heylocal.traveler.util.jwt.JwtTokenProvider;
 import io.jsonwebtoken.Claims;
@@ -19,7 +18,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.heylocal.traveler.dto.AuthTokenDto.*;
+import static com.heylocal.traveler.dto.AuthTokenDto.TokenPairRequest;
+import static com.heylocal.traveler.dto.AuthTokenDto.TokenPairResponse;
 
 /**
  * 인가 관련 서비스
@@ -27,28 +27,27 @@ import static com.heylocal.traveler.dto.AuthTokenDto.*;
 @Service
 @RequiredArgsConstructor
 public class AuthService {
-  private final TravelerRepository travelerRepository;
+  private final UserRepository userRepository;
   private final TokenRepository tokenRepository;
   private final JwtTokenParser jwtTokenParser;
   private final JwtTokenProvider jwtTokenProvider;
 
   /**
-   * id값(pk)으로 Traveler를 조회하는 메서드
-   * @param travelerId id값 (pk)
+   * id값(pk)으로 User를 조회하는 메서드
+   * @param userId id값 (pk)
    * @return 로그인된 유저의 정보
    */
   @Transactional
-  public LoginUser findLoginTraveler(long travelerId) throws TokenException {
-    Traveler traveler = travelerRepository.findById(travelerId).orElseThrow(
+  public LoginUser findLoginUser(long userId) throws TokenException {
+    User user = userRepository.findById(userId).orElseThrow(
         () -> new TokenException(TokenCode.NOT_EXIST_TOKEN_USER_ID)
     );
 
     return LoginUser.builder()
-        .id(traveler.getId())
-        .accountId(traveler.getAccountId())
-        .nickname(traveler.getNickname())
-        .phoneNumber(traveler.getPhoneNumber())
-        .userType(UserType.TRAVELER)
+        .id(user.getId())
+        .accountId(user.getAccountId())
+        .nickname(user.getNickname())
+        .userRole(user.getUserRole())
         .build();
   }
 

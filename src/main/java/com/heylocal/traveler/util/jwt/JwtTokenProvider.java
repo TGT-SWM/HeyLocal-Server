@@ -1,6 +1,5 @@
 package com.heylocal.traveler.util.jwt;
 
-import com.heylocal.traveler.domain.user.UserType;
 import io.jsonwebtoken.Header;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
