@@ -43,7 +43,7 @@ public class SwaggerConfig {
             new Tag("Signup", "회원가입", 1),
             new Tag("Signin", "로그인", 2),
             new Tag("Auth", "인가(Authorization)", 3),
-            new Tag("User", "사용자", 4),
+            new Tag("Users", "사용자", 4),
             new Tag("TravelOns", "여행On", 5),
             new Tag("Travels", "여행", 6),
             new Tag("Search", "검색", 7),
