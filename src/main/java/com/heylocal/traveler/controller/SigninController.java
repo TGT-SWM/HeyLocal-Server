@@ -24,7 +24,7 @@ public class SigninController implements SigninApi {
   private final SigninService signinService;
 
   @Override
-  public SigninResponse signinPost(SigninRequest request, BindingResult bindingResult) throws BadRequestException, UnauthorizedException {
+  public SigninResponse signin(SigninRequest request, BindingResult bindingResult) throws BadRequestException, UnauthorizedException {
     SigninResponse response = null;
 
     if (bindingResult.hasFieldErrors()) {

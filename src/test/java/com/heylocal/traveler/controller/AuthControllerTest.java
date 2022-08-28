@@ -93,32 +93,32 @@ class AuthControllerTest {
         .given(bindingResult).hasFieldErrors();
 
     //WHEN
-    TokenPairResponse succeedResult = authController.tokenPut(succeedReissueRequest, bindingResult);
+    TokenPairResponse succeedResult = authController.reissueTokenPair(succeedReissueRequest, bindingResult);
 
     //THEN
     assertAll(
         //성공 케이스 - 1 - 만료된 Access Token, 만료안된 Refresh Token
         () -> assertEquals(succeedResponse, succeedResult),
         //실패 케이스 - 1 - Request 로 빈 값이 전달되었을 때
-        () -> assertThrows(BadRequestException.class, () -> authController.tokenPut(emptyRefreshTokenRequest, bindingResult)),
+        () -> assertThrows(BadRequestException.class, () -> authController.reissueTokenPair(emptyRefreshTokenRequest, bindingResult)),
         //실패 케이스 - 2 - 아직 만료안된 Access Token, 만료안된 Refresh Token
         () -> assertThrows(UnauthorizedException.class,
-            () -> authController.tokenPut(notExpiredAccessTokenRequest, bindingResult),
+            () -> authController.reissueTokenPair(notExpiredAccessTokenRequest, bindingResult),
             AuthCode.NOT_EXPIRED_ACCESS_TOKEN.getDescription()
         ),
         //실패 케이스 - 3 - 만료된 Access Token, 만료된 Refresh Token
         () -> assertThrows(UnauthorizedException.class,
-            () -> authController.tokenPut(expiredRefreshTokenRequest, bindingResult),
+            () -> authController.reissueTokenPair(expiredRefreshTokenRequest, bindingResult),
             AuthCode.EXPIRED_REFRESH_TOKEN.getDescription()
         ),
         //실패 케이스 - 4 - Refresh Token 과 매치되지 않는 Access Token, 만료안된 Refresh Token
         () -> assertThrows(UnauthorizedException.class,
-            () -> authController.tokenPut(notMatchedTokenRequest, bindingResult),
+            () -> authController.reissueTokenPair(notMatchedTokenRequest, bindingResult),
             AuthCode.NOT_MATCH_PAIR.getDescription()
         ),
         //실패 케이스 - 5 - 만료된 Access Token, 존재하지 않는 Refresh Token
         () -> assertThrows(UnauthorizedException.class,
-            () -> authController.tokenPut(notExistRefreshTokenRequest, bindingResult),
+            () -> authController.reissueTokenPair(notExistRefreshTokenRequest, bindingResult),
             AuthCode.NOT_EXIST_REFRESH_TOKEN.getDescription()
         )
     );

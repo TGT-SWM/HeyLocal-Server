@@ -34,7 +34,7 @@ public class SignupController implements SignupApi {
   private String nicknamePattern;
 
   @Override
-  public UserInfoCheckResponse signupIdGet(String accountId) throws BadRequestException {
+  public UserInfoCheckResponse checkSignupId(String accountId) throws BadRequestException {
     UserInfoCheckResponse response;
 
     validateAccountIdFormat(accountId);
@@ -44,7 +44,7 @@ public class SignupController implements SignupApi {
   }
 
   @Override
-  public void signupPost(SignupRequest request, BindingResult bindingResult) throws BadRequestException {
+  public void signup(SignupRequest request, BindingResult bindingResult) throws BadRequestException {
     if (bindingResult.hasFieldErrors()) {
       throw new BadRequestException(BadRequestCode.EMPTY_FIELD);
     }

@@ -79,11 +79,11 @@ class SignInControllerTest {
     //THEN
     assertAll(
       //성공 케이스 - 1 - 정상 로그인
-      () -> assertDoesNotThrow(() -> signinController.signinPost(rightRequest, bindingResult)),
+      () -> assertDoesNotThrow(() -> signinController.signin(rightRequest, bindingResult)),
       //실패 케이스 - 1 - 빈 계정 id일 때
-      () -> assertThrows(BadRequestException.class, () -> signinController.signinPost(emptyAccountIdRequest, bindingResult)),
+      () -> assertThrows(BadRequestException.class, () -> signinController.signin(emptyAccountIdRequest, bindingResult)),
       //실패 케이스 - 2 - 잘못된 pw일 때
-      () -> assertThrows(UnauthorizedException.class, () -> signinController.signinPost(wrongPwRequest, bindingResult))
+      () -> assertThrows(UnauthorizedException.class, () -> signinController.signin(wrongPwRequest, bindingResult))
     );
   }
 }
