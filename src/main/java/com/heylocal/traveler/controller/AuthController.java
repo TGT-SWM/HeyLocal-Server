@@ -21,7 +21,7 @@ public class AuthController implements AuthApi {
   private final AuthService authService;
 
   @Override
-  public TokenPairResponse tokenPut(TokenPairRequest request, BindingResult bindingResult)
+  public TokenPairResponse reissueTokenPair(TokenPairRequest request, BindingResult bindingResult)
       throws BadRequestException, UnauthorizedException {
     TokenPairResponse response = null;
 

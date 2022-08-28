@@ -34,7 +34,7 @@ public interface SigninApi {
         @ApiResponse(responseCode = "401", description = "- `NOT_EXIST_SIGNIN_ACCOUNT_ID`: 아이디 오류\n\n- `WRONG_SIGNIN_PASSWORD`: 비밀번호 오류", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessageResponse.class)))
     })
     @PostMapping(consumes = { "application/json" })
-    SigninResponse signinPost(
+    SigninResponse signin(
         @Parameter(in = ParameterIn.DEFAULT, description = "", required=true) @Validated @RequestBody SigninRequest request,
         BindingResult bindingResult) throws BadRequestException, UnauthorizedException;
 

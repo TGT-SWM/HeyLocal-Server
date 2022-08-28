@@ -31,7 +31,7 @@ public interface SignupApi {
         @ApiResponse(responseCode = "400", description = "- `SHORT_OR_LONG_ACCOUNT_ID_LENGTH`: 계정 아이디가 너무 짧거나 길 경우\n\n- `WRONG_ACCOUNT_ID_FORMAT`: 계정 아이디 문자 조합이 틀린 경우", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessageResponse.class)))
     })
     @GetMapping("/accountid")
-    UserInfoCheckResponse signupIdGet(
+    UserInfoCheckResponse checkSignupId(
         @Parameter(in = ParameterIn.QUERY, description = "확인할 아이디", required = true) @RequestParam String accountId) throws BadRequestException;
 
     @Operation(summary = "회원가입", description = "", tags = {"Signup"})
@@ -40,7 +40,7 @@ public interface SignupApi {
     })
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(consumes = { "application/json" })
-    void signupPost(
+    void signup(
         @Parameter(in = ParameterIn.DEFAULT, description = "", required = true) @Validated @RequestBody SignupRequest request,
         BindingResult bindingResult) throws BadRequestException;
 

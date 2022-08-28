@@ -78,24 +78,24 @@ class SignupControllerTest {
     assertAll(
         //성공 케이스 - 1 - 포맷이 맞고, 존재하지 않는 계정 ID인 경우
         () -> assertDoesNotThrow(() -> {
-          UserInfoCheckResponse response = signupController.signupIdGet(notExist_RightAccountId);
+          UserInfoCheckResponse response = signupController.checkSignupId(notExist_RightAccountId);
           assertFalse(response.isAlreadyExist());
         }),
         //성공 케이스 - 2 - 포맷이 맞고, 존재하는 계정 ID인 경우
         () -> assertDoesNotThrow(() -> {
-          UserInfoCheckResponse response = signupController.signupIdGet(exist_RightAccountId);
+          UserInfoCheckResponse response = signupController.checkSignupId(exist_RightAccountId);
           assertTrue(response.isAlreadyExist());
         }),
         //실패 케이스 - 1 - 존재하지 않고, 5자 미만인 계정 ID인 경우
-        () -> assertThrows(BadRequestException.class, () -> signupController.signupIdGet(notExist_Less5AccountId)),
+        () -> assertThrows(BadRequestException.class, () -> signupController.checkSignupId(notExist_Less5AccountId)),
         //실패 케이스 - 2 - 존재하지 않고, 5자 미만이고 영어숫자 조합인 계정 ID인 경우
-        () -> assertThrows(BadRequestException.class, () -> signupController.signupIdGet(notExist_Less5WithNumberAccountId)),
+        () -> assertThrows(BadRequestException.class, () -> signupController.checkSignupId(notExist_Less5WithNumberAccountId)),
         //실패 케이스 - 3 - 존재하지 않고, 20자 초과인 계정 ID인 경우
-        () -> assertThrows(BadRequestException.class, () -> signupController.signupIdGet(notExist_Over20AccountId)),
+        () -> assertThrows(BadRequestException.class, () -> signupController.checkSignupId(notExist_Over20AccountId)),
         //실패 케이스 - 4 - 존재하지 않고, 20자 초과이고 영어숫자 조합인 계정 ID인 경우
-        () -> assertThrows(BadRequestException.class, () -> signupController.signupIdGet(notExist_Over20WithNumberAccountId)),
+        () -> assertThrows(BadRequestException.class, () -> signupController.checkSignupId(notExist_Over20WithNumberAccountId)),
         //실패 케이스 - 5 - 존재하지 않고, 특수기호가 들어간 계정 ID인 경우
-        () -> assertThrows(BadRequestException.class, () -> signupController.signupIdGet(notExist_WithSpecialSymbolAccountId))
+        () -> assertThrows(BadRequestException.class, () -> signupController.checkSignupId(notExist_WithSpecialSymbolAccountId))
     );
 
   }
@@ -144,13 +144,13 @@ class SignupControllerTest {
     //THEN
     assertAll(
         //성공 케이스 - 1
-        () -> assertDoesNotThrow(() -> signupController.signupPost(rightRequest, bindingResult)),
+        () -> assertDoesNotThrow(() -> signupController.signup(rightRequest, bindingResult)),
         //실패 케이스 - 1 - 잘못된 포맷의 계정 ID 인 경우
-        () -> assertThrows(BadRequestException.class, () -> signupController.signupPost(wrongAccountIdRequest, bindingResult)),
+        () -> assertThrows(BadRequestException.class, () -> signupController.signup(wrongAccountIdRequest, bindingResult)),
         //실패 케이스 - 2 - 잘못된 포맷의 비밀번호 인 경우
-        () -> assertThrows(BadRequestException.class, () -> signupController.signupPost(wrongPasswordRequest, bindingResult)),
+        () -> assertThrows(BadRequestException.class, () -> signupController.signup(wrongPasswordRequest, bindingResult)),
         //실패 케이스 - 3 - 잘못된 포맷의 닉네임 인 경우
-        () -> assertThrows(BadRequestException.class, () -> signupController.signupPost(wrongNicknameRequest, bindingResult))
+        () -> assertThrows(BadRequestException.class, () -> signupController.signup(wrongNicknameRequest, bindingResult))
     );
   }
 }
