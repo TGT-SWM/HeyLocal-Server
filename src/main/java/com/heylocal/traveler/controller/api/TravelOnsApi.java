@@ -71,7 +71,7 @@ public interface TravelOnsApi {
     );
 
     @Operation(summary = "답변 수정", description = "답변을 수정합니다.", tags = {"TravelOns"})
-    @GetMapping("/{travelOnId}/opinions/{opinionId}")
+    @PutMapping("/{travelOnId}/opinions/{opinionId}")
     ResponseEntity<Void> updateOpinion(
             @Parameter(in = ParameterIn.PATH, description = "여행 On ID", required = true) long travelOnId,
             @Parameter(in = ParameterIn.PATH, description = "답변 ID", required = true) long opinionId,
