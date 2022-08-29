@@ -1,6 +1,7 @@
 package com.heylocal.traveler.controller;
 
 import com.heylocal.traveler.controller.api.PlansApi;
+import com.heylocal.traveler.dto.LoginUser;
 import com.heylocal.traveler.dto.PlanDto.*;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +16,7 @@ public class PlanController implements PlansApi {
 	 * @return
 	 */
 	@Override
-	public PlanListResponse getPlans() {
+	public PlanListResponse getPlans(LoginUser loginUser) {
 		return null;
 	}
 
