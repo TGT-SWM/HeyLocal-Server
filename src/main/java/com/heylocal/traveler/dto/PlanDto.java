@@ -1,8 +1,12 @@
 package com.heylocal.traveler.dto;
 
+import com.heylocal.traveler.domain.Region;
+import com.heylocal.traveler.domain.plan.Plan;
+import com.heylocal.traveler.domain.travelon.TravelOn;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public class PlanDto {
@@ -26,6 +30,24 @@ public class PlanDto {
 		// 장소 정보를 제외한 스케줄 기본 정보
 		// 지역, 여행 기간 등
 		long id;
+		long regionId;
+		String regionState;
+		String regionCity;
+		// String regionThumbUrl;
+		LocalDate startDate;
+		LocalDate endDate;
+
+		public PlanResponse(Plan plan) {
+			TravelOn travelOn = plan.getTravelOn();
+			Region region = travelOn.getRegion();
+
+			this.id = plan.getId();
+			this.regionId = region.getId();
+			this.regionState = region.getState();
+			this.regionCity = region.getCity();
+			this.startDate = travelOn.getTravelStartDate();
+			this.endDate = travelOn.getTravelEndDate();
+		}
 	}
 
 	@Getter

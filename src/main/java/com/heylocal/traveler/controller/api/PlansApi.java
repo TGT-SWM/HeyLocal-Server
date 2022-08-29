@@ -1,6 +1,8 @@
 package com.heylocal.traveler.controller.api;
 
+import com.heylocal.traveler.dto.LoginUser;
 import com.heylocal.traveler.dto.PlanDto;
+import com.heylocal.traveler.dto.PlanDto.PlanListResponse;
 import com.heylocal.traveler.dto.PlanDto.PlanPlacesRequest;
 import com.heylocal.traveler.dto.PlanDto.PlanPlacesResponse;
 import com.heylocal.traveler.dto.PlanDto.PlanRequest;
@@ -16,7 +18,9 @@ import java.util.List;
 public interface PlansApi {
 	@Operation(summary = "작성한 스케줄 조회", description = "작성한 스케줄의 목록을 조회합니다.", tags = {"Plans"})
 	@GetMapping()
-	PlanDto.PlanListResponse getPlans();
+	PlanListResponse getPlans(
+			@Parameter(in = ParameterIn.QUERY, description = "로그인 정보", required = true) LoginUser loginUser
+	);
 
 	@Operation(summary = "스케줄 등록", description = "스케줄을 등록합니다.", tags = {"Plans"})
 	@PostMapping()
