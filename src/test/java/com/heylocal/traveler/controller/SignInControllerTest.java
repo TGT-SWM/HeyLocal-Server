@@ -1,6 +1,7 @@
 package com.heylocal.traveler.controller;
 
 import com.heylocal.traveler.domain.user.UserRole;
+import com.heylocal.traveler.dto.AuthTokenDto;
 import com.heylocal.traveler.exception.code.SigninCode;
 import com.heylocal.traveler.exception.controller.BadRequestException;
 import com.heylocal.traveler.exception.controller.UnauthorizedException;
@@ -12,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 
 import static com.heylocal.traveler.dto.SigninDto.SigninRequest;
 import static com.heylocal.traveler.dto.SigninDto.SigninResponse;
@@ -40,7 +42,6 @@ class SignInControllerTest {
     String rightRawPassword = "testPassword123!";
     long rightId = 3L;
     String rightNickname = "testNickname";
-    String rightPhoneNumber = "010-1234-1234";
     UserRole rightUserRole = UserRole.TRAVELER;
     String rightAccessToken = "accessToken";
     String rightRefreshToken = "refreshToken";
@@ -61,6 +62,8 @@ class SignInControllerTest {
 
     //Mock 행동 정의 - BindingResult
     willReturn(false).willReturn(true).willReturn(false).given(bindingResult).hasFieldErrors();
+    FieldError fieldError = new FieldError(AuthTokenDto.TokenPairRequest.class.getName(), "refreshToken", "빈값입니다.");
+    willReturn(fieldError).given(bindingResult).getFieldError();
 
     //Mock 행동 정의 - SigninService
     SigninResponse rightResponse = SigninResponse.builder()

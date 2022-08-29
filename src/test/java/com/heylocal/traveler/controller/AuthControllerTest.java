@@ -1,5 +1,6 @@
 package com.heylocal.traveler.controller;
 
+import com.heylocal.traveler.dto.AuthTokenDto;
 import com.heylocal.traveler.exception.code.AuthCode;
 import com.heylocal.traveler.exception.controller.BadRequestException;
 import com.heylocal.traveler.exception.controller.UnauthorizedException;
@@ -13,6 +14,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 
 import static com.heylocal.traveler.dto.AuthTokenDto.TokenPairRequest;
 import static com.heylocal.traveler.dto.AuthTokenDto.TokenPairResponse;
@@ -88,9 +90,13 @@ class AuthControllerTest {
     willThrow(new AuthException(AuthCode.NOT_EXIST_REFRESH_TOKEN))
         .given(authService).reissueTokenPair(notExistRefreshTokenRequest);
 
+
     //Mock 행동 정의 - BindingResult
     willReturn(false).willReturn(true).willReturn(false)
         .given(bindingResult).hasFieldErrors();
+
+    FieldError fieldError = new FieldError(AuthTokenDto.TokenPairRequest.class.getName(), "refreshToken", "빈값입니다.");
+    willReturn(fieldError).given(bindingResult).getFieldError();
 
     //WHEN
     TokenPairResponse succeedResult = authController.reissueTokenPair(succeedReissueRequest, bindingResult);
