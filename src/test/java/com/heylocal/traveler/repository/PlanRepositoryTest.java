@@ -106,7 +106,6 @@ class PlanRepositoryTest {
 	private Plan createPlan(User user, TravelOn travelOn) {
 		return Plan.builder()
 				.status(PlanStatus.DOING)
-				.isFixed(false)
 				.travelOn(travelOn)
 				.user(user)
 				.build();

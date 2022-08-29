@@ -33,10 +33,6 @@ public class Plan extends BaseTimeEntity {
   @Column(nullable = false)
   private PlanStatus status;
 
-  @Column(nullable = false)
-  @ColumnDefault("false")
-  private Boolean isFixed;
-
   @OneToOne(optional = false, fetch = FetchType.LAZY)
   private TravelOn travelOn;
 
