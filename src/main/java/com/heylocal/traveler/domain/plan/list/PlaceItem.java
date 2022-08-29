@@ -1,8 +1,8 @@
-package com.heylocal.traveler.domain.travel.list;
+package com.heylocal.traveler.domain.plan.list;
 
 import com.heylocal.traveler.domain.BaseTimeEntity;
 import com.heylocal.traveler.domain.place.Place;
-import com.heylocal.traveler.domain.travel.DaySchedule;
+import com.heylocal.traveler.domain.plan.DaySchedule;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

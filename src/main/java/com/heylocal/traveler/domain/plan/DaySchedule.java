@@ -1,7 +1,7 @@
-package com.heylocal.traveler.domain.travel;
+package com.heylocal.traveler.domain.plan;
 
 import com.heylocal.traveler.domain.BaseTimeEntity;
-import com.heylocal.traveler.domain.travel.list.PlaceItem;
+import com.heylocal.traveler.domain.plan.list.PlaceItem;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -29,7 +29,7 @@ public class DaySchedule extends BaseTimeEntity {
   private LocalDate dateTime; //스케줄 날짜
 
   @ManyToOne(optional = false, fetch = FetchType.LAZY)
-  private Travel travel;
+  private Plan plan;
 
   //양방향 설정
 
