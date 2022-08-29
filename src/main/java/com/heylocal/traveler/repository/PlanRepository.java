@@ -14,6 +14,18 @@ public class PlanRepository {
 
 	/**
 	 * <pre>
+	 * 플랜을 저장합니다.
+	 * @param plan 저장할 플랜 엔티티
+	 * @return 저장한 플랜 엔티티
+	 * </pre>
+	 */
+	public Plan save(Plan plan) {
+		em.persist(plan);
+		return plan;
+	}
+
+	/**
+	 * <pre>
 	 * 사용자가 작성한 스케줄을 리스트로 반환합니다.
 	 * @param userId 사용자의 아이디
 	 * @return 스케줄 도메인의 리스트
