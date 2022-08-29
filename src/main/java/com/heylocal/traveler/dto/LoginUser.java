@@ -11,7 +11,4 @@ import lombok.*;
 @Builder
 public class LoginUser {
   private long id;
-  private String accountId;
-  private String nickname;
-  private UserRole userRole;
 }

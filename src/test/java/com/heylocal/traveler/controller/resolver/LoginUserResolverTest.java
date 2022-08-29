@@ -1,6 +1,5 @@
 package com.heylocal.traveler.controller.resolver;
 
-import com.heylocal.traveler.domain.user.UserRole;
 import com.heylocal.traveler.dto.LoginUser;
 import com.heylocal.traveler.service.AuthService;
 import org.junit.jupiter.api.BeforeEach;
@@ -8,6 +7,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -36,7 +36,7 @@ class LoginUserResolverTest {
   @BeforeEach
   void setUp() {
     MockitoAnnotations.openMocks(this); //여러 test code 실행 시, mock 객체의 정의된 행동이 꼬일 수 있으므로 초기화한다.
-    this.loginUserResolver = new LoginUserResolver(authService);
+    loginUserResolver = new LoginUserResolver();
   }
 
   @Test
@@ -62,14 +62,8 @@ class LoginUserResolverTest {
   @DisplayName("ArgumentResolver")
   void resolveArgumentTest() throws Exception {
     //GIVEN
-    String phoneNumber = "010-1234-1234";
-    String nickname = "testNickname";
-    String accountId = "testAccountId";
     long userId = 3l;
     LoginUser loginUser = LoginUser.builder()
-        .userRole(UserRole.TRAVELER)
-        .nickname(nickname)
-        .accountId(accountId)
         .id(userId)
         .build();
     HttpServletRequest request = new MockHttpServletRequest();
