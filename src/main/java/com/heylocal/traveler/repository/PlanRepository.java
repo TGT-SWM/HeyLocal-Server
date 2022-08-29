@@ -1,6 +1,6 @@
 package com.heylocal.traveler.repository;
 
-import com.heylocal.traveler.domain.travel.Travel;
+import com.heylocal.traveler.domain.plan.Plan;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -19,10 +19,10 @@ public class PlanRepository {
 	 * @return 스케줄 도메인의 리스트
 	 * </pre>
 	 */
-	public List<Travel> findAll(long userId) {
-		String jpql = "select t from Travel t where t.user.id = :id";
+	public List<Plan> findAll(long userId) {
+		String jpql = "select t from Plan t where t.user.id = :id";
 
-		return em.createQuery(jpql, Travel.class)
+		return em.createQuery(jpql, Plan.class)
 				.setParameter("id", userId)
 				.getResultList();
 	}

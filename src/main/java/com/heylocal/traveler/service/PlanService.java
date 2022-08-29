@@ -1,6 +1,6 @@
 package com.heylocal.traveler.service;
 
-import com.heylocal.traveler.domain.travel.Travel;
+import com.heylocal.traveler.domain.plan.Plan;
 import com.heylocal.traveler.dto.PlanDto.*;
 import com.heylocal.traveler.repository.PlanRepository;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +22,7 @@ public class PlanService {
 	 */
 	public PlanListResponse getPlans(long userId) {
 		// 작성한 스케줄 조회
-		List<Travel> travels = planRepository.findAll(userId);
+		List<Plan> plans = planRepository.findAll(userId);
 
 		// DTO 변환 로직
 
