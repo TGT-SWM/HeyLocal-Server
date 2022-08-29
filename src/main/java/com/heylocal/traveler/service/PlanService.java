@@ -6,7 +6,9 @@ import com.heylocal.traveler.repository.PlanRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.Clock;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -15,6 +17,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class PlanService {
 	private final PlanRepository planRepository;
+
+	private final Clock clock;
 
 	/**
 	 * <pre>
@@ -33,7 +37,7 @@ public class PlanService {
 				.collect(Collectors.toList());
 
 		// 플랜을 날짜에 따라 분류
-		LocalDate today = LocalDate.now();
+		LocalDate today = LocalDate.now(clock);
 		List<PlanResponse> past = new ArrayList<>();
 		List<PlanResponse> ongoing = new ArrayList<>();
 		List<PlanResponse> upcoming = new ArrayList<>();
