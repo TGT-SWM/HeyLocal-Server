@@ -18,7 +18,9 @@ import org.hibernate.annotations.ColumnDefault;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 여행 On
@@ -73,16 +75,16 @@ public class TravelOn extends BaseTimeEntity {
   //양방향 설정
 
   @OneToMany(mappedBy = "travelOn", cascade = CascadeType.ALL)
-  private List<TravelMember> travelMemberList = new ArrayList<>();
+  private Set<TravelMember> travelMemberList = new HashSet<>();
 
   @OneToMany(mappedBy = "travelOn", cascade = CascadeType.ALL)
-  private List<HopeAccommodation> hopeAccommodationList = new ArrayList<>();
+  private Set<HopeAccommodation> hopeAccommodationList = new HashSet<>();
 
   @OneToMany(mappedBy = "travelOn", cascade = CascadeType.ALL)
-  private List<HopeFood> hopeFoodList = new ArrayList<>();
+  private Set<HopeFood> hopeFoodList = new HashSet<>();
 
   @OneToMany(mappedBy = "travelOn", cascade = CascadeType.ALL)
-  private List<HopeDrink> hopeDrinkList = new ArrayList<>();
+  private Set<HopeDrink> hopeDrinkList = new HashSet<>();
 
   @OneToOne(mappedBy = "travelOn", cascade = CascadeType.ALL)
   private TravelTypeGroup travelTypeGroup;
