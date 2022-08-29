@@ -19,7 +19,7 @@ public class PlanRepository {
 	 * @return 스케줄 도메인의 리스트
 	 * </pre>
 	 */
-	public List<Plan> findAll(long userId) {
+	public List<Plan> findByUserId(long userId) {
 		String jpql = "select t from Plan t where t.user.id = :id";
 
 		return em.createQuery(jpql, Plan.class)

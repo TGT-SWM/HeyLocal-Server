@@ -9,6 +9,11 @@ class PlanRepositoryTest {
 
 	@Test
 	@DisplayName("작성한 스케줄 목록 조회")
-	void findAllTest() {
+	void findByUserIdTest() {
+		// GIVEN
+
+		// WHEN
+
+		// THEN
 	}
 }

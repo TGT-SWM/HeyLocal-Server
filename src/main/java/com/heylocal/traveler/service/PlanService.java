@@ -25,7 +25,7 @@ public class PlanService {
 	 */
 	public PlanListResponse getPlans(long userId) {
 		// 작성한 플랜 조회
-		List<Plan> plans = planRepository.findAll(userId);
+		List<Plan> plans = planRepository.findByUserId(userId);
 
 		// Plan -> PlanResponse 변환
 		List<PlanResponse> planResponses = plans.stream()
