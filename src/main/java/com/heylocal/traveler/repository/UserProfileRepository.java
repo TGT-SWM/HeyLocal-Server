@@ -5,11 +5,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 @Repository
-@RequiredArgsConstructor
 public class UserProfileRepository {
-  private final EntityManager em;
+  @PersistenceContext
+  private EntityManager em;
 
   /**
    * 사용자 프로필을 저장하는 메서드

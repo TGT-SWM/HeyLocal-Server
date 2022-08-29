@@ -7,12 +7,13 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
+import javax.persistence.PersistenceContext;
 import java.util.Optional;
 
 @Repository
-@RequiredArgsConstructor
 public class UserRepository {
-  private final EntityManager em;
+  @PersistenceContext
+  private EntityManager em;
 
   /**
    * 사용자를 저장하는 메서드
