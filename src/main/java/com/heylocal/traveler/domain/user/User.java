@@ -6,12 +6,13 @@ import com.heylocal.traveler.domain.travelon.opinion.Opinion;
 import com.heylocal.traveler.domain.profile.UserProfile;
 import com.heylocal.traveler.domain.token.AccessToken;
 import com.heylocal.traveler.domain.token.RefreshToken;
-import com.heylocal.traveler.domain.travel.Travel;
+import com.heylocal.traveler.domain.plan.Plan;
 import com.heylocal.traveler.domain.travelon.TravelOn;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -56,7 +57,7 @@ public class User extends BaseTimeEntity {
   private UserProfile userProfile;
 
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-  private List<Travel> travelList = new ArrayList<>();
+  private List<Plan> planList = new ArrayList<>();
 
   @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   private List<TravelOn> travelOnList = new ArrayList<>();

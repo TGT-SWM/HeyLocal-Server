@@ -3,7 +3,7 @@ package com.heylocal.traveler.domain.travelon;
 import com.heylocal.traveler.domain.BaseTimeEntity;
 import com.heylocal.traveler.domain.Region;
 import com.heylocal.traveler.domain.travelon.opinion.Opinion;
-import com.heylocal.traveler.domain.travel.Travel;
+import com.heylocal.traveler.domain.plan.Plan;
 import com.heylocal.traveler.domain.travelon.list.HopeAccommodation;
 import com.heylocal.traveler.domain.travelon.list.HopeDrink;
 import com.heylocal.traveler.domain.travelon.list.HopeFood;
@@ -91,6 +91,6 @@ public class TravelOn extends BaseTimeEntity {
   private List<Opinion> opinionList = new ArrayList<>();
 
   @OneToOne(mappedBy = "travelOn")
-  private Travel travel;
+  private Plan plan;
 
 }

@@ -1,4 +1,4 @@
-package com.heylocal.traveler.domain.travel;
+package com.heylocal.traveler.domain.plan;
 
 import com.heylocal.traveler.domain.BaseTimeEntity;
 import com.heylocal.traveler.domain.travelon.TravelOn;
@@ -23,14 +23,14 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @SuperBuilder
-public class Travel extends BaseTimeEntity {
+public class Plan extends BaseTimeEntity {
   @Id
   @GeneratedValue
   private Long id;
 
   @Enumerated(EnumType.STRING)
   @Column(nullable = false)
-  private TravelStatus status;
+  private PlanStatus status;
 
   @Column(nullable = false)
   @ColumnDefault("false")
@@ -44,6 +44,6 @@ public class Travel extends BaseTimeEntity {
 
   //양방향 설정
 
-  @OneToMany(mappedBy = "travel", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  @OneToMany(mappedBy = "plan", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   private List<DaySchedule> dayScheduleList = new ArrayList<>();
 }

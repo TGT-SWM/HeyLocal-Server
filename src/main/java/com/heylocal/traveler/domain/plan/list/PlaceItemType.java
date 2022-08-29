@@ -1,4 +1,4 @@
-package com.heylocal.traveler.domain.travel.list;
+package com.heylocal.traveler.domain.plan.list;
 
 /**
  * 스케줄표의 장소 항목 타입
