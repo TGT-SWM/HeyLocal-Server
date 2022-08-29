@@ -2,12 +2,12 @@ package com.heylocal.traveler.domain.travelon;
 
 import com.heylocal.traveler.domain.BaseTimeEntity;
 import com.heylocal.traveler.domain.Region;
-import com.heylocal.traveler.domain.travelon.opinion.Opinion;
 import com.heylocal.traveler.domain.plan.Plan;
 import com.heylocal.traveler.domain.travelon.list.HopeAccommodation;
 import com.heylocal.traveler.domain.travelon.list.HopeDrink;
 import com.heylocal.traveler.domain.travelon.list.HopeFood;
 import com.heylocal.traveler.domain.travelon.list.TravelMember;
+import com.heylocal.traveler.domain.travelon.opinion.Opinion;
 import com.heylocal.traveler.domain.user.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -75,16 +75,16 @@ public class TravelOn extends BaseTimeEntity {
   //양방향 설정
 
   @OneToMany(mappedBy = "travelOn", cascade = CascadeType.ALL)
-  private Set<TravelMember> travelMemberList = new HashSet<>();
+  private Set<TravelMember> travelMemberSet = new HashSet<>();
 
   @OneToMany(mappedBy = "travelOn", cascade = CascadeType.ALL)
-  private Set<HopeAccommodation> hopeAccommodationList = new HashSet<>();
+  private Set<HopeAccommodation> hopeAccommodationSet = new HashSet<>();
 
   @OneToMany(mappedBy = "travelOn", cascade = CascadeType.ALL)
-  private Set<HopeFood> hopeFoodList = new HashSet<>();
+  private Set<HopeFood> hopeFoodSet = new HashSet<>();
 
   @OneToMany(mappedBy = "travelOn", cascade = CascadeType.ALL)
-  private Set<HopeDrink> hopeDrinkList = new HashSet<>();
+  private Set<HopeDrink> hopeDrinkSet = new HashSet<>();
 
   @OneToOne(mappedBy = "travelOn", cascade = CascadeType.ALL)
   private TravelTypeGroup travelTypeGroup;
