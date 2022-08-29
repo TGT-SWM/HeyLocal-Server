@@ -18,7 +18,7 @@ import java.util.List;
  */
 
 @Entity
-@Table(name = "TRAVEL")
+@Table(name = "PLAN")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
