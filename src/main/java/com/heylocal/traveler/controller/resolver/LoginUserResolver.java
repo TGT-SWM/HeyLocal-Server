@@ -17,7 +17,6 @@ import javax.servlet.http.HttpServletRequest;
 @Component
 @RequiredArgsConstructor
 public class LoginUserResolver implements HandlerMethodArgumentResolver {
-  private final AuthService authService;
 
   @Override
   public boolean supportsParameter(MethodParameter parameter) {
@@ -28,12 +27,11 @@ public class LoginUserResolver implements HandlerMethodArgumentResolver {
   @Override
   public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
     long userId;
-    LoginUser loginUser;
     HttpServletRequest httpServletRequest = (HttpServletRequest) webRequest.getNativeRequest();
 
     userId = (long) httpServletRequest.getAttribute("userId");
-    loginUser = authService.findLoginUser(userId);
-
-    return loginUser;
+    return LoginUser.builder()
+        .id(userId)
+        .build();
   }
 }
