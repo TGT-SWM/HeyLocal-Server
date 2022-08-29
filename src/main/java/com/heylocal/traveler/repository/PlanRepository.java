@@ -15,10 +15,15 @@ public class PlanRepository {
 	/**
 	 * <pre>
 	 * 사용자가 작성한 스케줄을 리스트로 반환합니다.
+	 * @param userId 사용자의 아이디
 	 * @return 스케줄 도메인의 리스트
 	 * </pre>
 	 */
-	public List<Travel> findAll() {
-		return null;
+	public List<Travel> findAll(long userId) {
+		String jpql = "select t from Travel t where t.user.id = :id";
+
+		return em.createQuery(jpql, Travel.class)
+				.setParameter("id", userId)
+				.getResultList();
 	}
 }
