@@ -28,6 +28,7 @@ public class Plan extends BaseTimeEntity {
   @GeneratedValue
   private Long id;
 
+  // 별도로 저장하고 있는 것보다. 여행 날짜를 통해 유도하는 것은 어떨까?
   @Enumerated(EnumType.STRING)
   @Column(nullable = false)
   private PlanStatus status;
