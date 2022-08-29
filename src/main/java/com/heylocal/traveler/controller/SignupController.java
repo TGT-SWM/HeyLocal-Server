@@ -46,7 +46,8 @@ public class SignupController implements SignupApi {
   @Override
   public void signup(SignupRequest request, BindingResult bindingResult) throws BadRequestException {
     if (bindingResult.hasFieldErrors()) {
-      throw new BadRequestException(BadRequestCode.BAD_INPUT_FORM);
+      String errMsg = bindingResult.getFieldError().getDefaultMessage();
+      throw new BadRequestException(BadRequestCode.BAD_INPUT_FORM, errMsg);
     }
     validateAccountIdFormat(request.getAccountId()); //계정 포맷 검증
     validatePasswordFormat(request.getPassword()); //비밀번호 포맷 검증

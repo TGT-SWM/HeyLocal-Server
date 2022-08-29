@@ -28,7 +28,8 @@ public class SigninController implements SigninApi {
     SigninResponse response = null;
 
     if (bindingResult.hasFieldErrors()) {
-      throw new BadRequestException(BadRequestCode.BAD_INPUT_FORM);
+      String errMsg = bindingResult.getFieldError().getDefaultMessage();
+      throw new BadRequestException(BadRequestCode.BAD_INPUT_FORM, errMsg);
     }
 
     try {
