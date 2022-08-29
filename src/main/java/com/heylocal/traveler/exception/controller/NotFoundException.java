@@ -7,4 +7,7 @@ public class NotFoundException extends AllException {
 	public NotFoundException(ErrorCode code) {
 		super(code);
 	}
+	public NotFoundException(ErrorCode code, String description) {
+		super(code, description);
+	}
 }

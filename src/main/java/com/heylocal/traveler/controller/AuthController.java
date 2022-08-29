@@ -26,7 +26,7 @@ public class AuthController implements AuthApi {
     TokenPairResponse response = null;
 
     if (bindingResult.hasFieldErrors()) {
-      throw new BadRequestException(BadRequestCode.EMPTY_FIELD);
+      throw new BadRequestException(BadRequestCode.BAD_INPUT_FORM);
     }
     try {
       response = authService.reissueTokenPair(request);

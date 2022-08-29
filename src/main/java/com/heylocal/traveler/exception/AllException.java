@@ -9,10 +9,18 @@ import com.heylocal.traveler.exception.code.ErrorCode;
  */
 public class AllException extends Exception {
   private ErrorCode code;
+  private String description;
 
   public AllException(ErrorCode code) {
     super(code.getDescription());
     this.code = code;
+    this.description = code.getDescription();
+  }
+
+  public AllException(ErrorCode code, String description) {
+    super(description);
+    this.code = code;
+    this.description = description;
   }
 
   public ErrorCode getCode() {

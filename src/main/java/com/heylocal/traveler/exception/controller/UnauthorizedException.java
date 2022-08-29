@@ -12,4 +12,7 @@ public class UnauthorizedException extends AllException {
   public UnauthorizedException(ErrorCode code) {
     super(code);
   }
+  public UnauthorizedException(ErrorCode code, String description) {
+    super(code, description);
+  }
 }

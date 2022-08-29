@@ -12,4 +12,7 @@ public class TokenException extends AllException {
   public TokenException(ErrorCode code) {
     super(code);
   }
+  public TokenException(ErrorCode code, String description) {
+    super(code, description);
+  }
 }

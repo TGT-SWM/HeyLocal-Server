@@ -28,7 +28,7 @@ public class SigninController implements SigninApi {
     SigninResponse response = null;
 
     if (bindingResult.hasFieldErrors()) {
-      throw new BadRequestException(BadRequestCode.EMPTY_FIELD);
+      throw new BadRequestException(BadRequestCode.BAD_INPUT_FORM);
     }
 
     try {
