@@ -45,9 +45,6 @@ public class AuthService {
 
     return LoginUser.builder()
         .id(user.getId())
-        .accountId(user.getAccountId())
-        .nickname(user.getNickname())
-        .userRole(user.getUserRole())
         .build();
   }
 

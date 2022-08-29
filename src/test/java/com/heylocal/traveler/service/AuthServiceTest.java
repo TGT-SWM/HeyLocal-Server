@@ -79,9 +79,6 @@ class AuthServiceTest {
         //성공 케이스 - 1
         () -> assertDoesNotThrow(() -> authService.findLoginUser(userId)),
         () -> assertEquals(user.getId(), loginTraveler.getId()),
-        () -> assertEquals(user.getAccountId(), loginTraveler.getAccountId()),
-        () -> assertEquals(user.getNickname(), loginTraveler.getNickname()),
-        () -> assertEquals(UserRole.TRAVELER, loginTraveler.getUserRole()),
         //실패 케이스 - 1 - 존재하지 않는 pk일 때
         () -> assertThrows(TokenException.class, () -> authService.findLoginUser(notExistId))
     );
