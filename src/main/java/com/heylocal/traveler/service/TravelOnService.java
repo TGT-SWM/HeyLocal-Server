@@ -31,11 +31,11 @@ public class TravelOnService {
     User user;
 
     user = userRepository.findById(loginUser.getId()).get();
-    travelOn = TravelOn.builder()
-        .region()
-        .description(request.getDescription())
-        .title(request.getTitle())
-        .
+//    travelOn = TravelOn.builder()
+//        .region()
+//        .description(request.getDescription())
+//        .title(request.getTitle())
+//        .
   }
 
 }
