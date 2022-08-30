@@ -30,4 +30,10 @@ public class HopeAccommodation extends BaseTimeEntity {
   @ManyToOne(optional = false, fetch = FetchType.LAZY)
   private TravelOn travelOn;
 
+  public void registerAt(TravelOn travelOn) {
+    this.travelOn = travelOn;
+    if (!travelOn.getHopeAccommodationSet().contains(this)) {
+      travelOn.getHopeAccommodationSet().add(this);
+    }
+  }
 }

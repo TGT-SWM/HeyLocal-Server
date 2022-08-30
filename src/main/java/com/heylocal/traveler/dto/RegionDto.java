@@ -3,6 +3,8 @@ package com.heylocal.traveler.dto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
+import javax.validation.constraints.NotEmpty;
+
 public class RegionDto {
 
 	@Getter
@@ -12,6 +14,7 @@ public class RegionDto {
 	@Builder
 	@Schema(description = "지역 선택 요청 DTO")
 	public static class RegionRequest {
+		@NotEmpty
 		private String state;
 		private String city;
 	}

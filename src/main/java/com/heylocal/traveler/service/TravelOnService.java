@@ -5,6 +5,7 @@ import com.heylocal.traveler.domain.travelon.TravelOn;
 import com.heylocal.traveler.domain.user.User;
 import com.heylocal.traveler.dto.LoginUser;
 import com.heylocal.traveler.exception.service.BadArgumentException;
+import com.heylocal.traveler.repository.RegionRepository;
 import com.heylocal.traveler.repository.TravelOnRepository;
 import com.heylocal.traveler.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,7 @@ import static com.heylocal.traveler.dto.TravelOnDto.TravelOnRequest;
 public class TravelOnService {
 
   private final TravelOnRepository travelOnRepository;
+  private final RegionRepository regionRepository;
   private final UserRepository userRepository;
 
   /**
@@ -28,14 +30,13 @@ public class TravelOnService {
   @Transactional
   public void addNewTravelOn(TravelOnRequest request, LoginUser loginUser) {
     TravelOn travelOn;
-    User user;
+    Region region;
+    User author;
 
-    user = userRepository.findById(loginUser.getId()).get();
-//    travelOn = TravelOn.builder()
-//        .region()
-//        .description(request.getDescription())
-//        .title(request.getTitle())
-//        .
+    author = userRepository.findById(loginUser.getId()).get();
+    region = regionRepository.findByStateAndCity(request.getRegion().getState(), request.getRegion().getCity());
+    travelOn = request.toEntity(author, region);
+    travelOnRepository.addTravelOn(travelOn);
   }
 
 }
