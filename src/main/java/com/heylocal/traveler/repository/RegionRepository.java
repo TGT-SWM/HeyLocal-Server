@@ -11,6 +11,12 @@ public class RegionRepository {
   @PersistenceContext
   private EntityManager em;
 
+  /**
+   * State 와 City 로 Region 엔티티를 조회하는 메서드
+   * @param state
+   * @param city
+   * @return
+   */
   public Region findByStateAndCity(String state, String city) {
     String jpql = "select r from Region r" +
         " where r.state = :state" +
