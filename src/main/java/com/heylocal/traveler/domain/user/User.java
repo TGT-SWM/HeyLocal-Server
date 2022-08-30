@@ -9,6 +9,7 @@ import com.heylocal.traveler.domain.token.RefreshToken;
 import com.heylocal.traveler.domain.plan.Plan;
 import com.heylocal.traveler.domain.travelon.TravelOn;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
@@ -47,18 +48,23 @@ public class User extends BaseTimeEntity {
 
   //양방향 설정
 
+  @Builder.Default
   @OneToMany(mappedBy = "receiver", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   private List<Notification> notificationList = new ArrayList<>();
 
+  @Builder.Default
   @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   private List<Opinion> opinionList = new ArrayList<>();
 
+  @Builder.Default
   @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   private UserProfile userProfile;
 
+  @Builder.Default
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   private List<Plan> planList = new ArrayList<>();
 
+  @Builder.Default
   @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   private List<TravelOn> travelOnList = new ArrayList<>();
 

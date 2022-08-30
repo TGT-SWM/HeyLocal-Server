@@ -3,6 +3,7 @@ package com.heylocal.traveler.domain.chat;
 import com.heylocal.traveler.domain.BaseTimeEntity;
 import com.heylocal.traveler.domain.user.User;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
@@ -34,6 +35,7 @@ public class ChatRoom extends BaseTimeEntity {
   private ChatMessage lastMessage;
 
   //양방향 설정
+  @Builder.Default
   @OneToMany(mappedBy = "chatRoom", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   private List<ChatMessage> chatMessageList = new ArrayList<>();
 }

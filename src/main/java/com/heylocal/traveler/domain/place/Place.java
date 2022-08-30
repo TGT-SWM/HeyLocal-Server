@@ -5,6 +5,7 @@ import com.heylocal.traveler.domain.Region;
 import com.heylocal.traveler.domain.travelon.opinion.Opinion;
 import com.heylocal.traveler.domain.plan.list.PlaceItem;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
@@ -50,9 +51,11 @@ public class Place extends BaseTimeEntity {
 
   // 양방향 설정
 
+  @Builder.Default
   @OneToMany(mappedBy = "place", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   private List<Opinion> opinionList = new ArrayList<>();
 
+  @Builder.Default
   @OneToMany(mappedBy = "place", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   private List<PlaceItem> placeItemList = new ArrayList<>();
 }
