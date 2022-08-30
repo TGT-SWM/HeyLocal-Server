@@ -56,7 +56,6 @@ public class User extends BaseTimeEntity {
   @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   private List<Opinion> opinionList = new ArrayList<>();
 
-  @Builder.Default
   @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   private UserProfile userProfile;
 
