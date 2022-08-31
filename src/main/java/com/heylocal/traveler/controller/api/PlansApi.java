@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.List;
 
@@ -19,7 +20,7 @@ public interface PlansApi {
 	@Operation(summary = "작성한 스케줄 조회", description = "작성한 스케줄의 목록을 조회합니다.", tags = {"Plans"})
 	@GetMapping()
 	PlanListResponse getPlans(
-			@Parameter(in = ParameterIn.QUERY, description = "로그인 정보", required = true) LoginUser loginUser
+			@ApiIgnore LoginUser loginUser
 	);
 
 	@Operation(summary = "스케줄 등록", description = "스케줄을 등록합니다.", tags = {"Plans"})
