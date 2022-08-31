@@ -55,11 +55,17 @@ class TokenRepositoryTest {
     em.persist(user);
 
     //WHEN
-    refreshToken = tokenRepository.saveTokenPair(user, refreshToken, accessToken);
+    RefreshToken refreshTokenResult = tokenRepository.saveTokenPair(user, refreshToken, accessToken);
 
     //THEN
-    assertEquals(accessToken, refreshToken.getAccessToken());
-    assertEquals(user, refreshToken.getUser());
+    assertAll(
+        //성공 케이스 - 1 - SQL Flush 성공
+        () -> assertDoesNotThrow(() -> em.flush()),
+        //성공 케이스 - 2 - 토큰간 연관관계 확인
+        () -> assertEquals(accessToken, refreshTokenResult.getAccessToken()),
+        //성공 케이스 - 3 - 유저가 연관되었는지 확인
+        () -> assertEquals(user, refreshTokenResult.getUser())
+    );
   }
 
   @Test
@@ -78,7 +84,9 @@ class TokenRepositoryTest {
 
     //THEN
     assertAll(
-        //성공 케이스 - 1
+        //성공 케이스 - 1 - SQL Flush 성공
+        () -> assertDoesNotThrow(() -> em.flush()),
+        //성공 케이스 - 2
         () -> assertAll(
             () -> assertTrue(succeedResult.isPresent()),
             () -> assertEquals(storedRefreshToken, succeedResult.get())
@@ -104,7 +112,9 @@ class TokenRepositoryTest {
 
     //THEN
     assertAll(
-        //성공 케이스 - 1
+        //성공 케이스 - 1 - SQL Flush 성공
+        () -> assertDoesNotThrow(() -> em.flush()),
+        //성공 케이스 - 2
         () -> assertAll(
             () -> assertTrue(succeedResult.isPresent()),
             () -> assertEquals(storedAccessToken, succeedResult.get())
@@ -133,7 +143,9 @@ class TokenRepositoryTest {
         //실패 케이스 - 1 - 존재하지 않는 Refresh Token 값인 경우
         () -> assertThrows(IllegalArgumentException.class,
             () -> tokenRepository.removeTokenPairByRefreshValue(notExistRefreshTokenValue),
-            "존재하지 않는 Refresh Token 값입니다.")
+            "존재하지 않는 Refresh Token 값입니다."),
+        //성공 케이스 - 2 - SQL Flush 성공
+        () -> assertDoesNotThrow(() -> em.flush())
     );
   }
 
@@ -156,7 +168,9 @@ class TokenRepositoryTest {
         //실패 케이스 - 1 - 존재하지 않는 Access Token 값인 경우
         () -> assertThrows(IllegalArgumentException.class,
             () -> tokenRepository.removeTokenPairByAccessValue(notExistAccessTokenValue),
-            "존재하지 않는 Access Token 값입니다.")
+            "존재하지 않는 Access Token 값입니다."),
+        //성공 케이스 - 2 - SQL Flush 성공
+        () -> assertDoesNotThrow(() -> em.flush())
     );
   }
 
@@ -228,7 +242,11 @@ class TokenRepositoryTest {
 
     //THEN
     assertAll(
+        //성공 케이스 - 1 - SQL Flush 성공
+        () -> assertDoesNotThrow(() -> em.flush()),
+        //성공 케이스 - 2 - 연관된 Access Token 이 없는지 확인
         () -> assertNull(resultUser.getAccessToken()),
+        //성공 케이스 - 3 - 연관된 Refresh Token 이 없는지 확인
         () -> assertNull(resultUser.getRefreshToken())
     );
   }
