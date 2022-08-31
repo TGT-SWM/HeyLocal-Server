@@ -22,6 +22,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.List;
 
@@ -46,7 +47,7 @@ public interface TravelOnsApi {
     void createTravelOn(
             @Parameter(in = ParameterIn.DEFAULT, description = "여행 On 정보", required = true) @Validated @RequestBody TravelOnRequest request,
             BindingResult bindingResult,
-            @Parameter(hidden = true) LoginUser loginUser
+            @ApiIgnore LoginUser loginUser
     ) throws BadRequestException;
 
     @Operation(summary = "여행 On 상세 조회", description = "여행 On의 상세 정보를 조회합니다.", tags = {"TravelOns"})
