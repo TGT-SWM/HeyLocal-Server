@@ -2,7 +2,9 @@ package com.heylocal.traveler.interceptor.auth;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.heylocal.traveler.dto.ErrorMessageResponse;
+import com.heylocal.traveler.exception.AllException;
 import com.heylocal.traveler.exception.code.UnauthorizedCode;
+import com.heylocal.traveler.exception.controller.UnauthorizedException;
 import com.heylocal.traveler.util.jwt.JwtTokenParser;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -100,7 +102,7 @@ public class AuthInterceptor implements HandlerInterceptor {
     response.setContentType("application/json");
     response.setCharacterEncoding("UTF-8");
 
-    errorResponse = new ErrorMessageResponse(code);
+    errorResponse = new ErrorMessageResponse(new UnauthorizedException(code));
     responseBody = objectMapper.writeValueAsString(errorResponse);
 
 

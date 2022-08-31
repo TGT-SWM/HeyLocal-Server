@@ -9,6 +9,7 @@ import com.heylocal.traveler.exception.controller.BadRequestException;
 import com.heylocal.traveler.exception.controller.NotFoundException;
 import com.heylocal.traveler.exception.service.BadArgumentException;
 import com.heylocal.traveler.service.TravelOnService;
+import com.heylocal.traveler.util.error.BindingErrorMessageProvider;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +26,7 @@ import static com.heylocal.traveler.dto.TravelOnDto.*;
 @RestController
 @RequiredArgsConstructor
 public class TravelOnsController implements TravelOnsApi {
+  private final BindingErrorMessageProvider errorMessageProvider;
 
   private final TravelOnService travelOnService;
 
@@ -38,7 +40,7 @@ public class TravelOnsController implements TravelOnsApi {
                              BindingResult bindingResult,
                              LoginUser loginUser) throws BadRequestException, NotFoundException {
     if (bindingResult.hasFieldErrors()) {
-      String errMsg = bindingResult.getFieldError().getDefaultMessage();
+      String errMsg = errorMessageProvider.getFieldErrMsg(bindingResult);
       throw new BadRequestException(BadRequestCode.BAD_INPUT_FORM, errMsg);
     }
 

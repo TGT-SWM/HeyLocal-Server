@@ -1,5 +1,6 @@
 package com.heylocal.traveler.dto;
 
+import com.heylocal.traveler.exception.AllException;
 import com.heylocal.traveler.exception.code.ErrorCode;
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -10,9 +11,9 @@ public class ErrorMessageResponse {
   private String description;
   private LocalDateTime dateTime;
 
-  public ErrorMessageResponse(ErrorCode code) {
-    this.code = code;
-    this.description = code.getDescription();
+  public ErrorMessageResponse(AllException e) {
+    this.code = e.getCode();
+    this.description = e.getDescription();
     this.dateTime = LocalDateTime.now();
   }
 

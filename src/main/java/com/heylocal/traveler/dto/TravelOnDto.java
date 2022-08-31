@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import org.hibernate.validator.constraints.Length;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
@@ -30,7 +31,7 @@ public class TravelOnDto {
 		@NotEmpty
 		@Length(max = 255)
 		private String title;
-		@NotNull
+		@Valid
 		private RegionRequest region;
 		@NotNull
 		private LocalDate travelStartDate;
@@ -50,7 +51,7 @@ public class TravelOnDto {
 		private int drinkMaxCost;
 		@NotEmpty
 		private Set<DrinkType> drinkTypeSet = new HashSet<>();
-		@NotNull
+		@Valid
 		private TravelTypeGroupRequest travelTypeGroup;
 
 		/**

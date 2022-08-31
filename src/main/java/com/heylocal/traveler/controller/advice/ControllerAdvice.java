@@ -19,21 +19,21 @@ public class ControllerAdvice {
   @ExceptionHandler(BadRequestException.class)
   @ResponseStatus(value = HttpStatus.BAD_REQUEST)
   public ErrorMessageResponse badRequestException(BadRequestException ex) {
-    ErrorMessageResponse message = new ErrorMessageResponse(ex.getCode());
+    ErrorMessageResponse message = new ErrorMessageResponse(ex);
     return message;
   }
 
   @ExceptionHandler(UnauthorizedException.class)
   @ResponseStatus(value = HttpStatus.UNAUTHORIZED)
   public ErrorMessageResponse unauthorizedException(UnauthorizedException ex) {
-    ErrorMessageResponse message = new ErrorMessageResponse(ex.getCode());
+    ErrorMessageResponse message = new ErrorMessageResponse(ex);
     return message;
   }
 
   @ExceptionHandler(NotFoundException.class)
   @ResponseStatus(value = HttpStatus.NOT_FOUND)
   public ErrorMessageResponse notFoundException(NotFoundException ex) {
-    ErrorMessageResponse message = new ErrorMessageResponse(ex.getCode());
+    ErrorMessageResponse message = new ErrorMessageResponse(ex);
     return message;
   }
 }
