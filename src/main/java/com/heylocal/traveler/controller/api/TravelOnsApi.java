@@ -41,7 +41,7 @@ public interface TravelOnsApi {
     @ResponseStatus(HttpStatus.CREATED)
     @ApiResponses(value = {
         @ApiResponse(responseCode = "201", description = "여행 On 등록 성공 시"),
-        @ApiResponse(responseCode = "400", description = "- ``:", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessageResponse.class)))
+        @ApiResponse(responseCode = "400", description = "- `BAD_INPUT_FORM`: 입력 값의 형식이 올바르지 않을 때", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessageResponse.class))),
     })
     @PostMapping(consumes = {"application/json"})
     void createTravelOn(
@@ -50,7 +50,7 @@ public interface TravelOnsApi {
             @ApiIgnore LoginUser loginUser
     ) throws BadRequestException;
 
-    @Operation(summary = "여행 On 상세 조회", description = "여행 On의 상세 정보를 조회합니다.", tags = {"TravelOns"})
+    @Operation(summary = "여행 On 상세 조회정", description = "여행 On의 상세 정보를 조회합니다.", tags = {"TravelOns"})
     @GetMapping(value = "/{travelOnId}")
     TravelOnResponse getTravelOn(
             @Parameter(in = ParameterIn.PATH, description = "여행 On ID", required = true) long travelOnId
