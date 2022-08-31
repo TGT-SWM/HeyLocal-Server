@@ -17,7 +17,7 @@ public class TravelOnRepository {
    * 여행On을 저장하는 메서드
    * @param travelOn
    */
-  public void addTravelOn(TravelOn travelOn) {
+  public void saveTravelOn(TravelOn travelOn) {
     em.persist(travelOn);
   }
 }

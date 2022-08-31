@@ -4,7 +4,6 @@ import com.heylocal.traveler.domain.Region;
 import com.heylocal.traveler.domain.travelon.TravelOn;
 import com.heylocal.traveler.domain.user.User;
 import com.heylocal.traveler.dto.LoginUser;
-import com.heylocal.traveler.exception.service.BadArgumentException;
 import com.heylocal.traveler.repository.RegionRepository;
 import com.heylocal.traveler.repository.TravelOnRepository;
 import com.heylocal.traveler.repository.UserRepository;
@@ -36,7 +35,7 @@ public class TravelOnService {
     author = userRepository.findById(loginUser.getId()).get();
     region = regionRepository.findByStateAndCity(request.getRegion().getState(), request.getRegion().getCity());
     travelOn = request.toEntity(author, region);
-    travelOnRepository.addTravelOn(travelOn);
+    travelOnRepository.saveTravelOn(travelOn);
   }
 
 }
