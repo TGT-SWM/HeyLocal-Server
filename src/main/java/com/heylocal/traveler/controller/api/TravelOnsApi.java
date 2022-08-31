@@ -43,6 +43,7 @@ public interface TravelOnsApi {
     @ApiResponses(value = {
         @ApiResponse(responseCode = "201", description = "여행 On 등록 성공 시"),
         @ApiResponse(responseCode = "400", description = "- `BAD_INPUT_FORM`: 입력 값의 형식이 올바르지 않을 때", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessageResponse.class))),
+        @ApiResponse(responseCode = "404", description = "- `NO_INFO`: 존재하지 않는 정보일 때", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessageResponse.class)))
     })
     @PostMapping(consumes = {"application/json"})
     void createTravelOn(
