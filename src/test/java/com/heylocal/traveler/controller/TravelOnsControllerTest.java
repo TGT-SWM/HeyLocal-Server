@@ -9,6 +9,7 @@ import com.heylocal.traveler.domain.travelon.list.DrinkType;
 import com.heylocal.traveler.domain.travelon.list.FoodType;
 import com.heylocal.traveler.domain.travelon.list.MemberType;
 import com.heylocal.traveler.dto.LoginUser;
+import com.heylocal.traveler.exception.controller.BadRequestException;
 import com.heylocal.traveler.service.TravelOnService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -16,6 +17,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 
 import java.time.LocalDate;
 import java.util.HashSet;
@@ -24,7 +26,7 @@ import java.util.Set;
 import static com.heylocal.traveler.dto.RegionDto.RegionRequest;
 import static com.heylocal.traveler.dto.TravelOnDto.TravelOnRequest;
 import static com.heylocal.traveler.dto.TravelTypeGroupDto.TravelTypeGroupRequest;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.willReturn;
 
 class TravelOnsControllerTest {
@@ -42,7 +44,7 @@ class TravelOnsControllerTest {
 
   @Test
   @DisplayName("여행 On 등록 성공")
-  void createTravelOnTest() {
+  void createTravelOnSucceedTest() {
     //GIVEN
     TravelOnRequest request = getTravelOnRequest();
     LoginUser loginUser = LoginUser.builder().id(3L).build();
@@ -54,6 +56,27 @@ class TravelOnsControllerTest {
 
     //THEN
     assertDoesNotThrow(
+        () -> travelOnsController.createTravelOn(request, bindingResult, loginUser)
+    );
+  }
+
+  @Test
+  @DisplayName("여행 On 등록 실패 - 비어있는 필드를 넘겼을 경우")
+  void createTravelOnEmptyTitleTest() {
+    //GIVEN
+    TravelOnRequest request = getTravelOnRequest();
+    LoginUser loginUser = LoginUser.builder().id(3L).build();
+
+    //Mock 행동 정의 - BindingResult
+    willReturn(true).given(bindingResult).hasFieldErrors();
+    FieldError fieldError = new FieldError("request", "title", "title 필드가 비어 있습니다.");
+    willReturn(fieldError).given(bindingResult).getFieldError();
+
+    //WHEN
+
+    //THEN
+    assertThrows(
+        BadRequestException.class,
         () -> travelOnsController.createTravelOn(request, bindingResult, loginUser)
     );
   }
