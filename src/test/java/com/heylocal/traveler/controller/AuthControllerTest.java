@@ -6,6 +6,7 @@ import com.heylocal.traveler.exception.controller.BadRequestException;
 import com.heylocal.traveler.exception.controller.UnauthorizedException;
 import com.heylocal.traveler.exception.service.AuthException;
 import com.heylocal.traveler.service.AuthService;
+import com.heylocal.traveler.util.error.BindingErrorMessageProvider;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -25,13 +26,15 @@ import static org.mockito.BDDMockito.willThrow;
 @ExtendWith(MockitoExtension.class)
 class AuthControllerTest {
   @Mock
+  private BindingErrorMessageProvider messageProvider;
+  @Mock
   private AuthService authService;
   private AuthController authController;
 
   @BeforeEach
   void setUp() {
     MockitoAnnotations.openMocks(this);
-    authController = new AuthController(authService);
+    authController = new AuthController(messageProvider, authService);
   }
 
   @Test
@@ -95,8 +98,6 @@ class AuthControllerTest {
     willReturn(false).willReturn(true).willReturn(false)
         .given(bindingResult).hasFieldErrors();
 
-    FieldError fieldError = new FieldError(AuthTokenDto.TokenPairRequest.class.getName(), "refreshToken", "빈값입니다.");
-    willReturn(fieldError).given(bindingResult).getFieldError();
 
     //WHEN
     TokenPairResponse succeedResult = authController.reissueTokenPair(succeedReissueRequest, bindingResult);

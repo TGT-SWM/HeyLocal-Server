@@ -11,6 +11,7 @@ import com.heylocal.traveler.domain.travelon.list.MemberType;
 import com.heylocal.traveler.dto.LoginUser;
 import com.heylocal.traveler.exception.controller.BadRequestException;
 import com.heylocal.traveler.service.TravelOnService;
+import com.heylocal.traveler.util.error.BindingErrorMessageProvider;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -31,6 +32,8 @@ import static org.mockito.BDDMockito.willReturn;
 
 class TravelOnsControllerTest {
   @Mock
+  private BindingErrorMessageProvider messageProvider;
+  @Mock
   private TravelOnService travelOnService;
   @Mock
   private BindingResult bindingResult;
@@ -39,7 +42,7 @@ class TravelOnsControllerTest {
   @BeforeEach
   void setUp() {
     MockitoAnnotations.openMocks(this);
-    travelOnsController = new TravelOnsController(travelOnService);
+    travelOnsController = new TravelOnsController(messageProvider, travelOnService);
   }
 
   @Test

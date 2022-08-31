@@ -7,6 +7,7 @@ import com.heylocal.traveler.exception.controller.BadRequestException;
 import com.heylocal.traveler.exception.controller.UnauthorizedException;
 import com.heylocal.traveler.exception.service.SigninArgumentException;
 import com.heylocal.traveler.service.SigninService;
+import com.heylocal.traveler.util.error.BindingErrorMessageProvider;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -23,6 +24,8 @@ import static org.mockito.BDDMockito.willThrow;
 
 class SignInControllerTest {
   @Mock
+  private BindingErrorMessageProvider messageProvider;
+  @Mock
   private SigninService signinService;
   @Mock
   private BindingResult bindingResult;
@@ -31,7 +34,7 @@ class SignInControllerTest {
   @BeforeEach
   void setUp() {
     MockitoAnnotations.openMocks(this); //여러 test code 실행 시, mock 객체의 정의된 행동이 꼬일 수 있으므로 초기화한다.
-    this.signinController = new SigninController(signinService);
+    this.signinController = new SigninController(messageProvider, signinService);
   }
 
   @Test
