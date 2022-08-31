@@ -3,6 +3,7 @@ package com.heylocal.traveler.interceptor.notfound;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.heylocal.traveler.dto.ErrorMessageResponse;
 import com.heylocal.traveler.exception.code.NotFoundCode;
+import com.heylocal.traveler.exception.controller.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -68,7 +69,7 @@ public class NotFoundInterceptor implements HandlerInterceptor {
     response.setContentType("application/json");
     response.setCharacterEncoding("UTF-8");
 
-    errorResponse = new ErrorMessageResponse(code);
+    errorResponse = new ErrorMessageResponse(new NotFoundException(code));
     responseBody = objectMapper.writeValueAsString(errorResponse);
 
 

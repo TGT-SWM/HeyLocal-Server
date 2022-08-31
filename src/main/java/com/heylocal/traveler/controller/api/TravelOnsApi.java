@@ -1,18 +1,29 @@
 package com.heylocal.traveler.controller.api;
 
+import com.heylocal.traveler.dto.ErrorMessageResponse;
+import com.heylocal.traveler.dto.LoginUser;
 import com.heylocal.traveler.dto.OpinionDto.OpinionRequest;
 import com.heylocal.traveler.dto.OpinionDto.OpinionResponse;
-import com.heylocal.traveler.dto.PageDto;
 import com.heylocal.traveler.dto.PageDto.PageRequest;
 import com.heylocal.traveler.dto.TravelOnDto.TravelOnRequest;
 import com.heylocal.traveler.dto.TravelOnDto.TravelOnResponse;
 import com.heylocal.traveler.dto.TravelOnDto.TravelOnSimpleResponse;
 import com.heylocal.traveler.dto.TravelOnDto.TravelOnSortType;
+import com.heylocal.traveler.exception.controller.BadRequestException;
+import com.heylocal.traveler.exception.controller.NotFoundException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.List;
 
@@ -28,12 +39,20 @@ public interface TravelOnsApi {
     );
 
     @Operation(summary = "여행 On 등록", description = "여행 On을 등록합니다.", tags = {"TravelOns"})
+    @ResponseStatus(HttpStatus.CREATED)
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "201", description = "여행 On 등록 성공 시"),
+        @ApiResponse(responseCode = "400", description = "- `BAD_INPUT_FORM`: 입력 값의 형식이 올바르지 않을 때", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessageResponse.class))),
+        @ApiResponse(responseCode = "404", description = "- `NO_INFO`: 존재하지 않는 정보일 때", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessageResponse.class)))
+    })
     @PostMapping(consumes = {"application/json"})
-    ResponseEntity<Void> createTravelOn(
-            @Parameter(in = ParameterIn.DEFAULT, description = "여행 On 정보", required = true) @RequestBody TravelOnRequest request
-    );
+    void createTravelOn(
+            @Parameter(in = ParameterIn.DEFAULT, description = "여행 On 정보", required = true) @Validated @RequestBody TravelOnRequest request,
+            BindingResult bindingResult,
+            @ApiIgnore LoginUser loginUser
+    ) throws BadRequestException, NotFoundException;
 
-    @Operation(summary = "여행 On 상세 조회", description = "여행 On의 상세 정보를 조회합니다.", tags = {"TravelOns"})
+    @Operation(summary = "여행 On 상세 조회정", description = "여행 On의 상세 정보를 조회합니다.", tags = {"TravelOns"})
     @GetMapping(value = "/{travelOnId}")
     TravelOnResponse getTravelOn(
             @Parameter(in = ParameterIn.PATH, description = "여행 On ID", required = true) long travelOnId

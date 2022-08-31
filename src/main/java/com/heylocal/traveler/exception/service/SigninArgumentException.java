@@ -13,4 +13,7 @@ public class SigninArgumentException extends AllException {
   public SigninArgumentException(ErrorCode code) {
     super(code);
   }
+  public SigninArgumentException(ErrorCode code, String description) {
+    super(code, description);
+  }
 }

@@ -28,4 +28,11 @@ public class HopeDrink extends BaseTimeEntity {
 
   @ManyToOne(optional = false, fetch = FetchType.LAZY)
   private TravelOn travelOn;
+
+  public void registerAt(TravelOn travelOn) {
+    this.travelOn = travelOn;
+    if (!travelOn.getHopeDrinkSet().contains(this)) {
+      travelOn.getHopeDrinkSet().add(this);
+    }
+  }
 }

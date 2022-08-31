@@ -6,6 +6,7 @@ import com.heylocal.traveler.exception.controller.BadRequestException;
 import com.heylocal.traveler.exception.controller.UnauthorizedException;
 import com.heylocal.traveler.exception.service.SigninArgumentException;
 import com.heylocal.traveler.service.SigninService;
+import com.heylocal.traveler.util.error.BindingErrorMessageProvider;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +21,7 @@ import static com.heylocal.traveler.dto.SigninDto.SigninResponse;
 @RestController
 @RequiredArgsConstructor
 public class SigninController implements SigninApi {
-
+  private final BindingErrorMessageProvider errorMessageProvider;
   private final SigninService signinService;
 
   @Override
@@ -28,7 +29,8 @@ public class SigninController implements SigninApi {
     SigninResponse response = null;
 
     if (bindingResult.hasFieldErrors()) {
-      throw new BadRequestException(BadRequestCode.EMPTY_FIELD);
+      String errMsg = errorMessageProvider.getFieldErrMsg(bindingResult);
+      throw new BadRequestException(BadRequestCode.BAD_INPUT_FORM, errMsg);
     }
 
     try {

@@ -29,5 +29,10 @@ public class TravelMember extends BaseTimeEntity {
   @ManyToOne(optional = false, fetch = FetchType.LAZY)
   private TravelOn travelOn;
 
-
+  public void registerAt(TravelOn travelOn) {
+    this.travelOn = travelOn;
+    if (!travelOn.getTravelMemberSet().contains(this)) {
+      travelOn.getTravelMemberSet().add(this);
+    }
+  }
 }

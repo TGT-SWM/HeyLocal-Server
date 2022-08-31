@@ -20,7 +20,6 @@ public class LoginUserResolver implements HandlerMethodArgumentResolver {
 
   @Override
   public boolean supportsParameter(MethodParameter parameter) {
-    log.info("{}", parameter.getParameterType().equals(LoginUser.class));
     return parameter.getParameterType().equals(LoginUser.class);
   }
 

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
+import javax.persistence.PersistenceContext;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Optional;
@@ -18,9 +19,9 @@ import java.util.Optional;
  */
 @Slf4j
 @Repository
-@RequiredArgsConstructor
 public class TokenRepository {
-  private final EntityManager em;
+  @PersistenceContext
+  private EntityManager em;
 
   /**
    * AccessToken 과 Refresh Token 쌍을 저장하는 메서드

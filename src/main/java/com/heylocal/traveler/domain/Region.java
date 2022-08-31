@@ -34,12 +34,15 @@ public class Region {
 
   //양방향 설정
 
+  @Builder.Default
   @OneToMany(mappedBy = "region", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   private List<Opinion> opinionList = new ArrayList<>();
 
+  @Builder.Default
   @OneToMany(mappedBy = "region", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   private List<Place> placeList = new ArrayList<>();
 
+  @Builder.Default
   @OneToMany(mappedBy = "region", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   private List<TravelOn> travelOnList = new ArrayList<>();
 }

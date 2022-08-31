@@ -2,6 +2,7 @@ package com.heylocal.traveler.controller;
 
 import com.heylocal.traveler.exception.controller.BadRequestException;
 import com.heylocal.traveler.service.SignupService;
+import com.heylocal.traveler.util.error.BindingErrorMessageProvider;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -20,6 +21,8 @@ import static org.mockito.BDDMockito.willReturn;
 
 @Slf4j
 class SignupControllerTest {
+  @Mock
+  private BindingErrorMessageProvider messageProvider;
   //계정 ID 검증 - 영문, 숫자 조합인지 (숫자 없어도 됨)
   private String accountIdPattern = "^[a-zA-Z0-9]*$";
   //비밀번호 검증 - 숫자 + 영어 + 특수문자 포함된 8자 이상
@@ -36,7 +39,7 @@ class SignupControllerTest {
   @BeforeEach
   void setUp() {
     MockitoAnnotations.openMocks(this); //여러 test code 실행 시, mock 객체의 정의된 행동이 꼬일 수 있으므로 초기화한다.
-    this.signupController = new SignupController(signupService);
+    this.signupController = new SignupController(messageProvider, signupService);
 
     //단위테스트인 경우, @Value 를 통해 값을 주입하지 못하므로 Reflection 을 통해 필드 값을 설정한다.
     ReflectionTestUtils.setField(

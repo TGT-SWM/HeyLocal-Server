@@ -6,6 +6,7 @@ import com.heylocal.traveler.exception.controller.BadRequestException;
 import com.heylocal.traveler.exception.controller.UnauthorizedException;
 import com.heylocal.traveler.exception.service.AuthException;
 import com.heylocal.traveler.service.AuthService;
+import com.heylocal.traveler.util.error.BindingErrorMessageProvider;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.BindingResult;
@@ -18,6 +19,7 @@ import static com.heylocal.traveler.dto.AuthTokenDto.TokenPairResponse;
 @RestController
 @RequiredArgsConstructor
 public class AuthController implements AuthApi {
+  private final BindingErrorMessageProvider errorMessageProvider;
   private final AuthService authService;
 
   @Override
@@ -26,7 +28,8 @@ public class AuthController implements AuthApi {
     TokenPairResponse response = null;
 
     if (bindingResult.hasFieldErrors()) {
-      throw new BadRequestException(BadRequestCode.EMPTY_FIELD);
+      String errMsg = errorMessageProvider.getFieldErrMsg(bindingResult);
+      throw new BadRequestException(BadRequestCode.BAD_INPUT_FORM, errMsg);
     }
     try {
       response = authService.reissueTokenPair(request);

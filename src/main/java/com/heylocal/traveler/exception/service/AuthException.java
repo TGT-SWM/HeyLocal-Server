@@ -12,4 +12,7 @@ public class AuthException extends AllException {
   public AuthException(ErrorCode code) {
     super(code);
   }
+  public AuthException(ErrorCode code, String description) {
+    super(code, description);
+  }
 }

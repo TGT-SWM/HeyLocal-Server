@@ -1,6 +1,5 @@
 package com.heylocal.traveler.dto;
 
-import com.heylocal.traveler.domain.user.UserRole;
 import lombok.*;
 
 @Getter

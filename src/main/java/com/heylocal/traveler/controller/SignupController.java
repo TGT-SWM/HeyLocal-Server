@@ -6,6 +6,7 @@ import com.heylocal.traveler.exception.code.SignupCode;
 import com.heylocal.traveler.exception.controller.BadRequestException;
 import com.heylocal.traveler.exception.service.BadArgumentException;
 import com.heylocal.traveler.service.SignupService;
+import com.heylocal.traveler.util.error.BindingErrorMessageProvider;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +24,7 @@ import static com.heylocal.traveler.dto.SignupDto.UserInfoCheckResponse;
 @RestController
 @RequiredArgsConstructor
 public class SignupController implements SignupApi {
+  private final BindingErrorMessageProvider errorMessageProvider;
 
   private final SignupService signupService;
 
@@ -46,7 +48,8 @@ public class SignupController implements SignupApi {
   @Override
   public void signup(SignupRequest request, BindingResult bindingResult) throws BadRequestException {
     if (bindingResult.hasFieldErrors()) {
-      throw new BadRequestException(BadRequestCode.EMPTY_FIELD);
+      String errMsg = errorMessageProvider.getFieldErrMsg(bindingResult);
+      throw new BadRequestException(BadRequestCode.BAD_INPUT_FORM, errMsg);
     }
     validateAccountIdFormat(request.getAccountId()); //계정 포맷 검증
     validatePasswordFormat(request.getPassword()); //비밀번호 포맷 검증

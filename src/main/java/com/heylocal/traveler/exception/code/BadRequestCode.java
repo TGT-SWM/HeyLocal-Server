@@ -6,7 +6,7 @@ package com.heylocal.traveler.exception.code;
  * <pre/>
  */
 public enum BadRequestCode implements ErrorCode {
-  EMPTY_FIELD("필드는 비어있을 수 없습니다.");
+  BAD_INPUT_FORM("입력 값의 형식이 올바르지 않습니다.");
 
   private String description;
 

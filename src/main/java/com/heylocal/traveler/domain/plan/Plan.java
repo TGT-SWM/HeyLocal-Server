@@ -4,6 +4,7 @@ import com.heylocal.traveler.domain.BaseTimeEntity;
 import com.heylocal.traveler.domain.travelon.TravelOn;
 import com.heylocal.traveler.domain.user.User;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
@@ -36,6 +37,7 @@ public class Plan extends BaseTimeEntity {
 
   //양방향 설정
 
+  @Builder.Default
   @OneToMany(mappedBy = "plan", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   private List<DaySchedule> dayScheduleList = new ArrayList<>();
 }

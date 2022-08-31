@@ -38,8 +38,12 @@ class UserRepositoryTest {
         .build();
 
     //WHEN - THEN
-    //성공 케이스 - 1
-    assertDoesNotThrow(() -> userRepository.saveUser(user));
+    assertAll(
+        //성공 케이스 - 1 - 예외없이 저장되는지 확인
+        () -> assertDoesNotThrow(() -> userRepository.saveUser(user)),
+        //성공 케이스 - 2 - SQL Flush 성공
+        () -> assertDoesNotThrow(() -> em.flush())
+    );
   }
 
   @Test
@@ -68,7 +72,9 @@ class UserRepositoryTest {
 
     //THEN
     assertAll(
-        //성공 케이스 - 1 - 존재하는 id로 조회하는 경우
+        //성공 케이스 - 1 - SQL Flush 성공
+        () -> assertDoesNotThrow(() -> em.flush()),
+        //성공 케이스 - 2 - 존재하는 id로 조회하는 경우
         () -> assertTrue(succeedResult.isPresent()),
         //실패 케이스 - 1 - 존재하지 않는 id로 조회하는 경우
         () -> assertFalse(failResult.isPresent())
@@ -96,7 +102,9 @@ class UserRepositoryTest {
 
     //THEN
     assertAll(
-        //성공 케이스 - 1 - 존재하는 계정 ID로 찾는 경우
+        //성공 케이스 - 1 - SQL Flush 성공
+        () -> assertDoesNotThrow(() -> em.flush()),
+        //성공 케이스 - 2 - 존재하는 계정 ID로 찾는 경우
         () -> assertTrue(existResult.isPresent()),
         //실패 케이스 - 1 - 없는 계정 ID로 찾는 경우
         () -> assertTrue(notExistResult.isEmpty())

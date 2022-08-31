@@ -1,17 +1,20 @@
 package com.heylocal.traveler.controller;
 
 import com.heylocal.traveler.domain.user.UserRole;
+import com.heylocal.traveler.dto.AuthTokenDto;
 import com.heylocal.traveler.exception.code.SigninCode;
 import com.heylocal.traveler.exception.controller.BadRequestException;
 import com.heylocal.traveler.exception.controller.UnauthorizedException;
 import com.heylocal.traveler.exception.service.SigninArgumentException;
 import com.heylocal.traveler.service.SigninService;
+import com.heylocal.traveler.util.error.BindingErrorMessageProvider;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 
 import static com.heylocal.traveler.dto.SigninDto.SigninRequest;
 import static com.heylocal.traveler.dto.SigninDto.SigninResponse;
@@ -21,6 +24,8 @@ import static org.mockito.BDDMockito.willThrow;
 
 class SignInControllerTest {
   @Mock
+  private BindingErrorMessageProvider messageProvider;
+  @Mock
   private SigninService signinService;
   @Mock
   private BindingResult bindingResult;
@@ -29,7 +34,7 @@ class SignInControllerTest {
   @BeforeEach
   void setUp() {
     MockitoAnnotations.openMocks(this); //여러 test code 실행 시, mock 객체의 정의된 행동이 꼬일 수 있으므로 초기화한다.
-    this.signinController = new SigninController(signinService);
+    this.signinController = new SigninController(messageProvider, signinService);
   }
 
   @Test
@@ -40,7 +45,6 @@ class SignInControllerTest {
     String rightRawPassword = "testPassword123!";
     long rightId = 3L;
     String rightNickname = "testNickname";
-    String rightPhoneNumber = "010-1234-1234";
     UserRole rightUserRole = UserRole.TRAVELER;
     String rightAccessToken = "accessToken";
     String rightRefreshToken = "refreshToken";
@@ -61,6 +65,8 @@ class SignInControllerTest {
 
     //Mock 행동 정의 - BindingResult
     willReturn(false).willReturn(true).willReturn(false).given(bindingResult).hasFieldErrors();
+    FieldError fieldError = new FieldError(AuthTokenDto.TokenPairRequest.class.getName(), "refreshToken", "빈값입니다.");
+    willReturn(fieldError).given(bindingResult).getFieldError();
 
     //Mock 행동 정의 - SigninService
     SigninResponse rightResponse = SigninResponse.builder()

@@ -6,6 +6,7 @@ import com.heylocal.traveler.domain.place.Place;
 import com.heylocal.traveler.domain.travelon.TravelOn;
 import com.heylocal.traveler.domain.user.User;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
@@ -113,6 +114,7 @@ public class Opinion extends BaseTimeEntity {
 
   // 양방향 설정
 
+  @Builder.Default
   @OneToMany(mappedBy = "opinion", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY) //Opinion 이 삭제되어도, S3에 저장된 경로를 알아야하므로 Cascade를 Persist만 설정
   private List<OpinionImageContent> opinionImageContentList = new ArrayList<>();
 

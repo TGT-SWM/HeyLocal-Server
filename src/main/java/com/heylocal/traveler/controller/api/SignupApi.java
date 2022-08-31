@@ -36,6 +36,7 @@ public interface SignupApi {
 
     @Operation(summary = "회원가입", description = "", tags = {"Signup"})
     @ApiResponses(value = {
+        @ApiResponse(responseCode = "201", description = "회원가입 성공 시"),
         @ApiResponse(responseCode = "400", description = "- `WRONG_PASSWORD_FORMAT`: 비밀번호 형식이 틀린 경우\n\n- `WRONG_NICKNAME_FORMAT`: 닉네임 형식이 틀린 경우\n\n- `ALREADY_EXIST_USER_INFO`: 이미 존재하는 사용자 정보인 경우", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessageResponse.class)))
     })
     @ResponseStatus(HttpStatus.CREATED)

@@ -14,4 +14,7 @@ public class BadRequestException extends AllException {
     super(code);
   }
 
+  public BadRequestException(ErrorCode code, String description) {
+    super(code, description);
+  }
 }

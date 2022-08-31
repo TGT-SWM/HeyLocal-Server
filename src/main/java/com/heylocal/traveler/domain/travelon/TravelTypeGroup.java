@@ -1,6 +1,10 @@
 package com.heylocal.traveler.domain.travelon;
 
 import com.heylocal.traveler.domain.BaseTimeEntity;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
 
@@ -9,6 +13,10 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "TRAVEL_TYPE_GROUP")
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@SuperBuilder
 public class TravelTypeGroup extends BaseTimeEntity {
   @Id @GeneratedValue
   private Long id;
@@ -28,4 +36,10 @@ public class TravelTypeGroup extends BaseTimeEntity {
   @Column(nullable = false)
   private SnsTasteType snsTasteType;
 
+  public void registerAt(TravelOn travelOn) {
+    this.travelOn = travelOn;
+    if (travelOn.getTravelTypeGroup() != this) {
+      travelOn.registerTravelTypeGroup(this);
+    }
+  }
 }

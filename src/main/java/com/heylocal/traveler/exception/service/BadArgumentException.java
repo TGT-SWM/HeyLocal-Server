@@ -13,4 +13,7 @@ public class BadArgumentException extends AllException {
   public BadArgumentException(ErrorCode code) {
     super(code);
   }
+  public BadArgumentException(ErrorCode code, String description) {
+    super(code, description);
+  }
 }
