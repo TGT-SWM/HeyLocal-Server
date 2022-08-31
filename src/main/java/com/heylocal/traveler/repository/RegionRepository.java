@@ -4,7 +4,9 @@ import com.heylocal.traveler.domain.Region;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
+import java.util.Optional;
 
 @Repository
 public class RegionRepository {
@@ -17,16 +19,21 @@ public class RegionRepository {
    * @param city
    * @return
    */
-  public Region findByStateAndCity(String state, String city) {
+  public Optional<Region> findByStateAndCity(String state, String city) {
+    Region result;
     String jpql = "select r from Region r" +
         " where r.state = :state" +
         " and r.city = :city";
 
-    Region result = em.createQuery(jpql, Region.class)
-        .setParameter("state", state)
-        .setParameter("city", city)
-        .getSingleResult();
+    try {
+      result = em.createQuery(jpql, Region.class)
+          .setParameter("state", state)
+          .setParameter("city", city)
+          .getSingleResult();
+    } catch (NoResultException e) {
+      return Optional.empty();
+    }
 
-    return result;
+    return Optional.of(result);
   }
 }

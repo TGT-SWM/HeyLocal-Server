@@ -26,4 +26,8 @@ public class AllException extends Exception {
   public ErrorCode getCode() {
     return this.code;
   }
+
+  public String getDescription() {
+    return this.description;
+  }
 }

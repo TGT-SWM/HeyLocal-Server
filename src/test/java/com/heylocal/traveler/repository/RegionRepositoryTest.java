@@ -10,6 +10,8 @@ import org.springframework.context.annotation.Import;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @Import(RegionRepository.class)
@@ -31,7 +33,7 @@ class RegionRepositoryTest {
     em.persist(region);
 
     //WHEN
-    Region result = regionRepository.findByStateAndCity(region.getState(), region.getCity());
+    Region result = regionRepository.findByStateAndCity(region.getState(), region.getCity()).get();
 
     //THEN
     assertAll(
@@ -54,14 +56,12 @@ class RegionRepositoryTest {
     String wrongCity = "없는 도시";
 
     //WHEN
+    Optional<Region> result = regionRepository.findByStateAndCity(wrongState, wrongCity);
 
     //THEN
     assertAll(
-        //실패 케이스 - 1 - 조회 성공
-        () -> assertThrows(
-            NoResultException.class,
-            () -> regionRepository.findByStateAndCity(wrongState, wrongCity)
-        ),
+        //실패 케이스 - 1 - 조회 실패
+        () -> assertTrue(result.isEmpty()),
         //성공 케이스 - 1 - SQL Flush 성공
         () -> assertDoesNotThrow(() -> em.flush())
     );

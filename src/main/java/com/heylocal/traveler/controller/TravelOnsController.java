@@ -6,6 +6,7 @@ import com.heylocal.traveler.dto.OpinionDto;
 import com.heylocal.traveler.dto.PageDto;
 import com.heylocal.traveler.exception.code.BadRequestCode;
 import com.heylocal.traveler.exception.controller.BadRequestException;
+import com.heylocal.traveler.exception.service.BadArgumentException;
 import com.heylocal.traveler.service.TravelOnService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -40,7 +41,11 @@ public class TravelOnsController implements TravelOnsApi {
       throw new BadRequestException(BadRequestCode.BAD_INPUT_FORM, errMsg);
     }
 
-    travelOnService.addNewTravelOn(request, loginUser);
+    try {
+      travelOnService.addNewTravelOn(request, loginUser);
+    } catch (BadArgumentException e) {
+      throw new BadRequestException(e.getCode(), e.getDescription());
+    }
   }
 
   @Override
