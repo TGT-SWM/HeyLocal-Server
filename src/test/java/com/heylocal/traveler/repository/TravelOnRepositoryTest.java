@@ -3,6 +3,9 @@ package com.heylocal.traveler.repository;
 import com.heylocal.traveler.domain.Region;
 import com.heylocal.traveler.domain.travelon.*;
 import com.heylocal.traveler.domain.travelon.list.*;
+import com.heylocal.traveler.domain.user.User;
+import com.heylocal.traveler.domain.user.UserRole;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,8 +15,9 @@ import org.springframework.context.annotation.Import;
 import javax.persistence.EntityManager;
 import java.time.LocalDate;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
+@Slf4j
 @Import(TravelOnRepository.class)
 @DataJpaTest
 class TravelOnRepositoryTest {
@@ -24,19 +28,49 @@ class TravelOnRepositoryTest {
 
   @Test
   @DisplayName("여행 On 저장 성공")
-  void addTravelOnTest() {
+  void addTravelOnSucceedTest() {
     //GIVEN
-    TravelOn travelOn = getNotPersistedTravelOn();
+    User author = User.builder()
+        .accountId("testAccount")
+        .nickname("testNickname")
+        .password("encodedPassword")
+        .userRole(UserRole.TRAVELER)
+        .build();
+    em.persist(author);
+    TravelOn travelOn = getNotPersistedTravelOn(author);
 
     //WHEN
     travelOnRepository.saveTravelOn(travelOn);
 
     //THEN
     TravelOn result = em.find(TravelOn.class, travelOn.getId());
-    assertEquals(travelOn, result);
+
+    assertAll(
+        //성공 케이스 - 1 - SQL Flush 성공
+        () -> assertDoesNotThrow(() -> em.flush()),
+        //성공 케이스 - 2 - 결과 확인
+        () -> assertEquals(travelOn, result)
+    );
   }
 
-  private TravelOn getNotPersistedTravelOn() {
+  @Test
+  @DisplayName("여행 On 저장 실패 - 존재하지 않는 유저가 작성한 경우")
+  void addTravelOnInvalidAuthorTest() {
+    //GIVEN
+    User author = null;
+    TravelOn travelOn = getNotPersistedTravelOn(author);
+
+    //WHEN
+    travelOnRepository.saveTravelOn(travelOn);
+
+    //THEN
+    TravelOn result = em.find(TravelOn.class, travelOn.getId());
+
+    //실패 케이스 - 1 - SQL Flush 실패
+    assertThrows(Exception.class, () -> em.flush());
+  }
+
+  private TravelOn getNotPersistedTravelOn(User author) {
     TravelOn travelOn;
     String title = "testTitle";
     LocalDate travelStartDate = LocalDate.now().plusMonths(1);
@@ -46,11 +80,6 @@ class TravelOnRepositoryTest {
     int accommodationMaxCost = 100000;
     int foodMaxCost = 100000;
     int drinkMaxCost = 100000;
-    TravelTypeGroup travelTypeGroup = TravelTypeGroup.builder()
-        .activityTasteType(ActivityTasteType.HARD)
-        .placeTasteType(PlaceTasteType.FAMOUS)
-        .snsTasteType(SnsTasteType.YES)
-        .build();
 
     Region region = Region.builder()
         .city("성남시")
@@ -61,6 +90,8 @@ class TravelOnRepositoryTest {
     travelOn = TravelOn.builder()
         .title(title)
         .region(region)
+        .views(1)
+        .author(author)
         .travelStartDate(travelStartDate)
         .travelEndDate(travelEndDate)
         .description(description)
@@ -123,6 +154,12 @@ class TravelOnRepositoryTest {
     travelOn.addHopeDrink(hopeDrink1);
     travelOn.addHopeDrink(hopeDrink2);
 
+    TravelTypeGroup travelTypeGroup = TravelTypeGroup.builder()
+        .activityTasteType(ActivityTasteType.HARD)
+        .placeTasteType(PlaceTasteType.FAMOUS)
+        .snsTasteType(SnsTasteType.YES)
+        .travelOn(travelOn)
+        .build();
     em.persist(travelTypeGroup);
     travelOn.registerTravelTypeGroup(travelTypeGroup);
 
