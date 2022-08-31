@@ -105,7 +105,6 @@ class PlanRepositoryTest {
 	 */
 	private Plan createPlan(User user, TravelOn travelOn) {
 		return Plan.builder()
-				.status(PlanStatus.DOING)
 				.travelOn(travelOn)
 				.user(user)
 				.build();
