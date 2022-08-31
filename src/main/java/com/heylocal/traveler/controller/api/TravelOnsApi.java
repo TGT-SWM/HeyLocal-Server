@@ -10,6 +10,7 @@ import com.heylocal.traveler.dto.TravelOnDto.TravelOnResponse;
 import com.heylocal.traveler.dto.TravelOnDto.TravelOnSimpleResponse;
 import com.heylocal.traveler.dto.TravelOnDto.TravelOnSortType;
 import com.heylocal.traveler.exception.controller.BadRequestException;
+import com.heylocal.traveler.exception.controller.NotFoundException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -48,7 +49,7 @@ public interface TravelOnsApi {
             @Parameter(in = ParameterIn.DEFAULT, description = "여행 On 정보", required = true) @Validated @RequestBody TravelOnRequest request,
             BindingResult bindingResult,
             @ApiIgnore LoginUser loginUser
-    ) throws BadRequestException;
+    ) throws BadRequestException, NotFoundException;
 
     @Operation(summary = "여행 On 상세 조회정", description = "여행 On의 상세 정보를 조회합니다.", tags = {"TravelOns"})
     @GetMapping(value = "/{travelOnId}")

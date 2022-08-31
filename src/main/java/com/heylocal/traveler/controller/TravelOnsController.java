@@ -6,6 +6,7 @@ import com.heylocal.traveler.dto.OpinionDto;
 import com.heylocal.traveler.dto.PageDto;
 import com.heylocal.traveler.exception.code.BadRequestCode;
 import com.heylocal.traveler.exception.controller.BadRequestException;
+import com.heylocal.traveler.exception.controller.NotFoundException;
 import com.heylocal.traveler.exception.service.BadArgumentException;
 import com.heylocal.traveler.service.TravelOnService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -35,7 +36,7 @@ public class TravelOnsController implements TravelOnsApi {
   @Override
   public void createTravelOn(TravelOnRequest request,
                              BindingResult bindingResult,
-                             LoginUser loginUser) throws BadRequestException {
+                             LoginUser loginUser) throws BadRequestException, NotFoundException {
     if (bindingResult.hasFieldErrors()) {
       String errMsg = bindingResult.getFieldError().getDefaultMessage();
       throw new BadRequestException(BadRequestCode.BAD_INPUT_FORM, errMsg);
@@ -44,7 +45,7 @@ public class TravelOnsController implements TravelOnsApi {
     try {
       travelOnService.addNewTravelOn(request, loginUser);
     } catch (BadArgumentException e) {
-      throw new BadRequestException(e.getCode(), e.getDescription());
+      throw new NotFoundException(e.getCode(), e.getDescription());
     }
   }
 
