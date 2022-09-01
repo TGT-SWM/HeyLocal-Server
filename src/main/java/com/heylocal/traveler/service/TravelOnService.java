@@ -107,7 +107,7 @@ public class TravelOnService {
     return result;
   }
 
-  private List<TravelOn> findWithOnlyState(AllTravelOnGetRequest request) {
+  private List<TravelOn> findWithOnlyState(AllTravelOnGetRequest request) throws BadArgumentException {
     List<TravelOn> result;
     String state;
     Boolean withOpinions;
@@ -121,6 +121,10 @@ public class TravelOnService {
     sortBy = request.getSortBy();
     firstIndex = request.getPageRequest().getFirstIndex();
     size = request.getPageRequest().getSize();
+
+    if (regionRepository.findByState(state).size() == 0) {
+      throw new BadArgumentException(NotFoundCode.NO_INFO, "존재하지 않는 State 입니다.");
+    }
 
     if (Objects.isNull(withOpinions)) {
       result = travelOnRepository.findAllByState(state, firstIndex, size, sortBy);

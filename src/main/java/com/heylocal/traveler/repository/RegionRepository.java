@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -35,5 +36,17 @@ public class RegionRepository {
     }
 
     return Optional.of(result);
+  }
+
+  public List<Region> findByState(String state) {
+    List<Region> result;
+    String jpql = "select r from Region r" +
+        " where r.state = :state";
+
+    result = em.createQuery(jpql, Region.class)
+        .setParameter("state", state)
+        .getResultList();
+
+    return result;
   }
 }
