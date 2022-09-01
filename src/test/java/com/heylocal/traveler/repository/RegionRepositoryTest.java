@@ -8,6 +8,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 
 import javax.persistence.EntityManager;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -62,6 +63,39 @@ class RegionRepositoryTest {
         () -> assertTrue(result.isEmpty()),
         //성공 케이스 - 1 - SQL Flush 성공
         () -> assertDoesNotThrow(() -> em.flush())
+    );
+  }
+
+  @Test
+  @DisplayName("state 로 Region 리스트 조회 성공")
+  void findByStateSucceedTest() {
+    //GIVEN
+    String storedStateA = "stateA";
+    String storedCity1 = "city1";
+    Region storedRegion1 = Region.builder()
+        .state(storedStateA)
+        .city(storedCity1)
+        .build();
+    String storedCity2 = "city2";
+    Region storedRegion2 = Region.builder()
+        .state(storedStateA)
+        .city(storedCity2)
+        .build();
+    String unknownState = "stateB";
+
+    em.persist(storedRegion1);
+    em.persist(storedRegion2);
+
+    //WHEN
+    List<Region> succeedResult = regionRepository.findByState(storedStateA);
+    List<Region> failResult = regionRepository.findByState(unknownState);
+
+    //THEN
+    assertAll(
+        //성공 케이스 - 1 - 존재하는 state 로 조회 시
+        () -> assertEquals(2, succeedResult.size()),
+        //실패 케이스 - 1 - 존재하지 않는 state 로 조회 시
+        () -> assertEquals(0, failResult.size())
     );
   }
 }
