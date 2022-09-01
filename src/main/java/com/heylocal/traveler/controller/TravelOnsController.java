@@ -34,7 +34,7 @@ public class TravelOnsController implements TravelOnsApi {
   private final TravelOnService travelOnService;
 
   @Override
-  public List<TravelOnSimpleResponse> getTravelOns(AllTravelOnGetRequest request) throws BadRequestException {
+  public List<TravelOnSimpleResponse> getTravelOns(AllTravelOnGetRequest request) throws BadRequestException, NotFoundException {
     List<TravelOnSimpleResponse> response;
 
     if (Objects.isNull(request.getState()) && !Objects.isNull(request.getCity())) {
@@ -44,7 +44,7 @@ public class TravelOnsController implements TravelOnsApi {
     try {
       response = travelOnService.inquirySimpleTravelOns(request);
     } catch (BadArgumentException e) {
-      throw new BadRequestException(e.getCode(), e.getDescription());
+      throw new NotFoundException(e.getCode(), e.getDescription());
     }
 
     return response;

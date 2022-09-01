@@ -31,6 +31,11 @@ import java.util.List;
 @RequestMapping("/travel-ons")
 public interface TravelOnsApi {
     @Operation(summary = "전체 여행 On 조회", description = "전체 여행 On의 목록을 조회합니다.", tags = {"TravelOns"})
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "여행 On 목록 조회 성공 시"),
+        @ApiResponse(responseCode = "400", description = "- `BAD_INPUT_FORM`: 입력 값의 형식이 올바르지 않을 때", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessageResponse.class))),
+        @ApiResponse(responseCode = "404", description = "- `NO_INFO`: 존재하지 않는 정보일 때", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessageResponse.class)))
+    })
     @GetMapping()
     List<TravelOnSimpleResponse> getTravelOns(
             /*
@@ -40,7 +45,7 @@ public interface TravelOnsApi {
              * @Parameter(in = ParameterIn.QUERY, description = "지역 ID", required = false) long regionId,
              */
             @Parameter(in = ParameterIn.QUERY, description = "여행 On 목록 조회 요청") TravelOnDto.AllTravelOnGetRequest request
-        ) throws BadRequestException;
+        ) throws BadRequestException, NotFoundException;
 
     @Operation(summary = "여행 On 등록", description = "여행 On을 등록합니다.", tags = {"TravelOns"})
     @ResponseStatus(HttpStatus.CREATED)
