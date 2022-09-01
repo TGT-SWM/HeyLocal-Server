@@ -50,6 +50,12 @@ public class TravelOnService {
     travelOnRepository.saveTravelOn(travelOn);
   }
 
+  /**
+   * 여행On 목록을 여러 조건으로 조회
+   * @param request 조회 조건
+   * @return
+   * @throws BadArgumentException
+   */
   @Transactional
   public List<TravelOnSimpleResponse> inquirySimpleTravelOns(AllTravelOnGetRequest request) throws BadArgumentException {
     List<TravelOn> travelOnList;

@@ -38,6 +38,11 @@ public class RegionRepository {
     return Optional.of(result);
   }
 
+  /**
+   * state 만으로 Region 을 조회하는 메서드
+   * @param state
+   * @return
+   */
   public List<Region> findByState(String state) {
     List<Region> result;
     String jpql = "select r from Region r" +
