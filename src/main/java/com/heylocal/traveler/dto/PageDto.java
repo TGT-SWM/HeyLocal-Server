@@ -17,7 +17,7 @@ public class PageDto {
 		/**
 		 * 응답으로 받고자 하는 첫 아이템의 index
 		 */
-		@ApiParam("응답으로 받고자 하는 첫 아이템의 index")
+		@ApiParam(value = "응답으로 받고자 하는 첫 아이템의 index", required = true)
 		int firstIndex;
 
 		/** 응답으로 받고자 하는 아이템의 최대 개수 */

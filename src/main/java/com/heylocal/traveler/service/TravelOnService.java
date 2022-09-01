@@ -14,6 +14,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
+
+import static com.heylocal.traveler.dto.TravelOnDto.*;
 import static com.heylocal.traveler.dto.TravelOnDto.TravelOnRequest;
 
 @Slf4j
@@ -42,6 +48,113 @@ public class TravelOnService {
     );
     travelOn = request.toEntity(author, region);
     travelOnRepository.saveTravelOn(travelOn);
+  }
+
+  @Transactional
+  public List<TravelOnSimpleResponse> inquirySimpleTravelOns(AllTravelOnGetRequest request) throws BadArgumentException {
+    List<TravelOn> travelOnList;
+    List<TravelOnSimpleResponse> response;
+    String state = request.getState();
+    String city = request.getCity();
+
+    if (Objects.isNull(state)) { //지역 관계없이 조회하는 경우
+      travelOnList = findWithoutRegion(request);
+
+    } else if (Objects.isNull(city)) { //state만을 기준으로 조회하는 경우
+      travelOnList = findWithOnlyState(request);
+
+    } else { //state와 city를 기준으로 조회하는 경우
+      travelOnList = findWithStateAndCity(request);
+    }
+
+    //List<TravelOn> -> List<TravelOnSimpleResponse>
+    response = travelOnList.stream()
+        .map(TravelOnSimpleResponse::new)
+        .collect(Collectors.toList());
+
+    return response;
+  }
+
+  private List<TravelOn> findWithStateAndCity(AllTravelOnGetRequest request) throws BadArgumentException {
+    List<TravelOn> result;
+    String state;
+    String city;
+    Boolean withOpinions;
+    TravelOnSortType sortBy;
+    int firstIndex;
+    int size;
+
+    //초기화
+    state = request.getState();
+    city = request.getCity();
+    withOpinions = request.getWithOpinions();
+    sortBy = request.getSortBy();
+    firstIndex = request.getPageRequest().getFirstIndex();
+    size = request.getPageRequest().getSize();
+
+    Region region = regionRepository.findByStateAndCity(state, city).orElseThrow(
+        () -> new BadArgumentException(NotFoundCode.NO_INFO, "존재하지 않는 Region 입니다.")
+    );
+
+    if (Objects.isNull(withOpinions)) {
+      result = travelOnRepository.findAllByRegion(region, firstIndex, size, sortBy);
+    } else if (withOpinions) {
+      result = travelOnRepository.findHasOpinionByRegion(region, firstIndex, size, sortBy);
+    } else {
+      result = travelOnRepository.findNoOpinionByRegion(region, firstIndex, size, sortBy);
+    }
+
+    return result;
+  }
+
+  private List<TravelOn> findWithOnlyState(AllTravelOnGetRequest request) {
+    List<TravelOn> result;
+    String state;
+    Boolean withOpinions;
+    TravelOnSortType sortBy;
+    int firstIndex;
+    int size;
+
+    //초기화
+    state = request.getState();
+    withOpinions = request.getWithOpinions();
+    sortBy = request.getSortBy();
+    firstIndex = request.getPageRequest().getFirstIndex();
+    size = request.getPageRequest().getSize();
+
+    if (Objects.isNull(withOpinions)) {
+      result = travelOnRepository.findAllByState(state, firstIndex, size, sortBy);
+    } else if (withOpinions) {
+      result = travelOnRepository.findHasOpinionByState(state, firstIndex, size, sortBy);
+    } else {
+      result = travelOnRepository.findNoOpinionByState(state, firstIndex, size, sortBy);
+    }
+
+    return result;
+  }
+
+  private List<TravelOn> findWithoutRegion(AllTravelOnGetRequest request) {
+    List<TravelOn> result;
+    Boolean withOpinions;
+    TravelOnSortType sortBy;
+    int firstIndex;
+    int size;
+
+    //초기화
+    withOpinions = request.getWithOpinions();
+    sortBy = request.getSortBy();
+    firstIndex = request.getPageRequest().getFirstIndex();
+    size = request.getPageRequest().getSize();
+
+    if (Objects.isNull(withOpinions)) {
+      result = travelOnRepository.findAll(firstIndex, size, sortBy);
+    } else if (withOpinions) {
+      result = travelOnRepository.findHasOpinion(firstIndex, size, sortBy);
+    } else {
+      result = travelOnRepository.findNoOpinion(firstIndex, size, sortBy);
+    }
+
+    return result;
   }
 
 }

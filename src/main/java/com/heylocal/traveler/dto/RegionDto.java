@@ -1,5 +1,6 @@
 package com.heylocal.traveler.dto;
 
+import com.heylocal.traveler.domain.Region;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
@@ -26,6 +27,14 @@ public class RegionDto {
 	@Builder
 	@Schema(description = "지역 정보 응답 DTO")
 	public static class RegionResponse {
-		long id;
+		private long id;
+		private String state;
+		private String city;
+
+		public RegionResponse(Region entity) {
+			this.id = entity.getId();
+			this.state = entity.getState();
+			this.city = entity.getCity();
+		}
 	}
 }

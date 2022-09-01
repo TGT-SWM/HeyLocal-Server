@@ -34,12 +34,20 @@ public class TravelOnsController implements TravelOnsApi {
   private final TravelOnService travelOnService;
 
   @Override
-  public List<TravelOnSimpleResponse> getTravelOns(TravelOnDto.AllTravelOnGetRequest request) throws BadRequestException {
+  public List<TravelOnSimpleResponse> getTravelOns(AllTravelOnGetRequest request) throws BadRequestException {
+    List<TravelOnSimpleResponse> response;
+
     if (Objects.isNull(request.getState()) && !Objects.isNull(request.getCity())) {
       throw new BadRequestException(BadRequestCode.BAD_INPUT_FORM, "state 가 null 이면, city 도 null 이어야 합니다.");
     }
 
-    return null;
+    try {
+      response = travelOnService.inquirySimpleTravelOns(request);
+    } catch (BadArgumentException e) {
+      throw new BadRequestException(e.getCode(), e.getDescription());
+    }
+
+    return response;
   }
 
   @Override
