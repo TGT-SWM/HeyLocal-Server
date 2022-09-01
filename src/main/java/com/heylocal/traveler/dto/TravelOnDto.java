@@ -181,6 +181,6 @@ public class TravelOnDto {
 	}
 
 	public enum TravelOnSortType {
-		DATE, VIEWS, OPINIONS
+		DATE, VIEWS, OPINIONS;
 	}
 }

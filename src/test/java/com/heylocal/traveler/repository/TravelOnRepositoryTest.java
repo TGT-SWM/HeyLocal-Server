@@ -70,6 +70,15 @@ class TravelOnRepositoryTest {
     assertThrows(Exception.class, () -> em.flush());
   }
 
+  //TODO - findAll
+  //TODO - findHasOpinion
+  //TODO - findNoOpinion
+  //TODO - findAllByRegion
+  //TODO - findHasOpinionByRegion
+  //TODO - findNoOpinionByRegion
+  //TODO - findAllByState
+  //TODO - findHasOpinionByState
+
   private TravelOn getNotPersistedTravelOn(User author) {
     TravelOn travelOn;
     String title = "testTitle";
