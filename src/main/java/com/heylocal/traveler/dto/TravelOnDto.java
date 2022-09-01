@@ -7,6 +7,7 @@ import com.heylocal.traveler.domain.travelon.TravelOn;
 import com.heylocal.traveler.domain.travelon.list.*;
 import com.heylocal.traveler.domain.user.User;
 import com.heylocal.traveler.dto.TravelTypeGroupDto.TravelTypeGroupRequest;
+import io.swagger.annotations.ApiParam;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import org.hibernate.validator.constraints.Length;
@@ -18,6 +19,7 @@ import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
+import static com.heylocal.traveler.dto.PageDto.*;
 import static com.heylocal.traveler.dto.RegionDto.RegionRequest;
 
 public class TravelOnDto {
@@ -137,6 +139,25 @@ public class TravelOnDto {
 					}
 			);
 		}
+	}
+
+	@Getter
+	@Setter
+	@NoArgsConstructor
+	@AllArgsConstructor
+	@Builder
+	@Schema(description = "여행 On 목록 조회 요청 DTO")
+	public static class AllTravelOnGetRequest {
+		@ApiParam(value = "지역(시/도), 전체(null)", required = false)
+		String state;
+		@ApiParam(value = "지역(시/구/군), 전체(null) <br/> 만약 state가 null이면 city도 null이어야 함. <br/> state가 null이 아니고, city가 null이면 해당 state의 모든 city 조회", required = false)
+		String city;
+		@ApiParam(value = "답변 있는 것(true), 없는 것(false), 전체(null)", required = false)
+		Boolean withOpinions;
+		@ApiParam(value = "정렬 기준(DATE, VIEWS, OPINIONS)", required = true)
+		TravelOnSortType sortBy;
+		@ApiParam(value = "페이징", required = true)
+		PageRequest pageRequest;
 	}
 
 	@Getter

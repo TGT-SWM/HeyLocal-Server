@@ -22,7 +22,7 @@ public class PageDto {
 		Long lastId;
 
 		/** 응답으로 받고자 하는 아이템의 최대 개수 */
-		@ApiParam("응답으로 받고자 하는 아이템의 최대 개수")
+		@ApiParam(value = "응답으로 받고자 하는 아이템의 최대 개수", required = true)
 		int size;
 	}
 }

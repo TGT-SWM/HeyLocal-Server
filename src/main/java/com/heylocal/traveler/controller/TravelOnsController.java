@@ -4,6 +4,7 @@ import com.heylocal.traveler.controller.api.TravelOnsApi;
 import com.heylocal.traveler.dto.LoginUser;
 import com.heylocal.traveler.dto.OpinionDto;
 import com.heylocal.traveler.dto.PageDto;
+import com.heylocal.traveler.dto.TravelOnDto;
 import com.heylocal.traveler.exception.code.BadRequestCode;
 import com.heylocal.traveler.exception.controller.BadRequestException;
 import com.heylocal.traveler.exception.controller.NotFoundException;
@@ -18,7 +19,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Objects;
 
+import static com.heylocal.traveler.dto.PageDto.*;
 import static com.heylocal.traveler.dto.TravelOnDto.*;
 
 @Slf4j
@@ -31,7 +34,11 @@ public class TravelOnsController implements TravelOnsApi {
   private final TravelOnService travelOnService;
 
   @Override
-  public List<TravelOnSimpleResponse> getTravelOns(long regionId, Boolean withOpinions, TravelOnSortType sortBy, PageDto.PageRequest pageRequest) {
+  public List<TravelOnSimpleResponse> getTravelOns(TravelOnDto.AllTravelOnGetRequest request) throws BadRequestException {
+    if (Objects.isNull(request.getState()) && !Objects.isNull(request.getCity())) {
+      throw new BadRequestException(BadRequestCode.BAD_INPUT_FORM, "state 가 null 이면, city 도 null 이어야 합니다.");
+    }
+
     return null;
   }
 
