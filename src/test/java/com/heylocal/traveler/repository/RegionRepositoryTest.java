@@ -8,8 +8,6 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 
 import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
-
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;

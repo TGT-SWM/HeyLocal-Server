@@ -14,13 +14,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static com.heylocal.traveler.dto.TravelOnDto.*;
-import static com.heylocal.traveler.dto.TravelOnDto.TravelOnRequest;
 
 @Slf4j
 @Service

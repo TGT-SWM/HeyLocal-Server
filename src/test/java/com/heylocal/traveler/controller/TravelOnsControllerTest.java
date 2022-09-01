@@ -27,7 +27,8 @@ import java.util.Set;
 import static com.heylocal.traveler.dto.RegionDto.RegionRequest;
 import static com.heylocal.traveler.dto.TravelOnDto.TravelOnRequest;
 import static com.heylocal.traveler.dto.TravelTypeGroupDto.TravelTypeGroupRequest;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.willReturn;
 
 class TravelOnsControllerTest {

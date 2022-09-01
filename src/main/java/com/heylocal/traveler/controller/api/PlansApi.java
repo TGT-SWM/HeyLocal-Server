@@ -1,7 +1,6 @@
 package com.heylocal.traveler.controller.api;
 
 import com.heylocal.traveler.dto.LoginUser;
-import com.heylocal.traveler.dto.PlanDto;
 import com.heylocal.traveler.dto.PlanDto.PlanListResponse;
 import com.heylocal.traveler.dto.PlanDto.PlanPlacesRequest;
 import com.heylocal.traveler.dto.PlanDto.PlanPlacesResponse;

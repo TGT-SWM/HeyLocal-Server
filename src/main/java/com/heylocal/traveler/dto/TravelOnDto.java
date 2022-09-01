@@ -20,7 +20,7 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
-import static com.heylocal.traveler.dto.PageDto.*;
+import static com.heylocal.traveler.dto.PageDto.PageRequest;
 import static com.heylocal.traveler.dto.RegionDto.RegionRequest;
 
 public class TravelOnDto {

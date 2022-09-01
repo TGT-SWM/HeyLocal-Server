@@ -9,7 +9,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
 
-import static com.heylocal.traveler.dto.TravelOnDto.*;
+import static com.heylocal.traveler.dto.TravelOnDto.TravelOnSortType;
 
 @Repository
 @RequiredArgsConstructor

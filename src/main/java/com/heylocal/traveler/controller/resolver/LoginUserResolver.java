@@ -1,7 +1,6 @@
 package com.heylocal.traveler.controller.resolver;
 
 import com.heylocal.traveler.dto.LoginUser;
-import com.heylocal.traveler.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.MethodParameter;

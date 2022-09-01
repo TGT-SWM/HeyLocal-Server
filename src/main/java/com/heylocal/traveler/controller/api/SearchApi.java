@@ -1,10 +1,7 @@
 package com.heylocal.traveler.controller.api;
 
-import com.heylocal.traveler.dto.SearchDto;
 import com.heylocal.traveler.dto.SearchDto.SearchResultResponse;
-import com.heylocal.traveler.dto.TravelOnDto;
 import com.heylocal.traveler.dto.TravelOnDto.TravelOnSimpleResponse;
-import com.heylocal.traveler.dto.UserDto;
 import com.heylocal.traveler.dto.UserDto.UserProfileResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;

@@ -3,14 +3,12 @@ package com.heylocal.traveler.repository;
 import com.heylocal.traveler.domain.token.AccessToken;
 import com.heylocal.traveler.domain.token.RefreshToken;
 import com.heylocal.traveler.domain.user.User;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
-import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Optional;
 

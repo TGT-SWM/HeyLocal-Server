@@ -3,8 +3,6 @@ package com.heylocal.traveler.controller;
 import com.heylocal.traveler.controller.api.TravelOnsApi;
 import com.heylocal.traveler.dto.LoginUser;
 import com.heylocal.traveler.dto.OpinionDto;
-import com.heylocal.traveler.dto.PageDto;
-import com.heylocal.traveler.dto.TravelOnDto;
 import com.heylocal.traveler.exception.code.BadRequestCode;
 import com.heylocal.traveler.exception.controller.BadRequestException;
 import com.heylocal.traveler.exception.controller.NotFoundException;
@@ -21,7 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import java.util.Objects;
 
-import static com.heylocal.traveler.dto.PageDto.*;
 import static com.heylocal.traveler.dto.TravelOnDto.*;
 
 @Slf4j

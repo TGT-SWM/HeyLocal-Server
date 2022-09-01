@@ -1,8 +1,8 @@
 package com.heylocal.traveler.domain;
 
-import com.heylocal.traveler.domain.travelon.opinion.Opinion;
 import com.heylocal.traveler.domain.place.Place;
 import com.heylocal.traveler.domain.travelon.TravelOn;
+import com.heylocal.traveler.domain.travelon.opinion.Opinion;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
