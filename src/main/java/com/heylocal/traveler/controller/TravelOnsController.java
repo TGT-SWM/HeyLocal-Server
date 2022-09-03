@@ -30,6 +30,13 @@ public class TravelOnsController implements TravelOnsApi {
 
   private final TravelOnService travelOnService;
 
+  /**
+   * 여행On 목록 조회 핸들러
+   * @param request 조회 조건
+   * @return
+   * @throws BadRequestException Input 데이터 형식이 올바르지 않은 경우
+   * @throws NotFoundException Request 한 Region 이 존재하지 않는 경우
+   */
   @Override
   public List<TravelOnSimpleResponse> getTravelOns(AllTravelOnGetRequest request) throws BadRequestException, NotFoundException {
     List<TravelOnSimpleResponse> response;
@@ -47,6 +54,14 @@ public class TravelOnsController implements TravelOnsApi {
     return response;
   }
 
+  /**
+   * 여행On 등록 핸들러
+   * @param request 등록할 여행On 정보
+   * @param bindingResult
+   * @param loginUser
+   * @throws BadRequestException Input 데이터 형식이 올바르지 않은 경우
+   * @throws NotFoundException Request 한 Region 이 존재하지 않는 경우
+   */
   @Override
   public void createTravelOn(TravelOnRequest request,
                              BindingResult bindingResult,

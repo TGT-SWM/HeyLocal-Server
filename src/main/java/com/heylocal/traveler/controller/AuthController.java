@@ -22,6 +22,14 @@ public class AuthController implements AuthApi {
   private final BindingErrorMessageProvider errorMessageProvider;
   private final AuthService authService;
 
+  /**
+   * 토큰 재발급 핸들러
+   * @param request 기존의 토큰값들
+   * @param bindingResult
+   * @return
+   * @throws BadRequestException Input 데이터 형식이 올바르지 않은 경우
+   * @throws UnauthorizedException 재발급에 실패한 경우
+   */
   @Override
   public TokenPairResponse reissueTokenPair(TokenPairRequest request, BindingResult bindingResult)
       throws BadRequestException, UnauthorizedException {

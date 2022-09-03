@@ -24,6 +24,14 @@ public class SigninController implements SigninApi {
   private final BindingErrorMessageProvider errorMessageProvider;
   private final SigninService signinService;
 
+  /**
+   * 로그인 핸들러
+   * @param request 로그인 정보
+   * @param bindingResult
+   * @return
+   * @throws BadRequestException Input 데이터 형식이 올바르지 않은 경우
+   * @throws UnauthorizedException 로그인 정보가 틀린 경우
+   */
   @Override
   public SigninResponse signin(SigninRequest request, BindingResult bindingResult) throws BadRequestException, UnauthorizedException {
     SigninResponse response = null;
