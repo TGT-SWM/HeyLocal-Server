@@ -46,10 +46,9 @@ public class SwaggerConfig {
             new Tag("Users", "사용자", 4),
             new Tag("TravelOns", "여행On", 5),
             new Tag("Plans", "스케줄", 6),
-            new Tag("Search", "검색", 7),
-            new Tag("ChatRooms", "채팅방", 8),
-            new Tag("Places", "장소", 9),
-            new Tag("Regions", "지역", 10)
+            new Tag("ChatRooms", "채팅방", 7),
+            new Tag("Places", "장소", 8),
+            new Tag("Regions", "지역", 9)
         );
   }
 
