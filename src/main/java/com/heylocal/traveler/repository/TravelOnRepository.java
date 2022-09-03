@@ -55,7 +55,7 @@ public class TravelOnRepository {
   public List<TravelOn> findHasOpinion(int firstIndex, int size, TravelOnSortType sortType) {
     List<TravelOn> result;
     String jpql = "select t from TravelOn t" +
-        " join fetch t.opinionList";
+        " where t.opinionList.size > 0";
 
     jpql = appendJpqlWithOrderBy(jpql, sortType);
     result = em.createQuery(jpql, TravelOn.class)
@@ -76,7 +76,6 @@ public class TravelOnRepository {
   public List<TravelOn> findNoOpinion(int firstIndex, int size, TravelOnSortType sortType) {
     List<TravelOn> result;
     String jpql = "select t from TravelOn t" +
-        " left join fetch t.opinionList" +
         " where t.opinionList.size = 0";
 
     jpql = appendJpqlWithOrderBy(jpql, sortType);
@@ -122,8 +121,8 @@ public class TravelOnRepository {
   public List<TravelOn> findHasOpinionByRegion(Region region, int firstIndex, int size, TravelOnSortType sortType) {
     List<TravelOn> result;
     String jpql = "select t from TravelOn t" +
-        " join fetch t.opinionList" +
-        " where t.region = :region";
+        " where t.region = :region" +
+        " and t.opinionList.size > 0";
 
     jpql = appendJpqlWithOrderBy(jpql, sortType);
     result = em.createQuery(jpql, TravelOn.class)
@@ -146,7 +145,6 @@ public class TravelOnRepository {
   public List<TravelOn> findNoOpinionByRegion(Region region, int firstIndex, int size, TravelOnSortType sortType) {
     List<TravelOn> result;
     String jpql = "select t from TravelOn t" +
-        " left join fetch t.opinionList" +
         " where t.region = :region" +
         " and t.opinionList.size = 0";
 
@@ -194,8 +192,8 @@ public class TravelOnRepository {
   public List<TravelOn> findHasOpinionByState(String state, int firstIndex, int size, TravelOnSortType sortType) {
     List<TravelOn> result;
     String jpql = "select t from TravelOn t" +
-        " join fetch t.opinionList" +
-        " where t.region.state = :state";
+        " where t.region.state = :state" +
+        " and t.opinionList.size > 0";
 
     jpql = appendJpqlWithOrderBy(jpql, sortType);
     result = em.createQuery(jpql, TravelOn.class)
@@ -218,7 +216,6 @@ public class TravelOnRepository {
   public List<TravelOn> findNoOpinionByState(String state, int firstIndex, int size, TravelOnSortType sortType) {
     List<TravelOn> result;
     String jpql = "select t from TravelOn t" +
-        " left join fetch t.opinionList" +
         " where t.region.state = :state" +
         " and t.opinionList.size = 0";
 
