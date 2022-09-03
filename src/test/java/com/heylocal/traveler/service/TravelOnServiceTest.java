@@ -11,9 +11,7 @@ import com.heylocal.traveler.domain.travelon.list.FoodType;
 import com.heylocal.traveler.domain.travelon.list.MemberType;
 import com.heylocal.traveler.domain.user.User;
 import com.heylocal.traveler.domain.user.UserRole;
-import com.heylocal.traveler.dto.LoginUser;
-import com.heylocal.traveler.dto.RegionDto;
-import com.heylocal.traveler.dto.TravelTypeGroupDto;
+import com.heylocal.traveler.dto.*;
 import com.heylocal.traveler.exception.service.BadArgumentException;
 import com.heylocal.traveler.repository.RegionRepository;
 import com.heylocal.traveler.repository.TravelOnRepository;
@@ -25,17 +23,15 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
+import static com.heylocal.traveler.dto.TravelOnDto.*;
 import static com.heylocal.traveler.dto.TravelOnDto.TravelOnRequest;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.AdditionalMatchers.not;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.BDDMockito.willDoNothing;
-import static org.mockito.BDDMockito.willReturn;
+import static org.mockito.BDDMockito.*;
 
 class TravelOnServiceTest {
   @Mock
@@ -135,8 +131,184 @@ class TravelOnServiceTest {
     );
   }
 
-  //TODO - 모든 여행 On 목록 조회
+  @Test
+  @DisplayName("모든 여행On 조회 - 지역 관계 없이 조회")
+  void inquirySimpleTravelOnsTestWithoutRegion() {
+    //GIVEN
+//    AllTravelOnGetRequest wrongRegionRequest = getAllTravelOnRequest();
+    AllTravelOnGetRequest opinionOptionIsNullRequest = getAllTravelOnRequest();
+    AllTravelOnGetRequest withOpinionOptionRequest = getAllTravelOnRequest();
+    AllTravelOnGetRequest noOpinionOptionRequest = getAllTravelOnRequest();
 
+//    String wrongRegion = "notExist";
+//    wrongRegionRequest.setState(wrongRegion);
+//    wrongRegionRequest.setCity(wrongRegion);
+    opinionOptionIsNullRequest.setWithOpinions(null);
+    opinionOptionIsNullRequest.setState(null);
+    withOpinionOptionRequest.setWithOpinions(true);
+    withOpinionOptionRequest.setState(null);
+    noOpinionOptionRequest.setWithOpinions(false);
+    noOpinionOptionRequest.setState(null);
+
+    //Mock 행동 정의 - RegionRepository
+//    willReturn(new ArrayList<>().add(Region.builder().build())).given(regionRepository).findByState(not(eq(wrongRegion)));
+
+    //WHEN
+
+    //THEN
+    assertAll(
+        //답변 여부 무관
+        () -> {
+          travelOnService.inquirySimpleTravelOns(opinionOptionIsNullRequest);
+          then(travelOnRepository).should(times(1)).findAll(anyInt(), anyInt(), any(TravelOnSortType.class));
+        },
+        //답변 있는 것만
+        () -> {
+          travelOnService.inquirySimpleTravelOns(withOpinionOptionRequest);
+          then(travelOnRepository).should(times(1)).findHasOpinion(anyInt(), anyInt(), any(TravelOnSortType.class));
+        },
+        //답변 없는 것만
+        () -> {
+          travelOnService.inquirySimpleTravelOns(noOpinionOptionRequest);
+          then(travelOnRepository).should(times(1)).findNoOpinion(anyInt(), anyInt(), any(TravelOnSortType.class));
+        }
+    );
+  }
+
+  @Test
+  @DisplayName("모든 여행On 조회 - state만을 기준으로 조회")
+  void inquirySimpleTravelOnsTestWithState() {
+    //GIVEN
+    AllTravelOnGetRequest wrongRegionRequest = getAllTravelOnRequest();
+    AllTravelOnGetRequest opinionOptionIsNullRequest = getAllTravelOnRequest();
+    AllTravelOnGetRequest withOpinionOptionRequest = getAllTravelOnRequest();
+    AllTravelOnGetRequest noOpinionOptionRequest = getAllTravelOnRequest();
+
+    String wrongState = "notExist";
+    wrongRegionRequest.setState(wrongState);
+    wrongRegionRequest.setCity(null);
+    opinionOptionIsNullRequest.setWithOpinions(null);
+    opinionOptionIsNullRequest.setState("myState");
+    opinionOptionIsNullRequest.setCity(null);
+    withOpinionOptionRequest.setWithOpinions(true);
+    withOpinionOptionRequest.setState("myState");
+    withOpinionOptionRequest.setCity(null);
+    noOpinionOptionRequest.setWithOpinions(false);
+    noOpinionOptionRequest.setState("myState");
+    noOpinionOptionRequest.setCity(null);
+
+    //Mock 행동 정의 - RegionRepository
+    List<Region> regionList = new ArrayList<>();
+    regionList.add(Region.builder().build());
+
+    willReturn(regionList).given(regionRepository).findByState(not(eq(wrongState)));
+
+    //WHEN
+
+    //THEN
+    assertAll(
+        //답변 여부 무관
+        () -> {
+          travelOnService.inquirySimpleTravelOns(opinionOptionIsNullRequest);
+          then(travelOnRepository).should(times(1)).findAllByState(anyString(), anyInt(), anyInt(), any(TravelOnSortType.class));
+        },
+        //답변 있는 것만
+        () -> {
+          travelOnService.inquirySimpleTravelOns(withOpinionOptionRequest);
+          then(travelOnRepository).should(times(1)).findHasOpinionByState(anyString(), anyInt(), anyInt(), any(TravelOnSortType.class));
+        },
+        //답변 없는 것만
+        () -> {
+          travelOnService.inquirySimpleTravelOns(noOpinionOptionRequest);
+          then(travelOnRepository).should(times(1)).findNoOpinionByState(anyString(), anyInt(), anyInt(), any(TravelOnSortType.class));
+        },
+        //없는 State 인 경우
+        () -> assertThrows(BadArgumentException.class,
+            () -> travelOnService.inquirySimpleTravelOns(wrongRegionRequest))
+    );
+  }
+
+  @Test
+  @DisplayName("모든 여행On 조회 - state와 city를 기준으로 조회")
+  void inquirySimpleTravelOnsTestWithStateCity() {
+    //GIVEN
+    AllTravelOnGetRequest wrongRegionRequest = getAllTravelOnRequest();
+    AllTravelOnGetRequest opinionOptionIsNullRequest = getAllTravelOnRequest();
+    AllTravelOnGetRequest withOpinionOptionRequest = getAllTravelOnRequest();
+    AllTravelOnGetRequest noOpinionOptionRequest = getAllTravelOnRequest();
+
+    String wrongState = "notExist";
+    String wrongCity = "notExist";
+    wrongRegionRequest.setState(wrongState);
+    wrongRegionRequest.setCity("myCity");
+    opinionOptionIsNullRequest.setWithOpinions(null);
+    opinionOptionIsNullRequest.setState("myState");
+    opinionOptionIsNullRequest.setCity("myCity");
+    withOpinionOptionRequest.setWithOpinions(true);
+    withOpinionOptionRequest.setState("myState");
+    withOpinionOptionRequest.setCity("myCity");
+    noOpinionOptionRequest.setWithOpinions(false);
+    noOpinionOptionRequest.setState("myState");
+    noOpinionOptionRequest.setCity("myCity");
+
+    //Mock 행동 정의 - RegionRepository
+    Region region = Region.builder()
+        .state("myState")
+        .city("myCity")
+        .build();
+
+    willReturn(Optional.of(region)).given(regionRepository).findByStateAndCity(not(eq(wrongState)), not(eq(wrongCity)));
+
+    //WHEN
+
+    //THEN
+    assertAll(
+        //답변 여부 무관
+        () -> {
+          travelOnService.inquirySimpleTravelOns(opinionOptionIsNullRequest);
+          then(travelOnRepository).should(times(1)).findAllByRegion(any(Region.class), anyInt(), anyInt(), any(TravelOnSortType.class));
+        },
+        //답변 있는 것만
+        () -> {
+          travelOnService.inquirySimpleTravelOns(withOpinionOptionRequest);
+          then(travelOnRepository).should(times(1)).findHasOpinionByRegion(any(Region.class), anyInt(), anyInt(), any(TravelOnSortType.class));
+        },
+        //답변 없는 것만
+        () -> {
+          travelOnService.inquirySimpleTravelOns(noOpinionOptionRequest);
+          then(travelOnRepository).should(times(1)).findNoOpinionByRegion(any(Region.class), anyInt(), anyInt(), any(TravelOnSortType.class));
+        },
+        //없는 Region 인 경우
+        () -> assertThrows(BadArgumentException.class,
+            () -> travelOnService.inquirySimpleTravelOns(wrongRegionRequest))
+    );
+  }
+
+  /**
+   * AllTravelOnRequest 객체를 생성하는 메서드
+   * @return
+   */
+  private AllTravelOnGetRequest getAllTravelOnRequest() {
+    PageDto.PageRequest pageRequest = PageDto.PageRequest.builder()
+        .firstIndex(0)
+        .size(10)
+        .build();
+    AllTravelOnGetRequest request = AllTravelOnGetRequest.builder()
+        .pageRequest(pageRequest)
+        .state("myState")
+        .city("myCity")
+        .sortBy(TravelOnSortType.DATE)
+        .withOpinions(null)
+        .build();
+    return request;
+  }
+
+  /**
+   * <pre>
+   * TravelOnRequest 객체를 생성하는 메서드
+   * </pre>
+   * @return
+   */
   private TravelOnRequest getTravelOnRequest() {
     TravelOnRequest request;
     String title = "testTitle";

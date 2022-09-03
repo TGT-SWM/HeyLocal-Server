@@ -10,6 +10,7 @@ import com.heylocal.traveler.domain.travelon.list.FoodType;
 import com.heylocal.traveler.domain.travelon.list.MemberType;
 import com.heylocal.traveler.dto.LoginUser;
 import com.heylocal.traveler.exception.controller.BadRequestException;
+import com.heylocal.traveler.exception.controller.NotFoundException;
 import com.heylocal.traveler.service.TravelOnService;
 import com.heylocal.traveler.util.error.BindingErrorMessageProvider;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,11 +25,11 @@ import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
+import static com.heylocal.traveler.dto.PageDto.PageRequest;
 import static com.heylocal.traveler.dto.RegionDto.RegionRequest;
-import static com.heylocal.traveler.dto.TravelOnDto.TravelOnRequest;
+import static com.heylocal.traveler.dto.TravelOnDto.*;
 import static com.heylocal.traveler.dto.TravelTypeGroupDto.TravelTypeGroupRequest;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.willReturn;
 
 class TravelOnsControllerTest {
@@ -85,8 +86,54 @@ class TravelOnsControllerTest {
     );
   }
 
-  //TODO - 여행On 목록 조회
+  @Test
+  @DisplayName("여행On 목록 조회")
+  void getTravelOnsTest() {
+    //GIVEN
+    AllTravelOnGetRequest succeedRequest = getAllTravelOnRequest();
+    AllTravelOnGetRequest wrongRegionRequest = getAllTravelOnRequest();
+    wrongRegionRequest.setState(null);
+    wrongRegionRequest.setCity("myCity");
 
+    //WHEN
+
+    //THEN
+    assertAll(
+        //성공 케이스
+        () -> assertDoesNotThrow(() -> travelOnsController.getTravelOns(succeedRequest)),
+        //잘못된 Region 케이스
+        () -> assertThrows(
+            BadRequestException.class,
+            () -> travelOnsController.getTravelOns(wrongRegionRequest)
+        )
+    );
+  }
+
+  /**
+   * AllTravelOnRequest 객체를 생성하는 메서드
+   * @return
+   */
+  private AllTravelOnGetRequest getAllTravelOnRequest() {
+    PageRequest pageRequest = PageRequest.builder()
+        .firstIndex(0)
+        .size(10)
+        .build();
+    AllTravelOnGetRequest request = AllTravelOnGetRequest.builder()
+        .pageRequest(pageRequest)
+        .state("myState")
+        .city("myCity")
+        .sortBy(TravelOnSortType.DATE)
+        .withOpinions(null)
+        .build();
+    return request;
+  }
+
+  /**
+   * <pre>
+   * TravelOnRequest 객체를 생성하는 메서드
+   * </pre>
+   * @return
+   */
   private TravelOnRequest getTravelOnRequest() {
     TravelOnRequest request;
     String title = "testTitle";
