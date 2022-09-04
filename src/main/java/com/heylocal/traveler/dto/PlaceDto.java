@@ -13,4 +13,17 @@ public class PlaceDto {
 	public static class PlaceResponse {
 		long id;
 	}
+
+	@Getter
+	@Setter
+	@NoArgsConstructor
+	@AllArgsConstructor
+	@Builder
+	@Schema(description = "플랜 내 장소 아이템 응답 DTO")
+	public static class PlaceItemResponse {
+		long id;
+		String name;
+		String address;
+		String roadAddress;
+	}
 }

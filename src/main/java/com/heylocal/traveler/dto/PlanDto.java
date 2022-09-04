@@ -3,6 +3,7 @@ package com.heylocal.traveler.dto;
 import com.heylocal.traveler.domain.Region;
 import com.heylocal.traveler.domain.plan.Plan;
 import com.heylocal.traveler.domain.travelon.TravelOn;
+import com.heylocal.traveler.dto.PlaceDto.PlaceItemResponse;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
@@ -79,6 +80,6 @@ public class PlanDto {
 	@Builder
 	@Schema(description = "장소 정보 응답 DTO")
 	public static class PlanPlacesResponse {
-		long id;
+		List<PlaceItemResponse> places;
 	}
 }
