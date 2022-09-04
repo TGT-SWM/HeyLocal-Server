@@ -1,10 +1,16 @@
 package com.heylocal.traveler.service;
 
 import com.heylocal.traveler.domain.Region;
+import com.heylocal.traveler.domain.place.Place;
+import com.heylocal.traveler.domain.plan.DaySchedule;
 import com.heylocal.traveler.domain.plan.Plan;
+import com.heylocal.traveler.domain.plan.list.PlaceItem;
 import com.heylocal.traveler.domain.travelon.TravelOn;
 import com.heylocal.traveler.domain.user.User;
+import com.heylocal.traveler.dto.PlanDto;
 import com.heylocal.traveler.dto.PlanDto.PlanListResponse;
+import com.heylocal.traveler.dto.PlanDto.PlanPlacesResponse;
+import com.heylocal.traveler.exception.service.BadArgumentException;
 import com.heylocal.traveler.repository.PlanRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,8 +27,9 @@ import java.time.LocalDate;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
 
 class PlanServiceTest {
@@ -122,5 +129,50 @@ class PlanServiceTest {
 	@Test
 	@DisplayName("플랜 내 장소 목록 조회")
 	void getPlacesInPlanTest() {
+		// GIVEN - Place
+		List<Place> places = new ArrayList<>();
+		for (int i = 0; i < 10; i++) {
+			places.add(Place.builder()
+					.id((long) i)
+					.name("NAME")
+					.address("ADDRESS")
+					.roadAddress("ROADADDRESS")
+					.build());
+		}
+
+		// GIVEN - PlaceItem
+		List<PlaceItem> placeItems = new ArrayList<>();
+		for (Place place : places) {
+			placeItems.add(PlaceItem.builder()
+					.place(place)
+					.build());
+		}
+
+		// GIVEN - DaySchedule
+		List<DaySchedule> daySchedules = new ArrayList<>();
+		for (int i = 0; i < 3; i++) {
+			daySchedules.add(DaySchedule.builder()
+					.placeItemList(placeItems)
+					.build());
+		}
+
+		// GIVEN - Plan
+		long planId = 1L;
+		long notFoundPlanId = planId + 1;
+		Plan plan = Plan.builder()
+				.id(planId)
+				.dayScheduleList(daySchedules)
+				.build();
+		given(planRepository.findById(planId)).willReturn(Optional.of(plan));
+
+		// WHEN - THEN
+		assertAll(
+				// 성공 케이스 - 1 - 예외 발생 없이 조회 성공
+				() -> assertDoesNotThrow(() -> planService.getPlacesInPlan(planId)),
+				// 성공 케이스 - 2 - 조회 결과가 기대와 일치
+				() -> Assertions.assertThat(planService.getPlacesInPlan(planId).size()).isEqualTo(daySchedules.size()),
+				// 실패 케이스 - 1 - 존재하지 않는 플랜 ID로 조회 시 예외 발생
+				() -> assertThrows(BadArgumentException.class, () -> planService.getPlacesInPlan(notFoundPlanId))
+		);
 	}
 }
