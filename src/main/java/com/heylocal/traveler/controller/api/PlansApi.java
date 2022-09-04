@@ -58,7 +58,7 @@ public interface PlansApi {
 	})
 	@GetMapping("/{planId}/places")
 	List<PlanPlacesResponse> getPlacesInPlan(
-			@Parameter(in = ParameterIn.PATH, description = "플랜 ID", required = true) long planId
+			@Parameter(in = ParameterIn.PATH, description = "플랜 ID", required = true) @PathVariable long planId
 	) throws NotFoundException;
 
 	@Operation(summary = "플랜의 장소 목록 수정", description = "플랜의 장소 목록 수정", tags = {"Plans"})
