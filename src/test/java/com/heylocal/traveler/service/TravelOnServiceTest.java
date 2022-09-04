@@ -64,9 +64,11 @@ class TravelOnServiceTest {
         .userRole(UserRole.TRAVELER)
         .id(loginUserId)
         .build();
+    long regionId = 1L;
     String state = "경기도";
     String city = "성남시";
     Region region = Region.builder()
+        .id(regionId)
         .state(state)
         .city(city)
         .build();
@@ -75,7 +77,7 @@ class TravelOnServiceTest {
     willReturn(Optional.of(author)).given(userRepository).findById(loginUserId);
 
     //Mock 행동 정의 - RegionRepository
-    willReturn(Optional.of(region)).given(regionRepository).findByStateAndCity(eq(state), eq(city));
+    willReturn(Optional.of(region)).given(regionRepository).findById(regionId);
 
     //Mock 행동 정의 - TravelOnRepository
     willDoNothing().given(travelOnRepository).saveTravelOn(any());
@@ -247,10 +249,6 @@ class TravelOnServiceTest {
   private TravelOnRequest getTravelOnRequest() {
     TravelOnRequest request;
     String title = "testTitle";
-    RegionDto.RegionRequest region = RegionDto.RegionRequest.builder()
-        .city("성남시")
-        .state("경기도")
-        .build();
     LocalDate travelStartDate = LocalDate.now().plusMonths(1);
     LocalDate travelEndDate = LocalDate.now().plusMonths(1).plusDays(3);
     String description = "test description";
@@ -277,7 +275,7 @@ class TravelOnServiceTest {
         .build();
     request = TravelOnRequest.builder()
         .title(title)
-        .region(region)
+        .regionId(1L)
         .travelStartDate(travelStartDate)
         .travelEndDate(travelEndDate)
         .description(description)

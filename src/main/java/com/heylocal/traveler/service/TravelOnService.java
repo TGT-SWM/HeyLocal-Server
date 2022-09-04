@@ -41,8 +41,8 @@ public class TravelOnService {
     User author;
 
     author = userRepository.findById(loginUser.getId()).get();
-    region = regionRepository.findByStateAndCity(request.getRegion().getState(), request.getRegion().getCity()).orElseThrow(
-        () -> new BadArgumentException(NotFoundCode.NO_INFO, "존재하지 않는 Region 입니다.")
+    region = regionRepository.findById(request.getRegionId()).orElseThrow(
+        () -> new BadArgumentException(NotFoundCode.NO_INFO, "존재하지 않는 Region ID 입니다.")
     );
     travelOn = request.toEntity(author, region);
     travelOnRepository.saveTravelOn(travelOn);

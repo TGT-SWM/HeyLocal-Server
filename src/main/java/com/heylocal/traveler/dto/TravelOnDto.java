@@ -34,8 +34,7 @@ public class TravelOnDto {
 		@NotEmpty
 		@Length(max = 255)
 		private String title;
-		@Valid
-		private RegionRequest region;
+		private long regionId;
 		@NotNull
 		private LocalDate travelStartDate;
 		@NotNull

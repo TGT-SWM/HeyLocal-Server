@@ -127,10 +127,6 @@ class TravelOnsControllerTest {
   private TravelOnRequest getTravelOnRequest() {
     TravelOnRequest request;
     String title = "testTitle";
-    RegionRequest region = RegionRequest.builder()
-        .city("성남시")
-        .state("경기도")
-        .build();
     LocalDate travelStartDate = LocalDate.now().plusMonths(1);
     LocalDate travelEndDate = LocalDate.now().plusMonths(1).plusDays(3);
     String description = "test description";
@@ -157,7 +153,7 @@ class TravelOnsControllerTest {
         .build();
     request = TravelOnRequest.builder()
         .title(title)
-        .region(region)
+        .regionId(1L)
         .travelStartDate(travelStartDate)
         .travelEndDate(travelEndDate)
         .description(description)
