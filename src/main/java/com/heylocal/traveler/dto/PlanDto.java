@@ -83,10 +83,12 @@ public class PlanDto {
 	@Builder
 	@Schema(description = "장소 정보 응답 DTO")
 	public static class PlanPlacesResponse {
+		LocalDate date;
 		List<PlaceItemResponse> places;
 
 		public PlanPlacesResponse(DaySchedule daySchedule) {
 			List<PlaceItem> placeItems = daySchedule.getPlaceItemList();
+			this.date = daySchedule.getDateTime();
 			this.places = placeItems.stream()
 					.map(PlaceItemResponse::new)
 					.collect(Collectors.toList());
