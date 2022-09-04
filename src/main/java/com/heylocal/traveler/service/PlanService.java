@@ -1,7 +1,9 @@
 package com.heylocal.traveler.service;
 
 import com.heylocal.traveler.domain.plan.Plan;
+import com.heylocal.traveler.dto.PlanDto;
 import com.heylocal.traveler.dto.PlanDto.PlanListResponse;
+import com.heylocal.traveler.dto.PlanDto.PlanPlacesResponse;
 import com.heylocal.traveler.dto.PlanDto.PlanResponse;
 import com.heylocal.traveler.repository.PlanRepository;
 import lombok.RequiredArgsConstructor;
@@ -61,5 +63,16 @@ public class PlanService {
 				.ongoing(ongoing)
 				.upcoming(upcoming)
 				.build();
+	}
+
+	/**
+	 * <pre>
+	 * 해당 플랜에 포함된 장소 리스트를 일자별로 나누어 반환
+	 * @param planId 플랜 ID
+	 * @return
+	 * </pre>
+	 */
+	public List<PlanPlacesResponse> getPlacesInPlan(long planId) {
+		return null;
 	}
 }

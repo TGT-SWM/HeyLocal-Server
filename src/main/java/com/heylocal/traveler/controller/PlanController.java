@@ -82,7 +82,7 @@ public class PlanController implements PlansApi {
 	 */
 	@Override
 	public List<PlanPlacesResponse> getPlacesInPlan(long planId) {
-		return null;
+		return planService.getPlacesInPlan(planId);
 	}
 
 	/**

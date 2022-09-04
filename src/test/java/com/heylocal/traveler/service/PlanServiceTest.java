@@ -118,4 +118,9 @@ class PlanServiceTest {
 		);
 
 	}
+
+	@Test
+	@DisplayName("플랜 내 장소 목록 조회")
+	void getPlacesInPlanTest() {
+	}
 }
