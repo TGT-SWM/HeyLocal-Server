@@ -90,21 +90,13 @@ class TravelOnsControllerTest {
   void getTravelOnsTest() {
     //GIVEN
     AllTravelOnGetRequest succeedRequest = getAllTravelOnRequest();
-    AllTravelOnGetRequest wrongRegionRequest = getAllTravelOnRequest();
-    wrongRegionRequest.setState(null);
-    wrongRegionRequest.setCity("myCity");
 
     //WHEN
 
     //THEN
     assertAll(
         //성공 케이스
-        () -> assertDoesNotThrow(() -> travelOnsController.getTravelOns(succeedRequest)),
-        //잘못된 Region 케이스
-        () -> assertThrows(
-            BadRequestException.class,
-            () -> travelOnsController.getTravelOns(wrongRegionRequest)
-        )
+        () -> assertDoesNotThrow(() -> travelOnsController.getTravelOns(succeedRequest))
     );
   }
 
@@ -119,8 +111,7 @@ class TravelOnsControllerTest {
         .build();
     AllTravelOnGetRequest request = AllTravelOnGetRequest.builder()
         .pageRequest(pageRequest)
-        .state("myState")
-        .city("myCity")
+        .regionId(1L)
         .sortBy(TravelOnSortType.DATE)
         .withOpinions(null)
         .build();

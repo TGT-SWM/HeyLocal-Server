@@ -34,16 +34,11 @@ public class TravelOnsController implements TravelOnsApi {
    * 여행On 목록 조회 핸들러
    * @param request 조회 조건
    * @return
-   * @throws BadRequestException Input 데이터 형식이 올바르지 않은 경우
    * @throws NotFoundException Request 한 Region 이 존재하지 않는 경우
    */
   @Override
-  public List<TravelOnSimpleResponse> getTravelOns(AllTravelOnGetRequest request) throws BadRequestException, NotFoundException {
+  public List<TravelOnSimpleResponse> getTravelOns(AllTravelOnGetRequest request) throws NotFoundException {
     List<TravelOnSimpleResponse> response;
-
-    if (Objects.isNull(request.getState()) && !Objects.isNull(request.getCity())) {
-      throw new BadRequestException(BadRequestCode.BAD_INPUT_FORM, "state 가 null 이면, city 도 null 이어야 합니다.");
-    }
 
     try {
       response = travelOnService.inquirySimpleTravelOns(request);
