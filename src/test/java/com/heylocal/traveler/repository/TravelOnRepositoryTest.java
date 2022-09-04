@@ -108,11 +108,11 @@ class TravelOnRepositoryTest {
     saveAnotherOpinion(result1);
 
     //WHEN
-    List<TravelOn> onlyFirstItem = travelOnRepository.findAll(0, 1, TravelOnSortType.DATE);
-    List<TravelOn> sortByCreatedDateTime = travelOnRepository.findAll(0, 4, TravelOnSortType.DATE);
-    List<TravelOn> sortByViews = travelOnRepository.findAll(0, 4, TravelOnSortType.VIEWS);
-    List<TravelOn> last2Item = travelOnRepository.findAll(2, 4, TravelOnSortType.VIEWS);
-    List<TravelOn> sortByOpinion = travelOnRepository.findAll(0, 4, TravelOnSortType.OPINIONS);
+    List<TravelOn> onlyFirstItem = travelOnRepository.findAll(null, 1, TravelOnSortType.DATE);
+    List<TravelOn> sortByCreatedDateTime = travelOnRepository.findAll(null, 4, TravelOnSortType.DATE);
+    List<TravelOn> sortByViews = travelOnRepository.findAll(null, 4, TravelOnSortType.VIEWS);
+    List<TravelOn> last2Item = travelOnRepository.findAll(result3.getId(), 4, TravelOnSortType.VIEWS);
+    List<TravelOn> sortByOpinion = travelOnRepository.findAll(null, 4, TravelOnSortType.OPINIONS);
 
     //THEN
     assertAll(
@@ -159,7 +159,7 @@ class TravelOnRepositoryTest {
     saveAnotherOpinion(travelOnRegionBWithOpinion);
 
     //WHEN
-    List<TravelOn> hasOpinionTravelOnResult = travelOnRepository.findHasOpinion(0, 4, TravelOnSortType.DATE);
+    List<TravelOn> hasOpinionTravelOnResult = travelOnRepository.findHasOpinion(null, 4, TravelOnSortType.DATE);
 
     //THEN
     assertAll(
@@ -200,7 +200,7 @@ class TravelOnRepositoryTest {
     saveAnotherOpinion(travelOnRegionBWithOpinion);
 
     //WHEN
-    List<TravelOn> noOpinionResult = travelOnRepository.findNoOpinion(0, 4, TravelOnSortType.DATE);
+    List<TravelOn> noOpinionResult = travelOnRepository.findNoOpinion(null, 4, TravelOnSortType.DATE);
 
     //THEN
     assertAll(
@@ -239,8 +239,8 @@ class TravelOnRepositoryTest {
     Region regionB = result3.getRegion();
 
     //WHEN
-    List<TravelOn> resultWithRegionA = travelOnRepository.findAllByRegion(regionA, 0, 4, TravelOnSortType.DATE);
-    List<TravelOn> resultWithRegionB = travelOnRepository.findAllByRegion(regionB, 0, 4, TravelOnSortType.DATE);
+    List<TravelOn> resultWithRegionA = travelOnRepository.findAllByRegion(regionA, null, 4, TravelOnSortType.DATE);
+    List<TravelOn> resultWithRegionB = travelOnRepository.findAllByRegion(regionB, null, 4, TravelOnSortType.DATE);
 
     //THEN
     assertAll(
@@ -283,8 +283,8 @@ class TravelOnRepositoryTest {
     Region regionB = travelOnNoOpinion1.getRegion();
 
     //WHEN
-    List<TravelOn> withOpinionResult = travelOnRepository.findHasOpinionByRegion(regionA, 0, 10, TravelOnSortType.DATE);
-    List<TravelOn> withOpinionButNotRegionResult = travelOnRepository.findHasOpinionByRegion(regionB, 0, 10, TravelOnSortType.DATE);
+    List<TravelOn> withOpinionResult = travelOnRepository.findHasOpinionByRegion(regionA, null, 10, TravelOnSortType.DATE);
+    List<TravelOn> withOpinionButNotRegionResult = travelOnRepository.findHasOpinionByRegion(regionB, null, 10, TravelOnSortType.DATE);
 
     //THEN
     assertAll(
@@ -327,8 +327,8 @@ class TravelOnRepositoryTest {
     Region regionB = travelOnNoOpinion.getRegion();
 
     //WHEN
-    List<TravelOn> noOpinionResult = travelOnRepository.findNoOpinionByRegion(regionB, 0, 10, TravelOnSortType.DATE);
-    List<TravelOn> noOpinionResultButNotRegion = travelOnRepository.findNoOpinionByRegion(regionA, 0, 10, TravelOnSortType.DATE);
+    List<TravelOn> noOpinionResult = travelOnRepository.findNoOpinionByRegion(regionB, null, 10, TravelOnSortType.DATE);
+    List<TravelOn> noOpinionResultButNotRegion = travelOnRepository.findNoOpinionByRegion(regionA, null, 10, TravelOnSortType.DATE);
 
     //THEN
     assertAll(
@@ -363,8 +363,8 @@ class TravelOnRepositoryTest {
     TravelOn travelOnRegionB = saveTravelOn(author, stateB, city1B, LocalDateTime.now().minusHours(4), 1);
 
     //WHEN
-    List<TravelOn> stateAResult = travelOnRepository.findAllByState(stateA, 0, 10, TravelOnSortType.DATE);
-    List<TravelOn> stateBResult = travelOnRepository.findAllByState(stateB, 0, 10, TravelOnSortType.DATE);
+    List<TravelOn> stateAResult = travelOnRepository.findAllByState(stateA, null, 10, TravelOnSortType.DATE);
+    List<TravelOn> stateBResult = travelOnRepository.findAllByState(stateB, null, 10, TravelOnSortType.DATE);
 
     //THEN
     assertAll(
@@ -402,8 +402,8 @@ class TravelOnRepositoryTest {
     saveAnotherOpinion(travelOnRegionBWithOpinion);
 
     //WHEN
-    List<TravelOn> hasOpinionByStateAResult = travelOnRepository.findHasOpinionByState(stateA, 0, 10, TravelOnSortType.DATE);
-    List<TravelOn> hasOpinionByStateBResult = travelOnRepository.findHasOpinionByState(stateB, 0, 10, TravelOnSortType.DATE);
+    List<TravelOn> hasOpinionByStateAResult = travelOnRepository.findHasOpinionByState(stateA, null, 10, TravelOnSortType.DATE);
+    List<TravelOn> hasOpinionByStateBResult = travelOnRepository.findHasOpinionByState(stateB, null, 10, TravelOnSortType.DATE);
 
     //THEN
     assertAll(
@@ -444,8 +444,8 @@ class TravelOnRepositoryTest {
     saveAnotherOpinion(travelOnRegionBWithOpinion);
 
     //WHEN
-    List<TravelOn> noOpinionByStateAResult = travelOnRepository.findNoOpinionByState(stateA, 0, 10, TravelOnSortType.DATE);
-    List<TravelOn> noOpinionByStateBResult = travelOnRepository.findNoOpinionByState(stateB, 0, 10, TravelOnSortType.DATE);
+    List<TravelOn> noOpinionByStateAResult = travelOnRepository.findNoOpinionByState(stateA, null, 10, TravelOnSortType.DATE);
+    List<TravelOn> noOpinionByStateBResult = travelOnRepository.findNoOpinionByState(stateB, null, 10, TravelOnSortType.DATE);
 
     //THEN
     assertAll(

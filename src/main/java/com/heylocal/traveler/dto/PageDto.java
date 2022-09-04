@@ -13,11 +13,11 @@ public class PageDto {
 	@Schema(description = "페이징을 위한 요청 DTO")
 	static public class PageRequest {
 		/**
-		 * 응답으로 받고자 하는 첫 아이템의 index
-		 * 첫 아이템 Index = 0
+		 * 클라이언트가 받은 마지막 아이템의 id(pk)
+		 * null 이면 처음부터
 		 */
-		@ApiParam(value = "응답으로 받고자 하는 첫 아이템의 index, (0: 첫 아이템 Index)", required = true)
-		int firstIndex;
+		@ApiParam(value = "클라이언트가 받은 마지막 아이템의 id(pk), null 이면 처음부터")
+		Long lastItemId;
 
 		/** 응답으로 받고자 하는 아이템의 최대 개수 */
 		@ApiParam(value = "응답으로 받고자 하는 아이템의 최대 개수", required = true)

@@ -10,7 +10,6 @@ import com.heylocal.traveler.domain.travelon.list.FoodType;
 import com.heylocal.traveler.domain.travelon.list.MemberType;
 import com.heylocal.traveler.dto.LoginUser;
 import com.heylocal.traveler.exception.controller.BadRequestException;
-import com.heylocal.traveler.exception.controller.NotFoundException;
 import com.heylocal.traveler.service.TravelOnService;
 import com.heylocal.traveler.util.error.BindingErrorMessageProvider;
 import org.junit.jupiter.api.BeforeEach;
@@ -115,7 +114,7 @@ class TravelOnsControllerTest {
    */
   private AllTravelOnGetRequest getAllTravelOnRequest() {
     PageRequest pageRequest = PageRequest.builder()
-        .firstIndex(0)
+        .lastItemId(0L)
         .size(10)
         .build();
     AllTravelOnGetRequest request = AllTravelOnGetRequest.builder()

@@ -160,17 +160,17 @@ class TravelOnServiceTest {
         //답변 여부 무관
         () -> {
           travelOnService.inquirySimpleTravelOns(opinionOptionIsNullRequest);
-          then(travelOnRepository).should(times(1)).findAll(anyInt(), anyInt(), any(TravelOnSortType.class));
+          then(travelOnRepository).should(times(1)).findAll(any(), anyInt(), any(TravelOnSortType.class));
         },
         //답변 있는 것만
         () -> {
           travelOnService.inquirySimpleTravelOns(withOpinionOptionRequest);
-          then(travelOnRepository).should(times(1)).findHasOpinion(anyInt(), anyInt(), any(TravelOnSortType.class));
+          then(travelOnRepository).should(times(1)).findHasOpinion(any(), anyInt(), any(TravelOnSortType.class));
         },
         //답변 없는 것만
         () -> {
           travelOnService.inquirySimpleTravelOns(noOpinionOptionRequest);
-          then(travelOnRepository).should(times(1)).findNoOpinion(anyInt(), anyInt(), any(TravelOnSortType.class));
+          then(travelOnRepository).should(times(1)).findNoOpinion(any(), anyInt(), any(TravelOnSortType.class));
         }
     );
   }
@@ -210,17 +210,17 @@ class TravelOnServiceTest {
         //답변 여부 무관
         () -> {
           travelOnService.inquirySimpleTravelOns(opinionOptionIsNullRequest);
-          then(travelOnRepository).should(times(1)).findAllByState(anyString(), anyInt(), anyInt(), any(TravelOnSortType.class));
+          then(travelOnRepository).should(times(1)).findAllByState(anyString(), any(), anyInt(), any(TravelOnSortType.class));
         },
         //답변 있는 것만
         () -> {
           travelOnService.inquirySimpleTravelOns(withOpinionOptionRequest);
-          then(travelOnRepository).should(times(1)).findHasOpinionByState(anyString(), anyInt(), anyInt(), any(TravelOnSortType.class));
+          then(travelOnRepository).should(times(1)).findHasOpinionByState(anyString(), any(), anyInt(), any(TravelOnSortType.class));
         },
         //답변 없는 것만
         () -> {
           travelOnService.inquirySimpleTravelOns(noOpinionOptionRequest);
-          then(travelOnRepository).should(times(1)).findNoOpinionByState(anyString(), anyInt(), anyInt(), any(TravelOnSortType.class));
+          then(travelOnRepository).should(times(1)).findNoOpinionByState(anyString(), any(), anyInt(), any(TravelOnSortType.class));
         },
         //없는 State 인 경우
         () -> assertThrows(BadArgumentException.class,
@@ -266,17 +266,17 @@ class TravelOnServiceTest {
         //답변 여부 무관
         () -> {
           travelOnService.inquirySimpleTravelOns(opinionOptionIsNullRequest);
-          then(travelOnRepository).should(times(1)).findAllByRegion(any(Region.class), anyInt(), anyInt(), any(TravelOnSortType.class));
+          then(travelOnRepository).should(times(1)).findAllByRegion(any(Region.class), any(), anyInt(), any(TravelOnSortType.class));
         },
         //답변 있는 것만
         () -> {
           travelOnService.inquirySimpleTravelOns(withOpinionOptionRequest);
-          then(travelOnRepository).should(times(1)).findHasOpinionByRegion(any(Region.class), anyInt(), anyInt(), any(TravelOnSortType.class));
+          then(travelOnRepository).should(times(1)).findHasOpinionByRegion(any(Region.class), any(), anyInt(), any(TravelOnSortType.class));
         },
         //답변 없는 것만
         () -> {
           travelOnService.inquirySimpleTravelOns(noOpinionOptionRequest);
-          then(travelOnRepository).should(times(1)).findNoOpinionByRegion(any(Region.class), anyInt(), anyInt(), any(TravelOnSortType.class));
+          then(travelOnRepository).should(times(1)).findNoOpinionByRegion(any(Region.class), any(), anyInt(), any(TravelOnSortType.class));
         },
         //없는 Region 인 경우
         () -> assertThrows(BadArgumentException.class,
@@ -290,7 +290,7 @@ class TravelOnServiceTest {
    */
   private AllTravelOnGetRequest getAllTravelOnRequest() {
     PageDto.PageRequest pageRequest = PageDto.PageRequest.builder()
-        .firstIndex(0)
+        .lastItemId(0L)
         .size(10)
         .build();
     AllTravelOnGetRequest request = AllTravelOnGetRequest.builder()

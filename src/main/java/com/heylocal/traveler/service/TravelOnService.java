@@ -85,7 +85,7 @@ public class TravelOnService {
     String city;
     Boolean withOpinions;
     TravelOnSortType sortBy;
-    int firstIndex;
+    Long lastItemId;
     int size;
 
     //초기화
@@ -93,7 +93,7 @@ public class TravelOnService {
     city = request.getCity();
     withOpinions = request.getWithOpinions();
     sortBy = request.getSortBy();
-    firstIndex = request.getPageRequest().getFirstIndex();
+    lastItemId = request.getPageRequest().getLastItemId();
     size = request.getPageRequest().getSize();
 
     Region region = regionRepository.findByStateAndCity(state, city).orElseThrow(
@@ -101,11 +101,11 @@ public class TravelOnService {
     );
 
     if (Objects.isNull(withOpinions)) {
-      result = travelOnRepository.findAllByRegion(region, firstIndex, size, sortBy);
+      result = travelOnRepository.findAllByRegion(region, lastItemId, size, sortBy);
     } else if (withOpinions) {
-      result = travelOnRepository.findHasOpinionByRegion(region, firstIndex, size, sortBy);
+      result = travelOnRepository.findHasOpinionByRegion(region, lastItemId, size, sortBy);
     } else {
-      result = travelOnRepository.findNoOpinionByRegion(region, firstIndex, size, sortBy);
+      result = travelOnRepository.findNoOpinionByRegion(region, lastItemId, size, sortBy);
     }
 
     return result;
@@ -116,14 +116,14 @@ public class TravelOnService {
     String state;
     Boolean withOpinions;
     TravelOnSortType sortBy;
-    int firstIndex;
+    Long lastItemId;
     int size;
 
     //초기화
     state = request.getState();
     withOpinions = request.getWithOpinions();
     sortBy = request.getSortBy();
-    firstIndex = request.getPageRequest().getFirstIndex();
+    lastItemId = request.getPageRequest().getLastItemId();
     size = request.getPageRequest().getSize();
 
     if (regionRepository.findByState(state).size() == 0) {
@@ -131,11 +131,11 @@ public class TravelOnService {
     }
 
     if (Objects.isNull(withOpinions)) {
-      result = travelOnRepository.findAllByState(state, firstIndex, size, sortBy);
+      result = travelOnRepository.findAllByState(state, lastItemId, size, sortBy);
     } else if (withOpinions) {
-      result = travelOnRepository.findHasOpinionByState(state, firstIndex, size, sortBy);
+      result = travelOnRepository.findHasOpinionByState(state, lastItemId, size, sortBy);
     } else {
-      result = travelOnRepository.findNoOpinionByState(state, firstIndex, size, sortBy);
+      result = travelOnRepository.findNoOpinionByState(state, lastItemId, size, sortBy);
     }
 
     return result;
@@ -145,21 +145,21 @@ public class TravelOnService {
     List<TravelOn> result;
     Boolean withOpinions;
     TravelOnSortType sortBy;
-    int firstIndex;
+    Long lastItemId;
     int size;
 
     //초기화
     withOpinions = request.getWithOpinions();
     sortBy = request.getSortBy();
-    firstIndex = request.getPageRequest().getFirstIndex();
+    lastItemId = request.getPageRequest().getLastItemId();
     size = request.getPageRequest().getSize();
 
     if (Objects.isNull(withOpinions)) {
-      result = travelOnRepository.findAll(firstIndex, size, sortBy);
+      result = travelOnRepository.findAll(lastItemId, size, sortBy);
     } else if (withOpinions) {
-      result = travelOnRepository.findHasOpinion(firstIndex, size, sortBy);
+      result = travelOnRepository.findHasOpinion(lastItemId, size, sortBy);
     } else {
-      result = travelOnRepository.findNoOpinion(firstIndex, size, sortBy);
+      result = travelOnRepository.findNoOpinion(lastItemId, size, sortBy);
     }
 
     return result;
