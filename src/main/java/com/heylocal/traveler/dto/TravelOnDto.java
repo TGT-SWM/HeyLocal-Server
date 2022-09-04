@@ -15,13 +15,13 @@ import org.hibernate.validator.constraints.Length;
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
 import static com.heylocal.traveler.dto.PageDto.PageRequest;
-import static com.heylocal.traveler.dto.RegionDto.RegionRequest;
 
 public class TravelOnDto {
 	@Getter
@@ -34,8 +34,9 @@ public class TravelOnDto {
 		@NotEmpty
 		@Length(max = 255)
 		private String title;
-		@Valid
-		private RegionRequest region;
+		@NotNull
+		@Positive
+		private Long regionId;
 		@NotNull
 		private LocalDate travelStartDate;
 		@NotNull
@@ -149,10 +150,8 @@ public class TravelOnDto {
 	@Builder
 	@Schema(description = "여행 On 목록 조회 요청 DTO")
 	public static class AllTravelOnGetRequest {
-		@ApiParam(value = "지역(시/도), 전체(null)", required = false)
-		private String state;
-		@ApiParam(value = "지역(시/구/군), 전체(null) <br/> 만약 state가 null이면 city도 null이어야 함. <br/> state가 null이 아니고, city가 null이면 해당 state의 모든 city 조회", required = false)
-		private String city;
+		@ApiParam(value = "지역(Region) id(pk)", required = false)
+		private Long regionId;
 		@ApiParam(value = "답변 있는 것(true), 없는 것(false), 전체(null)", required = false)
 		private Boolean withOpinions;
 		@ApiParam(value = "정렬 기준(DATE, VIEWS, OPINIONS)", required = true)

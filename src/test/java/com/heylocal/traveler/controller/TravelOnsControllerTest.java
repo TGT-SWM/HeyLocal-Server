@@ -25,7 +25,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import static com.heylocal.traveler.dto.PageDto.PageRequest;
-import static com.heylocal.traveler.dto.RegionDto.RegionRequest;
 import static com.heylocal.traveler.dto.TravelOnDto.*;
 import static com.heylocal.traveler.dto.TravelTypeGroupDto.TravelTypeGroupRequest;
 import static org.junit.jupiter.api.Assertions.*;
@@ -90,21 +89,13 @@ class TravelOnsControllerTest {
   void getTravelOnsTest() {
     //GIVEN
     AllTravelOnGetRequest succeedRequest = getAllTravelOnRequest();
-    AllTravelOnGetRequest wrongRegionRequest = getAllTravelOnRequest();
-    wrongRegionRequest.setState(null);
-    wrongRegionRequest.setCity("myCity");
 
     //WHEN
 
     //THEN
     assertAll(
         //성공 케이스
-        () -> assertDoesNotThrow(() -> travelOnsController.getTravelOns(succeedRequest)),
-        //잘못된 Region 케이스
-        () -> assertThrows(
-            BadRequestException.class,
-            () -> travelOnsController.getTravelOns(wrongRegionRequest)
-        )
+        () -> assertDoesNotThrow(() -> travelOnsController.getTravelOns(succeedRequest))
     );
   }
 
@@ -119,8 +110,7 @@ class TravelOnsControllerTest {
         .build();
     AllTravelOnGetRequest request = AllTravelOnGetRequest.builder()
         .pageRequest(pageRequest)
-        .state("myState")
-        .city("myCity")
+        .regionId(1L)
         .sortBy(TravelOnSortType.DATE)
         .withOpinions(null)
         .build();
@@ -136,10 +126,6 @@ class TravelOnsControllerTest {
   private TravelOnRequest getTravelOnRequest() {
     TravelOnRequest request;
     String title = "testTitle";
-    RegionRequest region = RegionRequest.builder()
-        .city("성남시")
-        .state("경기도")
-        .build();
     LocalDate travelStartDate = LocalDate.now().plusMonths(1);
     LocalDate travelEndDate = LocalDate.now().plusMonths(1).plusDays(3);
     String description = "test description";
@@ -166,7 +152,7 @@ class TravelOnsControllerTest {
         .build();
     request = TravelOnRequest.builder()
         .title(title)
-        .region(region)
+        .regionId(1L)
         .travelStartDate(travelStartDate)
         .travelEndDate(travelEndDate)
         .description(description)

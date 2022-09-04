@@ -41,8 +41,8 @@ public class TravelOnService {
     User author;
 
     author = userRepository.findById(loginUser.getId()).get();
-    region = regionRepository.findByStateAndCity(request.getRegion().getState(), request.getRegion().getCity()).orElseThrow(
-        () -> new BadArgumentException(NotFoundCode.NO_INFO, "존재하지 않는 Region 입니다.")
+    region = regionRepository.findById(request.getRegionId()).orElseThrow(
+        () -> new BadArgumentException(NotFoundCode.NO_INFO, "존재하지 않는 Region ID 입니다.")
     );
     travelOn = request.toEntity(author, region);
     travelOnRepository.saveTravelOn(travelOn);
@@ -58,17 +58,13 @@ public class TravelOnService {
   public List<TravelOnSimpleResponse> inquirySimpleTravelOns(AllTravelOnGetRequest request) throws BadArgumentException {
     List<TravelOn> travelOnList;
     List<TravelOnSimpleResponse> response;
-    String state = request.getState();
-    String city = request.getCity();
+    Long regionId = request.getRegionId();
 
-    if (Objects.isNull(state)) { //지역 관계없이 조회하는 경우
+    if (Objects.isNull(regionId)) { //지역 관계없이 조회하는 경우
       travelOnList = findWithoutRegion(request);
 
-    } else if (Objects.isNull(city)) { //state만을 기준으로 조회하는 경우
-      travelOnList = findWithOnlyState(request);
-
-    } else { //state와 city를 기준으로 조회하는 경우
-      travelOnList = findWithStateAndCity(request);
+    } else { //Region을 기준으로 조회하는 경우
+      travelOnList = findByRegion(request);
     }
 
     //List<TravelOn> -> List<TravelOnSimpleResponse>
@@ -79,25 +75,23 @@ public class TravelOnService {
     return response;
   }
 
-  private List<TravelOn> findWithStateAndCity(AllTravelOnGetRequest request) throws BadArgumentException {
+  private List<TravelOn> findByRegion(AllTravelOnGetRequest request) throws BadArgumentException {
     List<TravelOn> result;
-    String state;
-    String city;
     Boolean withOpinions;
     TravelOnSortType sortBy;
+    long regionId;
     Long lastItemId;
     int size;
 
     //초기화
-    state = request.getState();
-    city = request.getCity();
     withOpinions = request.getWithOpinions();
     sortBy = request.getSortBy();
+    regionId = request.getRegionId();
     lastItemId = request.getPageRequest().getLastItemId();
     size = request.getPageRequest().getSize();
 
-    Region region = regionRepository.findByStateAndCity(state, city).orElseThrow(
-        () -> new BadArgumentException(NotFoundCode.NO_INFO, "존재하지 않는 Region 입니다.")
+    Region region = regionRepository.findById(regionId).orElseThrow(
+        () -> new BadArgumentException(NotFoundCode.NO_INFO, "존재하지 않는 Region ID 입니다.")
     );
 
     if (Objects.isNull(withOpinions)) {
@@ -106,36 +100,6 @@ public class TravelOnService {
       result = travelOnRepository.findHasOpinionByRegion(region, lastItemId, size, sortBy);
     } else {
       result = travelOnRepository.findNoOpinionByRegion(region, lastItemId, size, sortBy);
-    }
-
-    return result;
-  }
-
-  private List<TravelOn> findWithOnlyState(AllTravelOnGetRequest request) throws BadArgumentException {
-    List<TravelOn> result;
-    String state;
-    Boolean withOpinions;
-    TravelOnSortType sortBy;
-    Long lastItemId;
-    int size;
-
-    //초기화
-    state = request.getState();
-    withOpinions = request.getWithOpinions();
-    sortBy = request.getSortBy();
-    lastItemId = request.getPageRequest().getLastItemId();
-    size = request.getPageRequest().getSize();
-
-    if (regionRepository.findByState(state).size() == 0) {
-      throw new BadArgumentException(NotFoundCode.NO_INFO, "존재하지 않는 State 입니다.");
-    }
-
-    if (Objects.isNull(withOpinions)) {
-      result = travelOnRepository.findAllByState(state, lastItemId, size, sortBy);
-    } else if (withOpinions) {
-      result = travelOnRepository.findHasOpinionByState(state, lastItemId, size, sortBy);
-    } else {
-      result = travelOnRepository.findNoOpinionByState(state, lastItemId, size, sortBy);
     }
 
     return result;

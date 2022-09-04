@@ -15,6 +15,16 @@ public class RegionRepository {
   private EntityManager em;
 
   /**
+   * id 로 Region 엔티티를 조회하는 메서드
+   * @param id
+   * @return
+   */
+  public Optional<Region> findById(long id) {
+    Region region = em.find(Region.class, id);
+    return Optional.ofNullable(region);
+  }
+
+  /**
    * State 와 City 로 Region 엔티티를 조회하는 메서드
    * @param state
    * @param city
