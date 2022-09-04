@@ -37,8 +37,11 @@ public class PlanController implements PlansApi {
 	}
 
 	/**
-	 * @param request
+	 * <pre>
+	 * 플랜을 등록합니다.
+	 * @param request 플랜 정보
 	 * @return
+	 * </pre>
 	 */
 	@Override
 	public ResponseEntity<Void> createPlan(PlanRequest request) {
@@ -46,9 +49,12 @@ public class PlanController implements PlansApi {
 	}
 
 	/**
-	 * @param planId
-	 * @param request
+	 * <pre>
+	 * 플랜을 수정합니다.
+	 * @param planId 플랜 ID
+	 * @param request 플랜 정보
 	 * @return
+	 * </pre>
 	 */
 	@Override
 	public ResponseEntity<Void> updatePlan(long planId, PlanRequest request) {
@@ -56,8 +62,11 @@ public class PlanController implements PlansApi {
 	}
 
 	/**
-	 * @param planId
+	 * <pre>
+	 * 플랜을 삭제합니다.
+	 * @param planId 플랜 ID
 	 * @return
+	 * </pre>
 	 */
 	@Override
 	public ResponseEntity<Void> deletePlan(long planId) {
@@ -65,8 +74,11 @@ public class PlanController implements PlansApi {
 	}
 
 	/**
-	 * @param planId
-	 * @return
+	 * <pre>
+	 * 플랜의 장소 목록을 반환합니다.
+	 * @param planId 플랜 ID
+	 * @return 장소 목록
+	 * </pre>
 	 */
 	@Override
 	public List<PlanPlacesResponse> getPlacesInPlan(long planId) {
@@ -74,9 +86,12 @@ public class PlanController implements PlansApi {
 	}
 
 	/**
-	 * @param planId
-	 * @param request
+	 * <pre>
+	 * 플랜의 장소 목록을 수정합니다.
+	 * @param planId 플랜 ID
+	 * @param request 장소 목록
 	 * @return
+	 * </pre>
 	 */
 	@Override
 	public ResponseEntity<Void> updatePlaceInPlan(long planId, PlanPlacesRequest request) {
