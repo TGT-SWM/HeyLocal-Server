@@ -15,6 +15,7 @@ import org.hibernate.validator.constraints.Length;
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -33,7 +34,9 @@ public class TravelOnDto {
 		@NotEmpty
 		@Length(max = 255)
 		private String title;
-		private long regionId;
+		@NotNull
+		@Positive
+		private Long regionId;
 		@NotNull
 		private LocalDate travelStartDate;
 		@NotNull
