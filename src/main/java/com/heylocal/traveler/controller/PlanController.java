@@ -24,7 +24,7 @@ public class PlanController implements PlansApi {
 	 * <pre>
 	 * 마이 플랜 목록을 조회합니다.
 	 * @param loginUser 로그인 되어 있는 사용자의 정보
-	 * @return 작성한 스케줄 정보
+	 * @return 작성한 플랜 정보
 	 * </pre>
 	 */
 	@Override
