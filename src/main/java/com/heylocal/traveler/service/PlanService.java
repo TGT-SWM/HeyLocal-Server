@@ -1,8 +1,13 @@
 package com.heylocal.traveler.service;
 
+import com.heylocal.traveler.domain.plan.DaySchedule;
 import com.heylocal.traveler.domain.plan.Plan;
+import com.heylocal.traveler.dto.PlanDto;
 import com.heylocal.traveler.dto.PlanDto.PlanListResponse;
+import com.heylocal.traveler.dto.PlanDto.PlanPlacesResponse;
 import com.heylocal.traveler.dto.PlanDto.PlanResponse;
+import com.heylocal.traveler.exception.code.NotFoundCode;
+import com.heylocal.traveler.exception.service.BadArgumentException;
 import com.heylocal.traveler.repository.PlanRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -11,6 +16,7 @@ import java.time.Clock;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -61,5 +67,28 @@ public class PlanService {
 				.ongoing(ongoing)
 				.upcoming(upcoming)
 				.build();
+	}
+
+	/**
+	 * <pre>
+	 * 해당 플랜에 포함된 장소 리스트를 일자별로 나누어 반환
+	 * @param planId 플랜 ID
+	 * @return
+	 * </pre>
+	 */
+	public List<PlanPlacesResponse> getPlacesInPlan(long planId) throws BadArgumentException {
+		// Plan 조회
+		// Plan이 존재하지 않는 경우에는 예외 발생
+		Optional<Plan> optPlan = planRepository.findById(planId);
+		if (optPlan.isEmpty())
+			throw new BadArgumentException(NotFoundCode.NO_INFO, "존재하지 않는 플랜입니다.");
+		Plan plan = optPlan.get();
+
+		// DTO 변환
+		// List<DaySchedule> -> List<PlanPlacesReponse>
+		List<DaySchedule> daySchedules = plan.getDayScheduleList();
+		return daySchedules.stream()
+				.map(PlanPlacesResponse::new)
+				.collect(Collectors.toList());
 	}
 }

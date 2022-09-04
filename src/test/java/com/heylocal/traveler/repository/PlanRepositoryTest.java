@@ -16,6 +16,7 @@ import org.springframework.context.annotation.Import;
 import javax.persistence.EntityManager;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 
@@ -31,20 +32,8 @@ class PlanRepositoryTest {
 	@Test
 	@DisplayName("플랜 저장")
 	void saveTest() {
-		// GIVEN - 여행 On의 지역
-		Region region = createRegion();
-		em.persist(region);
-
-		// GIVEN - 여행 On 작성자
-		User user = createUser();
-		em.persist(user);
-
-		// GIVEN - 여행 On
-		TravelOn travelOn = createTravelOn(region, user);
-		em.persist(travelOn);
-
 		// GIVEN - 플랜
-		Plan plan = createPlan(user, travelOn);
+		Plan plan = createPlan();
 
 		// WHEN
 		Plan savedPlan = planRepository.save(plan);
@@ -94,6 +83,30 @@ class PlanRepositoryTest {
 		);
 	}
 
+	@Test
+	@DisplayName("ID로 플랜 조회")
+	void findByIdTest() {
+		// GIVEN
+		Plan plan = createPlan();
+		em.persist(plan);
+		long planId = plan.getId();
+		long notFoundPlanId = planId + 1;
+
+		// WHEN
+		Optional<Plan> optPlan = planRepository.findById(planId);
+		Optional<Plan> notFoundOptPlan = planRepository.findById(notFoundPlanId);
+
+		// THEN
+		assertAll(
+				// 성공 케이스 - 1 - 플랜 조회 결과가 존재하는지
+				() -> Assertions.assertThat(optPlan).isPresent(),
+				// 성공 케이스 - 2 - 플랜 조회 결과가 기대와 일치하는지
+				() -> Assertions.assertThat(optPlan.get()).isEqualTo(plan),
+				// 실패 케이스 - 1 - 존재하지 않는 플랜 조회
+				() -> Assertions.assertThat(notFoundOptPlan).isEmpty()
+		);
+	}
+
 	/**
 	 * <pre>
 	 * 새 Plan 객체를 반환합니다.
@@ -106,6 +119,29 @@ class PlanRepositoryTest {
 				.travelOn(travelOn)
 				.user(user)
 				.build();
+	}
+
+	/**
+	 * <pre>
+	 * 임의의 새 Plan 객체를 반환합니다.
+	 * @return Plan 객체
+	 * </pre>
+	 */
+	private Plan createPlan() {
+		// Region 생성
+		Region region = createRegion();
+		em.persist(region);
+
+		// User 생성
+		User user = createUser();
+		em.persist(user);
+
+		// TravelOn 생성
+		TravelOn travelOn = createTravelOn(region, user);
+		em.persist(travelOn);
+
+		// Plan 반환
+		return createPlan(user, travelOn);
 	}
 
 	/**

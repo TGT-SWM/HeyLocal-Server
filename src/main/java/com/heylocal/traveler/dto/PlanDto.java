@@ -1,13 +1,17 @@
 package com.heylocal.traveler.dto;
 
 import com.heylocal.traveler.domain.Region;
+import com.heylocal.traveler.domain.plan.DaySchedule;
 import com.heylocal.traveler.domain.plan.Plan;
+import com.heylocal.traveler.domain.plan.list.PlaceItem;
 import com.heylocal.traveler.domain.travelon.TravelOn;
+import com.heylocal.traveler.dto.PlaceDto.PlaceItemResponse;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class PlanDto {
 	@Getter
@@ -79,6 +83,13 @@ public class PlanDto {
 	@Builder
 	@Schema(description = "장소 정보 응답 DTO")
 	public static class PlanPlacesResponse {
-		long id;
+		List<PlaceItemResponse> places;
+
+		public PlanPlacesResponse(DaySchedule daySchedule) {
+			List<PlaceItem> placeItems = daySchedule.getPlaceItemList();
+			this.places = placeItems.stream()
+					.map(PlaceItemResponse::new)
+					.collect(Collectors.toList());
+		}
 	}
 }

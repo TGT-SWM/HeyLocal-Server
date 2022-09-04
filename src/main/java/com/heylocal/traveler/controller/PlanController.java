@@ -6,6 +6,8 @@ import com.heylocal.traveler.dto.PlanDto.PlanListResponse;
 import com.heylocal.traveler.dto.PlanDto.PlanPlacesRequest;
 import com.heylocal.traveler.dto.PlanDto.PlanPlacesResponse;
 import com.heylocal.traveler.dto.PlanDto.PlanRequest;
+import com.heylocal.traveler.exception.controller.NotFoundException;
+import com.heylocal.traveler.exception.service.BadArgumentException;
 import com.heylocal.traveler.service.PlanService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +26,7 @@ public class PlanController implements PlansApi {
 	 * <pre>
 	 * 마이 플랜 목록을 조회합니다.
 	 * @param loginUser 로그인 되어 있는 사용자의 정보
-	 * @return 작성한 스케줄 정보
+	 * @return 작성한 플랜 정보
 	 * </pre>
 	 */
 	@Override
@@ -37,8 +39,11 @@ public class PlanController implements PlansApi {
 	}
 
 	/**
-	 * @param request
+	 * <pre>
+	 * 플랜을 등록합니다.
+	 * @param request 플랜 정보
 	 * @return
+	 * </pre>
 	 */
 	@Override
 	public ResponseEntity<Void> createPlan(PlanRequest request) {
@@ -46,9 +51,12 @@ public class PlanController implements PlansApi {
 	}
 
 	/**
-	 * @param planId
-	 * @param request
+	 * <pre>
+	 * 플랜을 수정합니다.
+	 * @param planId 플랜 ID
+	 * @param request 플랜 정보
 	 * @return
+	 * </pre>
 	 */
 	@Override
 	public ResponseEntity<Void> updatePlan(long planId, PlanRequest request) {
@@ -56,8 +64,11 @@ public class PlanController implements PlansApi {
 	}
 
 	/**
-	 * @param planId
+	 * <pre>
+	 * 플랜을 삭제합니다.
+	 * @param planId 플랜 ID
 	 * @return
+	 * </pre>
 	 */
 	@Override
 	public ResponseEntity<Void> deletePlan(long planId) {
@@ -65,23 +76,31 @@ public class PlanController implements PlansApi {
 	}
 
 	/**
-	 * @param planId
-	 * @param day
-	 * @return
+	 * <pre>
+	 * 플랜의 장소 목록을 반환합니다.
+	 * @param planId 플랜 ID
+	 * @return 장소 목록
+	 * </pre>
 	 */
 	@Override
-	public List<PlanPlacesResponse> getPlacesInPlan(long planId, int day) {
-		return null;
+	public List<PlanPlacesResponse> getPlacesInPlan(long planId) throws NotFoundException {
+		try {
+			return planService.getPlacesInPlan(planId);
+		} catch (BadArgumentException e) {
+			throw new NotFoundException(e.getCode(), e.getDescription());
+		}
 	}
 
 	/**
-	 * @param planId
-	 * @param day
-	 * @param request
+	 * <pre>
+	 * 플랜의 장소 목록을 수정합니다.
+	 * @param planId 플랜 ID
+	 * @param request 장소 목록
 	 * @return
+	 * </pre>
 	 */
 	@Override
-	public ResponseEntity<Void> updatePlaceInPlan(long planId, int day, PlanPlacesRequest request) {
+	public ResponseEntity<Void> updatePlaceInPlan(long planId, PlanPlacesRequest request) {
 		return null;
 	}
 }
