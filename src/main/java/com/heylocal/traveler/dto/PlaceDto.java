@@ -1,5 +1,7 @@
 package com.heylocal.traveler.dto;
 
+import com.heylocal.traveler.domain.place.Place;
+import com.heylocal.traveler.domain.plan.list.PlaceItem;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
@@ -25,5 +27,13 @@ public class PlaceDto {
 		String name;
 		String address;
 		String roadAddress;
+
+		public PlaceItemResponse(PlaceItem placeItem) {
+			Place place = placeItem.getPlace();
+			this.id = place.getId();
+			this.name = place.getName();
+			this.address = place.getAddress();
+			this.roadAddress = place.getRoadAddress();
+		}
 	}
 }

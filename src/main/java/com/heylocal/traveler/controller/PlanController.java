@@ -6,6 +6,8 @@ import com.heylocal.traveler.dto.PlanDto.PlanListResponse;
 import com.heylocal.traveler.dto.PlanDto.PlanPlacesRequest;
 import com.heylocal.traveler.dto.PlanDto.PlanPlacesResponse;
 import com.heylocal.traveler.dto.PlanDto.PlanRequest;
+import com.heylocal.traveler.exception.controller.NotFoundException;
+import com.heylocal.traveler.exception.service.BadArgumentException;
 import com.heylocal.traveler.service.PlanService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -81,8 +83,12 @@ public class PlanController implements PlansApi {
 	 * </pre>
 	 */
 	@Override
-	public List<PlanPlacesResponse> getPlacesInPlan(long planId) {
-		return planService.getPlacesInPlan(planId);
+	public List<PlanPlacesResponse> getPlacesInPlan(long planId) throws NotFoundException {
+		try {
+			return planService.getPlacesInPlan(planId);
+		} catch (BadArgumentException e) {
+			throw new NotFoundException(e.getCode(), e.getDescription());
+		}
 	}
 
 	/**

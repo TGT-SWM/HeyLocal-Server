@@ -1,13 +1,19 @@
 package com.heylocal.traveler.controller.api;
 
+import com.heylocal.traveler.dto.ErrorMessageResponse;
 import com.heylocal.traveler.dto.LoginUser;
 import com.heylocal.traveler.dto.PlanDto.PlanListResponse;
 import com.heylocal.traveler.dto.PlanDto.PlanPlacesRequest;
 import com.heylocal.traveler.dto.PlanDto.PlanPlacesResponse;
 import com.heylocal.traveler.dto.PlanDto.PlanRequest;
+import com.heylocal.traveler.exception.controller.NotFoundException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
@@ -46,10 +52,14 @@ public interface PlansApi {
 	 */
 
 	@Operation(summary = "플랜의 장소 목록 조회", description = "플랜의 장소 목록 조회", tags = {"Plans"})
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "플랜의 장소 목록 조회 성공"),
+			@ApiResponse(responseCode = "404", description = "- `NO_INFO`: 존재하지 않는 정보일 때", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessageResponse.class)))
+	})
 	@GetMapping("/{planId}/places")
 	List<PlanPlacesResponse> getPlacesInPlan(
 			@Parameter(in = ParameterIn.PATH, description = "플랜 ID", required = true) long planId
-	);
+	) throws NotFoundException;
 
 	@Operation(summary = "플랜의 장소 목록 수정", description = "플랜의 장소 목록 수정", tags = {"Plans"})
 	@PutMapping("/{planId}/places")
