@@ -45,18 +45,16 @@ public interface PlansApi {
 	 * 아래는 스케줄 내 장소들에 대한 컨트롤러입니다.
 	 */
 
-	@Operation(summary = "스케줄의 장소 목록 조회", description = "스케줄의 특정 일자에 해당하는 장소 목록 조회", tags = {"Plans"})
-	@GetMapping("/{planId}/{day}/places")
+	@Operation(summary = "스케줄의 장소 목록 조회", description = "스케줄의 장소 목록 조회", tags = {"Plans"})
+	@GetMapping("/{planId}/places")
 	List<PlanPlacesResponse> getPlacesInPlan(
-			@Parameter(in = ParameterIn.PATH, description = "스케줄 ID", required = true) long planId,
-			@Parameter(in = ParameterIn.PATH, description = "스케줄 일자", required = true) int day
+			@Parameter(in = ParameterIn.PATH, description = "스케줄 ID", required = true) long planId
 	);
 
-	@Operation(summary = "스케줄의 장소 목록 수정", description = "스케줄의 특정 일자에 해당하는 장소 목록 수정", tags = {"Plans"})
-	@PutMapping("/{planId}/{day}/places")
+	@Operation(summary = "스케줄의 장소 목록 수정", description = "스케줄의 장소 목록 수정", tags = {"Plans"})
+	@PutMapping("/{planId}/places")
 	ResponseEntity<Void> updatePlaceInPlan(
 			@Parameter(in = ParameterIn.PATH, description = "스케줄 ID", required = true) long planId,
-			@Parameter(in = ParameterIn.PATH, description = "스케줄 일자", required = true) int day,
 			@Parameter(in = ParameterIn.DEFAULT, description = "", required = true) PlanPlacesRequest request
 	);
 }

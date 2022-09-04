@@ -66,22 +66,20 @@ public class PlanController implements PlansApi {
 
 	/**
 	 * @param planId
-	 * @param day
 	 * @return
 	 */
 	@Override
-	public List<PlanPlacesResponse> getPlacesInPlan(long planId, int day) {
+	public List<PlanPlacesResponse> getPlacesInPlan(long planId) {
 		return null;
 	}
 
 	/**
 	 * @param planId
-	 * @param day
 	 * @param request
 	 * @return
 	 */
 	@Override
-	public ResponseEntity<Void> updatePlaceInPlan(long planId, int day, PlanPlacesRequest request) {
+	public ResponseEntity<Void> updatePlaceInPlan(long planId, PlanPlacesRequest request) {
 		return null;
 	}
 }
