@@ -3,7 +3,6 @@ package com.heylocal.traveler.controller;
 import com.heylocal.traveler.controller.api.TravelOnsApi;
 import com.heylocal.traveler.dto.LoginUser;
 import com.heylocal.traveler.dto.OpinionDto;
-import com.heylocal.traveler.dto.PageDto;
 import com.heylocal.traveler.exception.code.BadRequestCode;
 import com.heylocal.traveler.exception.controller.BadRequestException;
 import com.heylocal.traveler.exception.controller.NotFoundException;
@@ -18,6 +17,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Objects;
 
 import static com.heylocal.traveler.dto.TravelOnDto.*;
 
@@ -30,11 +30,38 @@ public class TravelOnsController implements TravelOnsApi {
 
   private final TravelOnService travelOnService;
 
+  /**
+   * 여행On 목록 조회 핸들러
+   * @param request 조회 조건
+   * @return
+   * @throws BadRequestException Input 데이터 형식이 올바르지 않은 경우
+   * @throws NotFoundException Request 한 Region 이 존재하지 않는 경우
+   */
   @Override
-  public List<TravelOnSimpleResponse> getTravelOns(long regionId, Boolean withOpinions, TravelOnSortType sortBy, PageDto.PageRequest pageRequest) {
-    return null;
+  public List<TravelOnSimpleResponse> getTravelOns(AllTravelOnGetRequest request) throws BadRequestException, NotFoundException {
+    List<TravelOnSimpleResponse> response;
+
+    if (Objects.isNull(request.getState()) && !Objects.isNull(request.getCity())) {
+      throw new BadRequestException(BadRequestCode.BAD_INPUT_FORM, "state 가 null 이면, city 도 null 이어야 합니다.");
+    }
+
+    try {
+      response = travelOnService.inquirySimpleTravelOns(request);
+    } catch (BadArgumentException e) {
+      throw new NotFoundException(e.getCode(), e.getDescription());
+    }
+
+    return response;
   }
 
+  /**
+   * 여행On 등록 핸들러
+   * @param request 등록할 여행On 정보
+   * @param bindingResult
+   * @param loginUser
+   * @throws BadRequestException Input 데이터 형식이 올바르지 않은 경우
+   * @throws NotFoundException Request 한 Region 이 존재하지 않는 경우
+   */
   @Override
   public void createTravelOn(TravelOnRequest request,
                              BindingResult bindingResult,

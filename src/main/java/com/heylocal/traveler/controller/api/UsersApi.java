@@ -1,6 +1,6 @@
 package com.heylocal.traveler.controller.api;
 
-import com.heylocal.traveler.dto.*;
+import com.heylocal.traveler.dto.ErrorMessageResponse;
 import com.heylocal.traveler.dto.OpinionDto.OpinionResponse;
 import com.heylocal.traveler.dto.PageDto.PageRequest;
 import com.heylocal.traveler.dto.TravelOnDto.TravelOnSimpleResponse;

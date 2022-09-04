@@ -35,6 +35,12 @@ public class SignupController implements SignupApi {
   @Value("${heylocal.signup.pattern.nickname}")
   private String nicknamePattern;
 
+  /**
+   * 계정 아이디 중복 확인 핸들러
+   * @param accountId 확인할 아이디 값
+   * @return
+   * @throws BadRequestException 아이디 형식이 잘못된 경우
+   */
   @Override
   public UserInfoCheckResponse checkSignupId(String accountId) throws BadRequestException {
     UserInfoCheckResponse response;
@@ -45,6 +51,12 @@ public class SignupController implements SignupApi {
     return response;
   }
 
+  /**
+   * 회원가입 핸들러
+   * @param request 회원가입 정보
+   * @param bindingResult
+   * @throws BadRequestException Input 데이터 형식이 올바르지 않은 경우
+   */
   @Override
   public void signup(SignupRequest request, BindingResult bindingResult) throws BadRequestException {
     if (bindingResult.hasFieldErrors()) {

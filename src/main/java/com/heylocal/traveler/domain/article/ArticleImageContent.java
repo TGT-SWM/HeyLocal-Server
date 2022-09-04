@@ -1,7 +1,6 @@
 package com.heylocal.traveler.domain.article;
 
 import com.heylocal.traveler.domain.BaseTimeEntity;
-import com.heylocal.traveler.domain.travelon.opinion.Opinion;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -1,8 +1,6 @@
 package com.heylocal.traveler.repository;
 
 import com.heylocal.traveler.domain.user.User;
-import com.heylocal.traveler.domain.user.UserRole;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;

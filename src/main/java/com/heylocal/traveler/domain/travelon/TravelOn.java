@@ -14,8 +14,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import lombok.extern.slf4j.Slf4j;
 import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -134,6 +134,13 @@ public class TravelOn extends BaseTimeEntity {
     this.travelTypeGroup = travelTypeGroup;
     if (travelTypeGroup.getTravelOn() != this) {
       travelTypeGroup.registerAt(this);
+    }
+  }
+
+  public void addOpinion(Opinion opinion) {
+    this.opinionList.add(opinion);
+    if (opinion.getTravelOn() != this) {
+      opinion.registerTravelOn(this);
     }
   }
 }

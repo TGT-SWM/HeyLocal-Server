@@ -4,11 +4,10 @@ import com.heylocal.traveler.dto.ErrorMessageResponse;
 import com.heylocal.traveler.dto.LoginUser;
 import com.heylocal.traveler.dto.OpinionDto.OpinionRequest;
 import com.heylocal.traveler.dto.OpinionDto.OpinionResponse;
-import com.heylocal.traveler.dto.PageDto.PageRequest;
+import com.heylocal.traveler.dto.TravelOnDto;
 import com.heylocal.traveler.dto.TravelOnDto.TravelOnRequest;
 import com.heylocal.traveler.dto.TravelOnDto.TravelOnResponse;
 import com.heylocal.traveler.dto.TravelOnDto.TravelOnSimpleResponse;
-import com.heylocal.traveler.dto.TravelOnDto.TravelOnSortType;
 import com.heylocal.traveler.exception.controller.BadRequestException;
 import com.heylocal.traveler.exception.controller.NotFoundException;
 import io.swagger.v3.oas.annotations.Operation;
@@ -30,13 +29,21 @@ import java.util.List;
 @RequestMapping("/travel-ons")
 public interface TravelOnsApi {
     @Operation(summary = "전체 여행 On 조회", description = "전체 여행 On의 목록을 조회합니다.", tags = {"TravelOns"})
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "여행 On 목록 조회 성공 시"),
+        @ApiResponse(responseCode = "400", description = "- `BAD_INPUT_FORM`: 입력 값의 형식이 올바르지 않을 때", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessageResponse.class))),
+        @ApiResponse(responseCode = "404", description = "- `NO_INFO`: 존재하지 않는 정보일 때", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessageResponse.class)))
+    })
     @GetMapping()
     List<TravelOnSimpleResponse> getTravelOns(
-            @Parameter(in = ParameterIn.QUERY, description = "지역 ID", required = false) long regionId,
-            @Parameter(in = ParameterIn.QUERY, description = "답변 있는 것(true), 없는 것(false), 전체(null)", required = false) Boolean withOpinions,
-            @Parameter(in = ParameterIn.QUERY, description = "정렬 기준(DATE, VIEWS, OPINIONS)", required = true) TravelOnSortType sortBy,
-            @Parameter(in = ParameterIn.QUERY, description = "페이징", required = true) PageRequest pageRequest
-    );
+            /*
+             * 지역 ID 가 250여 개라서 클라이언트에서 일일이 처리하기 어려울 것 같음.
+             * 그래서 일단 지역명으로 처리함.
+             *
+             * @Parameter(in = ParameterIn.QUERY, description = "지역 ID", required = false) long regionId,
+             */
+            @Parameter(in = ParameterIn.QUERY, description = "여행 On 목록 조회 요청") TravelOnDto.AllTravelOnGetRequest request
+        ) throws BadRequestException, NotFoundException;
 
     @Operation(summary = "여행 On 등록", description = "여행 On을 등록합니다.", tags = {"TravelOns"})
     @ResponseStatus(HttpStatus.CREATED)

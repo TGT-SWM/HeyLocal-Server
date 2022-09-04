@@ -2,18 +2,17 @@ package com.heylocal.traveler.domain.user;
 
 import com.heylocal.traveler.domain.BaseTimeEntity;
 import com.heylocal.traveler.domain.notification.Notification;
-import com.heylocal.traveler.domain.travelon.opinion.Opinion;
+import com.heylocal.traveler.domain.plan.Plan;
 import com.heylocal.traveler.domain.profile.UserProfile;
 import com.heylocal.traveler.domain.token.AccessToken;
 import com.heylocal.traveler.domain.token.RefreshToken;
-import com.heylocal.traveler.domain.plan.Plan;
 import com.heylocal.traveler.domain.travelon.TravelOn;
+import com.heylocal.traveler.domain.travelon.opinion.Opinion;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
-import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.util.ArrayList;

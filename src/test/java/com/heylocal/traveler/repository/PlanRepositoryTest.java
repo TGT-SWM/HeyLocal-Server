@@ -2,7 +2,6 @@ package com.heylocal.traveler.repository;
 
 import com.heylocal.traveler.domain.Region;
 import com.heylocal.traveler.domain.plan.Plan;
-import com.heylocal.traveler.domain.plan.PlanStatus;
 import com.heylocal.traveler.domain.travelon.TransportationType;
 import com.heylocal.traveler.domain.travelon.TravelOn;
 import com.heylocal.traveler.domain.user.User;
@@ -15,11 +14,10 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 
 import javax.persistence.EntityManager;
-
 import java.time.LocalDate;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 @DataJpaTest
 @Import({ PlanRepository.class })

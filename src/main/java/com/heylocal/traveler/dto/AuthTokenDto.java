@@ -25,9 +25,7 @@ public class AuthTokenDto {
   @AllArgsConstructor
   @Builder
   public static class TokenPairResponse {
-    @NotEmpty
     private String accessToken;
-    @NotEmpty
     private String refreshToken;
   }
 }

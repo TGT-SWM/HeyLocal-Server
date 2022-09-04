@@ -118,4 +118,10 @@ public class Opinion extends BaseTimeEntity {
   @OneToMany(mappedBy = "opinion", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY) //Opinion 이 삭제되어도, S3에 저장된 경로를 알아야하므로 Cascade를 Persist만 설정
   private List<OpinionImageContent> opinionImageContentList = new ArrayList<>();
 
+  public void registerTravelOn(TravelOn travelOn) {
+    this.travelOn = travelOn;
+    if (!travelOn.getOpinionList().contains(this)) {
+      travelOn.addOpinion(this);
+    }
+  }
 }

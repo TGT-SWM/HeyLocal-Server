@@ -2,7 +2,10 @@ package com.heylocal.traveler.controller;
 
 import com.heylocal.traveler.controller.api.PlansApi;
 import com.heylocal.traveler.dto.LoginUser;
-import com.heylocal.traveler.dto.PlanDto.*;
+import com.heylocal.traveler.dto.PlanDto.PlanListResponse;
+import com.heylocal.traveler.dto.PlanDto.PlanPlacesRequest;
+import com.heylocal.traveler.dto.PlanDto.PlanPlacesResponse;
+import com.heylocal.traveler.dto.PlanDto.PlanRequest;
 import com.heylocal.traveler.service.PlanService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
