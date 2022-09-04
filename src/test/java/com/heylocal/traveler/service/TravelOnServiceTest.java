@@ -11,7 +11,9 @@ import com.heylocal.traveler.domain.travelon.list.FoodType;
 import com.heylocal.traveler.domain.travelon.list.MemberType;
 import com.heylocal.traveler.domain.user.User;
 import com.heylocal.traveler.domain.user.UserRole;
-import com.heylocal.traveler.dto.*;
+import com.heylocal.traveler.dto.LoginUser;
+import com.heylocal.traveler.dto.PageDto;
+import com.heylocal.traveler.dto.TravelTypeGroupDto;
 import com.heylocal.traveler.exception.service.BadArgumentException;
 import com.heylocal.traveler.repository.RegionRepository;
 import com.heylocal.traveler.repository.TravelOnRepository;
@@ -23,12 +25,12 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.time.LocalDate;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
 
 import static com.heylocal.traveler.dto.TravelOnDto.*;
-import static com.heylocal.traveler.dto.TravelOnDto.TravelOnRequest;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.AdditionalMatchers.not;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.*;

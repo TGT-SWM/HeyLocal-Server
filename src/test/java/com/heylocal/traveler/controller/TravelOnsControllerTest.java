@@ -25,7 +25,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import static com.heylocal.traveler.dto.PageDto.PageRequest;
-import static com.heylocal.traveler.dto.RegionDto.RegionRequest;
 import static com.heylocal.traveler.dto.TravelOnDto.*;
 import static com.heylocal.traveler.dto.TravelTypeGroupDto.TravelTypeGroupRequest;
 import static org.junit.jupiter.api.Assertions.*;

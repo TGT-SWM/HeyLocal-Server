@@ -17,7 +17,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.Objects;
 
 import static com.heylocal.traveler.dto.TravelOnDto.*;
 
