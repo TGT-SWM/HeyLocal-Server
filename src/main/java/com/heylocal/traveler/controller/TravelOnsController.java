@@ -72,6 +72,12 @@ public class TravelOnsController implements TravelOnsApi {
     }
   }
 
+  /**
+   * 여행 On 상세 조회 핸들러
+   * @param travelOnId 조회할 여행 On 의 ID
+   * @return
+   * @throws NotFoundException 잘못된 ID 인 경우
+   */
   @Override
   public TravelOnResponse getTravelOn(long travelOnId) throws NotFoundException {
     TravelOnResponse response;
