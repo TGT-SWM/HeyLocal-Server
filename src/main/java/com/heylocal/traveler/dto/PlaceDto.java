@@ -27,6 +27,8 @@ public class PlaceDto {
 		String name;
 		String address;
 		String roadAddress;
+		double lat;
+		double lng;
 
 		public PlaceItemResponse(PlaceItem placeItem) {
 			Place place = placeItem.getPlace();
@@ -34,6 +36,8 @@ public class PlaceDto {
 			this.name = place.getName();
 			this.address = place.getAddress();
 			this.roadAddress = place.getRoadAddress();
+			this.lat = place.getLat();
+			this.lng = place.getLng();
 		}
 	}
 }

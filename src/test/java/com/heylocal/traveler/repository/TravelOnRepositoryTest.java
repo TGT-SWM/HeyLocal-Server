@@ -731,6 +731,8 @@ class TravelOnRepositoryTest {
         .name("placeName")
         .roadAddress("roadAddress")
         .address("address")
+        .lat(0.0)
+        .lng(0.0)
         .region(region)
         .link("link")
         .build();

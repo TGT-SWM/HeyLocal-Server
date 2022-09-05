@@ -41,6 +41,12 @@ public class Place extends BaseTimeEntity {
   @Column(nullable = false)
   private String address; //구주소
 
+  @Column(nullable = false)
+  private Double lat;
+
+  @Column(nullable = false)
+  private Double lng;
+
   @ManyToOne(optional = false)
   private Region region;
 
