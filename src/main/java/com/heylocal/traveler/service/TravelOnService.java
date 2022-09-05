@@ -4,6 +4,7 @@ import com.heylocal.traveler.domain.Region;
 import com.heylocal.traveler.domain.travelon.TravelOn;
 import com.heylocal.traveler.domain.user.User;
 import com.heylocal.traveler.dto.LoginUser;
+import com.heylocal.traveler.dto.TravelOnDto;
 import com.heylocal.traveler.exception.code.NotFoundCode;
 import com.heylocal.traveler.exception.service.BadArgumentException;
 import com.heylocal.traveler.repository.RegionRepository;
@@ -71,6 +72,24 @@ public class TravelOnService {
     response = travelOnList.stream()
         .map(TravelOnSimpleResponse::new)
         .collect(Collectors.toList());
+
+    return response;
+  }
+
+  /**
+   * 여행 On 상세 조회
+   * @param travelOnId 조회할 여행 On 의 ID
+   * @return
+   */
+  @Transactional
+  public TravelOnResponse inquiryTravelOn(long travelOnId) throws BadArgumentException {
+    TravelOnResponse response;
+    TravelOn travelOn;
+
+    travelOn = travelOnRepository.findById(travelOnId).orElseThrow(
+        () -> new BadArgumentException(NotFoundCode.NO_INFO, "존재하지 않는 여행On ID 입니다.")
+    );
+    response = new TravelOnResponse(travelOn);
 
     return response;
   }

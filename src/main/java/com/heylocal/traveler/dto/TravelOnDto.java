@@ -20,8 +20,17 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
+import static com.heylocal.traveler.dto.HopeAccommodationDto.*;
+import static com.heylocal.traveler.dto.HopeDrinkDto.*;
+import static com.heylocal.traveler.dto.HopeFoodDto.*;
 import static com.heylocal.traveler.dto.PageDto.PageRequest;
+import static com.heylocal.traveler.dto.RegionDto.*;
+import static com.heylocal.traveler.dto.TravelMemberDto.*;
+import static com.heylocal.traveler.dto.TravelTypeGroupDto.*;
+import static com.heylocal.traveler.dto.UserDto.*;
 
 public class TravelOnDto {
 	@Getter
@@ -167,7 +176,73 @@ public class TravelOnDto {
 	@Builder
 	@Schema(description = "여행 On 응답 DTO")
 	public static class TravelOnResponse {
-		long id;
+		private long id;
+		private String title;
+		private int views;
+		private RegionResponse region;
+		private UserResponse author;
+		private LocalDate travelStartDate;
+		private LocalDate travelEndDate;
+		private TransportationType transportationType;
+		private Set<TravelMemberResponse> travelMemberSet;
+		private Integer accommodationMaxCost;
+		private Set<HopeAccommodationResponse> hopeAccommodationSet;
+		private Integer foodMaxCost;
+		private Set<HopeFoodResponse> hopeFoodSet;
+		private Integer drinkMaxCost;
+		private Set<HopeDrinkResponse> hopeDrinkSet;
+		private TravelTypeGroupResponse travelTypeGroup;
+		private LocalDateTime createdDateTime;
+		private LocalDateTime modifiedDate;
+
+		public TravelOnResponse(TravelOn entity) {
+			this.id = entity.getId();
+			this.title = entity.getTitle();
+			this.views = entity.getViews();
+			this.region = new RegionResponse(entity.getRegion());
+			this.author = new UserResponse(entity.getAuthor());
+			this.travelStartDate = entity.getTravelStartDate();
+			this.travelEndDate = entity.getTravelEndDate();
+			this.transportationType = entity.getTransportationType();
+			setTravelMemberSet(entity.getTravelMemberSet());
+			this.accommodationMaxCost = entity.getAccommodationMaxCost();
+			setHopeAccommodationSet(entity.getHopeAccommodationSet());
+			this.foodMaxCost = entity.getFoodMaxCost();
+			setHopeFoodSet(entity.getHopeFoodSet());
+			this.drinkMaxCost = entity.getDrinkMaxCost();
+			setHopeDrinkSet(entity.getHopeDrinkSet());
+			this.travelTypeGroup = new TravelTypeGroupResponse(entity.getTravelTypeGroup());
+			this.createdDateTime = entity.getCreatedDate();
+			this.modifiedDate = entity.getModifiedDate();
+		}
+
+		@JsonIgnore
+		public void setTravelMemberSet(Set<TravelMember> travelMemberSet) {
+			this.travelMemberSet = travelMemberSet.stream()
+					.map(TravelMemberResponse::new)
+					.collect(Collectors.toSet());
+		}
+
+		@JsonIgnore
+		public void setHopeAccommodationSet(Set<HopeAccommodation> hopeAccommodationSet) {
+			this.hopeAccommodationSet = hopeAccommodationSet.stream()
+					.map(HopeAccommodationResponse::new)
+					.collect(Collectors.toSet());
+		}
+
+		@JsonIgnore
+		public void setHopeFoodSet(Set<HopeFood> hopeFoodSet) {
+			this.hopeFoodSet = hopeFoodSet.stream()
+					.map(HopeFoodResponse::new)
+					.collect(Collectors.toSet());
+		}
+
+		@JsonIgnore
+		public void setHopeDrinkSet(Set<HopeDrink> hopeDrinkSet) {
+			this.hopeDrinkSet = hopeDrinkSet.stream()
+					.map(HopeDrinkResponse::new)
+					.collect(Collectors.toSet());
+		}
 	}
 
 	@Getter
@@ -179,10 +254,10 @@ public class TravelOnDto {
 	public static class TravelOnSimpleResponse {
 		private long id;
 		private String title;
-		private RegionDto.RegionResponse region;
+		private RegionResponse region;
 		private LocalDateTime createdDateTime;
 		private LocalDateTime modifiedDate;
-		private UserDto.UserProfileResponse userProfile;
+		private UserProfileResponse userProfile;
 		private String description;
 		private int views;
 		private int opinionQuantity;
@@ -190,10 +265,10 @@ public class TravelOnDto {
 		public TravelOnSimpleResponse(TravelOn entity) {
 			this.id = entity.getId();
 			this.title = entity.getTitle();
-			this.region = new RegionDto.RegionResponse(entity.getRegion());
+			this.region = new RegionResponse(entity.getRegion());
 			this.createdDateTime = entity.getCreatedDate();
 			this.modifiedDate = entity.getModifiedDate();
-			this.userProfile = new UserDto.UserProfileResponse(entity.getAuthor().getUserProfile(), 0); //Ranking 은 무조건 0으로 표시하도록 함
+			this.userProfile = new UserProfileResponse(entity.getAuthor().getUserProfile(), 0); //Ranking 은 무조건 0으로 표시하도록 함
 			this.description = entity.getDescription();
 			this.views = entity.getViews();
 			this.opinionQuantity = entity.getOpinionList().size();

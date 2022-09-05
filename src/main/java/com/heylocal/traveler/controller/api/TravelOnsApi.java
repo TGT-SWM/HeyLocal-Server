@@ -52,11 +52,15 @@ public interface TravelOnsApi {
             @ApiIgnore LoginUser loginUser
     ) throws BadRequestException, NotFoundException;
 
-    @Operation(summary = "여행 On 상세 조회정", description = "여행 On의 상세 정보를 조회합니다.", tags = {"TravelOns"})
+    @Operation(summary = "여행 On 상세 조회", description = "여행 On의 상세 정보를 조회합니다.", tags = {"TravelOns"})
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "여행 On 상세 조회 성공 시"),
+        @ApiResponse(responseCode = "404", description = "- `NO_INFO`: 존재하지 않는 정보일 때", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessageResponse.class)))
+    })
     @GetMapping(value = "/{travelOnId}")
     TravelOnResponse getTravelOn(
             @Parameter(in = ParameterIn.PATH, description = "여행 On ID", required = true) long travelOnId
-    );
+    ) throws NotFoundException;
 
     @Operation(summary = "여행 On 수정", description = "여행 On을 수정합니다.", tags = {"TravelOns"})
     @PutMapping(value = "/{travelOnId}")
