@@ -1,5 +1,6 @@
 package com.heylocal.traveler.service;
 
+import com.heylocal.traveler.domain.profile.UserProfile;
 import com.heylocal.traveler.domain.user.User;
 import com.heylocal.traveler.domain.user.UserRole;
 import com.heylocal.traveler.repository.UserProfileRepository;
@@ -16,6 +17,7 @@ import java.util.Optional;
 import static com.heylocal.traveler.dto.SignupDto.SignupRequest;
 import static com.heylocal.traveler.dto.SignupDto.UserInfoCheckResponse;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.eq;
 import static org.mockito.BDDMockito.willReturn;
 
@@ -88,10 +90,15 @@ class SignupServiceTest {
         .nickname(nickname)
         .userRole(UserRole.TRAVELER)
         .build();
+    UserProfile profile = UserProfile.builder()
+        .id(1L)
+        .knowHow(0)
+        .build();
 
     //Mock 행동 정의
     willReturn(encodedPassword).given(passwordEncoder).encode(eq(rawPassword));
-    willReturn(user).given(userRepository).saveUser(eq(user));
+    willReturn(user).given(userRepository).saveUser(any());
+    willReturn(profile).given(userProfileRepository).saveUserProfile(any());
 
     //WHEN
 
