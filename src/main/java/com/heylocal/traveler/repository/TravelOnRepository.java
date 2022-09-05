@@ -9,6 +9,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import static com.heylocal.traveler.dto.TravelOnDto.TravelOnSortType;
 
@@ -44,6 +45,15 @@ public class TravelOnRepository {
         .getResultList();
 
     return result;
+  }
+
+  /**
+   * 여행On 을 id 로 찾는 메서드
+   * @param id 찾을 id
+   * @return
+   */
+  public Optional<TravelOn> findById(long id) {
+    return Optional.ofNullable(em.find(TravelOn.class, id));
   }
 
   /**

@@ -56,7 +56,7 @@ public interface TravelOnsApi {
     @GetMapping(value = "/{travelOnId}")
     TravelOnResponse getTravelOn(
             @Parameter(in = ParameterIn.PATH, description = "여행 On ID", required = true) long travelOnId
-    );
+    ) throws NotFoundException;
 
     @Operation(summary = "여행 On 수정", description = "여행 On을 수정합니다.", tags = {"TravelOns"})
     @PutMapping(value = "/{travelOnId}")

@@ -32,4 +32,24 @@ public class TravelTypeGroupDto {
           .build();
     }
   }
+
+  @Getter
+  @Setter
+  @NoArgsConstructor
+  @AllArgsConstructor
+  @Builder
+  @Schema(description = "여행 유형 응답 DTO")
+  public static class TravelTypeGroupResponse {
+    private long id;
+    private PlaceTasteType placeTasteType;
+    private ActivityTasteType activityTasteType;
+    private SnsTasteType snsTasteType;
+
+    public TravelTypeGroupResponse(TravelTypeGroup entity) {
+      this.id = entity.getId();
+      this.placeTasteType = entity.getPlaceTasteType();
+      this.activityTasteType = entity.getActivityTasteType();
+      this.snsTasteType = entity.getSnsTasteType();
+    }
+  }
 }

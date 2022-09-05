@@ -73,8 +73,16 @@ public class TravelOnsController implements TravelOnsApi {
   }
 
   @Override
-  public TravelOnResponse getTravelOn(long travelOnId) {
-    return null;
+  public TravelOnResponse getTravelOn(long travelOnId) throws NotFoundException {
+    TravelOnResponse response;
+
+    try {
+      response = travelOnService.inquiryTravelOn(travelOnId);
+    } catch (BadArgumentException e) {
+      throw new NotFoundException(e.getCode(), e.getDescription());
+    }
+
+    return response;
   }
 
   @Override
