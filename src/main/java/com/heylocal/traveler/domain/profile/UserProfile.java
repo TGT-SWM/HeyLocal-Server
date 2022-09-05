@@ -32,4 +32,11 @@ public class UserProfile extends BaseTimeEntity {
   @Column(nullable = false)
   @ColumnDefault("0")
   private Integer knowHow; //Redis로 이동해야함
+
+  public void associateUser(User user) {
+    this.user = user;
+    if (user.getUserProfile() != this) {
+      user.registerUserProfile(this);
+    }
+  }
 }
