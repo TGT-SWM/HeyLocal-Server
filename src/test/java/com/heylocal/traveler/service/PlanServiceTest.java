@@ -137,6 +137,8 @@ class PlanServiceTest {
 					.name("NAME")
 					.address("ADDRESS")
 					.roadAddress("ROADADDRESS")
+					.lat(0.0)
+					.lng(0.0)
 					.build());
 		}
 
