@@ -10,6 +10,8 @@ import com.heylocal.traveler.domain.travelon.list.FoodType;
 import com.heylocal.traveler.domain.travelon.list.MemberType;
 import com.heylocal.traveler.dto.LoginUser;
 import com.heylocal.traveler.exception.controller.BadRequestException;
+import com.heylocal.traveler.exception.controller.NotFoundException;
+import com.heylocal.traveler.exception.service.BadArgumentException;
 import com.heylocal.traveler.service.TravelOnService;
 import com.heylocal.traveler.util.error.BindingErrorMessageProvider;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,6 +31,7 @@ import static com.heylocal.traveler.dto.TravelOnDto.*;
 import static com.heylocal.traveler.dto.TravelTypeGroupDto.TravelTypeGroupRequest;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.willReturn;
+import static org.mockito.BDDMockito.willThrow;
 
 class TravelOnsControllerTest {
   @Mock
@@ -99,7 +102,26 @@ class TravelOnsControllerTest {
     );
   }
 
-  //TODO - getTravelOn
+  @Test
+  @DisplayName("여행On 상세 조회")
+  void getTravelOnTest() throws BadArgumentException {
+    //GIVEN
+    long existTravelOnId = 1L;
+    long notExistTravelOnId = 3L;
+
+    //Mock 행동 정의 - travelOnService
+    willThrow(BadArgumentException.class).given(travelOnService).inquiryTravelOn(notExistTravelOnId);
+
+    //WHEN
+
+    //THEN
+    assertAll(
+        //성공 케이스 - 1 - 정상적인 여행On ID를 전달받았을 때
+        () -> assertDoesNotThrow(() -> travelOnsController.getTravelOn(existTravelOnId)),
+        //실패 케이스 - 1 - 존재하지 않는 여행On ID를 전달받았을 때
+        () -> assertThrows(NotFoundException.class, () -> travelOnsController.getTravelOn(notExistTravelOnId))
+    );
+  }
 
   /**
    * AllTravelOnRequest 객체를 생성하는 메서드

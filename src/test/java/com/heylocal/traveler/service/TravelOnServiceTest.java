@@ -1,14 +1,9 @@
 package com.heylocal.traveler.service;
 
 import com.heylocal.traveler.domain.Region;
-import com.heylocal.traveler.domain.travelon.ActivityTasteType;
-import com.heylocal.traveler.domain.travelon.PlaceTasteType;
-import com.heylocal.traveler.domain.travelon.SnsTasteType;
-import com.heylocal.traveler.domain.travelon.TransportationType;
-import com.heylocal.traveler.domain.travelon.list.AccommodationType;
-import com.heylocal.traveler.domain.travelon.list.DrinkType;
-import com.heylocal.traveler.domain.travelon.list.FoodType;
-import com.heylocal.traveler.domain.travelon.list.MemberType;
+import com.heylocal.traveler.domain.profile.UserProfile;
+import com.heylocal.traveler.domain.travelon.*;
+import com.heylocal.traveler.domain.travelon.list.*;
 import com.heylocal.traveler.domain.user.User;
 import com.heylocal.traveler.domain.user.UserRole;
 import com.heylocal.traveler.dto.LoginUser;
@@ -224,7 +219,29 @@ class TravelOnServiceTest {
     );
   }
 
-  //TODO - inquiryTravelOn
+  @Test
+  @DisplayName("여행 On 상세 조회")
+  void inquiryTravelOnTest() {
+    //GIVEN
+    long travelOnId = 1L;
+    long notExistTravelOnId = travelOnId + 10;
+    String travelOnTitle = "title1";
+
+    //Mock 행동 정의 - TravelOnRepository
+    TravelOn travelOn = getTravelOn(travelOnId, travelOnTitle);
+    willReturn(Optional.of(travelOn)).given(travelOnRepository).findById(travelOnId);
+    willReturn(Optional.empty()).given(travelOnRepository).findById(notExistTravelOnId);
+
+    //WHEN
+
+    //THEN
+    assertAll(
+        //성공 케이스 - 1 - 존재하는 여행 On 조회
+        () -> assertDoesNotThrow(() -> travelOnService.inquiryTravelOn(travelOnId)),
+        //실패 케이스 - 1 - 존재하지 않는 여행 On 조회
+        () -> assertThrows(BadArgumentException.class, () -> travelOnService.inquiryTravelOn(notExistTravelOnId))
+    );
+  }
 
   /**
    * AllTravelOnRequest 객체를 생성하는 메서드
@@ -294,5 +311,105 @@ class TravelOnServiceTest {
         .travelTypeGroup(travelTypeGroupRequest)
         .build();
     return request;
+  }
+
+  /**
+   * <pre>
+   * 새 TravelOn 객체를 반환하는 메서드
+   * </pre>
+   * @return
+   */
+  private TravelOn getTravelOn(long id, String title) {
+    TravelOn travelOn;
+    LocalDate travelStartDate = LocalDate.now().plusMonths(1);
+    LocalDate travelEndDate = LocalDate.now().plusMonths(1).plusDays(3);
+    String description = "test description";
+    TransportationType transportationType = TransportationType.OWN_CAR;
+    int accommodationMaxCost = 100000;
+    int foodMaxCost = 100000;
+    int drinkMaxCost = 100000;
+
+    Region region = Region.builder().id(1L).state("경기도").city("성남시").build();
+    User author = User.builder().id(1L).accountId("accountId").password("password").nickname("nickname").userRole(UserRole.TRAVELER).build();
+    UserProfile profile = UserProfile.builder().id(1L).knowHow(100).build();
+    author.registerUserProfile(profile);
+
+    travelOn = TravelOn.builder()
+        .id(id)
+        .title(title)
+        .region(region)
+        .views(1)
+        .author(author)
+        .travelStartDate(travelStartDate)
+        .travelEndDate(travelEndDate)
+        .description(description)
+        .transportationType(transportationType)
+        .accommodationMaxCost(accommodationMaxCost)
+        .foodMaxCost(foodMaxCost)
+        .drinkMaxCost(drinkMaxCost)
+        .build();
+
+    TravelMember travelMember1 = TravelMember.builder()
+        .id(1L)
+        .travelOn(travelOn)
+        .memberType(MemberType.CHILD)
+        .build();
+    TravelMember travelMember2 = TravelMember.builder()
+        .id(2L)
+        .travelOn(travelOn)
+        .memberType(MemberType.PARENT)
+        .build();
+    travelOn.addTravelMember(travelMember1);
+    travelOn.addTravelMember(travelMember2);
+
+    HopeAccommodation accommodation1 = HopeAccommodation.builder()
+        .id(1L)
+        .travelOn(travelOn)
+        .type(AccommodationType.HOTEL)
+        .build();
+    HopeAccommodation accommodation2 = HopeAccommodation.builder()
+        .id(2L)
+        .travelOn(travelOn)
+        .type(AccommodationType.GUEST_HOUSE)
+        .build();
+    travelOn.addHopeAccommodation(accommodation1);
+    travelOn.addHopeAccommodation(accommodation2);
+
+    HopeFood food1 = HopeFood.builder()
+        .id(1L)
+        .travelOn(travelOn)
+        .type(FoodType.GLOBAL)
+        .build();
+    HopeFood food2 = HopeFood.builder()
+        .id(2L)
+        .travelOn(travelOn)
+        .type(FoodType.KOREAN)
+        .build();
+    travelOn.addHopeFood(food1);
+    travelOn.addHopeFood(food2);
+
+    HopeDrink hopeDrink1 = HopeDrink.builder()
+        .id(1L)
+        .travelOn(travelOn)
+        .type(DrinkType.BEER)
+        .build();
+    HopeDrink hopeDrink2 = HopeDrink.builder()
+        .id(2L)
+        .travelOn(travelOn)
+        .type(DrinkType.BEER)
+        .build();
+    travelOn.addHopeDrink(hopeDrink1);
+    travelOn.addHopeDrink(hopeDrink2);
+
+    TravelTypeGroup travelTypeGroup = TravelTypeGroup.builder()
+        .id(1L)
+        .activityTasteType(ActivityTasteType.HARD)
+        .placeTasteType(PlaceTasteType.FAMOUS)
+        .snsTasteType(SnsTasteType.YES)
+        .travelOn(travelOn)
+        .build();
+    travelOn.registerTravelTypeGroup(travelTypeGroup);
+
+    return travelOn;
   }
 }

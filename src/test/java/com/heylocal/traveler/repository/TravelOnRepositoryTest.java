@@ -21,6 +21,7 @@ import javax.persistence.NoResultException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import static com.heylocal.traveler.dto.TravelOnDto.TravelOnSortType;
 import static org.junit.jupiter.api.Assertions.*;
@@ -458,7 +459,33 @@ class TravelOnRepositoryTest {
     );
   }
 
-  //TODO - findById
+  @Test
+  @DisplayName("ID 로 TravelOn 조회")
+  void findByIdTest() {
+    //GIVEN
+    User author = User.builder()
+            .accountId("accountId")
+            .nickname("nickname")
+            .password("password")
+            .userRole(UserRole.TRAVELER)
+            .build();
+    em.persist(author);
+    TravelOn travelOnA = saveTravelOn(author, "stateA", "city1", LocalDateTime.now(), 0);
+    long travelOnAId = travelOnA.getId();
+    long notExistTravelOnId = travelOnAId + 10;
+
+    //WHEN
+    Optional<TravelOn> succeedResult = travelOnRepository.findById(travelOnAId);
+    Optional<TravelOn> failResult = travelOnRepository.findById(notExistTravelOnId);
+
+    //THEN
+    assertAll(
+        //성공 케이스 - 1 - 존재하는 ID 로 조회
+        () -> assertTrue(succeedResult.isPresent()),
+        //실패 케이스 - 1 - 존재하지 않는 ID 로 조회
+        () -> assertFalse(failResult.isPresent())
+    );
+  }
 
   /**
    * <pre>
