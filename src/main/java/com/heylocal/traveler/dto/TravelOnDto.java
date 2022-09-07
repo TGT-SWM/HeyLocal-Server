@@ -216,28 +216,24 @@ public class TravelOnDto {
 			this.modifiedDate = entity.getModifiedDate();
 		}
 
-		@JsonIgnore
 		public void setTravelMemberSet(Set<TravelMember> travelMemberSet) {
 			this.travelMemberSet = travelMemberSet.stream()
 					.map(TravelMemberResponse::new)
 					.collect(Collectors.toSet());
 		}
 
-		@JsonIgnore
 		public void setHopeAccommodationSet(Set<HopeAccommodation> hopeAccommodationSet) {
 			this.hopeAccommodationSet = hopeAccommodationSet.stream()
 					.map(HopeAccommodationResponse::new)
 					.collect(Collectors.toSet());
 		}
 
-		@JsonIgnore
 		public void setHopeFoodSet(Set<HopeFood> hopeFoodSet) {
 			this.hopeFoodSet = hopeFoodSet.stream()
 					.map(HopeFoodResponse::new)
 					.collect(Collectors.toSet());
 		}
 
-		@JsonIgnore
 		public void setHopeDrinkSet(Set<HopeDrink> hopeDrinkSet) {
 			this.hopeDrinkSet = hopeDrinkSet.stream()
 					.map(HopeDrinkResponse::new)

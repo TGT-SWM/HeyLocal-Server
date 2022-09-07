@@ -12,3 +12,4 @@
 
 ## TODO
 - Opinion API
+- 상세 조회에서 Set 필드 응답

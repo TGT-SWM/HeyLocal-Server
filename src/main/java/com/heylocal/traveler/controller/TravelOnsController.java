@@ -91,9 +91,36 @@ public class TravelOnsController implements TravelOnsApi {
     return response;
   }
 
+  /**
+   * 여행On 수정 핸들러
+   * @param travelOnId 수정할 여행On ID
+   * @param request 수정 정보
+   * @param bindingResult
+   * @param loginUser
+   * @throws BadRequestException
+   * @throws NotFoundException
+   */
   @Override
-  public ResponseEntity<Void> updateTravelOn(long travelOnId, TravelOnRequest request) {
-    return null;
+  public void updateTravelOn(long travelOnId,
+                             TravelOnRequest request,
+                             BindingResult bindingResult,
+                             LoginUser loginUser) throws BadRequestException, NotFoundException {
+    boolean isAuthor = false;
+
+    if (bindingResult.hasFieldErrors()) {
+      String fieldErrMsg = errorMessageProvider.getFieldErrMsg(bindingResult);
+      throw new BadRequestException(BadRequestCode.BAD_INPUT_FORM, fieldErrMsg);
+    }
+
+    try {
+      //수정 권한 확인
+      isAuthor = travelOnService.isAuthor(loginUser.getId(), travelOnId);
+
+      //수정
+      travelOnService.updateTravelOn(request, travelOnId);
+    } catch (BadArgumentException e) {
+      throw new NotFoundException(e.getCode(), e.getDescription());
+    }
   }
 
   @Override
