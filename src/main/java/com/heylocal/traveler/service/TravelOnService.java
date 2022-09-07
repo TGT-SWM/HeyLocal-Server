@@ -2,9 +2,13 @@ package com.heylocal.traveler.service;
 
 import com.heylocal.traveler.domain.Region;
 import com.heylocal.traveler.domain.travelon.TravelOn;
+import com.heylocal.traveler.domain.travelon.TravelTypeGroup;
+import com.heylocal.traveler.domain.travelon.list.HopeAccommodation;
+import com.heylocal.traveler.domain.travelon.list.HopeDrink;
+import com.heylocal.traveler.domain.travelon.list.HopeFood;
+import com.heylocal.traveler.domain.travelon.list.TravelMember;
 import com.heylocal.traveler.domain.user.User;
 import com.heylocal.traveler.dto.LoginUser;
-import com.heylocal.traveler.dto.TravelOnDto;
 import com.heylocal.traveler.exception.code.NotFoundCode;
 import com.heylocal.traveler.exception.service.BadArgumentException;
 import com.heylocal.traveler.repository.RegionRepository;
@@ -94,6 +98,62 @@ public class TravelOnService {
     return response;
   }
 
+  /**
+   * 여행On 수정
+   * @param request 수정 정보
+   * @param travelOnId 수정할 여행On ID
+   * @throws BadArgumentException
+   */
+  @Transactional
+  public void updateTravelOn(TravelOnRequest request, long travelOnId) throws BadArgumentException {
+    TravelOn originTravelOn;
+
+    originTravelOn = travelOnRepository.findById(travelOnId).orElseThrow(
+        () -> new BadArgumentException(NotFoundCode.NO_INFO, "존재하지 않는 여행On ID 입니다.")
+    );
+
+    originTravelOn.updateTitle(request.getTitle());
+    originTravelOn.updateDescription(request.getDescription());
+    originTravelOn.updateTravelStartDate(request.getTravelStartDate());
+    originTravelOn.updateTravelEndDate(request.getTravelEndDate());
+    originTravelOn.updateTransportationType(request.getTransportationType());
+    originTravelOn.updateAccommodationMaxCost(request.getAccommodationMaxCost());
+    originTravelOn.updateFoodMaxCost(request.getFoodMaxCost());
+    originTravelOn.updateDrinkMaxCost(request.getDrinkMaxCost());
+
+    updateTravelTypeGroup(request, originTravelOn);
+    updateTravelMembers(request, originTravelOn);
+    updateHopeAccommodation(request, originTravelOn);
+    updateHopeFood(request, originTravelOn);
+    updateHopeDrink(request, originTravelOn);
+  }
+
+  private void updateTravelTypeGroup(TravelOnRequest request, TravelOn originTravelOn) {
+    TravelTypeGroup travelTypeGroup = request.getTravelTypeGroup().toEntity();
+    travelTypeGroup.registerAt(originTravelOn);
+    originTravelOn.updateTravelTypeGroup(travelTypeGroup);
+  }
+
+  /**
+   * 해당 여행On 의 작성자인지 확인
+   * @param userId 확인할 사용자 ID
+   * @param travelOnId 확인할 여행On ID
+   * @return
+   * @throws BadArgumentException 존재하지 않는 여행On ID 라면
+   */
+  @Transactional
+  public boolean isAuthor(long userId, long travelOnId) throws BadArgumentException {
+    TravelOn travelOn = travelOnRepository.findById(travelOnId).orElseThrow(
+        () -> new BadArgumentException(NotFoundCode.NO_INFO, "존재하지 않는 여행On ID 입니다.")
+    );
+
+    if (travelOn.getAuthor().getId() == userId) {
+      return true;
+    }
+
+    return false;
+  }
+
   private List<TravelOn> findByRegion(AllTravelOnGetRequest request) throws BadArgumentException {
     List<TravelOn> result;
     Boolean withOpinions;
@@ -146,6 +206,46 @@ public class TravelOnService {
     }
 
     return result;
+  }
+
+  private void updateTravelMembers(TravelOnRequest request, TravelOn originTravelOn) {
+    originTravelOn.removeAllTravelMember();
+    request.getMemberTypeSet().stream().forEach(
+        (item) -> {
+          TravelMember travelMember = TravelMember.builder().memberType(item).build();
+          travelMember.registerAt(originTravelOn);
+        }
+    );
+  }
+
+  private void updateHopeAccommodation(TravelOnRequest request, TravelOn originTravelOn) {
+    originTravelOn.removeAllHopeAccommodation();
+    request.getAccommodationTypeSet().stream().forEach(
+        (item) -> {
+          HopeAccommodation hopeAccommodation = HopeAccommodation.builder().type(item).build();
+          hopeAccommodation.registerAt(originTravelOn);
+        }
+    );
+  }
+
+  private void updateHopeDrink(TravelOnRequest request, TravelOn originTravelOn) {
+    originTravelOn.removeAllHopeDrink();
+    request.getDrinkTypeSet().stream().forEach(
+        (item) -> {
+          HopeDrink hopeDrink = HopeDrink.builder().type(item).build();
+          hopeDrink.registerAt(originTravelOn);
+        }
+    );
+  }
+
+  private void updateHopeFood(TravelOnRequest request, TravelOn originTravelOn) {
+    originTravelOn.removeAllHopeFood();
+    request.getFoodTypeSet().stream().forEach(
+        (item) -> {
+          HopeFood hopeFood = HopeFood.builder().type(item).build();
+          hopeFood.registerAt(originTravelOn);
+        }
+    );
   }
 
 }

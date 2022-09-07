@@ -9,7 +9,9 @@ import com.heylocal.traveler.domain.travelon.list.DrinkType;
 import com.heylocal.traveler.domain.travelon.list.FoodType;
 import com.heylocal.traveler.domain.travelon.list.MemberType;
 import com.heylocal.traveler.dto.LoginUser;
+import com.heylocal.traveler.exception.code.BadRequestCode;
 import com.heylocal.traveler.exception.controller.BadRequestException;
+import com.heylocal.traveler.exception.controller.ForbiddenException;
 import com.heylocal.traveler.exception.controller.NotFoundException;
 import com.heylocal.traveler.exception.service.BadArgumentException;
 import com.heylocal.traveler.service.TravelOnService;
@@ -121,6 +123,67 @@ class TravelOnsControllerTest {
         //실패 케이스 - 1 - 존재하지 않는 여행On ID를 전달받았을 때
         () -> assertThrows(NotFoundException.class, () -> travelOnsController.getTravelOn(notExistTravelOnId))
     );
+  }
+
+  @Test
+  @DisplayName("여행On 수정 핸들러 - 성공 케이스")
+  void updateTravelOnSucceedTest() throws BadArgumentException, ForbiddenException, BadRequestException, NotFoundException {
+    //GIVEN
+    long travelOnId = 1L;
+    long ownerId = 2L;
+    LoginUser loginUser = LoginUser.builder().id(ownerId).build();
+
+    //Mock 행동 정의 - bindingResult
+    willReturn(false).given(bindingResult).hasFieldErrors();
+
+    //Mock 행동 정의 - travelOnService
+    willReturn(true).given(travelOnService).isAuthor(ownerId, travelOnId);
+
+    //WHEN
+    travelOnsController.updateTravelOn(travelOnId, null, bindingResult, loginUser);
+
+    //THEN
+    assertDoesNotThrow(() -> travelOnsController.updateTravelOn(travelOnId, null, bindingResult, loginUser));
+  }
+
+  @Test
+  @DisplayName("여행On 수정 핸들러 - 수정 권한이 없는 경우")
+  void updateTravelOnForbiddenTest() throws BadArgumentException, ForbiddenException, BadRequestException, NotFoundException {
+    //GIVEN
+    long travelOnId = 1L;
+    long noOwnerId = 2L;
+    LoginUser loginUser = LoginUser.builder().id(noOwnerId).build();
+
+    //Mock 행동 정의 - bindingResult
+    willReturn(false).given(bindingResult).hasFieldErrors();
+
+    //Mock 행동 정의 - travelOnService
+    willReturn(false).given(travelOnService).isAuthor(noOwnerId, travelOnId);
+
+    //WHEN
+
+    //THEN
+    assertThrows(ForbiddenException.class, () -> travelOnsController.updateTravelOn(travelOnId, null, bindingResult, loginUser));
+  }
+
+  @Test
+  @DisplayName("여행On 수정 핸들러 - 입력 형식이 틀린 경우")
+  void updateTravelOnWrongInputFormTest() throws BadArgumentException, ForbiddenException, BadRequestException, NotFoundException {
+    //GIVEN
+    long travelOnId = 1L;
+    long noOwnerId = 2L;
+    LoginUser loginUser = LoginUser.builder().id(noOwnerId).build();
+
+    //Mock 행동 정의 - bindingResult
+    willReturn(true).given(bindingResult).hasFieldErrors();
+
+    //Mock 행동 정의 - travelOnService
+    willReturn(false).given(travelOnService).isAuthor(noOwnerId, travelOnId);
+
+    //WHEN
+
+    //THEN
+    assertThrows(BadRequestException.class, () -> travelOnsController.updateTravelOn(travelOnId, null, bindingResult, loginUser));
   }
 
   /**

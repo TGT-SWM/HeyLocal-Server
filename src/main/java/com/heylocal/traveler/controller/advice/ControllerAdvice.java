@@ -1,7 +1,9 @@
 package com.heylocal.traveler.controller.advice;
 
 import com.heylocal.traveler.dto.ErrorMessageResponse;
+import com.heylocal.traveler.exception.code.ForbiddenCode;
 import com.heylocal.traveler.exception.controller.BadRequestException;
+import com.heylocal.traveler.exception.controller.ForbiddenException;
 import com.heylocal.traveler.exception.controller.NotFoundException;
 import com.heylocal.traveler.exception.controller.UnauthorizedException;
 import org.springframework.http.HttpStatus;
@@ -33,6 +35,13 @@ public class ControllerAdvice {
   @ExceptionHandler(NotFoundException.class)
   @ResponseStatus(value = HttpStatus.NOT_FOUND)
   public ErrorMessageResponse notFoundException(NotFoundException ex) {
+    ErrorMessageResponse message = new ErrorMessageResponse(ex);
+    return message;
+  }
+
+  @ExceptionHandler(ForbiddenException.class)
+  @ResponseStatus(value = HttpStatus.NOT_FOUND)
+  public ErrorMessageResponse forbiddenException(ForbiddenException ex) {
     ErrorMessageResponse message = new ErrorMessageResponse(ex);
     return message;
   }

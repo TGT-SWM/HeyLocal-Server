@@ -76,22 +76,22 @@ public class TravelOn extends BaseTimeEntity {
   //양방향 설정
 
   @Builder.Default
-  @OneToMany(mappedBy = "travelOn", cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "travelOn", cascade = CascadeType.ALL, orphanRemoval = true)
   private Set<TravelMember> travelMemberSet = new HashSet<>();
 
   @Builder.Default
-  @OneToMany(mappedBy = "travelOn", cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "travelOn", cascade = CascadeType.ALL, orphanRemoval = true)
   private Set<HopeAccommodation> hopeAccommodationSet = new HashSet<>();
 
   @Builder.Default
-  @OneToMany(mappedBy = "travelOn", cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "travelOn", cascade = CascadeType.ALL, orphanRemoval = true)
   private Set<HopeFood> hopeFoodSet = new HashSet<>();
 
   @Builder.Default
-  @OneToMany(mappedBy = "travelOn", cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "travelOn", cascade = CascadeType.ALL, orphanRemoval = true)
   private Set<HopeDrink> hopeDrinkSet = new HashSet<>();
 
-  @OneToOne(mappedBy = "travelOn", cascade = CascadeType.ALL)
+  @OneToOne(mappedBy = "travelOn", cascade = CascadeType.ALL, orphanRemoval = true)
   private TravelTypeGroup travelTypeGroup;
 
   @Builder.Default
@@ -141,5 +141,61 @@ public class TravelOn extends BaseTimeEntity {
     if (opinion.getTravelOn() != this) {
       opinion.registerTravelOn(this);
     }
+  }
+
+  public void updateTitle(String title) {
+    this.title = title;
+  }
+
+  public void updateDescription(String description) {
+    this.description = description;
+  }
+
+  public void updateRegion(Region region) {
+    this.region = region;
+  }
+
+  public void updateTravelStartDate(LocalDate travelStartDate) {
+    this.travelStartDate = travelStartDate;
+  }
+
+  public void updateTravelEndDate(LocalDate travelEndDate) {
+    this.travelEndDate = travelEndDate;
+  }
+
+  public void updateTransportationType(TransportationType transportationType) {
+    this.transportationType = transportationType;
+  }
+
+  public void updateAccommodationMaxCost(Integer accommodationMaxCost) {
+    this.accommodationMaxCost = accommodationMaxCost;
+  }
+
+  public void updateFoodMaxCost(Integer foodMaxCost) {
+    this.foodMaxCost = foodMaxCost;
+  }
+
+  public void updateDrinkMaxCost(Integer drinkMaxCost) {
+    this.drinkMaxCost = drinkMaxCost;
+  }
+
+  public void updateTravelTypeGroup(TravelTypeGroup travelTypeGroup) {
+    this.travelTypeGroup = travelTypeGroup;
+  }
+
+  public void removeAllHopeAccommodation() {
+    this.hopeAccommodationSet.clear();
+  }
+
+  public void removeAllHopeFood() {
+    this.hopeFoodSet.clear();
+  }
+
+  public void removeAllHopeDrink() {
+    this.hopeDrinkSet.clear();
+  }
+
+  public void removeAllTravelMember() {
+    this.travelMemberSet.clear();
   }
 }

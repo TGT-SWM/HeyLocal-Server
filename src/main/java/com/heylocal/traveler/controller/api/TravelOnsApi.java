@@ -9,6 +9,7 @@ import com.heylocal.traveler.dto.TravelOnDto.TravelOnRequest;
 import com.heylocal.traveler.dto.TravelOnDto.TravelOnResponse;
 import com.heylocal.traveler.dto.TravelOnDto.TravelOnSimpleResponse;
 import com.heylocal.traveler.exception.controller.BadRequestException;
+import com.heylocal.traveler.exception.controller.ForbiddenException;
 import com.heylocal.traveler.exception.controller.NotFoundException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -59,20 +60,26 @@ public interface TravelOnsApi {
     })
     @GetMapping(value = "/{travelOnId}")
     TravelOnResponse getTravelOn(
-            @Parameter(in = ParameterIn.PATH, description = "여행 On ID", required = true) long travelOnId
+            @Parameter(in = ParameterIn.PATH, description = "여행 On ID", required = true) @PathVariable long travelOnId
     ) throws NotFoundException;
 
     @Operation(summary = "여행 On 수정", description = "여행 On을 수정합니다.", tags = {"TravelOns"})
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "여행 On 수정 성공 시"),
+        @ApiResponse(responseCode = "400", description = "- `BAD_INPUT_FORM`: 입력 값의 형식이 올바르지 않을 때", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessageResponse.class))),
+    })
     @PutMapping(value = "/{travelOnId}")
-    ResponseEntity<Void> updateTravelOn(
-            @Parameter(in = ParameterIn.PATH, description = "여행 On ID", required = true) long travelOnId,
-            @Parameter(in = ParameterIn.DEFAULT, description = "여행 On 정보", required = true) @RequestBody TravelOnRequest request
-    );
+    void updateTravelOn(
+            @Parameter(in = ParameterIn.PATH, description = "여행 On ID", required = true) @PathVariable long travelOnId,
+            @Parameter(in = ParameterIn.DEFAULT, description = "여행 On 수정할 정보, \n Region Id 필드는 기존 값을 그대로 넘긴다. 값이 변경되더라도 적요되지 않음.", required = true) @RequestBody TravelOnRequest request,
+            BindingResult bindingResult,
+            @ApiIgnore LoginUser loginUser
+    ) throws BadRequestException, NotFoundException, ForbiddenException;
 
     @Operation(summary = "여행 On 삭제", description = "여행 On을 삭제합니다.", tags = {"TravelOns"})
     @DeleteMapping(value = "/{travelOnId}")
     ResponseEntity<Void> deleteTravelOn(
-            @Parameter(in = ParameterIn.PATH, description = "여행 On ID", required = true) long travelOnId
+            @Parameter(in = ParameterIn.PATH, description = "여행 On ID", required = true) @PathVariable long travelOnId
     );
 
     /*
@@ -83,29 +90,29 @@ public interface TravelOnsApi {
     @Operation(summary = "답변 조회", description = "여행 On에 달린 답변의 목록을 조회합니다.", tags = {"TravelOns"})
     @GetMapping("/{travelOnId}/opinions")
     List<OpinionResponse> getOpinions(
-            @Parameter(in = ParameterIn.PATH, description = "여행 On ID", required = true) long travelOnId
+            @Parameter(in = ParameterIn.PATH, description = "여행 On ID", required = true) @PathVariable long travelOnId
     );
 
     @Operation(summary = "답변 등록", description = "여행 On에 답변을 등록합니다.", tags = {"TravelOns"})
     @PostMapping("/{travelOnId}/opinions")
     ResponseEntity<Void> createOpinions(
-            @Parameter(in = ParameterIn.PATH, description = "여행 On ID", required = true) long travelOnId,
+            @Parameter(in = ParameterIn.PATH, description = "여행 On ID", required = true) @PathVariable long travelOnId,
             @Parameter(in = ParameterIn.DEFAULT, description = "답변 정보", required = true) @RequestBody OpinionRequest request
     );
 
     @Operation(summary = "답변 수정", description = "답변을 수정합니다.", tags = {"TravelOns"})
     @PutMapping("/{travelOnId}/opinions/{opinionId}")
     ResponseEntity<Void> updateOpinion(
-            @Parameter(in = ParameterIn.PATH, description = "여행 On ID", required = true) long travelOnId,
-            @Parameter(in = ParameterIn.PATH, description = "답변 ID", required = true) long opinionId,
+            @Parameter(in = ParameterIn.PATH, description = "여행 On ID", required = true) @PathVariable long travelOnId,
+            @Parameter(in = ParameterIn.PATH, description = "답변 ID", required = true) @PathVariable long opinionId,
             @Parameter(in = ParameterIn.DEFAULT, description = "답변 정보", required = true) @RequestBody OpinionRequest request
     );
 
     @Operation(summary = "답변 삭제", description = "답변을 삭제합니다.", tags = {"TravelOns"})
     @DeleteMapping("/{travelOnId}/opinions/{opinionId}")
     ResponseEntity<Void> deleteOpinion(
-            @Parameter(in = ParameterIn.PATH, description = "여행 On ID", required = true) long travelOnId,
-            @Parameter(in = ParameterIn.PATH, description = "답변 ID", required = true) long opinionId
+            @Parameter(in = ParameterIn.PATH, description = "여행 On ID", required = true) @PathVariable long travelOnId,
+            @Parameter(in = ParameterIn.PATH, description = "답변 ID", required = true) @PathVariable long opinionId
     );
 }
 

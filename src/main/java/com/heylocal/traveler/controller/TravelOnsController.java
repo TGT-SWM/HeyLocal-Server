@@ -4,7 +4,9 @@ import com.heylocal.traveler.controller.api.TravelOnsApi;
 import com.heylocal.traveler.dto.LoginUser;
 import com.heylocal.traveler.dto.OpinionDto;
 import com.heylocal.traveler.exception.code.BadRequestCode;
+import com.heylocal.traveler.exception.code.ForbiddenCode;
 import com.heylocal.traveler.exception.controller.BadRequestException;
+import com.heylocal.traveler.exception.controller.ForbiddenException;
 import com.heylocal.traveler.exception.controller.NotFoundException;
 import com.heylocal.traveler.exception.service.BadArgumentException;
 import com.heylocal.traveler.service.TravelOnService;
@@ -91,9 +93,39 @@ public class TravelOnsController implements TravelOnsApi {
     return response;
   }
 
+  /**
+   * 여행On 수정 핸들러
+   * @param travelOnId 수정할 여행On ID
+   * @param request 수정 정보
+   * @param bindingResult
+   * @param loginUser
+   * @throws BadRequestException
+   * @throws NotFoundException
+   */
   @Override
-  public ResponseEntity<Void> updateTravelOn(long travelOnId, TravelOnRequest request) {
-    return null;
+  public void updateTravelOn(long travelOnId,
+                             TravelOnRequest request,
+                             BindingResult bindingResult,
+                             LoginUser loginUser) throws BadRequestException, NotFoundException, ForbiddenException {
+    boolean isAuthor = false;
+
+    if (bindingResult.hasFieldErrors()) {
+      String fieldErrMsg = errorMessageProvider.getFieldErrMsg(bindingResult);
+      throw new BadRequestException(BadRequestCode.BAD_INPUT_FORM, fieldErrMsg);
+    }
+
+    try {
+      //수정 권한 확인
+      isAuthor = travelOnService.isAuthor(loginUser.getId(), travelOnId);
+      if (!isAuthor) {
+        throw new ForbiddenException(ForbiddenCode.NO_PERMISSION, "수정 권한이 없습니다.");
+      }
+
+      //수정
+      travelOnService.updateTravelOn(request, travelOnId);
+    } catch (BadArgumentException e) {
+      throw new NotFoundException(e.getCode(), e.getDescription());
+    }
   }
 
   @Override
