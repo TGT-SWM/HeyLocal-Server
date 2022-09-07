@@ -243,7 +243,30 @@ class TravelOnServiceTest {
     );
   }
 
-  // TODO - updateTravelOn
+  @Test
+  @DisplayName("여행On 수정")
+  void updateTravelOnTest() {
+    //GIVEN
+    TravelOnRequest request = getTravelOnRequest();
+    long existTravelOnId = 1L;
+    long notExistTravelOnId = 2L;
+    TravelOn travelOn = getTravelOn(existTravelOnId, "title1");
+
+    //Mock 행동 정의 - travelOnRepository
+    willReturn(Optional.of(travelOn)).given(travelOnRepository).findById(existTravelOnId);
+    willReturn(Optional.empty()).given(travelOnRepository).findById(notExistTravelOnId);
+
+    //WHEN
+
+
+    //THEN
+    assertAll(
+        //성공 케이스 - 1 - 정상 요청
+        () -> assertDoesNotThrow(() -> travelOnService.updateTravelOn(request, existTravelOnId)),
+        //실패 케이스 - 1 - 존재하지 않는 여행On ID
+        () -> assertThrows(BadArgumentException.class, () -> travelOnService.updateTravelOn(request, notExistTravelOnId))
+    );
+  }
 
   /**
    * AllTravelOnRequest 객체를 생성하는 메서드

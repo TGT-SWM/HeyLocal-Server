@@ -184,18 +184,18 @@ public class TravelOn extends BaseTimeEntity {
   }
 
   public void removeAllHopeAccommodation() {
-    this.hopeAccommodationSet.stream().forEach(hopeAccommodationSet::remove);
+    this.hopeAccommodationSet.clear();
   }
 
   public void removeAllHopeFood() {
-    this.hopeFoodSet.stream().forEach(hopeFoodSet::remove);
+    this.hopeFoodSet.clear();
   }
 
   public void removeAllHopeDrink() {
-    this.hopeDrinkSet.stream().forEach(hopeDrinkSet::remove);
+    this.hopeDrinkSet.clear();
   }
 
   public void removeAllTravelMember() {
-    this.travelMemberSet.stream().forEach(travelMemberSet::remove);
+    this.travelMemberSet.clear();
   }
 }
