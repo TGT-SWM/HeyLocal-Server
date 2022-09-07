@@ -9,6 +9,7 @@ import com.heylocal.traveler.exception.controller.BadRequestException;
 import com.heylocal.traveler.exception.controller.ForbiddenException;
 import com.heylocal.traveler.exception.controller.NotFoundException;
 import com.heylocal.traveler.exception.service.BadArgumentException;
+import com.heylocal.traveler.exception.service.TaskRejectException;
 import com.heylocal.traveler.service.TravelOnService;
 import com.heylocal.traveler.util.error.BindingErrorMessageProvider;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -129,8 +130,23 @@ public class TravelOnsController implements TravelOnsApi {
   }
 
   @Override
-  public ResponseEntity<Void> deleteTravelOn(long travelOnId) {
-    return null;
+  public void deleteTravelOn(long travelOnId, LoginUser loginUser) throws ForbiddenException, NotFoundException {
+    boolean isAuthor = false;
+
+    try {
+      //삭제 권한 확인
+      isAuthor = travelOnService.isAuthor(loginUser.getId(), travelOnId);
+      if (!isAuthor) {
+        throw new ForbiddenException(ForbiddenCode.NO_PERMISSION, "삭제 권한이 없습니다.");
+      }
+
+      //삭제
+      travelOnService.removeTravelOn(travelOnId);
+    } catch (BadArgumentException e) {
+      throw new NotFoundException(e.getCode(), e.getDescription());
+    } catch (TaskRejectException e) {
+      throw new ForbiddenException(e.getCode(), e.getDescription());
+    }
   }
 
   @Override

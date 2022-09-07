@@ -9,8 +9,10 @@ import com.heylocal.traveler.domain.travelon.list.HopeFood;
 import com.heylocal.traveler.domain.travelon.list.TravelMember;
 import com.heylocal.traveler.domain.user.User;
 import com.heylocal.traveler.dto.LoginUser;
+import com.heylocal.traveler.exception.code.ForbiddenCode;
 import com.heylocal.traveler.exception.code.NotFoundCode;
 import com.heylocal.traveler.exception.service.BadArgumentException;
+import com.heylocal.traveler.exception.service.TaskRejectException;
 import com.heylocal.traveler.repository.RegionRepository;
 import com.heylocal.traveler.repository.TravelOnRepository;
 import com.heylocal.traveler.repository.UserRepository;
@@ -152,6 +154,27 @@ public class TravelOnService {
     }
 
     return false;
+  }
+
+  /**
+   * 여행 On 삭제
+   * @param targetId 삭제할 여행 On id(pk)
+   */
+  @Transactional
+  public void removeTravelOn(long targetId) throws BadArgumentException, TaskRejectException {
+    TravelOn target;
+
+    target = travelOnRepository.findById(targetId).orElseThrow(
+        () -> new BadArgumentException(NotFoundCode.NO_INFO, "존재하지 않는 여행On ID 입니다.")
+    );
+
+    //의견이 달려있다면 삭제 거절
+    if (target.getOpinionList().size() != 0) {
+      throw new TaskRejectException(ForbiddenCode.NO_PERMISSION, "답변이 달린 여행On 은 삭제할 수 없습니다.");
+    }
+
+    //여행 On 삭제
+    travelOnRepository.remove(target);
   }
 
   private List<TravelOn> findByRegion(AllTravelOnGetRequest request) throws BadArgumentException {

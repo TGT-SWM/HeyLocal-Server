@@ -186,6 +186,8 @@ class TravelOnsControllerTest {
     assertThrows(BadRequestException.class, () -> travelOnsController.updateTravelOn(travelOnId, null, bindingResult, loginUser));
   }
 
+  // TODO - deleteTravelOn
+
   /**
    * AllTravelOnRequest 객체를 생성하는 메서드
    * @return
