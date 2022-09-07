@@ -10,12 +10,16 @@ import com.heylocal.traveler.domain.travelon.list.FoodType;
 import com.heylocal.traveler.domain.travelon.list.MemberType;
 import com.heylocal.traveler.dto.LoginUser;
 import com.heylocal.traveler.exception.code.BadRequestCode;
+import com.heylocal.traveler.exception.code.ForbiddenCode;
+import com.heylocal.traveler.exception.code.NotFoundCode;
 import com.heylocal.traveler.exception.controller.BadRequestException;
 import com.heylocal.traveler.exception.controller.ForbiddenException;
 import com.heylocal.traveler.exception.controller.NotFoundException;
 import com.heylocal.traveler.exception.service.BadArgumentException;
+import com.heylocal.traveler.exception.service.TaskRejectException;
 import com.heylocal.traveler.service.TravelOnService;
 import com.heylocal.traveler.util.error.BindingErrorMessageProvider;
+import lombok.extern.java.Log;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -186,7 +190,78 @@ class TravelOnsControllerTest {
     assertThrows(BadRequestException.class, () -> travelOnsController.updateTravelOn(travelOnId, null, bindingResult, loginUser));
   }
 
-  // TODO - deleteTravelOn
+  @Test
+  @DisplayName("여행On 삭제 핸들러 - 성공 케이스")
+  void deleteTravelOnSucceedTest() throws BadArgumentException {
+    //GIVEN
+    long existTravelOnId = 1L;
+    long authorId = 2L;
+    LoginUser loginUser = LoginUser.builder().id(authorId).build();
+
+    //Mock 행동 정의 - travelOnService
+    willReturn(true).given(travelOnService).isAuthor(authorId, existTravelOnId);
+
+    //WHEN
+
+    //THEN
+    //성공 케이스 - 1 - 정상 요청
+    assertDoesNotThrow(() -> travelOnsController.deleteTravelOn(existTravelOnId, loginUser));
+  }
+
+  @Test
+  @DisplayName("여행On 삭제 핸들러 - 삭제 권한 없는 경우")
+  void deleteTravelOnForbiddenTest() throws BadArgumentException {
+    //GIVEN
+    long existTravelOnId = 1L;
+    long noAuthorId = 2L;
+    LoginUser loginUser = LoginUser.builder().id(noAuthorId).build();
+
+    //Mock 행동 정의 - travelOnService
+    willReturn(false).given(travelOnService).isAuthor(noAuthorId, existTravelOnId);
+
+    //WHEN
+
+    //THEN
+    //실패 케이스 - 1 - 삭제 권한이 없는 경우
+    assertThrows(ForbiddenException.class, () -> travelOnsController.deleteTravelOn(existTravelOnId, loginUser));
+  }
+
+  @Test
+  @DisplayName("여행On 삭제 핸들러 - 잘못된 여행On ID인 경우")
+  void deleteTravelOnWrongIdTest() throws BadArgumentException {
+    //GIVEN
+    long notExistTravelOnId = 1L;
+    long noAuthorId = 2L;
+    LoginUser loginUser = LoginUser.builder().id(noAuthorId).build();
+
+    //Mock 행동 정의 - travelOnService
+    willThrow(new BadArgumentException(NotFoundCode.NO_INFO, "존재하지 않는 여행On ID 입니다.")).given(travelOnService).isAuthor(noAuthorId, notExistTravelOnId);
+
+    //WHEN
+
+    //THEN
+    //실패 케이스 - 1 - 존재하지 않는 여행On ID인 경우
+    assertThrows(NotFoundException.class, () -> travelOnsController.deleteTravelOn(notExistTravelOnId, loginUser));
+  }
+
+  @Test
+  @DisplayName("여행On 삭제 핸들러 - 이미 답변이 달린 경우")
+  void deleteTravelOnHasOpinionTest() throws BadArgumentException, TaskRejectException {
+    //GIVEN
+    long existTravelOnId = 1L;
+    long authorId = 2L;
+    LoginUser loginUser = LoginUser.builder().id(authorId).build();
+
+    //Mock 행동 정의 - travelOnService
+    willReturn(true).given(travelOnService).isAuthor(authorId, existTravelOnId);
+    willThrow(new TaskRejectException(ForbiddenCode.NO_PERMISSION, "답변이 달린 여행On 은 삭제할 수 없습니다.")).given(travelOnService).removeTravelOn(existTravelOnId);
+
+    //WHEN
+
+    //THEN
+    //실패 케이스 - 1 - 이미 답변이 달린 여행On ID인 경우
+    assertThrows(ForbiddenException.class, () -> travelOnsController.deleteTravelOn(existTravelOnId, loginUser));
+  }
 
   /**
    * AllTravelOnRequest 객체를 생성하는 메서드

@@ -487,7 +487,35 @@ class TravelOnRepositoryTest {
     );
   }
 
-  // TODO - remove
+  @Test
+  @DisplayName("여행 On 삭제")
+  void removeTest() {
+    //GIVEN
+    User author = User.builder()
+        .accountId("testAccountId")
+        .password("testPassword")
+        .nickname("testNickname")
+        .userRole(UserRole.TRAVELER)
+        .build();
+    em.persist(author);
+
+    String stateA = "stateA";
+    String city1A = "city1A";
+
+    //여행On 저장
+    TravelOn travelOn = saveTravelOn(author, stateA, city1A, LocalDateTime.now().minusHours(4), 1);
+
+    //WHEN
+    travelOnRepository.remove(travelOn);
+
+    //THEN
+    assertAll(
+        //성공 케이스 - 1 - 삭제가 되었는지
+        () -> assertNull(em.find(TravelOn.class, travelOn.getId())),
+        //성공 케이스 - 2 - Flush 성공
+        () -> assertDoesNotThrow(() -> em.flush())
+    );
+  }
 
   /**
    * <pre>

@@ -4,12 +4,14 @@ import com.heylocal.traveler.domain.Region;
 import com.heylocal.traveler.domain.profile.UserProfile;
 import com.heylocal.traveler.domain.travelon.*;
 import com.heylocal.traveler.domain.travelon.list.*;
+import com.heylocal.traveler.domain.travelon.opinion.Opinion;
 import com.heylocal.traveler.domain.user.User;
 import com.heylocal.traveler.domain.user.UserRole;
 import com.heylocal.traveler.dto.LoginUser;
 import com.heylocal.traveler.dto.PageDto;
 import com.heylocal.traveler.dto.TravelTypeGroupDto;
 import com.heylocal.traveler.exception.service.BadArgumentException;
+import com.heylocal.traveler.exception.service.TaskRejectException;
 import com.heylocal.traveler.repository.RegionRepository;
 import com.heylocal.traveler.repository.TravelOnRepository;
 import com.heylocal.traveler.repository.UserRepository;
@@ -268,7 +270,54 @@ class TravelOnServiceTest {
     );
   }
 
-  // TODO - removeTravelOn
+  @Test
+  @DisplayName("여행On 삭제 - 성공 케이스")
+  void removeTravelOnSucceedTest() {
+    //GIVEN
+    long existTravelOnId = 1L;
+
+    //Mock 행동 정의 - travelOnRepository
+    TravelOn travelOn = getTravelOn(existTravelOnId, "title1");
+    willReturn(Optional.of(travelOn)).given(travelOnRepository).findById(existTravelOnId);
+
+    //WHEN
+
+    //THEN
+    assertDoesNotThrow(() -> travelOnService.removeTravelOn(existTravelOnId));
+  }
+
+  @Test
+  @DisplayName("여행On 삭제 - 존재하지 않는 여행On ID 인 경우")
+  void removeTravelOnNotExistIdTest() {
+    //GIVEN
+    long notExistTravelOnId = 1L;
+
+    //Mock 행동 정의 - travelOnRepository
+    willReturn(Optional.empty()).given(travelOnRepository).findById(notExistTravelOnId);
+
+    //WHEN
+
+    //THEN
+    assertThrows(BadArgumentException.class, () -> travelOnService.removeTravelOn(notExistTravelOnId));
+  }
+
+  @Test
+  @DisplayName("여행On 삭제 - 이미 답변이 달린 경우")
+  void removeTravelOnHasOpinionTest() {
+    //GIVEN
+    long existTravelOnId = 1L;
+
+    //Mock 행동 정의 - travelOnRepository
+    TravelOn travelOn = getTravelOn(existTravelOnId, "title1");
+    travelOn.addOpinion(new Opinion());
+    travelOn.addOpinion(new Opinion());
+    willReturn(Optional.of(travelOn)).given(travelOnRepository).findById(existTravelOnId);
+
+    //WHEN
+
+    //THEN
+    assertThrows(TaskRejectException.class, () -> travelOnService.removeTravelOn(existTravelOnId));
+  }
 
   /**
    * AllTravelOnRequest 객체를 생성하는 메서드
