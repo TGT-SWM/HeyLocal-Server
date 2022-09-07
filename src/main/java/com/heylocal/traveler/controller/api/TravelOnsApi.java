@@ -9,6 +9,7 @@ import com.heylocal.traveler.dto.TravelOnDto.TravelOnRequest;
 import com.heylocal.traveler.dto.TravelOnDto.TravelOnResponse;
 import com.heylocal.traveler.dto.TravelOnDto.TravelOnSimpleResponse;
 import com.heylocal.traveler.exception.controller.BadRequestException;
+import com.heylocal.traveler.exception.controller.ForbiddenException;
 import com.heylocal.traveler.exception.controller.NotFoundException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -73,7 +74,7 @@ public interface TravelOnsApi {
             @Parameter(in = ParameterIn.DEFAULT, description = "여행 On 수정할 정보, \n Region Id 필드는 기존 값을 그대로 넘긴다. 값이 변경되더라도 적요되지 않음.", required = true) @RequestBody TravelOnRequest request,
             BindingResult bindingResult,
             @ApiIgnore LoginUser loginUser
-    ) throws BadRequestException, NotFoundException;
+    ) throws BadRequestException, NotFoundException, ForbiddenException;
 
     @Operation(summary = "여행 On 삭제", description = "여행 On을 삭제합니다.", tags = {"TravelOns"})
     @DeleteMapping(value = "/{travelOnId}")

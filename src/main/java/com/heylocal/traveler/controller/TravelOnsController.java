@@ -4,7 +4,9 @@ import com.heylocal.traveler.controller.api.TravelOnsApi;
 import com.heylocal.traveler.dto.LoginUser;
 import com.heylocal.traveler.dto.OpinionDto;
 import com.heylocal.traveler.exception.code.BadRequestCode;
+import com.heylocal.traveler.exception.code.ForbiddenCode;
 import com.heylocal.traveler.exception.controller.BadRequestException;
+import com.heylocal.traveler.exception.controller.ForbiddenException;
 import com.heylocal.traveler.exception.controller.NotFoundException;
 import com.heylocal.traveler.exception.service.BadArgumentException;
 import com.heylocal.traveler.service.TravelOnService;
@@ -104,7 +106,7 @@ public class TravelOnsController implements TravelOnsApi {
   public void updateTravelOn(long travelOnId,
                              TravelOnRequest request,
                              BindingResult bindingResult,
-                             LoginUser loginUser) throws BadRequestException, NotFoundException {
+                             LoginUser loginUser) throws BadRequestException, NotFoundException, ForbiddenException {
     boolean isAuthor = false;
 
     if (bindingResult.hasFieldErrors()) {
@@ -115,6 +117,9 @@ public class TravelOnsController implements TravelOnsApi {
     try {
       //수정 권한 확인
       isAuthor = travelOnService.isAuthor(loginUser.getId(), travelOnId);
+      if (!isAuthor) {
+        throw new ForbiddenException(ForbiddenCode.NO_PERMISSION, "수정 권한이 없습니다.");
+      }
 
       //수정
       travelOnService.updateTravelOn(request, travelOnId);
