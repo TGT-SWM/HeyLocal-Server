@@ -129,6 +129,13 @@ public class TravelOnsController implements TravelOnsApi {
     }
   }
 
+  /**
+   * 여행On 제거 핸들러
+   * @param travelOnId
+   * @param loginUser
+   * @throws ForbiddenException
+   * @throws NotFoundException
+   */
   @Override
   public void deleteTravelOn(long travelOnId, LoginUser loginUser) throws ForbiddenException, NotFoundException {
     boolean isAuthor = false;
