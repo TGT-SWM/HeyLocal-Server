@@ -78,9 +78,10 @@ public interface TravelOnsApi {
 
     @Operation(summary = "여행 On 삭제", description = "여행 On을 삭제합니다.", tags = {"TravelOns"})
     @DeleteMapping(value = "/{travelOnId}")
-    ResponseEntity<Void> deleteTravelOn(
-            @Parameter(in = ParameterIn.PATH, description = "여행 On ID", required = true) @PathVariable long travelOnId
-    );
+    void deleteTravelOn(
+            @Parameter(in = ParameterIn.PATH, description = "여행 On ID", required = true) @PathVariable long travelOnId,
+            @ApiIgnore LoginUser loginUser
+    ) throws ForbiddenException, NotFoundException;
 
     /*
      * Opinions API

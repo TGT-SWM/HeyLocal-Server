@@ -241,6 +241,14 @@ public class TravelOnRepository {
   }
 
   /**
+   * 여행On를 삭제하는 메서드
+   * @param target
+   */
+  public void remove(TravelOn target) {
+    em.remove(target);
+  }
+
+  /**
    * order by 문을 쿼리에 붙이는 메서드
    * @param jpql 원본 jpql 쿼리
    * @param sortType 정렬 기준
