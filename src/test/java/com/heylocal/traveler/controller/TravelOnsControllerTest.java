@@ -17,6 +17,7 @@ import com.heylocal.traveler.exception.controller.ForbiddenException;
 import com.heylocal.traveler.exception.controller.NotFoundException;
 import com.heylocal.traveler.exception.service.BadArgumentException;
 import com.heylocal.traveler.exception.service.TaskRejectException;
+import com.heylocal.traveler.service.OpinionService;
 import com.heylocal.traveler.service.TravelOnService;
 import com.heylocal.traveler.util.error.BindingErrorMessageProvider;
 import lombok.extern.java.Log;
@@ -45,13 +46,15 @@ class TravelOnsControllerTest {
   @Mock
   private TravelOnService travelOnService;
   @Mock
+  private OpinionService opinionService;
+  @Mock
   private BindingResult bindingResult;
   private TravelOnsController travelOnsController;
 
   @BeforeEach
   void setUp() {
     MockitoAnnotations.openMocks(this);
-    travelOnsController = new TravelOnsController(messageProvider, travelOnService);
+    travelOnsController = new TravelOnsController(messageProvider, travelOnService, opinionService);
   }
 
   @Test
