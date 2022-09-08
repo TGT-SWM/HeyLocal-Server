@@ -7,6 +7,7 @@ import com.heylocal.traveler.domain.travelon.opinion.Opinion;
 import com.heylocal.traveler.domain.user.User;
 import com.heylocal.traveler.dto.LoginUser;
 import com.heylocal.traveler.dto.PlaceDto;
+import com.heylocal.traveler.exception.code.BadRequestCode;
 import com.heylocal.traveler.exception.code.NotFoundCode;
 import com.heylocal.traveler.exception.service.BadArgumentException;
 import com.heylocal.traveler.repository.*;
@@ -96,13 +97,16 @@ public class OpinionService {
    * @param address 매핑할 주소
    * @return 매핑된 Region 엔티티
    */
-  private Optional<Region> getRegionByKeyword(String address) {
+  private Optional<Region> getRegionByKeyword(String address) throws BadArgumentException {
     String keyword;
     String[] addressAry;
     String state;
     String city;
 
     addressAry = address.split(" ");
+    if (addressAry.length != 2) {
+      throw new BadArgumentException(BadRequestCode.BAD_INPUT_FORM, "장소의 주소 형식이 잘못되었습니다.");
+    }
     state = addressAry[0];
     city = addressAry[1];
 
