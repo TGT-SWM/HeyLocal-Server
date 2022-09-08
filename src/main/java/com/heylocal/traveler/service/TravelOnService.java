@@ -61,7 +61,7 @@ public class TravelOnService {
    * @return
    * @throws BadArgumentException
    */
-  @Transactional
+  @Transactional(readOnly = true)
   public List<TravelOnSimpleResponse> inquirySimpleTravelOns(AllTravelOnGetRequest request) throws BadArgumentException {
     List<TravelOn> travelOnList;
     List<TravelOnSimpleResponse> response;
@@ -87,7 +87,7 @@ public class TravelOnService {
    * @param travelOnId 조회할 여행 On 의 ID
    * @return
    */
-  @Transactional
+  @Transactional(readOnly = true)
   public TravelOnResponse inquiryTravelOn(long travelOnId) throws BadArgumentException {
     TravelOnResponse response;
     TravelOn travelOn;
@@ -137,7 +137,7 @@ public class TravelOnService {
    * @return
    * @throws BadArgumentException 존재하지 않는 여행On ID 라면
    */
-  @Transactional
+  @Transactional(readOnly = true)
   public boolean isAuthor(long userId, long travelOnId) throws BadArgumentException {
     TravelOn travelOn = travelOnRepository.findById(travelOnId).orElseThrow(
         () -> new BadArgumentException(NotFoundCode.NO_INFO, "존재하지 않는 여행On ID 입니다.")

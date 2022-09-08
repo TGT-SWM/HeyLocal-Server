@@ -10,6 +10,7 @@ import com.heylocal.traveler.exception.service.BadArgumentException;
 import com.heylocal.traveler.repository.PlanRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Clock;
 import java.time.LocalDate;
@@ -32,6 +33,7 @@ public class PlanService {
 	 * @return 작성한 스케줄 정보
 	 * </pre>
 	 */
+	@Transactional(readOnly = true)
 	public PlanListResponse getPlans(long userId) {
 		// 작성한 플랜 조회
 		List<Plan> plans = planRepository.findByUserId(userId);
@@ -75,6 +77,7 @@ public class PlanService {
 	 * @return
 	 * </pre>
 	 */
+	@Transactional(readOnly = true)
 	public List<PlanPlacesResponse> getPlacesInPlan(long planId) throws BadArgumentException {
 		// Plan 조회
 		// Plan이 존재하지 않는 경우에는 예외 발생

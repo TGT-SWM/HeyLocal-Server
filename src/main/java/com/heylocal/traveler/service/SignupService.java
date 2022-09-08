@@ -34,7 +34,7 @@ public class SignupService {
    * @param accountId 확인할 아이디
    * @return IdCheckResponse 의 속성 isAlreadyExist 이 true 면 중복
    */
-  @Transactional
+  @Transactional(readOnly = true)
   public UserInfoCheckResponse checkAccountIdExist(String accountId) {
     boolean isExist;
     Optional<User> result;
