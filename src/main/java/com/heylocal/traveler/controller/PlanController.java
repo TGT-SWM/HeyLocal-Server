@@ -100,7 +100,7 @@ public class PlanController implements PlansApi {
 	 * </pre>
 	 */
 	@Override
-	public ResponseEntity<Void> updatePlaceInPlan(long planId, PlanPlacesRequest request) {
-		return null;
+	public void updatePlacesInPlan(long planId, List<PlanPlacesRequest> request) {
+		planService.updatePlacesInPlan(planId, request);
 	}
 }

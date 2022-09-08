@@ -5,6 +5,7 @@ import com.heylocal.traveler.domain.plan.DaySchedule;
 import com.heylocal.traveler.domain.plan.Plan;
 import com.heylocal.traveler.domain.plan.list.PlaceItem;
 import com.heylocal.traveler.domain.travelon.TravelOn;
+import com.heylocal.traveler.dto.PlaceDto.PlaceItemRequest;
 import com.heylocal.traveler.dto.PlaceDto.PlaceItemResponse;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
@@ -73,7 +74,17 @@ public class PlanDto {
 	@Builder
 	@Schema(description = "장소 목록 수정을 위한 요청 DTO")
 	public static class PlanPlacesRequest {
-		long id;
+		List<PlaceItemRequest> places;
+
+		public DaySchedule toEntity() {
+			List<PlaceItem> placeItems = places.stream()
+					.map(place -> place.toEntity())
+					.collect(Collectors.toList());
+
+			return DaySchedule.builder()
+					.placeItemList(placeItems)
+					.build();
+		}
 	}
 
 	@Getter
