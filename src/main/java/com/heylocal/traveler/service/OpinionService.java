@@ -7,8 +7,10 @@ import com.heylocal.traveler.domain.travelon.opinion.Opinion;
 import com.heylocal.traveler.domain.user.User;
 import com.heylocal.traveler.dto.LoginUser;
 import com.heylocal.traveler.dto.PlaceDto;
+import com.heylocal.traveler.exception.code.ForbiddenCode;
 import com.heylocal.traveler.exception.code.NotFoundCode;
 import com.heylocal.traveler.exception.service.BadArgumentException;
+import com.heylocal.traveler.exception.service.TaskRejectException;
 import com.heylocal.traveler.repository.OpinionRepository;
 import com.heylocal.traveler.repository.PlaceRepository;
 import com.heylocal.traveler.repository.TravelOnRepository;
@@ -39,11 +41,11 @@ public class OpinionService {
    * @throws BadArgumentException
    */
   @Transactional
-  public void addNewOpinion(long travelOnId, OpinionRequest request, LoginUser loginUser) throws BadArgumentException {
+  public void addNewOpinion(long travelOnId, OpinionRequest request, LoginUser loginUser) throws BadArgumentException, TaskRejectException {
     long authorId;
     long placeId;
     TravelOn travelOn;
-    Region region;
+    Region placeRegion;
     Place place;
     Optional<Place> existedPlaceOptional;
     Opinion newOpinion;
@@ -54,9 +56,14 @@ public class OpinionService {
     );
 
     //지역 조회
-    region = regionService.getRegionByAddress(request.getPlace().getAddress()).orElseThrow(
+    placeRegion = regionService.getRegionByAddress(request.getPlace().getAddress()).orElseThrow(
         () -> new BadArgumentException(NotFoundCode.NO_INFO, "주소 관련 Region을 찾을 수 없습니다.")
     );
+
+    //여행On의 지역과 답변할 장소의 지역이 다르면 거부
+    if (travelOn.getRegion() != placeRegion) {
+      throw new TaskRejectException(ForbiddenCode.NO_PERMISSION, "여행On의 지역과 다른 지역의 장소는 등록할 수 없습니다.");
+    }
 
     //작성자 조회
     authorId = loginUser.getId();
@@ -66,7 +73,7 @@ public class OpinionService {
     placeId = request.getPlace().getId();
     existedPlaceOptional = placeRepository.findById(placeId);
     if (existedPlaceOptional.isEmpty()) { //기존에 저장된 장소가 없다면
-      place = request.getPlace().toEntity(region);
+      place = request.getPlace().toEntity(placeRegion);
       placeRepository.save(place);
 
     } else { //기존에 저장된 장소가 있다면
@@ -75,7 +82,7 @@ public class OpinionService {
     }
 
     //새 답변 추가
-    newOpinion = request.toEntity(place, author, travelOn, region);
+    newOpinion = request.toEntity(place, author, travelOn, placeRegion);
     opinionRepository.save(newOpinion);
   }
 

@@ -104,6 +104,7 @@ public interface TravelOnsApi {
     @ApiResponses(value = {
         @ApiResponse(responseCode = "201", description = "해당 여행On 에 답변 등록 성공 시"),
         @ApiResponse(responseCode = "400", description = "- `BAD_INPUT_FORM`: 입력 값의 형식이 올바르지 않을 때", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessageResponse.class))),
+        @ApiResponse(responseCode = "403", description = "- `NO_PERMISSION`: 등록할 수 없을 때", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessageResponse.class))),
         @ApiResponse(responseCode = "404", description = "- `NO_INFO`: 존재하지 않는 정보일 때", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessageResponse.class)))
     })
     @ResponseStatus(HttpStatus.CREATED)
@@ -113,7 +114,7 @@ public interface TravelOnsApi {
             @Parameter(in = ParameterIn.DEFAULT, description = "답변 정보", required = true) @Validated @RequestBody OpinionRequest request,
             BindingResult bindingResult,
             @ApiIgnore LoginUser loginUser
-    ) throws BadRequestException, BadArgumentException, NotFoundException;
+    ) throws BadRequestException, BadArgumentException, NotFoundException, ForbiddenException;
 
     @Operation(summary = "답변 수정", description = "답변을 수정합니다.", tags = {"TravelOns"})
     @PutMapping("/{travelOnId}/opinions/{opinionId}")

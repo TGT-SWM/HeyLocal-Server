@@ -171,7 +171,7 @@ public class TravelOnsController implements TravelOnsApi {
    * @return
    */
   @Override
-  public void createOpinions(long travelOnId, OpinionRequest request, BindingResult bindingResult, LoginUser loginUser) throws BadRequestException, NotFoundException {
+  public void createOpinions(long travelOnId, OpinionRequest request, BindingResult bindingResult, LoginUser loginUser) throws BadRequestException, NotFoundException, ForbiddenException {
     if (bindingResult.hasFieldErrors()) {
       String fieldErrMsg = errorMessageProvider.getFieldErrMsg(bindingResult);
       throw new BadRequestException(BadRequestCode.BAD_INPUT_FORM, fieldErrMsg);
@@ -181,6 +181,8 @@ public class TravelOnsController implements TravelOnsApi {
       opinionService.addNewOpinion(travelOnId, request, loginUser);
     } catch (BadArgumentException e) {
       throw new NotFoundException(e.getCode(), e.getDescription());
+    } catch (TaskRejectException e) {
+      throw new ForbiddenException(e.getCode(), e.getDescription());
     }
 
   }
