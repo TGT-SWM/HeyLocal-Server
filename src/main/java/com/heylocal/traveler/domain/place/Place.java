@@ -64,4 +64,11 @@ public class Place extends BaseTimeEntity {
   @Builder.Default
   @OneToMany(mappedBy = "place", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   private List<PlaceItem> placeItemList = new ArrayList<>();
+
+  public void addOpinion(Opinion opinion) {
+    this.opinionList.add(opinion);
+    if (opinion.getPlace() != this) {
+      opinion.registerPlace(this);
+    }
+  }
 }

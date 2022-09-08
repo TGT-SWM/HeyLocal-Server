@@ -45,4 +45,11 @@ public class Region {
   @Builder.Default
   @OneToMany(mappedBy = "region", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   private List<TravelOn> travelOnList = new ArrayList<>();
+
+  public void addOpinion(Opinion opinion) {
+    this.getOpinionList().add(opinion);
+    if (opinion.getRegion() != this) {
+      opinion.registerRegion(this);
+    }
+  }
 }

@@ -1,7 +1,12 @@
 package com.heylocal.traveler.dto;
 
+import com.heylocal.traveler.domain.Region;
+import com.heylocal.traveler.domain.place.Place;
+import com.heylocal.traveler.domain.travelon.TravelOn;
 import com.heylocal.traveler.domain.travelon.opinion.CoffeeType;
 import com.heylocal.traveler.domain.travelon.opinion.EvaluationDegree;
+import com.heylocal.traveler.domain.travelon.opinion.Opinion;
+import com.heylocal.traveler.domain.user.User;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiParam;
@@ -84,6 +89,42 @@ public class OpinionDto {
 		private boolean existsAmenity;
 		@ApiModelProperty("근처에 편의점이 있나요")
 		private boolean existsStore;
+
+		public Opinion toEntity(Place place, User author, TravelOn travelOn, Region region) {
+			Opinion opinion = Opinion.builder()
+					.description(description)
+					.kindness(kindness)
+					.facilityCleanliness(facilityCleanliness)
+					.accessibility(accessibility)
+					.costPerformance(costPerformance)
+					.canParking(canParking)
+					.waiting(waiting)
+					.photoSpotImageUrl(photoSpotImageUrl)
+					.photoSpotText(photoSpotText)
+					.mood(mood)
+					.toiletCleanliness(toiletCleanliness)
+					.food(food)
+					.recommendFood(recommendFood)
+					.drink(drink)
+					.coffeeType(coffeeType)
+					.recommendDrink(recommendDrink)
+					.recommendDessert(recommendDessert)
+					.recommendToDo(recommendToDo)
+					.recommendSnack(recommendSnack)
+					.streetNoise(streetNoise)
+					.deafening(deafening)
+					.breakFast(breakFast)
+					.existsAmenity(existsAmenity)
+					.existsStore(existsStore)
+					.build();
+
+			opinion.registerPlace(place);
+			opinion.registerAuthor(author);
+			opinion.registerTravelOn(travelOn);
+			opinion.registerRegion(region);
+
+			return opinion;
+		}
 	}
 
 	@Getter
