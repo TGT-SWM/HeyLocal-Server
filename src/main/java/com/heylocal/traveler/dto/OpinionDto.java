@@ -9,15 +9,13 @@ import com.heylocal.traveler.domain.travelon.opinion.Opinion;
 import com.heylocal.traveler.domain.user.User;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import io.swagger.annotations.ApiParam;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
-import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
-import static com.heylocal.traveler.dto.PlaceDto.*;
+import static com.heylocal.traveler.dto.PlaceDto.PlaceRequest;
 
 public class OpinionDto {
 	@Getter

@@ -6,10 +6,8 @@ import com.heylocal.traveler.domain.place.PlaceCategory;
 import com.heylocal.traveler.domain.plan.list.PlaceItem;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import io.swagger.annotations.ApiParam;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
-import org.springframework.validation.annotation.Validated;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;

@@ -1,7 +1,6 @@
 package com.heylocal.traveler.controller;
 
 import com.heylocal.traveler.controller.api.RegionsApi;
-import com.heylocal.traveler.dto.RegionDto;
 import com.heylocal.traveler.exception.controller.NotFoundException;
 import com.heylocal.traveler.exception.service.BadArgumentException;
 import com.heylocal.traveler.service.RegionService;
@@ -11,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-import static com.heylocal.traveler.dto.RegionDto.*;
+import static com.heylocal.traveler.dto.RegionDto.RegionResponse;
 
 @Tag(name = "Regions")
 @RestController

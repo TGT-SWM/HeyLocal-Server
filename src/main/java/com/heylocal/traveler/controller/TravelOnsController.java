@@ -2,7 +2,6 @@ package com.heylocal.traveler.controller;
 
 import com.heylocal.traveler.controller.api.TravelOnsApi;
 import com.heylocal.traveler.dto.LoginUser;
-import com.heylocal.traveler.dto.OpinionDto;
 import com.heylocal.traveler.exception.code.BadRequestCode;
 import com.heylocal.traveler.exception.code.ForbiddenCode;
 import com.heylocal.traveler.exception.controller.BadRequestException;
@@ -22,7 +21,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-import static com.heylocal.traveler.dto.OpinionDto.*;
+import static com.heylocal.traveler.dto.OpinionDto.OpinionRequest;
+import static com.heylocal.traveler.dto.OpinionDto.OpinionResponse;
 import static com.heylocal.traveler.dto.TravelOnDto.*;
 
 @Slf4j

@@ -2,7 +2,6 @@ package com.heylocal.traveler.service;
 
 import com.heylocal.traveler.domain.plan.DaySchedule;
 import com.heylocal.traveler.domain.plan.Plan;
-import com.heylocal.traveler.dto.PlanDto;
 import com.heylocal.traveler.dto.PlanDto.PlanListResponse;
 import com.heylocal.traveler.dto.PlanDto.PlanPlacesResponse;
 import com.heylocal.traveler.dto.PlanDto.PlanResponse;

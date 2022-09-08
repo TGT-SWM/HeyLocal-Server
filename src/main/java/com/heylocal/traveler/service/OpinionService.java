@@ -6,12 +6,10 @@ import com.heylocal.traveler.domain.travelon.TravelOn;
 import com.heylocal.traveler.domain.travelon.opinion.Opinion;
 import com.heylocal.traveler.domain.user.User;
 import com.heylocal.traveler.dto.LoginUser;
-import com.heylocal.traveler.exception.code.BadRequestCode;
 import com.heylocal.traveler.exception.code.NotFoundCode;
 import com.heylocal.traveler.exception.service.BadArgumentException;
 import com.heylocal.traveler.repository.*;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
