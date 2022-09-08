@@ -54,7 +54,7 @@ public class OpinionService {
     );
 
     //지역 조회
-    region = regionService.getRegionByKeyword(request.getPlace().getAddress()).orElseThrow(
+    region = regionService.getRegionByAddress(request.getPlace().getAddress()).orElseThrow(
         () -> new BadArgumentException(NotFoundCode.NO_INFO, "주소 관련 Region을 찾을 수 없습니다.")
     );
 

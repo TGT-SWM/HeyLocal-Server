@@ -46,7 +46,7 @@ public class RegionService {
    * @return 매핑된 Region 엔티티
    */
   @Transactional(readOnly = true)
-  public Optional<Region> getRegionByKeyword(String address) throws BadArgumentException {
+  public Optional<Region> getRegionByAddress(String address) throws BadArgumentException {
     String keyword;
     String[] addressAry;
     String state;
