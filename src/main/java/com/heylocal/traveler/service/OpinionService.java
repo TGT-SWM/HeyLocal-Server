@@ -6,6 +6,7 @@ import com.heylocal.traveler.domain.travelon.TravelOn;
 import com.heylocal.traveler.domain.travelon.opinion.Opinion;
 import com.heylocal.traveler.domain.user.User;
 import com.heylocal.traveler.dto.LoginUser;
+import com.heylocal.traveler.dto.PlaceDto;
 import com.heylocal.traveler.exception.code.NotFoundCode;
 import com.heylocal.traveler.exception.service.BadArgumentException;
 import com.heylocal.traveler.repository.*;
@@ -61,16 +62,33 @@ public class OpinionService {
     //장소 저장 및 조회
     placeId = request.getPlace().getId();
     existedPlaceOptional = placeRepository.findById(placeId);
-    if (existedPlaceOptional.isEmpty()) {
+    if (existedPlaceOptional.isEmpty()) { //기존에 저장된 장소가 없다면
       place = request.getPlace().toEntity(region);
       placeRepository.save(place);
-    } else {
+
+    } else { //기존에 저장된 장소가 있다면
+      updatePlace(existedPlaceOptional.get(), request.getPlace()); //장소 정보 업데이트
       place = existedPlaceOptional.get();
     }
 
     //새 답변 추가
     newOpinion = request.toEntity(place, author, travelOn, region);
     opinionRepository.save(newOpinion);
+  }
+
+  /**
+   * 장소 업데이트
+   * @param savedPlace 기존에 저장되었던 장소 엔티티
+   * @param newPlaceInfo 해당 장소의 새 정보
+   */
+  private void updatePlace(Place savedPlace, PlaceDto.PlaceRequest newPlaceInfo) {
+    savedPlace.updateCategory(newPlaceInfo.getCategory());
+    savedPlace.updateName(newPlaceInfo.getName());
+    savedPlace.updateRoadAddress(newPlaceInfo.getRoadAddress());
+    savedPlace.updateAddress(newPlaceInfo.getAddress());
+    savedPlace.updateCoordinates(newPlaceInfo.getLat(), newPlaceInfo.getLng());
+    savedPlace.updateThumbnailUrl(newPlaceInfo.getThumbnailUrl());
+    savedPlace.updateLink(newPlaceInfo.getKakaoLink());
   }
 
   /**
