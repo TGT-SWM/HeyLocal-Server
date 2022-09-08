@@ -63,8 +63,8 @@ public interface PlansApi {
 
 	@Operation(summary = "플랜의 장소 목록 수정", description = "플랜의 장소 목록 수정", tags = {"Plans"})
 	@PutMapping("/{planId}/places")
-	ResponseEntity<Void> updatePlaceInPlan(
+	void updatePlacesInPlan(
 			@Parameter(in = ParameterIn.PATH, description = "플랜 ID", required = true) long planId,
-			@Parameter(in = ParameterIn.DEFAULT, description = "", required = true) PlanPlacesRequest request
+			@Parameter(in = ParameterIn.DEFAULT, description = "", required = true) List<PlanPlacesRequest> request
 	);
 }
