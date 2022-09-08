@@ -25,7 +25,7 @@ import java.util.List;
 @Getter
 @SuperBuilder
 public class Place extends BaseTimeEntity {
-  @Id @GeneratedValue
+  @Id
   private Long id;
 
   @Enumerated(EnumType.STRING)
