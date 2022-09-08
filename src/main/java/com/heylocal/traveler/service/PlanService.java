@@ -4,6 +4,7 @@ import com.heylocal.traveler.domain.plan.DaySchedule;
 import com.heylocal.traveler.domain.plan.Plan;
 import com.heylocal.traveler.dto.PlanDto;
 import com.heylocal.traveler.dto.PlanDto.PlanListResponse;
+import com.heylocal.traveler.dto.PlanDto.PlanPlacesRequest;
 import com.heylocal.traveler.dto.PlanDto.PlanPlacesResponse;
 import com.heylocal.traveler.dto.PlanDto.PlanResponse;
 import com.heylocal.traveler.exception.code.NotFoundCode;
@@ -90,5 +91,30 @@ public class PlanService {
 		return daySchedules.stream()
 				.map(PlanPlacesResponse::new)
 				.collect(Collectors.toList());
+	}
+
+	/**
+	 * <plan>
+	 * 해당 플랜의 장소 목록을 업데이트합니다.
+	 * @param planId 플랜 ID
+	 * @param request 장소 정보
+	 * </plan>
+	 */
+	public void updatePlacesInPlan(long planId, List<PlanPlacesRequest> request) {
+		// Plan 조회
+		// Plan이 존재하지 않는 경우에는 예외 발생
+		Optional<Plan> optPlan = planRepository.findById(planId);
+		if (optPlan.isEmpty())
+			return;
+		Plan plan = optPlan.get();
+
+		// DTO 변환
+		// List<PlanPlacesRequest> -> List<DaySchedule>
+		List<DaySchedule> daySchedules = request.stream()
+				.map(places -> places.toEntity())
+				.collect(Collectors.toList());
+
+		// 업데이트
+		plan.updateDayScheduleList(daySchedules);
 	}
 }
