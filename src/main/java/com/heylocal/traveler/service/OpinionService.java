@@ -19,7 +19,6 @@ import java.util.Optional;
 
 import static com.heylocal.traveler.dto.OpinionDto.OpinionRequest;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
 public class OpinionService {
@@ -92,22 +91,18 @@ public class OpinionService {
     city = addressAry[1];
 
     if (state.contains("제주")) { //제주인 경우
-      log.info("지역 검색 키워드: {}", "제주");
       return regionRepository.findByStateKeyword("제주");
 
     } else if (city.endsWith("시")) { //city 가 "시"인 경우
       keyword = city.replace("시", "");
-      log.info("지역 검색 키워드: {}", keyword);
       return regionRepository.findByCityKeyword(keyword);
 
     } else if (city.endsWith("군")) { //city 가 "군"인 경우
       keyword = city.replace("군", "");
-      log.info("지역 검색 키워드: {}", keyword);
       return regionRepository.findByCityKeyword(keyword);
 
     } else { //특별시나 광역시인 경우
       keyword = state.replace("시", "");
-      log.info("지역 검색 키워드: {}", keyword);
       return regionRepository.findByStateKeyword(keyword);
     }
 
