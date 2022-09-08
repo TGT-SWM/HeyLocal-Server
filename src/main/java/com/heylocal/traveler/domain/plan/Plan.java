@@ -39,4 +39,8 @@ public class Plan extends BaseTimeEntity {
   @Builder.Default
   @OneToMany(mappedBy = "plan", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   private List<DaySchedule> dayScheduleList = new ArrayList<>();
+
+  public void updateDayScheduleList(List<DaySchedule> dayScheduleList) {
+    this.dayScheduleList = dayScheduleList;
+  }
 }
