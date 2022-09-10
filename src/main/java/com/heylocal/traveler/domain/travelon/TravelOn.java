@@ -98,7 +98,7 @@ public class TravelOn extends BaseTimeEntity {
   @OneToMany(mappedBy = "travelOn", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   private List<Opinion> opinionList = new ArrayList<>();
 
-  @OneToOne(mappedBy = "travelOn")
+  @OneToOne(mappedBy = "travelOn", fetch = FetchType.LAZY)
   private Plan plan;
 
   public void addTravelMember(TravelMember travelMember) {
