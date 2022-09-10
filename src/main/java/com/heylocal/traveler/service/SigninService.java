@@ -4,8 +4,8 @@ import com.heylocal.traveler.domain.token.AccessToken;
 import com.heylocal.traveler.domain.token.RefreshToken;
 import com.heylocal.traveler.domain.user.User;
 import com.heylocal.traveler.domain.user.UserRole;
+import com.heylocal.traveler.exception.UnauthorizedException;
 import com.heylocal.traveler.exception.code.SigninCode;
-import com.heylocal.traveler.exception.service.SigninArgumentException;
 import com.heylocal.traveler.repository.TokenRepository;
 import com.heylocal.traveler.repository.UserRepository;
 import com.heylocal.traveler.util.jwt.JwtTokenParser;
@@ -38,10 +38,10 @@ public class SigninService {
    * 로그인 메서드
    * @param request 요청 DTO
    * @return 로그인 성공 시, 응답 DTO
-   * @throws IllegalArgumentException 로그인 실패 시
+   * @throws UnauthorizedException 로그인 실패 시
    */
   @Transactional
-  public SigninResponse signin(SigninRequest request) throws SigninArgumentException {
+  public SigninResponse signin(SigninRequest request) throws UnauthorizedException {
     String accountId = request.getAccountId();
     String rawPassword = request.getPassword();
     User user;
@@ -70,14 +70,14 @@ public class SigninService {
    * 계정 ID 확인 메서드
    * @param accountId (client가 요청한) 확인할 계정 ID
    * @return 해당 계정 ID를 가지고 있는 Traveler 엔티티
-   * @throws IllegalArgumentException 존재하지 않는 계정 ID인 경우
+   * @throws UnauthorizedException 존재하지 않는 계정 ID인 경우
    */
-  private User checkAccountId(String accountId) throws SigninArgumentException {
+  private User checkAccountId(String accountId) throws UnauthorizedException {
     Optional<User> userByAccountId;
 
     userByAccountId = userRepository.findByAccountId(accountId);
     if (userByAccountId.isEmpty()) {
-      throw new SigninArgumentException(SigninCode.NOT_EXIST_SIGNIN_ACCOUNT_ID);
+      throw new UnauthorizedException(SigninCode.NOT_EXIST_SIGNIN_ACCOUNT_ID);
     }
 
     return userByAccountId.get();
@@ -88,16 +88,16 @@ public class SigninService {
    * @param rawPassword (client가 요청한) 확인할 비밀번호
    * @param userByAccountId 요청받은 계정 ID로 찾은 Traveler 엔티티, 비밀번호를 대조할 엔티티
    * @return 비밀번호가 일치하는 경우 해당 Traveler 엔티티 반환
-   * @exception IllegalArgumentException 비밀번호가 일치하지 않는 경우
+   * @exception UnauthorizedException 비밀번호가 일치하지 않는 경우
    */
-  private User checkPassword(String rawPassword, User userByAccountId) throws SigninArgumentException {
+  private User checkPassword(String rawPassword, User userByAccountId) throws UnauthorizedException {
     String encodedPasswordOfFoundTraveler;
     boolean isMatchedPassword;
 
     encodedPasswordOfFoundTraveler = userByAccountId.getPassword();
     isMatchedPassword = checkPasswordMatch(rawPassword, encodedPasswordOfFoundTraveler);
     if (!isMatchedPassword) {
-      throw new SigninArgumentException(SigninCode.WRONG_SIGNIN_PASSWORD);
+      throw new UnauthorizedException(SigninCode.WRONG_SIGNIN_PASSWORD);
     }
 
     return userByAccountId;

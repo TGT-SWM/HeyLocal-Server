@@ -2,8 +2,8 @@ package com.heylocal.traveler.interceptor.auth;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.heylocal.traveler.dto.ErrorMessageResponse;
+import com.heylocal.traveler.exception.UnauthorizedException;
 import com.heylocal.traveler.exception.code.UnauthorizedCode;
-import com.heylocal.traveler.exception.controller.UnauthorizedException;
 import com.heylocal.traveler.util.jwt.JwtTokenParser;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;

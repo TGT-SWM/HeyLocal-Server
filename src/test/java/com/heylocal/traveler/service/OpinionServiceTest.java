@@ -11,8 +11,9 @@ import com.heylocal.traveler.domain.travelon.opinion.EvaluationDegree;
 import com.heylocal.traveler.domain.user.User;
 import com.heylocal.traveler.domain.user.UserRole;
 import com.heylocal.traveler.dto.LoginUser;
-import com.heylocal.traveler.exception.service.BadArgumentException;
-import com.heylocal.traveler.exception.service.TaskRejectException;
+import com.heylocal.traveler.exception.BadRequestException;
+import com.heylocal.traveler.exception.ForbiddenException;
+import com.heylocal.traveler.exception.NotFoundException;
 import com.heylocal.traveler.repository.OpinionRepository;
 import com.heylocal.traveler.repository.PlaceRepository;
 import com.heylocal.traveler.repository.TravelOnRepository;
@@ -55,7 +56,7 @@ class OpinionServiceTest {
 
   @Test
   @DisplayName("새 답변 등록 - 성공 케이스")
-  void addNewOpinionSucceedTest() throws BadArgumentException, TaskRejectException {
+  void addNewOpinionSucceedTest() throws BadRequestException {
     /* 여행On id가 유효하고, 주소->Region 매핑이 되고, 여행On Region과 답변 장소의 Region이 같고, 작성자 조회가 되는 경우 */
 
     //GIVEN
@@ -121,12 +122,12 @@ class OpinionServiceTest {
 
     //THEN
     //실패 케이스 - 1 - 존재하지 않는 여행On ID 인 경우
-    assertThrows(BadArgumentException.class, () -> opinionService.addNewOpinion(travelOnId, opinionRequest, loginUser));
+    assertThrows(NotFoundException.class, () -> opinionService.addNewOpinion(travelOnId, opinionRequest, loginUser));
   }
 
   @Test
   @DisplayName("새 답변 등록 - 주소가 잘못된 경우")
-  void addNewOpinionWrongAddressTest() throws BadArgumentException {
+  void addNewOpinionWrongAddressTest() throws BadRequestException {
     //GIVEN
     long travelOnId = 1L;
     long placeId = 2L;
@@ -148,12 +149,12 @@ class OpinionServiceTest {
 
     //THEN
     //실패 케이스 - 1 - 주소가 잘못된 경우
-    assertThrows(BadArgumentException.class, () -> opinionService.addNewOpinion(travelOnId, opinionRequest, loginUser));
+    assertThrows(NotFoundException.class, () -> opinionService.addNewOpinion(travelOnId, opinionRequest, loginUser));
   }
 
   @Test
   @DisplayName("새 답변 등록 - 주소 형식이 틀린 경우")
-  void addNewOpinionWrongFormatAddressTest() throws BadArgumentException {
+  void addNewOpinionWrongFormatAddressTest() throws BadRequestException {
     //GIVEN
     long travelOnId = 1L;
     long placeId = 2L;
@@ -169,18 +170,18 @@ class OpinionServiceTest {
     willReturn(Optional.of(travelOn)).given(travelOnRepository).findById(travelOnId);
 
     //Mock 행동 정의 - regionService
-    willThrow(BadArgumentException.class).given(regionService).getRegionByAddress(eq(placeAddress));
+    willThrow(BadRequestException.class).given(regionService).getRegionByAddress(eq(placeAddress));
 
     //WHEN
 
     //THEN
     //실패 케이스 - 1 - 주소 형식이 잘못된 경우
-    assertThrows(BadArgumentException.class, () -> opinionService.addNewOpinion(travelOnId, opinionRequest, loginUser));
+    assertThrows(BadRequestException.class, () -> opinionService.addNewOpinion(travelOnId, opinionRequest, loginUser));
   }
 
   @Test
   @DisplayName("새 답변 등록 - 여행On의 지역과 다른 지역의 장소로 답변한 경우")
-  void addNewOpinionNotSameRegionTest() throws BadArgumentException {
+  void addNewOpinionNotSameRegionTest() throws BadRequestException {
     //GIVEN
     long travelOnId = 1L;
     long placeId = 2L;
@@ -203,7 +204,7 @@ class OpinionServiceTest {
 
     //THEN
     //실패 케이스 - 1 - 여행On의 지역과 다른 지역의 장소로 답변한 경우
-    assertThrows(TaskRejectException.class, () -> opinionService.addNewOpinion(travelOnId, opinionRequest, loginUser));
+    assertThrows(ForbiddenException.class, () -> opinionService.addNewOpinion(travelOnId, opinionRequest, loginUser));
   }
 
   private OpinionRequest getOpinionRequest(PlaceRequest place) {

@@ -2,10 +2,9 @@ package com.heylocal.traveler.controller;
 
 import com.heylocal.traveler.domain.user.UserRole;
 import com.heylocal.traveler.dto.AuthTokenDto;
+import com.heylocal.traveler.exception.BadRequestException;
+import com.heylocal.traveler.exception.UnauthorizedException;
 import com.heylocal.traveler.exception.code.SigninCode;
-import com.heylocal.traveler.exception.controller.BadRequestException;
-import com.heylocal.traveler.exception.controller.UnauthorizedException;
-import com.heylocal.traveler.exception.service.SigninArgumentException;
 import com.heylocal.traveler.service.SigninService;
 import com.heylocal.traveler.util.error.BindingErrorMessageProvider;
 import org.junit.jupiter.api.BeforeEach;
@@ -39,7 +38,7 @@ class SignInControllerTest {
 
   @Test
   @DisplayName("로그인 컨트롤러")
-  void signinPostTest() throws SigninArgumentException {
+  void signinPostTest() throws UnauthorizedException {
     //GIVEN
     String rightAccountId = "testAccountId";
     String rightRawPassword = "testPassword123!";
@@ -78,7 +77,7 @@ class SignInControllerTest {
         .refreshToken(rightRefreshToken)
         .build();
     willReturn(rightResponse).given(signinService).signin(rightRequest);
-    willThrow(new SigninArgumentException(SigninCode.WRONG_SIGNIN_PASSWORD)).given(signinService).signin(wrongPwRequest);
+    willThrow(new UnauthorizedException(SigninCode.WRONG_SIGNIN_PASSWORD)).given(signinService).signin(wrongPwRequest);
 
     //WHEN
 

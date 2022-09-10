@@ -1,9 +1,8 @@
 package com.heylocal.traveler.controller;
 
+import com.heylocal.traveler.exception.BadRequestException;
+import com.heylocal.traveler.exception.UnauthorizedException;
 import com.heylocal.traveler.exception.code.AuthCode;
-import com.heylocal.traveler.exception.controller.BadRequestException;
-import com.heylocal.traveler.exception.controller.UnauthorizedException;
-import com.heylocal.traveler.exception.service.AuthException;
 import com.heylocal.traveler.service.AuthService;
 import com.heylocal.traveler.util.error.BindingErrorMessageProvider;
 import org.junit.jupiter.api.BeforeEach;
@@ -37,7 +36,7 @@ class AuthControllerTest {
 
   @Test
   @DisplayName("토큰 재발급 컨트롤러")
-  void tokenPutTest(@Mock BindingResult bindingResult) throws AuthException, UnauthorizedException, BadRequestException {
+  void tokenPutTest(@Mock BindingResult bindingResult) throws UnauthorizedException, BadRequestException {
     //GIVEN
     String expiredAccessTokenValue = "expiredAccessTokenValue"; //만료된 Access Token
     String notExpiredAccessTokenValue = "notExpiredAccessTokenValue"; //만료되지 않은 Access Token
@@ -82,13 +81,13 @@ class AuthControllerTest {
     //Mock 행동 정의 - AuthService
     willReturn(succeedResponse)
         .given(authService).reissueTokenPair(succeedReissueRequest);
-    willThrow(new AuthException(AuthCode.NOT_EXPIRED_ACCESS_TOKEN))
+    willThrow(new UnauthorizedException(AuthCode.NOT_EXPIRED_ACCESS_TOKEN))
         .given(authService).reissueTokenPair(notExpiredAccessTokenRequest);
-    willThrow(new AuthException(AuthCode.EXPIRED_REFRESH_TOKEN))
+    willThrow(new UnauthorizedException(AuthCode.EXPIRED_REFRESH_TOKEN))
         .given(authService).reissueTokenPair(expiredRefreshTokenRequest);
-    willThrow(new AuthException(AuthCode.NOT_MATCH_PAIR))
+    willThrow(new UnauthorizedException(AuthCode.NOT_MATCH_PAIR))
         .given(authService).reissueTokenPair(notMatchedTokenRequest);
-    willThrow(new AuthException(AuthCode.NOT_EXIST_REFRESH_TOKEN))
+    willThrow(new UnauthorizedException(AuthCode.NOT_EXIST_REFRESH_TOKEN))
         .given(authService).reissueTokenPair(notExistRefreshTokenRequest);
 
 

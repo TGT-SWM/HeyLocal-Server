@@ -2,7 +2,7 @@ package com.heylocal.traveler.service;
 
 import com.heylocal.traveler.domain.user.User;
 import com.heylocal.traveler.domain.user.UserRole;
-import com.heylocal.traveler.exception.service.SigninArgumentException;
+import com.heylocal.traveler.exception.UnauthorizedException;
 import com.heylocal.traveler.repository.TokenRepository;
 import com.heylocal.traveler.repository.UserRepository;
 import com.heylocal.traveler.util.jwt.JwtTokenParser;
@@ -40,7 +40,7 @@ class SigninServiceTest {
 
   @Test
   @DisplayName("로그인")
-  void signinTest() throws SigninArgumentException {
+  void signinTest() throws UnauthorizedException {
     //GIVEN
     String rightAccountId = "testAccountId1";
     String rightRawPassword = "testPassword123!";
@@ -109,11 +109,11 @@ class SigninServiceTest {
         () -> assertEquals(accessTokenValue, succeedResponse.getAccessToken()),
         () -> assertEquals(refreshTokenValue, succeedResponse.getRefreshToken()),
         //실패 케이스 - 1 - 존재하지 않는 계정 id
-        () -> assertThrows(SigninArgumentException.class, () -> signinService.signin(wrongAccountIdRequest)),
+        () -> assertThrows(UnauthorizedException.class, () -> signinService.signin(wrongAccountIdRequest)),
         //실패 케이스 - 2 - 존재하지 않는 password
-        () -> assertThrows(SigninArgumentException.class, () -> signinService.signin(wrongPasswordRequest)),
+        () -> assertThrows(UnauthorizedException.class, () -> signinService.signin(wrongPasswordRequest)),
         //실패 케이스 - 3 - 계정 id, password 모두 존재하지 않는 경우
-        () -> assertThrows(SigninArgumentException.class, () -> signinService.signin(wrongBothRequest))
+        () -> assertThrows(UnauthorizedException.class, () -> signinService.signin(wrongBothRequest))
     );
 
   }

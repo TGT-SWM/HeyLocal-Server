@@ -2,7 +2,8 @@ package com.heylocal.traveler.service;
 
 import com.heylocal.traveler.domain.Region;
 import com.heylocal.traveler.dto.RegionDto;
-import com.heylocal.traveler.exception.service.BadArgumentException;
+import com.heylocal.traveler.exception.BadRequestException;
+import com.heylocal.traveler.exception.NotFoundException;
 import com.heylocal.traveler.repository.RegionRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -32,7 +33,7 @@ class RegionServiceTest {
 
   @Test
   @DisplayName("state 으로 Region 조회")
-  void inquiryRegionsTest() throws BadArgumentException {
+  void inquiryRegionsTest() throws NotFoundException {
     //GIVEN
     String existState = "existState";
     String notExistState = "notExistState";
@@ -63,13 +64,13 @@ class RegionServiceTest {
         () -> assertDoesNotThrow(() -> regionService.inquiryRegions(existState)),
         () -> assertEquals(2, succeedResult.size()),
         //실패 케이스 - 1 - 존재하지 않는 state 조회시
-        () -> assertThrows(BadArgumentException.class, () -> regionService.inquiryRegions(notExistState))
+        () -> assertThrows(NotFoundException.class, () -> regionService.inquiryRegions(notExistState))
     );
   }
 
   @Test
   @DisplayName("주소 -> Region 매핑 - 성공 케이스")
-  void getRegionByAddressSucceedTest() throws BadArgumentException {
+  void getRegionByAddressSucceedTest() throws BadRequestException {
     //GIVEN
     String metropolitanKeyword = "부산";
     String generalCityKeyword = "안산";
@@ -108,6 +109,6 @@ class RegionServiceTest {
     //WHEN
 
     //THEN
-    assertThrows(BadArgumentException.class, () -> regionService.getRegionByAddress(wrongAddress));
+    assertThrows(BadRequestException.class, () -> regionService.getRegionByAddress(wrongAddress));
   }
 }

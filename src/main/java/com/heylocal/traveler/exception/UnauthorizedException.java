@@ -1,6 +1,5 @@
-package com.heylocal.traveler.exception.controller;
+package com.heylocal.traveler.exception;
 
-import com.heylocal.traveler.exception.AllException;
 import com.heylocal.traveler.exception.code.ErrorCode;
 
 /**

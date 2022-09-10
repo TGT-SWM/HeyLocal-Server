@@ -7,10 +7,11 @@ import com.heylocal.traveler.domain.travelon.opinion.Opinion;
 import com.heylocal.traveler.domain.user.User;
 import com.heylocal.traveler.dto.LoginUser;
 import com.heylocal.traveler.dto.PlaceDto;
+import com.heylocal.traveler.exception.BadRequestException;
+import com.heylocal.traveler.exception.ForbiddenException;
+import com.heylocal.traveler.exception.NotFoundException;
 import com.heylocal.traveler.exception.code.ForbiddenCode;
 import com.heylocal.traveler.exception.code.NotFoundCode;
-import com.heylocal.traveler.exception.service.BadArgumentException;
-import com.heylocal.traveler.exception.service.TaskRejectException;
 import com.heylocal.traveler.repository.OpinionRepository;
 import com.heylocal.traveler.repository.PlaceRepository;
 import com.heylocal.traveler.repository.TravelOnRepository;
@@ -38,10 +39,12 @@ public class OpinionService {
    * @param travelOnId 답변이 등록될 여행On ID
    * @param request 답변 내용
    * @param loginUser 로그인한 유저 (답변 작성자)
-   * @throws BadArgumentException
+   * @throws NotFoundException
+   * @throws ForbiddenException
+   * @throws BadRequestException
    */
   @Transactional
-  public void addNewOpinion(long travelOnId, OpinionRequest request, LoginUser loginUser) throws BadArgumentException, TaskRejectException {
+  public void addNewOpinion(long travelOnId, OpinionRequest request, LoginUser loginUser) throws NotFoundException, ForbiddenException, BadRequestException {
     long authorId;
     long placeId;
     TravelOn travelOn;
@@ -52,17 +55,17 @@ public class OpinionService {
 
     //답변이 달릴 여행On 조회
     travelOn = travelOnRepository.findById(travelOnId).orElseThrow(
-        () -> new BadArgumentException(NotFoundCode.NO_INFO, "존재하지 않는 여행On ID 입니다.")
+        () -> new NotFoundException(NotFoundCode.NO_INFO, "존재하지 않는 여행On ID 입니다.")
     );
 
     //지역 조회
     placeRegion = regionService.getRegionByAddress(request.getPlace().getAddress()).orElseThrow(
-        () -> new BadArgumentException(NotFoundCode.NO_INFO, "주소 관련 Region을 찾을 수 없습니다.")
+        () -> new NotFoundException(NotFoundCode.NO_INFO, "주소 관련 Region을 찾을 수 없습니다.")
     );
 
     //여행On의 지역과 답변할 장소의 지역이 다르면 거부
     if (travelOn.getRegion() != placeRegion) {
-      throw new TaskRejectException(ForbiddenCode.NO_PERMISSION, "여행On의 지역과 다른 지역의 장소는 등록할 수 없습니다.");
+      throw new ForbiddenException(ForbiddenCode.NO_PERMISSION, "여행On의 지역과 다른 지역의 장소는 등록할 수 없습니다.");
     }
 
     //작성자 조회

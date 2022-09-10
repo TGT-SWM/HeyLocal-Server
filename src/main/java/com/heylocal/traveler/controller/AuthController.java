@@ -1,10 +1,9 @@
 package com.heylocal.traveler.controller;
 
 import com.heylocal.traveler.controller.api.AuthApi;
+import com.heylocal.traveler.exception.BadRequestException;
+import com.heylocal.traveler.exception.UnauthorizedException;
 import com.heylocal.traveler.exception.code.BadRequestCode;
-import com.heylocal.traveler.exception.controller.BadRequestException;
-import com.heylocal.traveler.exception.controller.UnauthorizedException;
-import com.heylocal.traveler.exception.service.AuthException;
 import com.heylocal.traveler.service.AuthService;
 import com.heylocal.traveler.util.error.BindingErrorMessageProvider;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -39,11 +38,8 @@ public class AuthController implements AuthApi {
       String errMsg = errorMessageProvider.getFieldErrMsg(bindingResult);
       throw new BadRequestException(BadRequestCode.BAD_INPUT_FORM, errMsg);
     }
-    try {
-      response = authService.reissueTokenPair(request);
-    } catch (AuthException e) {
-      throw new UnauthorizedException(e.getCode());
-    }
+
+    response = authService.reissueTokenPair(request);
 
     return response;
   }

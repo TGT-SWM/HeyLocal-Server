@@ -10,8 +10,8 @@ import com.heylocal.traveler.domain.user.UserRole;
 import com.heylocal.traveler.dto.LoginUser;
 import com.heylocal.traveler.dto.PageDto;
 import com.heylocal.traveler.dto.TravelTypeGroupDto;
-import com.heylocal.traveler.exception.service.BadArgumentException;
-import com.heylocal.traveler.exception.service.TaskRejectException;
+import com.heylocal.traveler.exception.ForbiddenException;
+import com.heylocal.traveler.exception.NotFoundException;
 import com.heylocal.traveler.repository.RegionRepository;
 import com.heylocal.traveler.repository.TravelOnRepository;
 import com.heylocal.traveler.repository.UserRepository;
@@ -127,7 +127,7 @@ class TravelOnServiceTest {
     //THEN
     //실패 케이스 - 1 - 잘못된 Region 인 경우
     assertThrows(
-        BadArgumentException.class,
+        NotFoundException.class,
         () -> travelOnService.addNewTravelOn(request, loginUser)
     );
   }
@@ -216,7 +216,7 @@ class TravelOnServiceTest {
           then(travelOnRepository).should(times(1)).findNoOpinionByRegion(any(Region.class), any(), anyInt(), any(TravelOnSortType.class));
         },
         //없는 Region 인 경우
-        () -> assertThrows(BadArgumentException.class,
+        () -> assertThrows(NotFoundException.class,
             () -> travelOnService.inquirySimpleTravelOns(wrongRegionRequest))
     );
   }
@@ -241,7 +241,7 @@ class TravelOnServiceTest {
         //성공 케이스 - 1 - 존재하는 여행 On 조회
         () -> assertDoesNotThrow(() -> travelOnService.inquiryTravelOn(travelOnId)),
         //실패 케이스 - 1 - 존재하지 않는 여행 On 조회
-        () -> assertThrows(BadArgumentException.class, () -> travelOnService.inquiryTravelOn(notExistTravelOnId))
+        () -> assertThrows(NotFoundException.class, () -> travelOnService.inquiryTravelOn(notExistTravelOnId))
     );
   }
 
@@ -266,7 +266,7 @@ class TravelOnServiceTest {
         //성공 케이스 - 1 - 정상 요청
         () -> assertDoesNotThrow(() -> travelOnService.updateTravelOn(request, existTravelOnId)),
         //실패 케이스 - 1 - 존재하지 않는 여행On ID
-        () -> assertThrows(BadArgumentException.class, () -> travelOnService.updateTravelOn(request, notExistTravelOnId))
+        () -> assertThrows(NotFoundException.class, () -> travelOnService.updateTravelOn(request, notExistTravelOnId))
     );
   }
 
@@ -298,7 +298,7 @@ class TravelOnServiceTest {
     //WHEN
 
     //THEN
-    assertThrows(BadArgumentException.class, () -> travelOnService.removeTravelOn(notExistTravelOnId));
+    assertThrows(NotFoundException.class, () -> travelOnService.removeTravelOn(notExistTravelOnId));
   }
 
   @Test
@@ -316,7 +316,7 @@ class TravelOnServiceTest {
     //WHEN
 
     //THEN
-    assertThrows(TaskRejectException.class, () -> travelOnService.removeTravelOn(existTravelOnId));
+    assertThrows(ForbiddenException.class, () -> travelOnService.removeTravelOn(existTravelOnId));
   }
 
   /**
