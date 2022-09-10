@@ -28,5 +28,5 @@ public class OpinionImageContent extends BaseTimeEntity {
   private String url;
 
   @Column(nullable = false)
-  private Integer placedLineIndex;
+  private Integer placedIndex;
 }
