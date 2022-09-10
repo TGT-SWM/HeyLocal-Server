@@ -61,7 +61,7 @@ public class TravelOnService {
    * @return
    * @throws BadArgumentException
    */
-  @Transactional
+  @Transactional(readOnly = true)
   public List<TravelOnSimpleResponse> inquirySimpleTravelOns(AllTravelOnGetRequest request) throws BadArgumentException {
     List<TravelOn> travelOnList;
     List<TravelOnSimpleResponse> response;
@@ -87,7 +87,7 @@ public class TravelOnService {
    * @param travelOnId 조회할 여행 On 의 ID
    * @return
    */
-  @Transactional
+  @Transactional(readOnly = true)
   public TravelOnResponse inquiryTravelOn(long travelOnId) throws BadArgumentException {
     TravelOnResponse response;
     TravelOn travelOn;
@@ -130,12 +130,6 @@ public class TravelOnService {
     updateHopeDrink(request, originTravelOn);
   }
 
-  private void updateTravelTypeGroup(TravelOnRequest request, TravelOn originTravelOn) {
-    TravelTypeGroup travelTypeGroup = request.getTravelTypeGroup().toEntity();
-    travelTypeGroup.registerAt(originTravelOn);
-    originTravelOn.updateTravelTypeGroup(travelTypeGroup);
-  }
-
   /**
    * 해당 여행On 의 작성자인지 확인
    * @param userId 확인할 사용자 ID
@@ -143,7 +137,7 @@ public class TravelOnService {
    * @return
    * @throws BadArgumentException 존재하지 않는 여행On ID 라면
    */
-  @Transactional
+  @Transactional(readOnly = true)
   public boolean isAuthor(long userId, long travelOnId) throws BadArgumentException {
     TravelOn travelOn = travelOnRepository.findById(travelOnId).orElseThrow(
         () -> new BadArgumentException(NotFoundCode.NO_INFO, "존재하지 않는 여행On ID 입니다.")
@@ -175,6 +169,12 @@ public class TravelOnService {
 
     //여행 On 삭제
     travelOnRepository.remove(target);
+  }
+
+  private void updateTravelTypeGroup(TravelOnRequest request, TravelOn originTravelOn) {
+    TravelTypeGroup travelTypeGroup = request.getTravelTypeGroup().toEntity();
+    travelTypeGroup.registerAt(originTravelOn);
+    originTravelOn.updateTravelTypeGroup(travelTypeGroup);
   }
 
   private List<TravelOn> findByRegion(AllTravelOnGetRequest request) throws BadArgumentException {

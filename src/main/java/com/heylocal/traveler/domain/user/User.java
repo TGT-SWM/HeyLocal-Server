@@ -97,4 +97,11 @@ public class User extends BaseTimeEntity {
       userProfile.associateUser(this);
     }
   }
+
+  public void addOpinion(Opinion opinion) {
+    this.opinionList.add(opinion);
+    if (opinion.getAuthor() != this) {
+      opinion.registerAuthor(this);
+    }
+  }
 }

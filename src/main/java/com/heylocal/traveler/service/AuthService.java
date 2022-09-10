@@ -37,7 +37,7 @@ public class AuthService {
    * @param userId id값 (pk)
    * @return 로그인된 유저의 정보
    */
-  @Transactional
+  @Transactional(readOnly = true)
   public LoginUser findLoginUser(long userId) throws TokenException {
     User user = userRepository.findById(userId).orElseThrow(
         () -> new TokenException(TokenCode.NOT_EXIST_TOKEN_USER_ID)

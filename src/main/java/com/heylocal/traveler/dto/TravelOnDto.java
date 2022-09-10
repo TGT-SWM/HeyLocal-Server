@@ -20,17 +20,17 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
-import static com.heylocal.traveler.dto.HopeAccommodationDto.*;
-import static com.heylocal.traveler.dto.HopeDrinkDto.*;
-import static com.heylocal.traveler.dto.HopeFoodDto.*;
+import static com.heylocal.traveler.dto.HopeAccommodationDto.HopeAccommodationResponse;
+import static com.heylocal.traveler.dto.HopeDrinkDto.HopeDrinkResponse;
+import static com.heylocal.traveler.dto.HopeFoodDto.HopeFoodResponse;
 import static com.heylocal.traveler.dto.PageDto.PageRequest;
-import static com.heylocal.traveler.dto.RegionDto.*;
-import static com.heylocal.traveler.dto.TravelMemberDto.*;
-import static com.heylocal.traveler.dto.TravelTypeGroupDto.*;
-import static com.heylocal.traveler.dto.UserDto.*;
+import static com.heylocal.traveler.dto.RegionDto.RegionResponse;
+import static com.heylocal.traveler.dto.TravelMemberDto.TravelMemberResponse;
+import static com.heylocal.traveler.dto.TravelTypeGroupDto.TravelTypeGroupResponse;
+import static com.heylocal.traveler.dto.UserDto.UserProfileResponse;
+import static com.heylocal.traveler.dto.UserDto.UserResponse;
 
 public class TravelOnDto {
 	@Getter

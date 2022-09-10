@@ -9,7 +9,6 @@ import com.heylocal.traveler.domain.travelon.list.DrinkType;
 import com.heylocal.traveler.domain.travelon.list.FoodType;
 import com.heylocal.traveler.domain.travelon.list.MemberType;
 import com.heylocal.traveler.dto.LoginUser;
-import com.heylocal.traveler.exception.code.BadRequestCode;
 import com.heylocal.traveler.exception.code.ForbiddenCode;
 import com.heylocal.traveler.exception.code.NotFoundCode;
 import com.heylocal.traveler.exception.controller.BadRequestException;
@@ -17,9 +16,9 @@ import com.heylocal.traveler.exception.controller.ForbiddenException;
 import com.heylocal.traveler.exception.controller.NotFoundException;
 import com.heylocal.traveler.exception.service.BadArgumentException;
 import com.heylocal.traveler.exception.service.TaskRejectException;
+import com.heylocal.traveler.service.OpinionService;
 import com.heylocal.traveler.service.TravelOnService;
 import com.heylocal.traveler.util.error.BindingErrorMessageProvider;
-import lombok.extern.java.Log;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -36,6 +35,8 @@ import static com.heylocal.traveler.dto.PageDto.PageRequest;
 import static com.heylocal.traveler.dto.TravelOnDto.*;
 import static com.heylocal.traveler.dto.TravelTypeGroupDto.TravelTypeGroupRequest;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.willReturn;
 import static org.mockito.BDDMockito.willThrow;
 
@@ -45,13 +46,15 @@ class TravelOnsControllerTest {
   @Mock
   private TravelOnService travelOnService;
   @Mock
+  private OpinionService opinionService;
+  @Mock
   private BindingResult bindingResult;
   private TravelOnsController travelOnsController;
 
   @BeforeEach
   void setUp() {
     MockitoAnnotations.openMocks(this);
-    travelOnsController = new TravelOnsController(messageProvider, travelOnService);
+    travelOnsController = new TravelOnsController(messageProvider, travelOnService, opinionService);
   }
 
   @Test
@@ -261,6 +264,82 @@ class TravelOnsControllerTest {
     //THEN
     //실패 케이스 - 1 - 이미 답변이 달린 여행On ID인 경우
     assertThrows(ForbiddenException.class, () -> travelOnsController.deleteTravelOn(existTravelOnId, loginUser));
+  }
+
+  @Test
+  @DisplayName("답변 등록 핸들러 - 성공 케이스")
+  void createOpinionsSucceedTest() {
+    //GIVEN
+    long loginUserId = 1L;
+    long travelOnId = 3L;
+    LoginUser loginUser = LoginUser.builder()
+        .id(loginUserId)
+        .build();
+
+    //Mock 행동 정의 - bindingResult
+    willReturn(false).given(bindingResult).hasFieldErrors();
+
+    //WHEN
+
+    //THEN
+    assertDoesNotThrow(() -> travelOnsController.createOpinions(travelOnId, null, bindingResult, loginUser));
+  }
+
+  @Test
+  @DisplayName("답변 등록 핸들러 - 입력 형식 오류")
+  void createOpinionsWrongFormatTest() {
+    //GIVEN
+    long loginUserId = 1L;
+    long travelOnId = 3L;
+    LoginUser loginUser = LoginUser.builder()
+        .id(loginUserId)
+        .build();
+
+    //Mock 행동 정의 - bindingResult
+    willReturn(true).given(bindingResult).hasFieldErrors();
+
+    //WHEN
+
+    //THEN
+    assertThrows(BadRequestException.class, () -> travelOnsController.createOpinions(travelOnId, null, bindingResult, loginUser));
+  }
+
+  @Test
+  @DisplayName("답변 등록 핸들러 - NotFoundErr")
+  void createOpinionsNotFoundErrTest() throws BadArgumentException, TaskRejectException {
+    //GIVEN
+    long loginUserId = 1L;
+    long travelOnId = 3L;
+    LoginUser loginUser = LoginUser.builder()
+        .id(loginUserId)
+        .build();
+
+    //Mock 행동 정의 - bindingResult
+    willThrow(BadArgumentException.class).given(opinionService).addNewOpinion(anyLong(), any(), any());
+
+    //WHEN
+
+    //THEN
+    assertThrows(NotFoundException.class, () -> travelOnsController.createOpinions(travelOnId, null, bindingResult, loginUser));
+  }
+
+  @Test
+  @DisplayName("답변 등록 핸들러 - ForbiddenErr")
+  void createOpinionsForbiddenErrTest() throws BadArgumentException, TaskRejectException {
+    //GIVEN
+    long loginUserId = 1L;
+    long travelOnId = 3L;
+    LoginUser loginUser = LoginUser.builder()
+        .id(loginUserId)
+        .build();
+
+    //Mock 행동 정의 - bindingResult
+    willThrow(TaskRejectException.class).given(opinionService).addNewOpinion(anyLong(), any(), any());
+
+    //WHEN
+
+    //THEN
+    assertThrows(ForbiddenException.class, () -> travelOnsController.createOpinions(travelOnId, null, bindingResult, loginUser));
   }
 
   /**

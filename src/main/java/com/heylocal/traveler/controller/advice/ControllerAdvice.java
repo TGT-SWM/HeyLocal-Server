@@ -1,7 +1,6 @@
 package com.heylocal.traveler.controller.advice;
 
 import com.heylocal.traveler.dto.ErrorMessageResponse;
-import com.heylocal.traveler.exception.code.ForbiddenCode;
 import com.heylocal.traveler.exception.controller.BadRequestException;
 import com.heylocal.traveler.exception.controller.ForbiddenException;
 import com.heylocal.traveler.exception.controller.NotFoundException;

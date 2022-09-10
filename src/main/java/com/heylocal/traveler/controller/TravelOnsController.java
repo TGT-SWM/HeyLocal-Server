@@ -2,7 +2,6 @@ package com.heylocal.traveler.controller;
 
 import com.heylocal.traveler.controller.api.TravelOnsApi;
 import com.heylocal.traveler.dto.LoginUser;
-import com.heylocal.traveler.dto.OpinionDto;
 import com.heylocal.traveler.exception.code.BadRequestCode;
 import com.heylocal.traveler.exception.code.ForbiddenCode;
 import com.heylocal.traveler.exception.controller.BadRequestException;
@@ -10,6 +9,7 @@ import com.heylocal.traveler.exception.controller.ForbiddenException;
 import com.heylocal.traveler.exception.controller.NotFoundException;
 import com.heylocal.traveler.exception.service.BadArgumentException;
 import com.heylocal.traveler.exception.service.TaskRejectException;
+import com.heylocal.traveler.service.OpinionService;
 import com.heylocal.traveler.service.TravelOnService;
 import com.heylocal.traveler.util.error.BindingErrorMessageProvider;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -21,6 +21,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+import static com.heylocal.traveler.dto.OpinionDto.OpinionRequest;
+import static com.heylocal.traveler.dto.OpinionDto.OpinionResponse;
 import static com.heylocal.traveler.dto.TravelOnDto.*;
 
 @Slf4j
@@ -31,6 +33,7 @@ public class TravelOnsController implements TravelOnsApi {
   private final BindingErrorMessageProvider errorMessageProvider;
 
   private final TravelOnService travelOnService;
+  private final OpinionService opinionService;
 
   /**
    * 여행On 목록 조회 핸들러
@@ -129,6 +132,13 @@ public class TravelOnsController implements TravelOnsApi {
     }
   }
 
+  /**
+   * 여행On 제거 핸들러
+   * @param travelOnId
+   * @param loginUser
+   * @throws ForbiddenException
+   * @throws NotFoundException
+   */
   @Override
   public void deleteTravelOn(long travelOnId, LoginUser loginUser) throws ForbiddenException, NotFoundException {
     boolean isAuthor = false;
@@ -150,17 +160,35 @@ public class TravelOnsController implements TravelOnsApi {
   }
 
   @Override
-  public List<OpinionDto.OpinionResponse> getOpinions(long travelOnId) {
+  public List<OpinionResponse> getOpinions(long travelOnId) {
     return null;
   }
 
+  /**
+   * 답변(Opinion) 등록 핸들러
+   * @param travelOnId
+   * @param request
+   * @return
+   */
   @Override
-  public ResponseEntity<Void> createOpinions(long travelOnId, OpinionDto.OpinionRequest request) {
-    return null;
+  public void createOpinions(long travelOnId, OpinionRequest request, BindingResult bindingResult, LoginUser loginUser) throws BadRequestException, NotFoundException, ForbiddenException {
+    if (bindingResult.hasFieldErrors()) {
+      String fieldErrMsg = errorMessageProvider.getFieldErrMsg(bindingResult);
+      throw new BadRequestException(BadRequestCode.BAD_INPUT_FORM, fieldErrMsg);
+    }
+
+    try {
+      opinionService.addNewOpinion(travelOnId, request, loginUser);
+    } catch (BadArgumentException e) {
+      throw new NotFoundException(e.getCode(), e.getDescription());
+    } catch (TaskRejectException e) {
+      throw new ForbiddenException(e.getCode(), e.getDescription());
+    }
+
   }
 
   @Override
-  public ResponseEntity<Void> updateOpinion(long travelOnId, long opinionId, OpinionDto.OpinionRequest request) {
+  public ResponseEntity<Void> updateOpinion(long travelOnId, long opinionId, OpinionRequest request) {
     return null;
   }
 

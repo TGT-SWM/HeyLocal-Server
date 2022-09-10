@@ -34,6 +34,7 @@ class TravelOnRepositoryTest {
   private EntityManager em;
   @Autowired
   private TravelOnRepository travelOnRepository;
+  private long placeId = 0;
 
   @Test
   @DisplayName("여행 On 저장 성공")
@@ -757,6 +758,7 @@ class TravelOnRepositoryTest {
    */
   private Place savePlace(Region region) {
     Place place = Place.builder()
+        .id(++placeId)
         .category(PlaceCategory.CE7)
         .name("placeName")
         .roadAddress("roadAddress")

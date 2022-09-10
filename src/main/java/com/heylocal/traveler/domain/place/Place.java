@@ -25,7 +25,7 @@ import java.util.List;
 @Getter
 @SuperBuilder
 public class Place extends BaseTimeEntity {
-  @Id @GeneratedValue
+  @Id
   private Long id;
 
   @Enumerated(EnumType.STRING)
@@ -64,4 +64,44 @@ public class Place extends BaseTimeEntity {
   @Builder.Default
   @OneToMany(mappedBy = "place", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   private List<PlaceItem> placeItemList = new ArrayList<>();
+
+  public void addOpinion(Opinion opinion) {
+    this.opinionList.add(opinion);
+    if (opinion.getPlace() != this) {
+      opinion.registerPlace(this);
+    }
+  }
+
+
+  public void updateName(String newName) {
+    this.name = newName;
+  }
+  public void updateRoadAddress(String newRoadAddress) {
+    this.roadAddress = roadAddress;
+  }
+
+  public void updateAddress(String newAddress) {
+    this.address = newAddress;
+  }
+
+  public void updateCoordinates(double lat, double lng) {
+    this.lat = lat;
+    this.lng = lng;
+  }
+
+  public void updateCategory(PlaceCategory category) {
+    this.category = category;
+  }
+
+  public void updateRegion(Region region) {
+    this.region = region;
+  }
+
+  public void updateThumbnailUrl(String thumbnailUrl) {
+    this.thumbnailUrl = thumbnailUrl;
+  }
+
+  public void updateLink(String link) {
+    this.link = link;
+  }
 }
