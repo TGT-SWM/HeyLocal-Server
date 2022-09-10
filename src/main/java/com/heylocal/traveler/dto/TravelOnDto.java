@@ -253,7 +253,7 @@ public class TravelOnDto {
 		private RegionResponse region;
 		private LocalDateTime createdDateTime;
 		private LocalDateTime modifiedDate;
-		private UserProfileResponse userProfile;
+		private UserResponse author;
 		private String description;
 		private int views;
 		private int opinionQuantity;
@@ -264,7 +264,7 @@ public class TravelOnDto {
 			this.region = new RegionResponse(entity.getRegion());
 			this.createdDateTime = entity.getCreatedDate();
 			this.modifiedDate = entity.getModifiedDate();
-			this.userProfile = new UserProfileResponse(entity.getAuthor().getUserProfile(), 0); //Ranking 은 무조건 0으로 표시하도록 함
+			this.author = new UserResponse(entity.getAuthor());
 			this.description = entity.getDescription();
 			this.views = entity.getViews();
 			this.opinionQuantity = entity.getOpinionList().size();
