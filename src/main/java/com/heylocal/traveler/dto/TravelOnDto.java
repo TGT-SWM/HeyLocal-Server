@@ -178,6 +178,7 @@ public class TravelOnDto {
 	public static class TravelOnResponse {
 		private long id;
 		private String title;
+		private String description;
 		private int views;
 		private RegionResponse region;
 		private UserResponse author;
@@ -198,6 +199,7 @@ public class TravelOnDto {
 		public TravelOnResponse(TravelOn entity) {
 			this.id = entity.getId();
 			this.title = entity.getTitle();
+			this.description = entity.getDescription();
 			this.views = entity.getViews();
 			this.region = new RegionResponse(entity.getRegion());
 			this.author = new UserResponse(entity.getAuthor());
