@@ -35,6 +35,8 @@ import static com.heylocal.traveler.dto.PageDto.PageRequest;
 import static com.heylocal.traveler.dto.TravelOnDto.*;
 import static com.heylocal.traveler.dto.TravelTypeGroupDto.TravelTypeGroupRequest;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.willReturn;
 import static org.mockito.BDDMockito.willThrow;
 
@@ -264,7 +266,81 @@ class TravelOnsControllerTest {
     assertThrows(ForbiddenException.class, () -> travelOnsController.deleteTravelOn(existTravelOnId, loginUser));
   }
 
-  // TODO - createOpinions
+  @Test
+  @DisplayName("답변 등록 핸들러 - 성공 케이스")
+  void createOpinionsSucceedTest() {
+    //GIVEN
+    long loginUserId = 1L;
+    long travelOnId = 3L;
+    LoginUser loginUser = LoginUser.builder()
+        .id(loginUserId)
+        .build();
+
+    //Mock 행동 정의 - bindingResult
+    willReturn(false).given(bindingResult).hasFieldErrors();
+
+    //WHEN
+
+    //THEN
+    assertDoesNotThrow(() -> travelOnsController.createOpinions(travelOnId, null, bindingResult, loginUser));
+  }
+
+  @Test
+  @DisplayName("답변 등록 핸들러 - 입력 형식 오류")
+  void createOpinionsWrongFormatTest() {
+    //GIVEN
+    long loginUserId = 1L;
+    long travelOnId = 3L;
+    LoginUser loginUser = LoginUser.builder()
+        .id(loginUserId)
+        .build();
+
+    //Mock 행동 정의 - bindingResult
+    willReturn(true).given(bindingResult).hasFieldErrors();
+
+    //WHEN
+
+    //THEN
+    assertThrows(BadRequestException.class, () -> travelOnsController.createOpinions(travelOnId, null, bindingResult, loginUser));
+  }
+
+  @Test
+  @DisplayName("답변 등록 핸들러 - NotFoundErr")
+  void createOpinionsNotFoundErrTest() throws BadArgumentException, TaskRejectException {
+    //GIVEN
+    long loginUserId = 1L;
+    long travelOnId = 3L;
+    LoginUser loginUser = LoginUser.builder()
+        .id(loginUserId)
+        .build();
+
+    //Mock 행동 정의 - bindingResult
+    willThrow(BadArgumentException.class).given(opinionService).addNewOpinion(anyLong(), any(), any());
+
+    //WHEN
+
+    //THEN
+    assertThrows(NotFoundException.class, () -> travelOnsController.createOpinions(travelOnId, null, bindingResult, loginUser));
+  }
+
+  @Test
+  @DisplayName("답변 등록 핸들러 - ForbiddenErr")
+  void createOpinionsForbiddenErrTest() throws BadArgumentException, TaskRejectException {
+    //GIVEN
+    long loginUserId = 1L;
+    long travelOnId = 3L;
+    LoginUser loginUser = LoginUser.builder()
+        .id(loginUserId)
+        .build();
+
+    //Mock 행동 정의 - bindingResult
+    willThrow(TaskRejectException.class).given(opinionService).addNewOpinion(anyLong(), any(), any());
+
+    //WHEN
+
+    //THEN
+    assertThrows(ForbiddenException.class, () -> travelOnsController.createOpinions(travelOnId, null, bindingResult, loginUser));
+  }
 
   /**
    * AllTravelOnRequest 객체를 생성하는 메서드
