@@ -15,7 +15,11 @@ import lombok.*;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
+import java.util.List;
+
+import static com.heylocal.traveler.dto.PlaceDto.*;
 import static com.heylocal.traveler.dto.PlaceDto.PlaceRequest;
+import static com.heylocal.traveler.dto.UserDto.*;
 
 public class OpinionDto {
 	@Getter
@@ -133,6 +137,43 @@ public class OpinionDto {
 	@Builder
 	@Schema(description = "여행 On에 대한 답변 응답 DTO")
 	public static class OpinionResponse {
-		long id;
+		private long id;
+		private String description;
+		private UserResponse author;
+		private PlaceResponse place;
+		private List<OpinionImageContent> opinionImageContentList;
+
+		//공통 질문
+		private EvaluationDegree kindness;
+		private EvaluationDegree facilityCleanliness;
+		private EvaluationDegree accessibility;
+		private EvaluationDegree costPerformance;
+		private boolean canParking;
+		private boolean waiting;
+		private String photoSpotImageUrl;
+		private String photoSpotText;
+		private String mood;
+		private EvaluationDegree toiletCleanliness;
+
+		//음식점 전용 항목
+		private EvaluationDegree food;
+		private String recommendFood;
+
+		//카페 전용 항목
+		private EvaluationDegree drink;
+		private CoffeeType coffeeType;
+		private String recommendDrink;
+		private String recommendDessert;
+
+		//문화시설, 관광명소 전용 항목
+		private String recommendToDo;
+		private String recommendSnack;
+
+		//숙박 전용
+		private EvaluationDegree streetNoise;
+		private EvaluationDegree deafening;
+		private EvaluationDegree breakFast;
+		private boolean existsAmenity;
+		private boolean existsStore;
 	}
 }
