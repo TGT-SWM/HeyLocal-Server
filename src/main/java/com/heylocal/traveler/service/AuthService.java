@@ -4,10 +4,10 @@ import com.heylocal.traveler.domain.token.AccessToken;
 import com.heylocal.traveler.domain.token.RefreshToken;
 import com.heylocal.traveler.domain.user.User;
 import com.heylocal.traveler.dto.LoginUser;
+import com.heylocal.traveler.exception.TokenException;
+import com.heylocal.traveler.exception.UnauthorizedException;
 import com.heylocal.traveler.exception.code.AuthCode;
 import com.heylocal.traveler.exception.code.TokenCode;
-import com.heylocal.traveler.exception.service.AuthException;
-import com.heylocal.traveler.exception.service.TokenException;
 import com.heylocal.traveler.repository.TokenRepository;
 import com.heylocal.traveler.repository.UserRepository;
 import com.heylocal.traveler.util.jwt.JwtTokenParser;
@@ -36,6 +36,7 @@ public class AuthService {
    * id값(pk)으로 User를 조회하는 메서드
    * @param userId id값 (pk)
    * @return 로그인된 유저의 정보
+   * @throws TokenException
    */
   @Transactional(readOnly = true)
   public LoginUser findLoginUser(long userId) throws TokenException {
@@ -54,10 +55,10 @@ public class AuthService {
    * </pre>
    * @param request 만료된 Access Token, 만료 안된 Refresh Token
    * @return
-   * @throws AuthException 비정상적인 요청인 경우
+   * @throws UnauthorizedException 비정상적인 요청인 경우
    */
   @Transactional
-  public TokenPairResponse reissueTokenPair(TokenPairRequest request) throws AuthException {
+  public TokenPairResponse reissueTokenPair(TokenPairRequest request) throws UnauthorizedException {
     RefreshToken storedRefreshToken;
     AccessToken storedAccessToken;
     long userId = 0L;
@@ -96,21 +97,21 @@ public class AuthService {
    * </pre>
    * @param request
    * @return DB에 저장된 Refresh Token 엔티티
-   * @throws AuthException 검증 실패시
+   * @throws UnauthorizedException 검증 실패시
    */
-  private RefreshToken validateRefreshToken(TokenPairRequest request) throws AuthException {
+  private RefreshToken validateRefreshToken(TokenPairRequest request) throws UnauthorizedException {
     RefreshToken storedRefreshToken;
 
     //Refresh Token 조회
     storedRefreshToken = tokenRepository.findRefreshTokenByValue(request.getRefreshToken()).orElseThrow(
-        () -> new AuthException(AuthCode.NOT_EXIST_REFRESH_TOKEN)
+        () -> new UnauthorizedException(AuthCode.NOT_EXIST_REFRESH_TOKEN)
     );
 
     //Refresh Token 이 만료되었는지 확인
     try {
       jwtTokenParser.parseJwtToken(storedRefreshToken.getTokenValue());
     } catch (ExpiredJwtException expiredJwtException) {
-      throw new AuthException(AuthCode.EXPIRED_REFRESH_TOKEN);
+      throw new UnauthorizedException(AuthCode.EXPIRED_REFRESH_TOKEN);
     }
 
     return storedRefreshToken;
@@ -120,12 +121,12 @@ public class AuthService {
    * Refresh Token 에 담긴 사용자 id(pk)값을 추출하는 메서드
    * @param refreshToken 추출할 토큰 엔티티
    * @return 추출한 사용자 id(pk)
-   * @throws AuthException 존재하지 않는 토큰 값일 경우
+   * @throws UnauthorizedException 존재하지 않는 토큰 값일 경우
    */
-  private long getUserIdFromRefreshToken(RefreshToken refreshToken) throws AuthException {
+  private long getUserIdFromRefreshToken(RefreshToken refreshToken) throws UnauthorizedException {
     Claims claims = jwtTokenParser.parseJwtToken(refreshToken.getTokenValue())
         .orElseThrow(
-            () -> new AuthException(AuthCode.NOT_EXIST_REFRESH_TOKEN)
+            () -> new UnauthorizedException(AuthCode.NOT_EXIST_REFRESH_TOKEN)
         );
 
     return claims.get("userPk", Long.class);
@@ -136,12 +137,12 @@ public class AuthService {
    * @param storedAccessToken 확인할 Access Token
    * @param requestAccessToken 요청받은 Access Token
    * @return
-   * @throws AuthException
+   * @throws UnauthorizedException
    */
-  private AccessToken isSameAccessTokenValue(AccessToken storedAccessToken, String requestAccessToken) throws AuthException {
+  private AccessToken isSameAccessTokenValue(AccessToken storedAccessToken, String requestAccessToken) throws UnauthorizedException {
     if (!storedAccessToken.getTokenValue().equals(requestAccessToken)) {
       tokenRepository.removeTokenPairByAccessValue(storedAccessToken.getTokenValue()); //비정상 접근이므로, 모든 토큰 쌍 제거
-      throw new AuthException(AuthCode.NOT_MATCH_PAIR);
+      throw new UnauthorizedException(AuthCode.NOT_MATCH_PAIR);
     }
     return storedAccessToken;
   }
@@ -150,9 +151,9 @@ public class AuthService {
    * 정말로 만료된 Access Token인지 확인하는 메서드
    * @param accessToken 확인할 access token
    * @return 만료된 Access Token 의 클레임에 바인딩된 유저 id(pk)
-   * @throws AuthException 검증 실패 시
+   * @throws UnauthorizedException 검증 실패 시
    */
-  private void validateExpiredAccessToken(AccessToken accessToken) throws AuthException {
+  private void validateExpiredAccessToken(AccessToken accessToken) throws UnauthorizedException {
     boolean isExpiredAccessToken = false;
 
     try {
@@ -162,7 +163,7 @@ public class AuthService {
     }
     if (!isExpiredAccessToken) {
       tokenRepository.removeTokenPairByAccessValue(accessToken.getTokenValue()); //비정상 접근이므로, 모든 토큰 쌍 제거
-      throw new AuthException(AuthCode.NOT_EXPIRED_ACCESS_TOKEN);
+      throw new UnauthorizedException(AuthCode.NOT_EXPIRED_ACCESS_TOKEN);
     }
   }
 }

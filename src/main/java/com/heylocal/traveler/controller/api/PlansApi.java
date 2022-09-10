@@ -6,7 +6,7 @@ import com.heylocal.traveler.dto.PlanDto.PlanListResponse;
 import com.heylocal.traveler.dto.PlanDto.PlanPlacesRequest;
 import com.heylocal.traveler.dto.PlanDto.PlanPlacesResponse;
 import com.heylocal.traveler.dto.PlanDto.PlanRequest;
-import com.heylocal.traveler.exception.controller.NotFoundException;
+import com.heylocal.traveler.exception.NotFoundException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;

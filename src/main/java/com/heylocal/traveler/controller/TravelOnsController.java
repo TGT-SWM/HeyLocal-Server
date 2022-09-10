@@ -2,13 +2,11 @@ package com.heylocal.traveler.controller;
 
 import com.heylocal.traveler.controller.api.TravelOnsApi;
 import com.heylocal.traveler.dto.LoginUser;
+import com.heylocal.traveler.exception.BadRequestException;
+import com.heylocal.traveler.exception.ForbiddenException;
+import com.heylocal.traveler.exception.NotFoundException;
 import com.heylocal.traveler.exception.code.BadRequestCode;
 import com.heylocal.traveler.exception.code.ForbiddenCode;
-import com.heylocal.traveler.exception.controller.BadRequestException;
-import com.heylocal.traveler.exception.controller.ForbiddenException;
-import com.heylocal.traveler.exception.controller.NotFoundException;
-import com.heylocal.traveler.exception.service.BadArgumentException;
-import com.heylocal.traveler.exception.service.TaskRejectException;
 import com.heylocal.traveler.service.OpinionService;
 import com.heylocal.traveler.service.TravelOnService;
 import com.heylocal.traveler.util.error.BindingErrorMessageProvider;
@@ -45,11 +43,7 @@ public class TravelOnsController implements TravelOnsApi {
   public List<TravelOnSimpleResponse> getTravelOns(AllTravelOnGetRequest request) throws NotFoundException {
     List<TravelOnSimpleResponse> response;
 
-    try {
-      response = travelOnService.inquirySimpleTravelOns(request);
-    } catch (BadArgumentException e) {
-      throw new NotFoundException(e.getCode(), e.getDescription());
-    }
+    response = travelOnService.inquirySimpleTravelOns(request);
 
     return response;
   }
@@ -71,11 +65,7 @@ public class TravelOnsController implements TravelOnsApi {
       throw new BadRequestException(BadRequestCode.BAD_INPUT_FORM, errMsg);
     }
 
-    try {
-      travelOnService.addNewTravelOn(request, loginUser);
-    } catch (BadArgumentException e) {
-      throw new NotFoundException(e.getCode(), e.getDescription());
-    }
+    travelOnService.addNewTravelOn(request, loginUser);
   }
 
   /**
@@ -88,11 +78,7 @@ public class TravelOnsController implements TravelOnsApi {
   public TravelOnResponse getTravelOn(long travelOnId) throws NotFoundException {
     TravelOnResponse response;
 
-    try {
-      response = travelOnService.inquiryTravelOn(travelOnId);
-    } catch (BadArgumentException e) {
-      throw new NotFoundException(e.getCode(), e.getDescription());
-    }
+    response = travelOnService.inquiryTravelOn(travelOnId);
 
     return response;
   }
@@ -105,6 +91,7 @@ public class TravelOnsController implements TravelOnsApi {
    * @param loginUser
    * @throws BadRequestException
    * @throws NotFoundException
+   * @throws ForbiddenException
    */
   @Override
   public void updateTravelOn(long travelOnId,
@@ -118,18 +105,14 @@ public class TravelOnsController implements TravelOnsApi {
       throw new BadRequestException(BadRequestCode.BAD_INPUT_FORM, fieldErrMsg);
     }
 
-    try {
-      //수정 권한 확인
-      isAuthor = travelOnService.isAuthor(loginUser.getId(), travelOnId);
-      if (!isAuthor) {
-        throw new ForbiddenException(ForbiddenCode.NO_PERMISSION, "수정 권한이 없습니다.");
-      }
-
-      //수정
-      travelOnService.updateTravelOn(request, travelOnId);
-    } catch (BadArgumentException e) {
-      throw new NotFoundException(e.getCode(), e.getDescription());
+    //수정 권한 확인
+    isAuthor = travelOnService.isAuthor(loginUser.getId(), travelOnId);
+    if (!isAuthor) {
+      throw new ForbiddenException(ForbiddenCode.NO_PERMISSION, "수정 권한이 없습니다.");
     }
+
+    //수정
+    travelOnService.updateTravelOn(request, travelOnId);
   }
 
   /**
@@ -143,20 +126,14 @@ public class TravelOnsController implements TravelOnsApi {
   public void deleteTravelOn(long travelOnId, LoginUser loginUser) throws ForbiddenException, NotFoundException {
     boolean isAuthor = false;
 
-    try {
-      //삭제 권한 확인
-      isAuthor = travelOnService.isAuthor(loginUser.getId(), travelOnId);
-      if (!isAuthor) {
-        throw new ForbiddenException(ForbiddenCode.NO_PERMISSION, "삭제 권한이 없습니다.");
-      }
-
-      //삭제
-      travelOnService.removeTravelOn(travelOnId);
-    } catch (BadArgumentException e) {
-      throw new NotFoundException(e.getCode(), e.getDescription());
-    } catch (TaskRejectException e) {
-      throw new ForbiddenException(e.getCode(), e.getDescription());
+    //삭제 권한 확인
+    isAuthor = travelOnService.isAuthor(loginUser.getId(), travelOnId);
+    if (!isAuthor) {
+      throw new ForbiddenException(ForbiddenCode.NO_PERMISSION, "삭제 권한이 없습니다.");
     }
+
+    //삭제
+    travelOnService.removeTravelOn(travelOnId);
   }
 
   @Override
@@ -169,6 +146,9 @@ public class TravelOnsController implements TravelOnsApi {
    * @param travelOnId
    * @param request
    * @return
+   * @throws BadRequestException
+   * @throws NotFoundException
+   * @throws ForbiddenException
    */
   @Override
   public void createOpinions(long travelOnId, OpinionRequest request, BindingResult bindingResult, LoginUser loginUser) throws BadRequestException, NotFoundException, ForbiddenException {
@@ -177,13 +157,7 @@ public class TravelOnsController implements TravelOnsApi {
       throw new BadRequestException(BadRequestCode.BAD_INPUT_FORM, fieldErrMsg);
     }
 
-    try {
-      opinionService.addNewOpinion(travelOnId, request, loginUser);
-    } catch (BadArgumentException e) {
-      throw new NotFoundException(e.getCode(), e.getDescription());
-    } catch (TaskRejectException e) {
-      throw new ForbiddenException(e.getCode(), e.getDescription());
-    }
+    opinionService.addNewOpinion(travelOnId, request, loginUser);
 
   }
 

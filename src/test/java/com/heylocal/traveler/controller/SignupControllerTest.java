@@ -1,6 +1,6 @@
 package com.heylocal.traveler.controller;
 
-import com.heylocal.traveler.exception.controller.BadRequestException;
+import com.heylocal.traveler.exception.BadRequestException;
 import com.heylocal.traveler.service.SignupService;
 import com.heylocal.traveler.util.error.BindingErrorMessageProvider;
 import lombok.extern.slf4j.Slf4j;

@@ -6,7 +6,7 @@
 package com.heylocal.traveler.controller.api;
 
 import com.heylocal.traveler.dto.ErrorMessageResponse;
-import com.heylocal.traveler.exception.controller.BadRequestException;
+import com.heylocal.traveler.exception.BadRequestException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -28,6 +28,7 @@ public interface SignupApi {
 
     @Operation(summary = "아이디 중복 확인", description = "", tags = {"Signup"})
     @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "전체 지역 목록 조회 성공"),
         @ApiResponse(responseCode = "400", description = "- `SHORT_OR_LONG_ACCOUNT_ID_LENGTH`: 계정 아이디가 너무 짧거나 길 경우\n\n- `WRONG_ACCOUNT_ID_FORMAT`: 계정 아이디 문자 조합이 틀린 경우", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessageResponse.class)))
     })
     @GetMapping("/accountid")

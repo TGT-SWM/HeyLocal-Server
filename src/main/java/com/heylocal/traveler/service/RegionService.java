@@ -1,9 +1,10 @@
 package com.heylocal.traveler.service;
 
 import com.heylocal.traveler.domain.Region;
+import com.heylocal.traveler.exception.BadRequestException;
+import com.heylocal.traveler.exception.NotFoundException;
 import com.heylocal.traveler.exception.code.BadRequestCode;
 import com.heylocal.traveler.exception.code.NotFoundCode;
-import com.heylocal.traveler.exception.service.BadArgumentException;
 import com.heylocal.traveler.repository.RegionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,15 +25,15 @@ public class RegionService {
    * state 로 Region 조회
    * @param state
    * @return
-   * @throws BadArgumentException
+   * @throws NotFoundException
    */
   @Transactional(readOnly = true)
-  public List<RegionResponse> inquiryRegions(String state) throws BadArgumentException {
+  public List<RegionResponse> inquiryRegions(String state) throws NotFoundException {
     List<RegionResponse> result;
     List<Region> regionList = regionRepository.findByState(state);
 
     if (regionList.size() == 0) {
-      throw new BadArgumentException(NotFoundCode.NO_INFO, "해당 state가 존재하지 않습니다.");
+      throw new NotFoundException(NotFoundCode.NO_INFO, "해당 state가 존재하지 않습니다.");
     }
     result = regionList.stream().map(RegionResponse::new).collect(Collectors.toList());
 
@@ -44,9 +45,10 @@ public class RegionService {
    * 주소와 Region 엔티티를 매핑해서 Region 엔티티를 반환하는 메서드
    * @param address 매핑할 주소
    * @return 매핑된 Region 엔티티
+   * @throws BadRequestException
    */
   @Transactional(readOnly = true)
-  public Optional<Region> getRegionByAddress(String address) throws BadArgumentException {
+  public Optional<Region> getRegionByAddress(String address) throws BadRequestException {
     String keyword;
     String[] addressAry;
     String state;
@@ -54,7 +56,7 @@ public class RegionService {
 
     addressAry = address.split(" ");
     if (addressAry.length < 2) {
-      throw new BadArgumentException(BadRequestCode.BAD_INPUT_FORM, "장소의 주소 형식이 잘못되었습니다.");
+      throw new BadRequestException(BadRequestCode.BAD_INPUT_FORM, "장소의 주소 형식이 잘못되었습니다.");
     }
     state = addressAry[0];
     city = addressAry[1];

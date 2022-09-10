@@ -2,7 +2,7 @@ package com.heylocal.traveler.controller.api;
 
 import com.heylocal.traveler.dto.ErrorMessageResponse;
 import com.heylocal.traveler.dto.RegionDto.RegionResponse;
-import com.heylocal.traveler.exception.controller.NotFoundException;
+import com.heylocal.traveler.exception.NotFoundException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -18,9 +18,10 @@ import java.util.List;
 @RequestMapping("/regions")
 public interface RegionsApi {
 	@Operation(summary = "지역 목록 조회", description = "전체 지역 목록을 조회합니다.", tags = {"Regions"})
-	@ApiResponses(
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "전체 지역 목록 조회 성공"),
 			@ApiResponse(responseCode = "404", description = "- `NO_INFO`: 존재하지 않는 정보일 때", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessageResponse.class)))
-	)
+	})
 	@GetMapping()
 	List<RegionResponse> getRegions(
 			@Parameter(in = ParameterIn.QUERY, description = "조회할 City의 State", required = true) String state

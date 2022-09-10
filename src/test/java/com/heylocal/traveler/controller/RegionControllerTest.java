@@ -1,8 +1,7 @@
 package com.heylocal.traveler.controller;
 
 import com.heylocal.traveler.dto.RegionDto;
-import com.heylocal.traveler.exception.controller.NotFoundException;
-import com.heylocal.traveler.exception.service.BadArgumentException;
+import com.heylocal.traveler.exception.NotFoundException;
 import com.heylocal.traveler.service.RegionService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -29,13 +28,13 @@ class RegionControllerTest {
 
   @Test
   @DisplayName("State 관련 Region 조회 핸들러")
-  void getRegionsTest() throws BadArgumentException, NotFoundException {
+  void getRegionsTest() throws NotFoundException {
     //GIVEN
     String existState = "exitState";
     String notExistState = "notExistState";
 
     //Mock 행동 정의 - regionService
-    willThrow(BadArgumentException.class).given(regionService).inquiryRegions(eq(notExistState));
+    willThrow(NotFoundException.class).given(regionService).inquiryRegions(eq(notExistState));
 
     //WHEN
     List<RegionDto.RegionResponse> succeedResult = regionController.getRegions(existState);
