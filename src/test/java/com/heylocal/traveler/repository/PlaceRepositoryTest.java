@@ -11,7 +11,6 @@ import org.springframework.context.annotation.Import;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
