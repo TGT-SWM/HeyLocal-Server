@@ -37,14 +37,14 @@ public interface PlansApi {
 	@Operation(summary = "플랜 수정", description = "플랜을 수정합니다.", tags = {"Plans"})
 	@PutMapping("/{planId}")
 	ResponseEntity<Void> updatePlan(
-			@Parameter(in = ParameterIn.PATH, description = "플랜 ID", required = true) long planId,
+			@Parameter(in = ParameterIn.PATH, description = "플랜 ID", required = true) @PathVariable long planId,
 			@Parameter(in = ParameterIn.DEFAULT, description = "플랜 정보", required = true) PlanRequest request
 	);
 
 	@Operation(summary = "플랜 삭제", description = "플랜을 삭제합니다.", tags = {"Plans"})
 	@DeleteMapping("/{planId}")
 	ResponseEntity<Void> deletePlan(
-			@Parameter(in = ParameterIn.PATH, description = "플랜 ID", required = true) long planId
+			@Parameter(in = ParameterIn.PATH, description = "플랜 ID", required = true) @PathVariable long planId
 	);
 
 	/*
@@ -64,7 +64,7 @@ public interface PlansApi {
 	@Operation(summary = "플랜의 장소 목록 수정", description = "플랜의 장소 목록 수정", tags = {"Plans"})
 	@PutMapping("/{planId}/places")
 	void updatePlacesInPlan(
-			@Parameter(in = ParameterIn.PATH, description = "플랜 ID", required = true) long planId,
+			@Parameter(in = ParameterIn.PATH, description = "플랜 ID", required = true) @PathVariable long planId,
 			@Parameter(in = ParameterIn.DEFAULT, description = "", required = true) List<PlanPlacesRequest> request
 	);
 }
