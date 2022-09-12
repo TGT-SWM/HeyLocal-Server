@@ -8,9 +8,9 @@ import com.heylocal.traveler.dto.TravelOnDto;
 import com.heylocal.traveler.dto.TravelOnDto.TravelOnRequest;
 import com.heylocal.traveler.dto.TravelOnDto.TravelOnResponse;
 import com.heylocal.traveler.dto.TravelOnDto.TravelOnSimpleResponse;
-import com.heylocal.traveler.exception.controller.BadRequestException;
-import com.heylocal.traveler.exception.controller.ForbiddenException;
-import com.heylocal.traveler.exception.controller.NotFoundException;
+import com.heylocal.traveler.exception.BadRequestException;
+import com.heylocal.traveler.exception.ForbiddenException;
+import com.heylocal.traveler.exception.NotFoundException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -67,6 +67,7 @@ public interface TravelOnsApi {
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "여행 On 수정 성공 시"),
         @ApiResponse(responseCode = "400", description = "- `BAD_INPUT_FORM`: 입력 값의 형식이 올바르지 않을 때", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessageResponse.class))),
+        @ApiResponse(responseCode = "404", description = "- `NO_INFO`: 존재하지 않는 정보일 때", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessageResponse.class)))
     })
     @PutMapping(value = "/{travelOnId}")
     void updateTravelOn(
@@ -77,6 +78,11 @@ public interface TravelOnsApi {
     ) throws BadRequestException, NotFoundException, ForbiddenException;
 
     @Operation(summary = "여행 On 삭제", description = "여행 On을 삭제합니다.", tags = {"TravelOns"})
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "여행 On 삭제 성공 시"),
+        @ApiResponse(responseCode = "403", description = "- `NO_PERMISSION`: 삭제할 수 없을 때", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessageResponse.class))),
+        @ApiResponse(responseCode = "404", description = "- `NO_INFO`: 존재하지 않는 정보일 때", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessageResponse.class)))
+    })
     @DeleteMapping(value = "/{travelOnId}")
     void deleteTravelOn(
             @Parameter(in = ParameterIn.PATH, description = "여행 On ID", required = true) @PathVariable long travelOnId,
@@ -95,11 +101,20 @@ public interface TravelOnsApi {
     );
 
     @Operation(summary = "답변 등록", description = "여행 On에 답변을 등록합니다.", tags = {"TravelOns"})
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "201", description = "해당 여행On 에 답변 등록 성공 시"),
+        @ApiResponse(responseCode = "400", description = "- `BAD_INPUT_FORM`: 입력 값의 형식이 올바르지 않을 때", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessageResponse.class))),
+        @ApiResponse(responseCode = "403", description = "- `NO_PERMISSION`: 등록할 수 없을 때", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessageResponse.class))),
+        @ApiResponse(responseCode = "404", description = "- `NO_INFO`: 존재하지 않는 정보일 때", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessageResponse.class)))
+    })
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/{travelOnId}/opinions")
-    ResponseEntity<Void> createOpinions(
+    void createOpinions(
             @Parameter(in = ParameterIn.PATH, description = "여행 On ID", required = true) @PathVariable long travelOnId,
-            @Parameter(in = ParameterIn.DEFAULT, description = "답변 정보", required = true) @RequestBody OpinionRequest request
-    );
+            @Parameter(in = ParameterIn.DEFAULT, description = "답변 정보", required = true) @Validated @RequestBody OpinionRequest request,
+            BindingResult bindingResult,
+            @ApiIgnore LoginUser loginUser
+    ) throws BadRequestException, NotFoundException, ForbiddenException;
 
     @Operation(summary = "답변 수정", description = "답변을 수정합니다.", tags = {"TravelOns"})
     @PutMapping("/{travelOnId}/opinions/{opinionId}")

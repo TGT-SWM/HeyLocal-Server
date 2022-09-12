@@ -124,4 +124,25 @@ public class Opinion extends BaseTimeEntity {
       travelOn.addOpinion(this);
     }
   }
+
+  public void registerPlace(Place place) {
+    this.place = place;
+    if (!place.getOpinionList().contains(this)) {
+      place.addOpinion(this);
+    }
+  }
+
+  public void registerAuthor(User author) {
+    this.author = author;
+    if (!author.getOpinionList().contains(this)) {
+      author.addOpinion(this);
+    }
+  }
+
+  public void registerRegion(Region region) {
+    this.region = region;
+    if (!region.getOpinionList().contains(this)) {
+      region.addOpinion(this);
+    }
+  }
 }

@@ -1,10 +1,9 @@
 package com.heylocal.traveler.controller;
 
 import com.heylocal.traveler.controller.api.SignupApi;
+import com.heylocal.traveler.exception.BadRequestException;
 import com.heylocal.traveler.exception.code.BadRequestCode;
 import com.heylocal.traveler.exception.code.SignupCode;
-import com.heylocal.traveler.exception.controller.BadRequestException;
-import com.heylocal.traveler.exception.service.BadArgumentException;
 import com.heylocal.traveler.service.SignupService;
 import com.heylocal.traveler.util.error.BindingErrorMessageProvider;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -67,11 +66,8 @@ public class SignupController implements SignupApi {
     validatePasswordFormat(request.getPassword()); //비밀번호 포맷 검증
     validateNicknameFormat(request.getNickname()); //닉네임 포맷 검증
 
-    try {
-      signupService.signupUser(request);
-    } catch (BadArgumentException e) {
-      throw new BadRequestException(e.getCode());
-    }
+    signupService.signupUser(request);
+
   }
 
   /**

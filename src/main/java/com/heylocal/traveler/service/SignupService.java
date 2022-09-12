@@ -4,8 +4,8 @@ import com.heylocal.traveler.domain.profile.UserProfile;
 import com.heylocal.traveler.domain.user.User;
 import com.heylocal.traveler.domain.user.UserRole;
 import com.heylocal.traveler.dto.SignupDto.UserInfoCheckResponse;
+import com.heylocal.traveler.exception.BadRequestException;
 import com.heylocal.traveler.exception.code.SignupCode;
-import com.heylocal.traveler.exception.service.BadArgumentException;
 import com.heylocal.traveler.repository.UserProfileRepository;
 import com.heylocal.traveler.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -34,7 +34,7 @@ public class SignupService {
    * @param accountId 확인할 아이디
    * @return IdCheckResponse 의 속성 isAlreadyExist 이 true 면 중복
    */
-  @Transactional
+  @Transactional(readOnly = true)
   public UserInfoCheckResponse checkAccountIdExist(String accountId) {
     boolean isExist;
     Optional<User> result;
@@ -51,9 +51,10 @@ public class SignupService {
    * 사용자(여행자)를 회원가입 시키는 메서드
    * </pre>
    * @param request
+   * @throws BadRequestException
    */
   @Transactional
-  public void signupUser(SignupRequest request) throws BadArgumentException {
+  public void signupUser(SignupRequest request) throws BadRequestException {
     String accountId = request.getAccountId();
     String nickname = request.getNickname();
     String encodedPassword;
@@ -63,7 +64,7 @@ public class SignupService {
     //중복 확인
     UserInfoCheckResponse accountIdCheckRes = checkAccountIdExist(accountId);
     if (accountIdCheckRes.isAlreadyExist()) {
-      throw new BadArgumentException(SignupCode.ALREADY_EXIST_USER_INFO);
+      throw new BadRequestException(SignupCode.ALREADY_EXIST_USER_INFO);
     }
 
     //사용자 저장

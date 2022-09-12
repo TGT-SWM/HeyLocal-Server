@@ -7,10 +7,8 @@ import com.heylocal.traveler.domain.plan.Plan;
 import com.heylocal.traveler.domain.plan.list.PlaceItem;
 import com.heylocal.traveler.domain.travelon.TravelOn;
 import com.heylocal.traveler.domain.user.User;
-import com.heylocal.traveler.dto.PlanDto;
 import com.heylocal.traveler.dto.PlanDto.PlanListResponse;
-import com.heylocal.traveler.dto.PlanDto.PlanPlacesResponse;
-import com.heylocal.traveler.exception.service.BadArgumentException;
+import com.heylocal.traveler.exception.NotFoundException;
 import com.heylocal.traveler.repository.PlanRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -174,7 +172,7 @@ class PlanServiceTest {
 				// 성공 케이스 - 2 - 조회 결과가 기대와 일치
 				() -> Assertions.assertThat(planService.getPlacesInPlan(planId).size()).isEqualTo(daySchedules.size()),
 				// 실패 케이스 - 1 - 존재하지 않는 플랜 ID로 조회 시 예외 발생
-				() -> assertThrows(BadArgumentException.class, () -> planService.getPlacesInPlan(notFoundPlanId))
+				() -> assertThrows(NotFoundException.class, () -> planService.getPlacesInPlan(notFoundPlanId))
 		);
 	}
 }

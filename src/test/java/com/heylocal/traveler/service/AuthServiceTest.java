@@ -5,9 +5,9 @@ import com.heylocal.traveler.domain.token.RefreshToken;
 import com.heylocal.traveler.domain.user.User;
 import com.heylocal.traveler.domain.user.UserRole;
 import com.heylocal.traveler.dto.LoginUser;
+import com.heylocal.traveler.exception.TokenException;
+import com.heylocal.traveler.exception.UnauthorizedException;
 import com.heylocal.traveler.exception.code.AuthCode;
-import com.heylocal.traveler.exception.service.AuthException;
-import com.heylocal.traveler.exception.service.TokenException;
 import com.heylocal.traveler.repository.TokenRepository;
 import com.heylocal.traveler.repository.UserRepository;
 import com.heylocal.traveler.util.jwt.JwtTokenParser;
@@ -86,7 +86,7 @@ class AuthServiceTest {
 
   @Test
   @DisplayName("토큰 쌍 재발급 - 재발급 성공")
-  void reissueTokenPairTestSucceed() throws AuthException {
+  void reissueTokenPairTestSucceed() throws UnauthorizedException {
     //GIVEN
     long userPk = 1L;
 
@@ -166,7 +166,7 @@ class AuthServiceTest {
     //WHEN
 
     //THEN
-    assertThrows(AuthException.class,
+    assertThrows(UnauthorizedException.class,
         () -> authService.reissueTokenPair(failReissueRequest),
         AuthCode.NOT_EXIST_REFRESH_TOKEN.getDescription()
     );
@@ -219,7 +219,7 @@ class AuthServiceTest {
     //WHEN
 
     //THEN
-    assertThrows(AuthException.class,
+    assertThrows(UnauthorizedException.class,
         () -> authService.reissueTokenPair(failReissueRequest),
         AuthCode.NOT_MATCH_PAIR.getDescription()
     );
@@ -266,7 +266,7 @@ class AuthServiceTest {
     //WHEN
 
     //THEN
-    assertThrows(AuthException.class,
+    assertThrows(UnauthorizedException.class,
         () -> authService.reissueTokenPair(failReissueRequest),
         AuthCode.NOT_EXPIRED_ACCESS_TOKEN.getDescription()
     );
@@ -310,7 +310,7 @@ class AuthServiceTest {
     //WHEN
 
     //THEN
-    assertThrows(AuthException.class,
+    assertThrows(UnauthorizedException.class,
         () -> authService.reissueTokenPair(failReissueRequest),
         AuthCode.EXPIRED_REFRESH_TOKEN.getDescription()
     );

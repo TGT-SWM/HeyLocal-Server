@@ -9,17 +9,14 @@ import com.heylocal.traveler.domain.travelon.list.DrinkType;
 import com.heylocal.traveler.domain.travelon.list.FoodType;
 import com.heylocal.traveler.domain.travelon.list.MemberType;
 import com.heylocal.traveler.dto.LoginUser;
-import com.heylocal.traveler.exception.code.BadRequestCode;
+import com.heylocal.traveler.exception.BadRequestException;
+import com.heylocal.traveler.exception.ForbiddenException;
+import com.heylocal.traveler.exception.NotFoundException;
 import com.heylocal.traveler.exception.code.ForbiddenCode;
 import com.heylocal.traveler.exception.code.NotFoundCode;
-import com.heylocal.traveler.exception.controller.BadRequestException;
-import com.heylocal.traveler.exception.controller.ForbiddenException;
-import com.heylocal.traveler.exception.controller.NotFoundException;
-import com.heylocal.traveler.exception.service.BadArgumentException;
-import com.heylocal.traveler.exception.service.TaskRejectException;
+import com.heylocal.traveler.service.OpinionService;
 import com.heylocal.traveler.service.TravelOnService;
 import com.heylocal.traveler.util.error.BindingErrorMessageProvider;
-import lombok.extern.java.Log;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -36,6 +33,8 @@ import static com.heylocal.traveler.dto.PageDto.PageRequest;
 import static com.heylocal.traveler.dto.TravelOnDto.*;
 import static com.heylocal.traveler.dto.TravelTypeGroupDto.TravelTypeGroupRequest;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.willReturn;
 import static org.mockito.BDDMockito.willThrow;
 
@@ -45,13 +44,15 @@ class TravelOnsControllerTest {
   @Mock
   private TravelOnService travelOnService;
   @Mock
+  private OpinionService opinionService;
+  @Mock
   private BindingResult bindingResult;
   private TravelOnsController travelOnsController;
 
   @BeforeEach
   void setUp() {
     MockitoAnnotations.openMocks(this);
-    travelOnsController = new TravelOnsController(messageProvider, travelOnService);
+    travelOnsController = new TravelOnsController(messageProvider, travelOnService, opinionService);
   }
 
   @Test
@@ -110,13 +111,13 @@ class TravelOnsControllerTest {
 
   @Test
   @DisplayName("여행On 상세 조회")
-  void getTravelOnTest() throws BadArgumentException {
+  void getTravelOnTest() throws NotFoundException {
     //GIVEN
     long existTravelOnId = 1L;
     long notExistTravelOnId = 3L;
 
     //Mock 행동 정의 - travelOnService
-    willThrow(BadArgumentException.class).given(travelOnService).inquiryTravelOn(notExistTravelOnId);
+    willThrow(NotFoundException.class).given(travelOnService).inquiryTravelOn(notExistTravelOnId);
 
     //WHEN
 
@@ -131,7 +132,7 @@ class TravelOnsControllerTest {
 
   @Test
   @DisplayName("여행On 수정 핸들러 - 성공 케이스")
-  void updateTravelOnSucceedTest() throws BadArgumentException, ForbiddenException, BadRequestException, NotFoundException {
+  void updateTravelOnSucceedTest() throws ForbiddenException, BadRequestException, NotFoundException {
     //GIVEN
     long travelOnId = 1L;
     long ownerId = 2L;
@@ -152,7 +153,7 @@ class TravelOnsControllerTest {
 
   @Test
   @DisplayName("여행On 수정 핸들러 - 수정 권한이 없는 경우")
-  void updateTravelOnForbiddenTest() throws BadArgumentException, ForbiddenException, BadRequestException, NotFoundException {
+  void updateTravelOnForbiddenTest() throws ForbiddenException, BadRequestException, NotFoundException {
     //GIVEN
     long travelOnId = 1L;
     long noOwnerId = 2L;
@@ -172,7 +173,7 @@ class TravelOnsControllerTest {
 
   @Test
   @DisplayName("여행On 수정 핸들러 - 입력 형식이 틀린 경우")
-  void updateTravelOnWrongInputFormTest() throws BadArgumentException, ForbiddenException, BadRequestException, NotFoundException {
+  void updateTravelOnWrongInputFormTest() throws ForbiddenException, BadRequestException, NotFoundException {
     //GIVEN
     long travelOnId = 1L;
     long noOwnerId = 2L;
@@ -192,7 +193,7 @@ class TravelOnsControllerTest {
 
   @Test
   @DisplayName("여행On 삭제 핸들러 - 성공 케이스")
-  void deleteTravelOnSucceedTest() throws BadArgumentException {
+  void deleteTravelOnSucceedTest() throws NotFoundException {
     //GIVEN
     long existTravelOnId = 1L;
     long authorId = 2L;
@@ -210,7 +211,7 @@ class TravelOnsControllerTest {
 
   @Test
   @DisplayName("여행On 삭제 핸들러 - 삭제 권한 없는 경우")
-  void deleteTravelOnForbiddenTest() throws BadArgumentException {
+  void deleteTravelOnForbiddenTest() throws NotFoundException {
     //GIVEN
     long existTravelOnId = 1L;
     long noAuthorId = 2L;
@@ -228,14 +229,14 @@ class TravelOnsControllerTest {
 
   @Test
   @DisplayName("여행On 삭제 핸들러 - 잘못된 여행On ID인 경우")
-  void deleteTravelOnWrongIdTest() throws BadArgumentException {
+  void deleteTravelOnWrongIdTest() throws NotFoundException {
     //GIVEN
     long notExistTravelOnId = 1L;
     long noAuthorId = 2L;
     LoginUser loginUser = LoginUser.builder().id(noAuthorId).build();
 
     //Mock 행동 정의 - travelOnService
-    willThrow(new BadArgumentException(NotFoundCode.NO_INFO, "존재하지 않는 여행On ID 입니다.")).given(travelOnService).isAuthor(noAuthorId, notExistTravelOnId);
+    willThrow(new NotFoundException(NotFoundCode.NO_INFO, "존재하지 않는 여행On ID 입니다.")).given(travelOnService).isAuthor(noAuthorId, notExistTravelOnId);
 
     //WHEN
 
@@ -246,7 +247,7 @@ class TravelOnsControllerTest {
 
   @Test
   @DisplayName("여행On 삭제 핸들러 - 이미 답변이 달린 경우")
-  void deleteTravelOnHasOpinionTest() throws BadArgumentException, TaskRejectException {
+  void deleteTravelOnHasOpinionTest() throws NotFoundException, ForbiddenException {
     //GIVEN
     long existTravelOnId = 1L;
     long authorId = 2L;
@@ -254,13 +255,89 @@ class TravelOnsControllerTest {
 
     //Mock 행동 정의 - travelOnService
     willReturn(true).given(travelOnService).isAuthor(authorId, existTravelOnId);
-    willThrow(new TaskRejectException(ForbiddenCode.NO_PERMISSION, "답변이 달린 여행On 은 삭제할 수 없습니다.")).given(travelOnService).removeTravelOn(existTravelOnId);
+    willThrow(new ForbiddenException(ForbiddenCode.NO_PERMISSION, "답변이 달린 여행On 은 삭제할 수 없습니다.")).given(travelOnService).removeTravelOn(existTravelOnId);
 
     //WHEN
 
     //THEN
     //실패 케이스 - 1 - 이미 답변이 달린 여행On ID인 경우
     assertThrows(ForbiddenException.class, () -> travelOnsController.deleteTravelOn(existTravelOnId, loginUser));
+  }
+
+  @Test
+  @DisplayName("답변 등록 핸들러 - 성공 케이스")
+  void createOpinionsSucceedTest() {
+    //GIVEN
+    long loginUserId = 1L;
+    long travelOnId = 3L;
+    LoginUser loginUser = LoginUser.builder()
+        .id(loginUserId)
+        .build();
+
+    //Mock 행동 정의 - bindingResult
+    willReturn(false).given(bindingResult).hasFieldErrors();
+
+    //WHEN
+
+    //THEN
+    assertDoesNotThrow(() -> travelOnsController.createOpinions(travelOnId, null, bindingResult, loginUser));
+  }
+
+  @Test
+  @DisplayName("답변 등록 핸들러 - 입력 형식 오류")
+  void createOpinionsWrongFormatTest() {
+    //GIVEN
+    long loginUserId = 1L;
+    long travelOnId = 3L;
+    LoginUser loginUser = LoginUser.builder()
+        .id(loginUserId)
+        .build();
+
+    //Mock 행동 정의 - bindingResult
+    willReturn(true).given(bindingResult).hasFieldErrors();
+
+    //WHEN
+
+    //THEN
+    assertThrows(BadRequestException.class, () -> travelOnsController.createOpinions(travelOnId, null, bindingResult, loginUser));
+  }
+
+  @Test
+  @DisplayName("답변 등록 핸들러 - NotFoundErr")
+  void createOpinionsNotFoundErrTest() throws NotFoundException, ForbiddenException, BadRequestException {
+    //GIVEN
+    long loginUserId = 1L;
+    long travelOnId = 3L;
+    LoginUser loginUser = LoginUser.builder()
+        .id(loginUserId)
+        .build();
+
+    //Mock 행동 정의 - bindingResult
+    willThrow(NotFoundException.class).given(opinionService).addNewOpinion(anyLong(), any(), any());
+
+    //WHEN
+
+    //THEN
+    assertThrows(NotFoundException.class, () -> travelOnsController.createOpinions(travelOnId, null, bindingResult, loginUser));
+  }
+
+  @Test
+  @DisplayName("답변 등록 핸들러 - ForbiddenErr")
+  void createOpinionsForbiddenErrTest() throws ForbiddenException, NotFoundException, BadRequestException {
+    //GIVEN
+    long loginUserId = 1L;
+    long travelOnId = 3L;
+    LoginUser loginUser = LoginUser.builder()
+        .id(loginUserId)
+        .build();
+
+    //Mock 행동 정의 - bindingResult
+    willThrow(ForbiddenException.class).given(opinionService).addNewOpinion(anyLong(), any(), any());
+
+    //WHEN
+
+    //THEN
+    assertThrows(ForbiddenException.class, () -> travelOnsController.createOpinions(travelOnId, null, bindingResult, loginUser));
   }
 
   /**

@@ -20,17 +20,16 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
-import static com.heylocal.traveler.dto.HopeAccommodationDto.*;
-import static com.heylocal.traveler.dto.HopeDrinkDto.*;
-import static com.heylocal.traveler.dto.HopeFoodDto.*;
+import static com.heylocal.traveler.dto.HopeAccommodationDto.HopeAccommodationResponse;
+import static com.heylocal.traveler.dto.HopeDrinkDto.HopeDrinkResponse;
+import static com.heylocal.traveler.dto.HopeFoodDto.HopeFoodResponse;
 import static com.heylocal.traveler.dto.PageDto.PageRequest;
-import static com.heylocal.traveler.dto.RegionDto.*;
-import static com.heylocal.traveler.dto.TravelMemberDto.*;
-import static com.heylocal.traveler.dto.TravelTypeGroupDto.*;
-import static com.heylocal.traveler.dto.UserDto.*;
+import static com.heylocal.traveler.dto.RegionDto.RegionResponse;
+import static com.heylocal.traveler.dto.TravelMemberDto.TravelMemberResponse;
+import static com.heylocal.traveler.dto.TravelTypeGroupDto.TravelTypeGroupResponse;
+import static com.heylocal.traveler.dto.UserDto.UserResponse;
 
 public class TravelOnDto {
 	@Getter
@@ -178,6 +177,7 @@ public class TravelOnDto {
 	public static class TravelOnResponse {
 		private long id;
 		private String title;
+		private String description;
 		private int views;
 		private RegionResponse region;
 		private UserResponse author;
@@ -198,6 +198,7 @@ public class TravelOnDto {
 		public TravelOnResponse(TravelOn entity) {
 			this.id = entity.getId();
 			this.title = entity.getTitle();
+			this.description = entity.getDescription();
 			this.views = entity.getViews();
 			this.region = new RegionResponse(entity.getRegion());
 			this.author = new UserResponse(entity.getAuthor());
@@ -253,7 +254,7 @@ public class TravelOnDto {
 		private RegionResponse region;
 		private LocalDateTime createdDateTime;
 		private LocalDateTime modifiedDate;
-		private UserProfileResponse userProfile;
+		private UserResponse author;
 		private String description;
 		private int views;
 		private int opinionQuantity;
@@ -264,7 +265,7 @@ public class TravelOnDto {
 			this.region = new RegionResponse(entity.getRegion());
 			this.createdDateTime = entity.getCreatedDate();
 			this.modifiedDate = entity.getModifiedDate();
-			this.userProfile = new UserProfileResponse(entity.getAuthor().getUserProfile(), 0); //Ranking 은 무조건 0으로 표시하도록 함
+			this.author = new UserResponse(entity.getAuthor());
 			this.description = entity.getDescription();
 			this.views = entity.getViews();
 			this.opinionQuantity = entity.getOpinionList().size();
