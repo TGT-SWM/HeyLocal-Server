@@ -1,5 +1,6 @@
 package com.heylocal.traveler.service;
 
+import com.heylocal.traveler.domain.place.Place;
 import com.heylocal.traveler.domain.plan.DaySchedule;
 import com.heylocal.traveler.domain.plan.Plan;
 import com.heylocal.traveler.dto.PlanDto.PlanListResponse;
@@ -8,6 +9,7 @@ import com.heylocal.traveler.dto.PlanDto.PlanPlacesResponse;
 import com.heylocal.traveler.dto.PlanDto.PlanResponse;
 import com.heylocal.traveler.exception.NotFoundException;
 import com.heylocal.traveler.exception.code.NotFoundCode;
+import com.heylocal.traveler.repository.PlaceRepository;
 import com.heylocal.traveler.repository.PlanRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,6 +26,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class PlanService {
 	private final PlanRepository planRepository;
+
+	private final PlaceRepository placeRepository;
 
 	private final Clock clock;
 
@@ -116,6 +120,19 @@ public class PlanService {
 		List<DaySchedule> daySchedules = request.stream()
 				.map(places -> places.toEntity())
 				.collect(Collectors.toList());
+
+		// 장소 엔티티 저장
+		for (DaySchedule daySchedule: daySchedules) {
+			daySchedule.getPlaceItemList().stream()
+					.map(placeItem -> placeItem.getPlace())
+					.forEach(place -> {
+						Optional<Place> optPlace = placeRepository.findById(place.getId());
+
+						// 장소가 저장되어 있지 않은 경우, 저장
+						if (optPlace.isEmpty())
+							placeRepository.save(place);
+					});
+		}
 
 		// 업데이트
 		plan.updateDayScheduleList(daySchedules);
