@@ -340,6 +340,8 @@ class TravelOnsControllerTest {
     assertThrows(ForbiddenException.class, () -> travelOnsController.createOpinions(travelOnId, null, bindingResult, loginUser));
   }
 
+  // TODO - getOpinions
+
   /**
    * AllTravelOnRequest 객체를 생성하는 메서드
    * @return

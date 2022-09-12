@@ -86,6 +86,19 @@ public class PlaceDto {
 		private RegionResponse region;
 		private String thumbnailUrl;
 		private String kakaoLink;
+
+		public PlaceResponse(Place entity) {
+			this.id = entity.getId();
+			this.category = entity.getCategory();
+			this.name = entity.getName();
+			this.roadAddress = entity.getRoadAddress();
+			this.address = entity.getAddress();
+			this.lat = entity.getLat();
+			this.lng = entity.getLng();
+			this.region = new RegionResponse(entity.getRegion());
+			this.thumbnailUrl = entity.getThumbnailUrl();
+			this.kakaoLink = entity.getLink();
+		}
 	}
 
 	@Getter

@@ -136,9 +136,17 @@ public class TravelOnsController implements TravelOnsApi {
     travelOnService.removeTravelOn(travelOnId);
   }
 
+  /**
+   * 답변 조회 핸들러
+   * @param travelOnId 답변을 조회할 여행On ID
+   * @return
+   * @throws NotFoundException 여행On ID가 존재하지 않을 경우
+   */
   @Override
-  public List<OpinionResponse> getOpinions(long travelOnId) {
-    return null;
+  public List<OpinionResponse> getOpinions(long travelOnId) throws NotFoundException {
+    List<OpinionResponse> response = opinionService.inquiryOpinions(travelOnId);
+
+    return response;
   }
 
   /**

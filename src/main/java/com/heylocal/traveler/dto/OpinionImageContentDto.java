@@ -1,9 +1,10 @@
 package com.heylocal.traveler.dto;
 
+import com.heylocal.traveler.domain.travelon.opinion.OpinionImageContent;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
-public class OpinionImageContent {
+public class OpinionImageContentDto {
   @Getter
   @Setter
   @NoArgsConstructor
@@ -14,5 +15,11 @@ public class OpinionImageContent {
     private long id;
     private String url;
     private int placedIndex;
+
+    public OpinionImageContentResponse(OpinionImageContent entity) {
+      this.id = entity.getId();
+      this.url = entity.getUrl();
+      this.placedIndex = entity.getPlacedIndex();
+    }
   }
 }

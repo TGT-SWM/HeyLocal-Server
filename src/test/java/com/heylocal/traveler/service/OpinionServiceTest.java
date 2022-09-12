@@ -207,6 +207,8 @@ class OpinionServiceTest {
     assertThrows(ForbiddenException.class, () -> opinionService.addNewOpinion(travelOnId, opinionRequest, loginUser));
   }
 
+  // TODO - inquiryOpinions
+
   private OpinionRequest getOpinionRequest(PlaceRequest place) {
     return OpinionRequest.builder()
         .description("myDescription")
