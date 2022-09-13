@@ -121,12 +121,20 @@ public interface TravelOnsApi {
     ) throws BadRequestException, NotFoundException, ForbiddenException;
 
     @Operation(summary = "답변 수정", description = "답변을 수정합니다.", tags = {"TravelOns"})
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "답변 수정 성공 시"),
+        @ApiResponse(responseCode = "400", description = "- `BAD_INPUT_FORM`: 입력 값의 형식이 올바르지 않을 때", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessageResponse.class))),
+        @ApiResponse(responseCode = "403", description = "- `NO_PERMISSION`: 수정할 수 없을 때", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessageResponse.class))),
+        @ApiResponse(responseCode = "404", description = "- `NO_INFO`: 존재하지 않는 정보일 때", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessageResponse.class)))
+    })
     @PutMapping("/{travelOnId}/opinions/{opinionId}")
-    ResponseEntity<Void> updateOpinion(
+    void updateOpinion(
             @Parameter(in = ParameterIn.PATH, description = "여행 On ID", required = true) @PathVariable long travelOnId,
             @Parameter(in = ParameterIn.PATH, description = "답변 ID", required = true) @PathVariable long opinionId,
-            @Parameter(in = ParameterIn.DEFAULT, description = "답변 정보", required = true) @RequestBody OpinionRequest request
-    );
+            @Parameter(in = ParameterIn.DEFAULT, description = "답변 정보", required = true) @Validated @RequestBody OpinionRequest request,
+            BindingResult bindingResult,
+            @ApiIgnore LoginUser loginUser
+    ) throws BadRequestException, NotFoundException, ForbiddenException;
 
     @Operation(summary = "답변 삭제", description = "답변을 삭제합니다.", tags = {"TravelOns"})
     @DeleteMapping("/{travelOnId}/opinions/{opinionId}")

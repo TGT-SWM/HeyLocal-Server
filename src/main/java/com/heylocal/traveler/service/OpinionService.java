@@ -6,7 +6,6 @@ import com.heylocal.traveler.domain.travelon.TravelOn;
 import com.heylocal.traveler.domain.travelon.opinion.Opinion;
 import com.heylocal.traveler.domain.user.User;
 import com.heylocal.traveler.dto.LoginUser;
-import com.heylocal.traveler.dto.OpinionDto;
 import com.heylocal.traveler.dto.PlaceDto;
 import com.heylocal.traveler.exception.BadRequestException;
 import com.heylocal.traveler.exception.ForbiddenException;
@@ -50,46 +49,36 @@ public class OpinionService {
   @Transactional
   public void addNewOpinion(long travelOnId, OpinionRequest request, LoginUser loginUser) throws NotFoundException, ForbiddenException, BadRequestException {
     long authorId;
-    long placeId;
     TravelOn travelOn;
-    Region placeRegion;
-    Place place;
-    Optional<Place> existedPlaceOptional;
+    String requestPlaceAddress;
+    Region regionOfRequestPlace;
+    Place requestPlace;
     Opinion newOpinion;
+    boolean isSameRegion;
+    User opinionAuthor;
 
     //답변이 달릴 여행On 조회
-    travelOn = travelOnRepository.findById(travelOnId).orElseThrow(
-        () -> new NotFoundException(NotFoundCode.NO_INFO, "존재하지 않는 여행On ID 입니다.")
-    );
+    travelOn = inquiryTravelOn(travelOnId);
 
     //지역 조회
-    placeRegion = regionService.getRegionByAddress(request.getPlace().getAddress()).orElseThrow(
-        () -> new NotFoundException(NotFoundCode.NO_INFO, "주소 관련 Region을 찾을 수 없습니다.")
-    );
+    requestPlaceAddress = request.getPlace().getAddress();
+    regionOfRequestPlace = inquiryRegionByAddress(requestPlaceAddress);
 
     //여행On의 지역과 답변할 장소의 지역이 다르면 거부
-    if (travelOn.getRegion() != placeRegion) {
+    isSameRegion = isSameRegionOfTravelOnAndOpinion(travelOn, regionOfRequestPlace);
+    if (!isSameRegion) {
       throw new ForbiddenException(ForbiddenCode.NO_PERMISSION, "여행On의 지역과 다른 지역의 장소는 등록할 수 없습니다.");
     }
 
     //작성자 조회
     authorId = loginUser.getId();
-    User author = userRepository.findById(authorId).get();
+    opinionAuthor = userRepository.findById(authorId).get();
 
     //장소 저장 및 조회
-    placeId = request.getPlace().getId();
-    existedPlaceOptional = placeRepository.findById(placeId);
-    if (existedPlaceOptional.isEmpty()) { //기존에 저장된 장소가 없다면
-      place = request.getPlace().toEntity(placeRegion);
-      placeRepository.save(place);
-
-    } else { //기존에 저장된 장소가 있다면
-      updatePlace(existedPlaceOptional.get(), request.getPlace()); //장소 정보 업데이트
-      place = existedPlaceOptional.get();
-    }
+    requestPlace = inquiryPlaceFromOpinionRequest(request);
 
     //새 답변 추가
-    newOpinion = request.toEntity(place, author, travelOn, placeRegion);
+    newOpinion = request.toEntity(requestPlace, opinionAuthor, travelOn, regionOfRequestPlace);
     opinionRepository.save(newOpinion);
   }
 
@@ -105,14 +94,180 @@ public class OpinionService {
     List<OpinionResponse> result;
 
     //답변을 조회할 여행On 조회
-    targetTravelOn = travelOnRepository.findById(travelOnId).orElseThrow(
-        () -> new NotFoundException(NotFoundCode.NO_INFO, "존재하지 않는 여행On ID 입니다.")
-    );
+    targetTravelOn = inquiryTravelOn(travelOnId);
 
     //List<Opinion> -> List<OpinionResponse>
     result = targetTravelOn.getOpinionList().stream().map(OpinionResponse::new).collect(Collectors.toList());
 
     return result;
+  }
+
+  /**
+   * 답변(Opinion) 을 수정하는 메서드
+   * @param travelOnId 수정할 답변이 달릴 여행On ID
+   * @param opinionId 수정할 답변 ID
+   * @param request 답변 수정 내용
+   * @throws NotFoundException
+   * @throws BadRequestException
+   * @throws ForbiddenException
+   */
+  @Transactional
+  public void updateOpinion(long travelOnId, long opinionId, OpinionRequest request) throws NotFoundException, BadRequestException, ForbiddenException {
+    Opinion targetOpinion;
+    TravelOn targetTravelOn;
+    String requestPlaceAddress;
+    Region regionOfRequestPlace;
+    boolean isSameRegion;
+    Place requestPlace;
+
+    //답변이 달릴 여행On 조회
+    targetTravelOn = inquiryTravelOn(travelOnId);
+
+    //수정할 답변(Opinion) 조회
+    targetOpinion = inquiryOpinionOfTravelOn(travelOnId, opinionId);
+
+    //수정 답변 장소의 지역 조회
+    requestPlaceAddress = request.getPlace().getAddress();
+    regionOfRequestPlace = inquiryRegionByAddress(requestPlaceAddress);
+
+    //여행On의 지역과 답변할 장소의 지역이 다르면 거부
+    isSameRegion = isSameRegionOfTravelOnAndOpinion(targetTravelOn, regionOfRequestPlace);
+    if (!isSameRegion) {
+      throw new ForbiddenException(ForbiddenCode.NO_PERMISSION, "여행On의 지역과 다른 지역의 장소는 등록할 수 없습니다.");
+    }
+
+    //Opinion Request 의 Place 를 조회
+    requestPlace = inquiryPlaceFromOpinionRequest(request);
+
+    //답변 수정
+    targetOpinion.updateRegion(regionOfRequestPlace);
+    targetOpinion.updatePlace(requestPlace);
+    targetOpinion.updateDescription(request.getDescription());
+    targetOpinion.updateKindness(request.getKindness());
+    targetOpinion.updateFacilityCleanliness(request.getFacilityCleanliness());
+    targetOpinion.updateAccessibility(request.getAccessibility());
+    targetOpinion.updateCanParking(request.isCanParking());
+    targetOpinion.updateWaiting(request.isWaiting());
+    targetOpinion.updatePhotoSpotImageUrl(request.getPhotoSpotImageUrl());
+    targetOpinion.updatePhotoSpotText(request.getPhotoSpotText());
+    targetOpinion.updateCostPerformance(request.getCostPerformance());
+    targetOpinion.updateMood(request.getMood());
+    targetOpinion.updateToiletCleanliness(request.getToiletCleanliness());
+    targetOpinion.updateFood(request.getFood());
+    targetOpinion.updateRecommendFood(request.getRecommendFood());
+    targetOpinion.updateDrink(request.getDrink());
+    targetOpinion.updateCoffeeType(request.getCoffeeType());
+    targetOpinion.updateRecommendDrink(request.getRecommendDrink());
+    targetOpinion.updateRecommendDessert(request.getRecommendDessert());
+    targetOpinion.updateRecommendToDo(request.getRecommendToDo());
+    targetOpinion.updateRecommendSnack(request.getRecommendSnack());
+    targetOpinion.updateStreetNoise(request.getStreetNoise());
+    targetOpinion.updateDeafening(request.getDeafening());
+    targetOpinion.updateBreakFast(request.getBreakFast());
+    targetOpinion.updateExistsAmenity(request.isExistsAmenity());
+    targetOpinion.updateExistsStore(request.isExistsStore());
+  }
+
+  /**
+   * 해당 답변(opinion)의 작성자인지 확인하는 메서드
+   * @param userId
+   * @param opinionId
+   * @return true:작성자맞음, false:작성자아님
+   * @throws NotFoundException
+   */
+  @Transactional(readOnly = true)
+  public boolean isAuthor(long userId, long opinionId) throws NotFoundException {
+    Optional<Opinion> opinionOptional;
+    Opinion opinion;
+
+    opinionOptional = opinionRepository.findById(opinionId);
+    if (opinionOptional.isEmpty()) {
+      throw new NotFoundException(NotFoundCode.NO_INFO, "존재하지 않는 답변 ID 입니다.");
+    }
+    opinion = opinionOptional.get();
+
+    return opinion.getAuthor().getId() == userId;
+  }
+
+  /**
+   * 해당 여행On 에 달린 답변을 조회하는 메서드
+   * @param travelOnId
+   * @param opinionId
+   * @return
+   * @throws NotFoundException
+   */
+  private Opinion inquiryOpinionOfTravelOn(long travelOnId, long opinionId) throws NotFoundException {
+    Optional<Opinion> opinionOptional;
+    Opinion opinion;
+
+    opinionOptional = opinionRepository.findByIdAndTravelOn(opinionId, travelOnId);
+    if (opinionOptional.isEmpty()) {
+      throw new NotFoundException(NotFoundCode.NO_INFO, "해당 여행On에 존재하지 않는 답변 ID 입니다.");
+    }
+    opinion = opinionOptional.get();
+
+    return opinion;
+  }
+
+  /**
+   * Opinion 에 해당되는 Place 를 구하는 메서드
+   * @param request Opinion 정보
+   * @return
+   */
+  private Place inquiryPlaceFromOpinionRequest(OpinionRequest request) throws NotFoundException, BadRequestException {
+    Place place;
+    long placeId;
+    Optional<Place> existedPlaceOptional;
+    String requestPlaceAddress;
+    Region regionOfRequestPlace;
+
+    requestPlaceAddress = request.getPlace().getAddress();
+    regionOfRequestPlace = inquiryRegionByAddress(requestPlaceAddress);
+    placeId = request.getPlace().getId();
+    existedPlaceOptional = placeRepository.findById(placeId);
+
+    if (existedPlaceOptional.isEmpty()) { //기존에 저장된 장소가 없다면
+      place = request.getPlace().toEntity(regionOfRequestPlace);
+      placeRepository.save(place);
+
+    } else { //기존에 저장된 장소가 있다면
+      updatePlace(existedPlaceOptional.get(), request.getPlace()); //장소 정보 업데이트
+      place = existedPlaceOptional.get();
+    }
+
+    return place;
+  }
+
+  /**
+   * 여행On의 지역과 답변 장소의 지역이 같은지 확인하는 메서드
+   * @param travelOn
+   * @param placeRegion
+   * @return
+   */
+  private boolean isSameRegionOfTravelOnAndOpinion(TravelOn travelOn, Region placeRegion) {
+    if (travelOn.getRegion() != placeRegion) {
+      return false;
+    }
+    return true;
+  }
+
+  /**
+   * 요청된
+   * @para된 requestPlaceAddress
+   * @return
+   * @throws NotFoundException
+   * @throws BadRequestException
+   */
+  private Region inquiryRegionByAddress(String requestPlaceAddress) throws NotFoundException, BadRequestException {
+    return regionService.getRegionByAddress(requestPlaceAddress).orElseThrow(
+        () -> new NotFoundException(NotFoundCode.NO_INFO, "주소 관련 Region을 찾을 수 없습니다.")
+    );
+  }
+
+  private TravelOn inquiryTravelOn(long travelOnId) throws NotFoundException {
+    return travelOnRepository.findById(travelOnId).orElseThrow(
+        () -> new NotFoundException(NotFoundCode.NO_INFO, "존재하지 않는 여행On ID 입니다.")
+    );
   }
 
   /**

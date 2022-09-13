@@ -104,4 +104,8 @@ public class Place extends BaseTimeEntity {
   public void updateLink(String link) {
     this.link = link;
   }
+
+  public void removeOpinion(Opinion target) {
+    this.getOpinionList().remove(target);
+  }
 }

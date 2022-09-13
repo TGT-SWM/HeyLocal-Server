@@ -52,4 +52,8 @@ public class Region {
       opinion.registerRegion(this);
     }
   }
+
+  public void removeOpinion(Opinion target) {
+    this.getOpinionList().remove(target);
+  }
 }

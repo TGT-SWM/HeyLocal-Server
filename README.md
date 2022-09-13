@@ -11,5 +11,4 @@
 | 최정인 | 팀원  |FE|
 
 ## TODO
-- 답변 조회 API E2E 테스트
-- 답변 조회 API 관련 테스트 코드 작성
+- Opinion 엔티티의 Region, Place 필드를 Lazy 로딩으로 설정하고, 조회할 때 fetch join을 하도록 수정
