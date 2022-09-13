@@ -9,6 +9,7 @@ import com.heylocal.traveler.domain.travelon.list.DrinkType;
 import com.heylocal.traveler.domain.travelon.list.FoodType;
 import com.heylocal.traveler.domain.travelon.list.MemberType;
 import com.heylocal.traveler.dto.LoginUser;
+import com.heylocal.traveler.dto.OpinionDto;
 import com.heylocal.traveler.exception.BadRequestException;
 import com.heylocal.traveler.exception.ForbiddenException;
 import com.heylocal.traveler.exception.NotFoundException;
@@ -340,7 +341,26 @@ class TravelOnsControllerTest {
     assertThrows(ForbiddenException.class, () -> travelOnsController.createOpinions(travelOnId, null, bindingResult, loginUser));
   }
 
-  // TODO - getOpinions
+  @Test
+  @DisplayName("답변 조회 핸들러")
+  void getOpinionsTest() throws NotFoundException {
+    //GIVEN
+    long existTravelOnId = 1L;
+    long notExistTravelOnId = 2L;
+
+    //Mock 행동 정의 - opinionService
+    willThrow(NotFoundException.class).given(opinionService).inquiryOpinions(notExistTravelOnId);
+
+    //WHEN
+
+    //THEN
+    assertAll(
+        //성공 케이스 - 1 - 존재하는 여행On 의 답변 조회
+        () -> assertDoesNotThrow(() -> travelOnsController.getOpinions(existTravelOnId)),
+        //실패 케이스 - 1 - 존재하지 않는 여행On 의 답변 조회
+        () -> assertThrows(NotFoundException.class, () -> travelOnsController.getOpinions(notExistTravelOnId))
+    );
+  }
 
   /**
    * AllTravelOnRequest 객체를 생성하는 메서드

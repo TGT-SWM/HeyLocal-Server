@@ -8,9 +8,11 @@ import com.heylocal.traveler.domain.travelon.*;
 import com.heylocal.traveler.domain.travelon.list.*;
 import com.heylocal.traveler.domain.travelon.opinion.CoffeeType;
 import com.heylocal.traveler.domain.travelon.opinion.EvaluationDegree;
+import com.heylocal.traveler.domain.travelon.opinion.Opinion;
 import com.heylocal.traveler.domain.user.User;
 import com.heylocal.traveler.domain.user.UserRole;
 import com.heylocal.traveler.dto.LoginUser;
+import com.heylocal.traveler.dto.OpinionDto;
 import com.heylocal.traveler.exception.BadRequestException;
 import com.heylocal.traveler.exception.ForbiddenException;
 import com.heylocal.traveler.exception.NotFoundException;
@@ -25,11 +27,14 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
+import static com.heylocal.traveler.dto.OpinionDto.*;
 import static com.heylocal.traveler.dto.OpinionDto.OpinionRequest;
 import static com.heylocal.traveler.dto.PlaceDto.PlaceRequest;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.AdditionalMatchers.not;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.*;
@@ -207,7 +212,37 @@ class OpinionServiceTest {
     assertThrows(ForbiddenException.class, () -> opinionService.addNewOpinion(travelOnId, opinionRequest, loginUser));
   }
 
-  // TODO - inquiryOpinions
+  @Test
+  @DisplayName("답변 조회")
+  void inquiryOpinionsTest() throws NotFoundException {
+    //GIVEN
+    User author = User.builder().id(1L).accountId("myAccountId").nickname("myNickname").password("myPassword").userRole(UserRole.TRAVELER).build();
+    UserProfile profile = UserProfile.builder().id(1L).knowHow(0).build();
+    profile.associateUser(author);
+    Region regionA = getRegionA();
+    long travelOnId = 1L;
+    TravelOn travelOn = getTravelOn(travelOnId, regionA);
+    Place place = Place.builder().id(1L).region(regionA).lat(10d).lng(10d).build();
+    String opinionDescription = "my opinion description";
+    Opinion opinion = Opinion.builder().id(1L).place(place).description(opinionDescription).author(author).build();
+
+    travelOn.addOpinion(opinion);
+
+    //Mock 행동 정의 - travelOnRepository
+    willReturn(Optional.of(travelOn)).given(travelOnRepository).findById(travelOnId);
+    willReturn(Optional.empty()).given(travelOnRepository).findById(not(eq(travelOnId)));
+
+    //WHEN
+    List<OpinionResponse> result = opinionService.inquiryOpinions(travelOnId);
+
+    //THEN
+    assertAll(
+        //성공 케이스 - 1 - 조회결과
+        () -> assertEquals(opinionDescription, result.get(0).getDescription()),
+        //실패 케이스 - 1 - 존재하지 않는 여행On ID 인 경우
+        () -> assertThrows(NotFoundException.class, () -> opinionService.inquiryOpinions(travelOnId + 1))
+    );
+  }
 
   private OpinionRequest getOpinionRequest(PlaceRequest place) {
     return OpinionRequest.builder()

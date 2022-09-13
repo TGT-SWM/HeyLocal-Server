@@ -99,6 +99,58 @@ class RegionRepositoryTest {
     );
   }
 
-  // TODO - findByStateKeyword
-  // TODO - findByCityKeyword
+  @Test
+  @DisplayName("state 키워드로 Region 조회")
+  void findByStateKeywordTest() {
+    //GIVEN
+    String stateKeyword = "서울";
+    Region regionADetail = Region.builder()
+        .state(stateKeyword + "특별시")
+        .city("cityA")
+        .build();
+    Region regionASimp = Region.builder()
+        .state(stateKeyword + "특별시")
+        .build();
+
+    em.persist(regionADetail);
+    em.persist(regionASimp);
+
+    //WHEN
+    Optional<Region> succeedResult = regionRepository.findByStateKeyword(stateKeyword);
+    Optional<Region> failResult = regionRepository.findByStateKeyword(stateKeyword + "시");
+
+    //THEN
+    assertAll(
+        //성공 케이스 - 1 - 결과가 존재하는지
+        () -> assertTrue(succeedResult.isPresent()),
+        //성공 케이스 - 2 - city가 없는 결과인지
+        () -> assertEquals(regionASimp, succeedResult.get()),
+        //실패 케이스 - 1 - 키워드가 '시' 로 끝나는 경우
+        () -> assertFalse(failResult.isPresent())
+    );
+  }
+
+  @Test
+  @DisplayName("city 키워드로 Region 조회")
+  void findByCityKeywordTest() {
+    //GIVEN
+    String cityKeyword = "성남";
+    Region regionA = Region.builder()
+        .state("stateA")
+        .city(cityKeyword + "시")
+        .build();
+
+    em.persist(regionA);
+
+    //WHEN
+    Optional<Region> succeedResult = regionRepository.findByCityKeyword(cityKeyword);
+
+    //THEN
+    assertAll(
+        //성공 케이스 - 1 - 결과가 존재하는지
+        () -> assertTrue(succeedResult.isPresent()),
+        //성공 케이스 - 2
+        () -> assertEquals(regionA, succeedResult.get())
+    );
+  }
 }
