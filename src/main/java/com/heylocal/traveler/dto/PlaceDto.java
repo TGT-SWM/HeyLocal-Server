@@ -13,6 +13,8 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 
+import static com.heylocal.traveler.dto.RegionDto.*;
+
 public class PlaceDto {
 
 	@Getter
@@ -74,7 +76,29 @@ public class PlaceDto {
 	@Builder
 	@Schema(description = "장소 상세 정보 응답 DTO")
 	public static class PlaceResponse {
-		long id;
+		private long id;
+		private PlaceCategory category;
+		private String name;
+		private String roadAddress;
+		private String address;
+		private double lat;
+		private double lng;
+		private RegionResponse region;
+		private String thumbnailUrl;
+		private String kakaoLink;
+
+		public PlaceResponse(Place entity) {
+			this.id = entity.getId();
+			this.category = entity.getCategory();
+			this.name = entity.getName();
+			this.roadAddress = entity.getRoadAddress();
+			this.address = entity.getAddress();
+			this.lat = entity.getLat();
+			this.lng = entity.getLng();
+			this.region = new RegionResponse(entity.getRegion());
+			this.thumbnailUrl = entity.getThumbnailUrl();
+			this.kakaoLink = entity.getLink();
+		}
 	}
 
 	@Getter

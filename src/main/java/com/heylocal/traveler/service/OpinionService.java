@@ -6,6 +6,7 @@ import com.heylocal.traveler.domain.travelon.TravelOn;
 import com.heylocal.traveler.domain.travelon.opinion.Opinion;
 import com.heylocal.traveler.domain.user.User;
 import com.heylocal.traveler.dto.LoginUser;
+import com.heylocal.traveler.dto.OpinionDto;
 import com.heylocal.traveler.dto.PlaceDto;
 import com.heylocal.traveler.exception.BadRequestException;
 import com.heylocal.traveler.exception.ForbiddenException;
@@ -20,8 +21,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
+import static com.heylocal.traveler.dto.OpinionDto.*;
 import static com.heylocal.traveler.dto.OpinionDto.OpinionRequest;
 
 @Service
@@ -87,6 +91,28 @@ public class OpinionService {
     //새 답변 추가
     newOpinion = request.toEntity(place, author, travelOn, placeRegion);
     opinionRepository.save(newOpinion);
+  }
+
+  /**
+   * 특정 여행On 의 모든 답변 조회
+   * @param travelOnId 답변을 조회할 여행On의 ID
+   * @return
+   * @throws NotFoundException 여행On ID 가 존재하지 않을 경우
+   */
+  @Transactional(readOnly = true)
+  public List<OpinionResponse> inquiryOpinions(long travelOnId) throws NotFoundException {
+    TravelOn targetTravelOn;
+    List<OpinionResponse> result;
+
+    //답변을 조회할 여행On 조회
+    targetTravelOn = travelOnRepository.findById(travelOnId).orElseThrow(
+        () -> new NotFoundException(NotFoundCode.NO_INFO, "존재하지 않는 여행On ID 입니다.")
+    );
+
+    //List<Opinion> -> List<OpinionResponse>
+    result = targetTravelOn.getOpinionList().stream().map(OpinionResponse::new).collect(Collectors.toList());
+
+    return result;
   }
 
   /**

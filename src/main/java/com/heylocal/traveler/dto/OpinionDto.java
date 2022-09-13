@@ -1,11 +1,13 @@
 package com.heylocal.traveler.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.heylocal.traveler.domain.Region;
 import com.heylocal.traveler.domain.place.Place;
 import com.heylocal.traveler.domain.travelon.TravelOn;
 import com.heylocal.traveler.domain.travelon.opinion.CoffeeType;
 import com.heylocal.traveler.domain.travelon.opinion.EvaluationDegree;
 import com.heylocal.traveler.domain.travelon.opinion.Opinion;
+import com.heylocal.traveler.domain.travelon.opinion.OpinionImageContent;
 import com.heylocal.traveler.domain.user.User;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -14,8 +16,14 @@ import lombok.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import java.util.List;
+import java.util.stream.Collectors;
 
+import static com.heylocal.traveler.dto.OpinionImageContentDto.*;
+import static com.heylocal.traveler.dto.OpinionImageContentDto.OpinionImageContentResponse;
 import static com.heylocal.traveler.dto.PlaceDto.PlaceRequest;
+import static com.heylocal.traveler.dto.PlaceDto.PlaceResponse;
+import static com.heylocal.traveler.dto.UserDto.UserResponse;
 
 public class OpinionDto {
 	@Getter
@@ -133,6 +141,90 @@ public class OpinionDto {
 	@Builder
 	@Schema(description = "여행 On에 대한 답변 응답 DTO")
 	public static class OpinionResponse {
-		long id;
+		private long id;
+		private String description;
+		private UserResponse author;
+		private PlaceResponse place;
+		private List<OpinionImageContentResponse> opinionImageContentList;
+
+		//공통 질문
+		private EvaluationDegree kindness;
+		private EvaluationDegree facilityCleanliness;
+		private EvaluationDegree accessibility;
+		private EvaluationDegree costPerformance;
+		private Boolean canParking;
+		private Boolean waiting;
+		private String photoSpotImageUrl;
+		private String photoSpotText;
+		private String mood;
+		private EvaluationDegree toiletCleanliness;
+
+		//음식점 전용 항목
+		private EvaluationDegree food;
+		private String recommendFood;
+
+		//카페 전용 항목
+		private EvaluationDegree drink;
+		private CoffeeType coffeeType;
+		private String recommendDrink;
+		private String recommendDessert;
+
+		//문화시설, 관광명소 전용 항목
+		private String recommendToDo;
+		private String recommendSnack;
+
+		//숙박 전용
+		private EvaluationDegree streetNoise;
+		private EvaluationDegree deafening;
+		private EvaluationDegree breakFast;
+		private Boolean existsAmenity;
+		private Boolean existsStore;
+
+		public OpinionResponse(Opinion entity) {
+			this.id = entity.getId();
+			this.description = entity.getDescription();
+			this.author = new UserResponse(entity.getAuthor());
+			this.place = new PlaceResponse(entity.getPlace());
+
+			//공통 질문
+			this.kindness = entity.getKindness();
+			this.facilityCleanliness = entity.getFacilityCleanliness();
+			this.accessibility = entity.getAccessibility();
+			this.costPerformance = entity.getCostPerformance();
+			this.canParking = entity.getCanParking();
+			this.waiting = entity.getWaiting();
+			this.photoSpotImageUrl = entity.getPhotoSpotImageUrl();
+			this.photoSpotText = entity.getPhotoSpotText();
+			this.mood = entity.getMood();
+			this.toiletCleanliness = entity.getToiletCleanliness();
+
+			//음식점 전용 항목
+			this.food = entity.getFood();
+			this.recommendFood = entity.getRecommendFood();
+
+			//카페 전용 항목
+			this.drink = entity.getDrink();
+			this.coffeeType = entity.getCoffeeType();
+			this.recommendDrink = entity.getRecommendDrink();
+			this.recommendDessert = entity.getRecommendDessert();
+
+			//문화시설, 관광명소 전용 항목
+			this.recommendToDo = entity.getRecommendToDo();
+			this.recommendSnack = entity.getRecommendSnack();
+
+			//숙박 전용
+			this.streetNoise = entity.getStreetNoise();
+			this.deafening = entity.getDeafening();
+			this.breakFast = entity.getBreakFast();
+			this.existsAmenity = entity.getExistsAmenity();
+			this.existsStore = entity.getExistsStore();
+
+			setOpinionImageContentList(entity.getOpinionImageContentList());
+		}
+
+		@JsonIgnore
+		public void setOpinionImageContentList(List<OpinionImageContent> opinionImageContentEntityList) {
+			this.opinionImageContentList = opinionImageContentEntityList.stream().map(OpinionImageContentResponse::new).collect(Collectors.toList());
+		}
 	}
 }
