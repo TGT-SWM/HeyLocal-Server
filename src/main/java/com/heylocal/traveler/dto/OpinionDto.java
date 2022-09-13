@@ -152,8 +152,8 @@ public class OpinionDto {
 		private EvaluationDegree facilityCleanliness;
 		private EvaluationDegree accessibility;
 		private EvaluationDegree costPerformance;
-		private boolean canParking;
-		private boolean waiting;
+		private Boolean canParking;
+		private Boolean waiting;
 		private String photoSpotImageUrl;
 		private String photoSpotText;
 		private String mood;
@@ -177,8 +177,8 @@ public class OpinionDto {
 		private EvaluationDegree streetNoise;
 		private EvaluationDegree deafening;
 		private EvaluationDegree breakFast;
-		private boolean existsAmenity;
-		private boolean existsStore;
+		private Boolean existsAmenity;
+		private Boolean existsStore;
 
 		public OpinionResponse(Opinion entity) {
 			this.id = entity.getId();
