@@ -18,10 +18,7 @@ import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * 여행 On
@@ -197,5 +194,13 @@ public class TravelOn extends BaseTimeEntity {
 
   public void removeAllTravelMember() {
     this.travelMemberSet.clear();
+  }
+  public void releasePlan() {
+    Plan temp = this.plan;
+    this.plan = null;
+
+    if (!Objects.isNull(temp)) {
+      temp.releaseTravelOn();
+    }
   }
 }
