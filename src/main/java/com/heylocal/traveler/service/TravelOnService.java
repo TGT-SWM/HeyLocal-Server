@@ -171,6 +171,9 @@ public class TravelOnService {
       throw new ForbiddenException(ForbiddenCode.NO_PERMISSION, "답변이 달린 여행On 은 삭제할 수 없습니다.");
     }
 
+    //연관된 Plan 엔티티 해제
+    target.releasePlan();
+
     //여행 On 삭제
     travelOnRepository.remove(target);
   }

@@ -12,6 +12,7 @@ import lombok.experimental.SuperBuilder;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * 여행
@@ -28,7 +29,7 @@ public class Plan extends BaseTimeEntity {
   @GeneratedValue
   private Long id;
 
-  @OneToOne(optional = false, fetch = FetchType.LAZY)
+  @OneToOne(fetch = FetchType.LAZY)
   private TravelOn travelOn;
 
   @ManyToOne(optional = false)
@@ -39,4 +40,13 @@ public class Plan extends BaseTimeEntity {
   @Builder.Default
   @OneToMany(mappedBy = "plan", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   private List<DaySchedule> dayScheduleList = new ArrayList<>();
+
+  public void releaseTravelOn() {
+    TravelOn temp = this.travelOn;
+    this.travelOn = null;
+
+    if (!Objects.isNull(temp)) {
+      temp.releasePlan();
+    }
+  }
 }
