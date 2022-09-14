@@ -14,11 +14,11 @@ public class TravelMemberDto {
   @Schema(description = "여행 On의 여행인원 정보 응답 DTO")
   public static class TravelMemberResponse {
     private long id;
-    private MemberType memberType;
+    private MemberType type;
 
     public TravelMemberResponse(TravelMember entity) {
       this.id = entity.getId();
-      this.memberType = entity.getMemberType();
+      this.type = entity.getMemberType();
     }
   }
 }
