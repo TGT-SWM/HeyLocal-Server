@@ -244,6 +244,243 @@ class OpinionServiceTest {
     );
   }
 
+  @Test
+  @DisplayName("답변 수정 - 성공 케이스")
+  void updateOpinionSucceedTest() throws BadRequestException, ForbiddenException, NotFoundException {
+    //GIVEN
+    Region regionOfTravelOn = getRegionA();
+    long savedTravelOnId = 2L;
+    TravelOn savedTravelOn = getTravelOn(savedTravelOnId, regionOfTravelOn);
+    User opinionAuthor = User.builder().id(3L).accountId("myAccountId").nickname("myNickname").password("myPassword").userRole(UserRole.TRAVELER).build();
+    long placeId = 4L;
+    PlaceRequest placeRequest = getPlaceRequest(placeId);
+    String addressOfPlace = placeRequest.getAddress();
+    Place placeOfSavedOpinion = Place.builder()
+        .id(placeId)
+        .region(regionOfTravelOn)
+        .address(addressOfPlace)
+        .build();
+    long savedOpinionId = 1L;
+    Opinion savedOpinion = Opinion.builder()
+        .id(savedOpinionId)
+        .travelOn(savedTravelOn)
+        .author(opinionAuthor)
+        .region(regionOfTravelOn)
+        .place(placeOfSavedOpinion)
+        .build();
+    String updateDescriptionOfOpinion = "changed description";
+    OpinionRequest opinionRequest = OpinionRequest.builder()
+        .place(placeRequest)
+        .description(updateDescriptionOfOpinion)
+        .build();
+
+    //Mock 행동 정의 - travelOnRepository
+    willReturn(Optional.of(savedTravelOn)).given(travelOnRepository).findById(savedTravelOnId);
+
+    //Mock 행동 정의 - opinionRepository
+    willReturn(Optional.of(savedOpinion)).given(opinionRepository).findByIdAndTravelOn(savedOpinionId, savedTravelOnId);
+
+    //Mock 행동 정의 - regionService
+    willReturn(Optional.of(regionOfTravelOn)).given(regionService).getRegionByAddress(eq(addressOfPlace));
+
+    //Mock 행동 정의 - placeRepository
+    willReturn(Optional.of(placeOfSavedOpinion)).given(placeRepository).findById(placeId);
+
+    //WHEN
+    opinionService.updateOpinion(savedTravelOnId, savedOpinionId, opinionRequest);
+
+    //THEN
+    assertEquals(updateDescriptionOfOpinion, savedOpinion.getDescription());
+  }
+
+  @Test
+  @DisplayName("답변 수정 - 존재하지 않는 여행On ID")
+  void updateOpinionNotExistTravelOnTest() {
+    //GIVEN
+    long savedTravelOnId = 2L;
+    long placeId = 4L;
+    PlaceRequest placeRequest = getPlaceRequest(placeId);
+    long savedOpinionId = 1L;
+    String updateDescriptionOfOpinion = "changed description";
+    OpinionRequest opinionRequest = OpinionRequest.builder()
+        .place(placeRequest)
+        .description(updateDescriptionOfOpinion)
+        .build();
+
+    //Mock 행동 정의 - travelOnRepository
+    willReturn(Optional.empty()).given(travelOnRepository).findById(anyLong());
+
+    //WHEN
+
+    //THEN
+    assertThrows(
+        NotFoundException.class,
+        () -> opinionService.updateOpinion(savedTravelOnId, savedOpinionId, opinionRequest)
+    );
+  }
+
+  @Test
+  @DisplayName("답변 수정 - 존재하지 않는 답변")
+  void updateOpinionNotExistOpinionTest() {
+    //GIVEN
+    Region regionOfTravelOn = getRegionA();
+    long savedTravelOnId = 2L;
+    TravelOn savedTravelOn = getTravelOn(savedTravelOnId, regionOfTravelOn);
+    long placeId = 4L;
+    PlaceRequest placeRequest = getPlaceRequest(placeId);
+    long savedOpinionId = 1L;
+    String updateDescriptionOfOpinion = "changed description";
+    OpinionRequest opinionRequest = OpinionRequest.builder()
+        .place(placeRequest)
+        .description(updateDescriptionOfOpinion)
+        .build();
+
+    //Mock 행동 정의 - travelOnRepository
+    willReturn(Optional.of(savedTravelOn)).given(travelOnRepository).findById(savedTravelOnId);
+
+    //Mock 행동 정의 - opinionRepository
+    willReturn(Optional.empty()).given(opinionRepository).findByIdAndTravelOn(anyLong(), anyLong());
+
+    //WHEN
+
+    //THEN
+    assertThrows(
+        NotFoundException.class,
+        () -> opinionService.updateOpinion(savedTravelOnId, savedOpinionId, opinionRequest)
+    );
+  }
+
+  @Test
+  @DisplayName("답변 수정 - 업데이트할 답변의 장소 주소가 올바르지 않은 경우")
+  void updateOpinionWrongNewPlaceAddressTest() throws BadRequestException {
+    //GIVEN
+    Region regionOfTravelOn = getRegionA();
+    long savedTravelOnId = 2L;
+    TravelOn savedTravelOn = getTravelOn(savedTravelOnId, regionOfTravelOn);
+    User opinionAuthor = User.builder().id(3L).accountId("myAccountId").nickname("myNickname").password("myPassword").userRole(UserRole.TRAVELER).build();
+    long placeId = 4L;
+    PlaceRequest placeRequest = getPlaceRequest(placeId);
+    String addressOfPlace = placeRequest.getAddress();
+    Place placeOfSavedOpinion = Place.builder()
+        .id(placeId)
+        .region(regionOfTravelOn)
+        .address(addressOfPlace)
+        .build();
+    long savedOpinionId = 1L;
+
+    Opinion savedOpinion = Opinion.builder()
+        .id(savedOpinionId)
+        .travelOn(savedTravelOn)
+        .author(opinionAuthor)
+        .region(regionOfTravelOn)
+        .place(placeOfSavedOpinion)
+        .build();
+    String updateDescriptionOfOpinion = "changed description";
+    OpinionRequest opinionRequest = OpinionRequest.builder()
+        .place(placeRequest)
+        .description(updateDescriptionOfOpinion)
+        .build();
+
+    //Mock 행동 정의 - travelOnRepository
+    willReturn(Optional.of(savedTravelOn)).given(travelOnRepository).findById(savedTravelOnId);
+
+    //Mock 행동 정의 - opinionRepository
+    willReturn(Optional.of(savedOpinion)).given(opinionRepository).findByIdAndTravelOn(savedOpinionId, savedTravelOnId);
+
+    //Mock 행동 정의 - regionService
+    willReturn(Optional.of(placeOfSavedOpinion)).given(placeRepository).findById(placeId);
+
+    //WHEN
+
+    //THEN
+    assertThrows(
+        NotFoundException.class,
+        () -> opinionService.updateOpinion(savedTravelOnId, savedOpinionId, opinionRequest)
+    );
+  }
+
+  @Test
+  @DisplayName("답변 수정 - 여행On의 지역과 업데이트할 답변의 장소 지역이 다른 경우")
+  void updateOpinionDifferentPlaceRegionTest() throws BadRequestException, ForbiddenException, NotFoundException {
+    //GIVEN
+    Region regionOfTravelOn = getRegionA();
+    Region differentRegion = getRegionB();
+    long savedTravelOnId = 2L;
+    TravelOn savedTravelOn = getTravelOn(savedTravelOnId, regionOfTravelOn);
+    User opinionAuthor = User.builder().id(3L).accountId("myAccountId").nickname("myNickname").password("myPassword").userRole(UserRole.TRAVELER).build();
+    long placeId = 4L;
+    PlaceRequest placeRequest = getPlaceRequest(placeId);
+    String addressOfPlace = placeRequest.getAddress();
+    Place placeOfSavedOpinion = Place.builder()
+        .id(placeId)
+        .region(regionOfTravelOn)
+        .address(addressOfPlace)
+        .build();
+    long savedOpinionId = 1L;
+    Opinion savedOpinion = Opinion.builder()
+        .id(savedOpinionId)
+        .travelOn(savedTravelOn)
+        .author(opinionAuthor)
+        .region(regionOfTravelOn)
+        .place(placeOfSavedOpinion)
+        .build();
+    String diffRegionAddress = "different region address";
+    PlaceRequest diffRegionPlaceRequest = getPlaceRequest(placeId + 1, diffRegionAddress);
+    String updateDescriptionOfOpinion = "changed description";
+    OpinionRequest opinionRequest = OpinionRequest.builder()
+        .place(diffRegionPlaceRequest)
+        .description(updateDescriptionOfOpinion)
+        .build();
+
+    //Mock 행동 정의 - travelOnRepository
+    willReturn(Optional.of(savedTravelOn)).given(travelOnRepository).findById(savedTravelOnId);
+
+    //Mock 행동 정의 - opinionRepository
+    willReturn(Optional.of(savedOpinion)).given(opinionRepository).findByIdAndTravelOn(savedOpinionId, savedTravelOnId);
+
+    //Mock 행동 정의 - regionService
+    willReturn(Optional.of(regionOfTravelOn)).given(regionService).getRegionByAddress(eq(addressOfPlace));
+    willReturn(Optional.of(differentRegion)).given(regionService).getRegionByAddress(eq(diffRegionAddress));
+
+    //Mock 행동 정의 - placeRepository
+    willReturn(Optional.of(placeOfSavedOpinion)).given(placeRepository).findById(placeId);
+
+    //WHEN
+
+    //THEN
+    assertThrows(
+        ForbiddenException.class,
+        () -> opinionService.updateOpinion(savedTravelOnId, savedOpinionId, opinionRequest)
+    );
+  }
+
+  @Test
+  @DisplayName("답변 작성자 확인")
+  void isAuthorTest() throws NotFoundException {
+    //GIVEN
+    long authorId = 1L;
+    long notAuthorId = authorId + 5L;
+    User author = User.builder().id(authorId).build();
+    long opinionId = 2L;
+    Opinion opinion = Opinion.builder().id(opinionId).author(author).build();
+
+    //Mock 행동 정의 - opinionRepository
+    willReturn(Optional.of(opinion)).given(opinionRepository).findById(opinionId);
+    willReturn(Optional.empty()).given(opinionRepository).findById(not(eq(opinionId)));
+
+    //WHEN
+    boolean isAuthorResult = opinionService.isAuthor(authorId, opinionId);
+    boolean isNotAuthorResult = opinionService.isAuthor(notAuthorId, opinionId);
+
+    //THEN
+    assertAll(
+        //성공 케이스 - 1 - 답변 작성자가 맞을 경우
+        () -> assertTrue(isAuthorResult),
+        //실패 케이스 - 1 - 답변 작성자가 아닌 경우
+        () -> assertFalse(isNotAuthorResult)
+    );
+  }
+
   private OpinionRequest getOpinionRequest(PlaceRequest place) {
     return OpinionRequest.builder()
         .description("myDescription")
@@ -267,6 +504,19 @@ class OpinionServiceTest {
         .name("myPlace")
         .roadAddress("myRoadAddress")
         .address("myAddress")
+        .lat(10)
+        .lng(10)
+        .kakaoLink("myLink")
+        .build();
+  }
+
+  private PlaceRequest getPlaceRequest(long placeId, String address) {
+    return PlaceRequest.builder()
+        .id(placeId)
+        .category(PlaceCategory.CE7)
+        .name("myPlace")
+        .roadAddress("myRoadAddress")
+        .address(address)
         .lat(10)
         .lng(10)
         .kakaoLink("myLink")
