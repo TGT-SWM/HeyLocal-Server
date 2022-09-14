@@ -362,6 +362,68 @@ class TravelOnsControllerTest {
     );
   }
 
+  @Test
+  @DisplayName("Opinion 수정 핸들러 - 성공 케이스")
+  void updateOpinionSucceedTest() throws NotFoundException {
+    //GIVEN
+    long loginUserId = 1L;
+    LoginUser loginUser = LoginUser.builder().id(loginUserId).build();
+    long existTravelOnId = 2L;
+    long existOpinionId = 3L;
+
+    //Mock 행동 정의 - opinionService
+    willReturn(true).given(opinionService).isAuthor(anyLong(), anyLong());
+
+    //Mock 행동 정의 - bindingResult
+    willReturn(false).given(bindingResult).hasFieldErrors();
+
+    //WHEN
+
+    //THEN
+    assertDoesNotThrow(() -> travelOnsController.updateOpinion(existTravelOnId, existOpinionId, null, bindingResult, loginUser));
+  }
+
+  @Test
+  @DisplayName("Opinion 수정 핸들러 - 올바르지 않은 Opinion 값이 바인딩된 경우")
+  void updateOpinionWrongOpinionRequestTest() {
+    //GIVEN
+    long loginUserId = 1L;
+    LoginUser loginUser = LoginUser.builder().id(loginUserId).build();
+    long existTravelOnId = 2L;
+    long existOpinionId = 3L;
+
+    //Mock 행동 정의 - bindingResult
+    willReturn(true).given(bindingResult).hasFieldErrors();
+
+    //WHEN
+
+    //THEN
+    assertThrows(BadRequestException.class,
+        () -> travelOnsController.updateOpinion(existTravelOnId, existOpinionId, null, bindingResult, loginUser));
+  }
+
+  @Test
+  @DisplayName("Opinion 수정 핸들러 - 답변 작성자가 아닌 경우")
+  void updateOpinionForbiddenTest() throws NotFoundException {
+    //GIVEN
+    long loginUserId = 1L;
+    LoginUser loginUser = LoginUser.builder().id(loginUserId).build();
+    long existTravelOnId = 2L;
+    long existOpinionId = 3L;
+
+    //Mock 행동 정의 - bindingResult
+    willReturn(false).given(bindingResult).hasFieldErrors();
+
+    //Mock 행동 정의 - opinionService
+    willReturn(false).given(opinionService).isAuthor(anyLong(), anyLong());
+
+    //WHEN
+
+    //THEN
+    assertThrows(ForbiddenException.class,
+        () -> travelOnsController.updateOpinion(existTravelOnId, existOpinionId, null, bindingResult, loginUser));
+  }
+
   /**
    * AllTravelOnRequest 객체를 생성하는 메서드
    * @return

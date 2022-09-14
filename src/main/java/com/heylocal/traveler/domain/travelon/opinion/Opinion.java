@@ -14,6 +14,7 @@ import lombok.experimental.SuperBuilder;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * 여행On 의 답변(의견)
@@ -144,5 +145,117 @@ public class Opinion extends BaseTimeEntity {
     if (!region.getOpinionList().contains(this)) {
       region.addOpinion(this);
     }
+  }
+
+  // 이하는 업데이트 메서드
+
+  public void updatePlace(Place newValue) {
+    if (!Objects.isNull(this.place)) {
+      this.place.removeOpinion(this);
+    }
+    registerPlace(newValue);
+  }
+
+  public void updateRegion(Region newValue) {
+    if (!Objects.isNull(this.region)) {
+      this.region.removeOpinion(this);
+    }
+    registerRegion(newValue);
+  }
+
+  public void updateDescription(String newValue) {
+    this.description = newValue;
+  }
+
+  public void updateKindness(EvaluationDegree newValue) {
+    this.kindness = newValue;
+  }
+
+  public void updateFacilityCleanliness(EvaluationDegree newValue) {
+    this.facilityCleanliness = newValue;
+  }
+
+  public void updateAccessibility(EvaluationDegree newValue) {
+    this.accessibility = newValue;
+  }
+
+  public void updateCanParking(Boolean newValue) {
+    this.canParking = newValue;
+  }
+
+  public void updateWaiting(Boolean newValue) {
+    this.waiting = newValue;
+  }
+
+  public void updatePhotoSpotImageUrl(String newValue) {
+    this.photoSpotImageUrl = newValue;
+  }
+
+  public void updatePhotoSpotText(String newValue) {
+    this.photoSpotText = newValue;
+  }
+
+  public void updateCostPerformance(EvaluationDegree newValue) {
+    this.costPerformance = newValue;
+  }
+
+  public void updateMood(String newValue) {
+    this.mood = newValue;
+  }
+
+  public void updateToiletCleanliness(EvaluationDegree newValue) {
+    this.toiletCleanliness = newValue;
+  }
+
+  public void updateFood(EvaluationDegree newValue) {
+    this.food = newValue;
+  }
+
+  public void updateRecommendFood(String newValue) {
+    this.recommendFood = newValue;
+  }
+
+  public void updateDrink(EvaluationDegree newValue) {
+    this.drink = newValue;
+  }
+
+  public void updateCoffeeType(CoffeeType newValue) {
+    this.coffeeType = newValue;
+  }
+
+  public void updateRecommendDrink(String newValue) {
+    this.recommendDrink = newValue;
+  }
+
+  public void updateRecommendDessert(String newValue) {
+    this.recommendDessert = newValue;
+  }
+
+  public void updateRecommendToDo(String newValue) {
+    this.recommendToDo = newValue;
+  }
+
+  public void updateRecommendSnack(String newValue) {
+    this.recommendSnack = newValue;
+  }
+
+  public void updateStreetNoise(EvaluationDegree newValue) {
+    this.streetNoise = newValue;
+  }
+
+  public void updateDeafening(EvaluationDegree newValue) {
+    this.deafening = newValue;
+  }
+
+  public void updateBreakFast(EvaluationDegree newValue) {
+    this.breakFast = newValue;
+  }
+
+  public void updateExistsAmenity(Boolean newValue) {
+    this.existsAmenity = newValue;
+  }
+
+  public void updateExistsStore(Boolean newValue) {
+    this.existsStore = newValue;
   }
 }

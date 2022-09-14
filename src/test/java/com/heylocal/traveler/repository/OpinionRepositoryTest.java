@@ -20,6 +20,7 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -56,6 +57,72 @@ class OpinionRepositoryTest {
         () -> assertEquals(notPersistOpinion, em.find(Opinion.class, notPersistOpinion.getId())),
         //성공 케이스 - 2 - Flush
         () -> assertDoesNotThrow(() -> em.flush())
+    );
+  }
+
+  @Test
+  @DisplayName("ID 로 Opinion 조회")
+  void findByIdTest() {
+    //GIVEN
+    User travelOnAuthor = User.builder().accountId("myAccountId").password("myPassword").nickname("myNickname").userRole(UserRole.TRAVELER).build();
+
+    em.persist(travelOnAuthor);
+
+    TravelOn travelOn = saveTravelOn(travelOnAuthor, "myState", "myCity");
+    Opinion opinion = getNotPersistOpinion(travelOn);
+
+    em.persist(opinion);
+
+    long existOpinionId = opinion.getId();
+    long notExistOpinionId = existOpinionId + 1L;
+
+    //WHEN
+    Optional<Opinion> succeedResult = opinionRepository.findById(existOpinionId);
+    Optional<Opinion> failResult = opinionRepository.findById(notExistOpinionId);
+
+    //THEN
+    assertAll(
+        //성공 케이스 - 1 - 존재하는 id 로 조회한 경우
+        () -> assertTrue(succeedResult.isPresent()),
+        () -> assertSame(opinion, succeedResult.get()),
+        //실패 케이스 - 1 - 존재하지 않은 id 로 조회한 경우
+        () -> assertFalse(failResult.isPresent())
+    );
+  }
+
+  @Test
+  @DisplayName("id와 travelOn 으로 조회")
+  void findByIdAndTravelOnTest() {
+    //GIVEN
+    User travelOnAuthor = User.builder().accountId("myAccountId").password("myPassword").nickname("myNickname").userRole(UserRole.TRAVELER).build();
+
+    em.persist(travelOnAuthor);
+
+    TravelOn travelOnOfOpinion = saveTravelOn(travelOnAuthor, "myState", "myCity");
+    TravelOn travelOnNoOpinion = saveTravelOn(travelOnAuthor, "myState", "myCity");
+    Opinion opinion = getNotPersistOpinion(travelOnOfOpinion);
+
+    em.persist(opinion);
+
+    long existOpinionId = opinion.getId();
+    long notExistOpinionId = existOpinionId + 1L;
+    long travelOnOfOpinionId = travelOnOfOpinion.getId();
+    long travelOnNoOpinionId = travelOnNoOpinion.getId();
+
+    //WHEN
+    Optional<Opinion> succeedResult = opinionRepository.findByIdAndTravelOn(existOpinionId, travelOnOfOpinionId);
+    Optional<Opinion> wrongOpinionIdResult = opinionRepository.findByIdAndTravelOn(notExistOpinionId, travelOnOfOpinionId);
+    Optional<Opinion> wrongTravelOnIdResult = opinionRepository.findByIdAndTravelOn(existOpinionId, travelOnNoOpinionId);
+
+    //THEN
+    assertAll(
+        //성공 케이스 - 1 - 존재하는 id 로 조회한 경우
+        () -> assertTrue(succeedResult.isPresent()),
+        () -> assertSame(opinion, succeedResult.get()),
+        //실패 케이스 - 1 - 존재하지 않은 opinion id 로 조회한 경우
+        () -> assertFalse(wrongOpinionIdResult.isPresent()),
+        //실패 케이스 - 2 - 해당 opinion 을 가지지 않는 조회한 경우
+        () -> assertFalse(wrongTravelOnIdResult.isPresent())
     );
   }
 
