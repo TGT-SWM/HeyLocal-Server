@@ -16,3 +16,5 @@
 - `Entity` <-> `DTO` Mapper 적용
   - https://jforj.tistory.com/93
 - Repository 테스트 코드의 엔티티 비교 검증 로직 중, 모든 assertEqual 을 assertSame 으로 변경
+- 답변 항목 DB 반영
+- 답변 이미지 처리

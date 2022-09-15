@@ -27,6 +27,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -485,15 +486,14 @@ class OpinionServiceTest {
     return OpinionRequest.builder()
         .description("myDescription")
         .place(place)
-        .kindness(EvaluationDegree.GOOD)
+        .generalImgContentUrlList(new ArrayList<>())
+        .foodImgContentUrlList(new ArrayList<>())
+        .drinkAndDessertImgContentUrlList(new ArrayList<>())
+        .photoSpotImgContentUrlList(new ArrayList<>())
         .facilityCleanliness(EvaluationDegree.GOOD)
-        .accessibility(EvaluationDegree.GOOD)
         .costPerformance(EvaluationDegree.GOOD)
         .waiting(false)
-        .drink(EvaluationDegree.GOOD)
         .coffeeType(CoffeeType.BITTER)
-        .recommendDrink("myDrink")
-        .recommendDessert("myDessert")
         .build();
   }
 

@@ -737,9 +737,7 @@ class TravelOnRepositoryTest {
         .author(travelOn.getAuthor()) //테스트용으로 여행On 작성자가 답변을 달았다고 가정
         .region(travelOn.getRegion())
         .place(place)
-        .kindness(EvaluationDegree.GOOD)
         .facilityCleanliness(EvaluationDegree.GOOD)
-        .accessibility(EvaluationDegree.GOOD)
         .canParking(true)
         .waiting(false)
         .costPerformance(EvaluationDegree.GOOD)
