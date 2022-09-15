@@ -47,15 +47,7 @@ public class Opinion extends BaseTimeEntity {
   // [일반]
   @Enumerated(EnumType.STRING)
   @Column(nullable = false)
-  private EvaluationDegree kindness; //직원이 친절한가요
-
-  @Enumerated(EnumType.STRING)
-  @Column(nullable = false)
   private EvaluationDegree facilityCleanliness; //시설이 청결한가요
-
-  @Enumerated(EnumType.STRING)
-  @Column(nullable = false)
-  private EvaluationDegree accessibility; //접근성이 좋나요
 
   @Column(nullable = false)
   private Boolean canParking; //주차장이 있나요
@@ -63,41 +55,31 @@ public class Opinion extends BaseTimeEntity {
   @Column(nullable = false)
   private Boolean waiting; //웨이팅이 있나요
 
-  private String photoSpotImageUrl; //사진 명소 - 예시 사진
-
-  @Column(length = 512)
-  private String photoSpotText; //사진 명소 - 단답형
-
   @Enumerated(EnumType.STRING)
   @Column(nullable = false)
   private EvaluationDegree costPerformance; //가성비가 좋나요
 
-  private String mood; //가게 분위기가 어떤가요 (단답형)
-
+  //[음식점]
   @Enumerated(EnumType.STRING)
-  private EvaluationDegree toiletCleanliness; //화장실이 깨끗한가요
+  private RestaurantMoodType restaurantMoodType; //식당 분위기가 어떤가요
 
-  // [음식점]
-  @Enumerated(EnumType.STRING)
-  private EvaluationDegree food; //음식맛이 어떤가요
-
-  private String recommendFood; //추천 음식
+  private String recommendFoodDescription; //추천 음식 설명
 
   // [카페]
   @Enumerated(EnumType.STRING)
-  private EvaluationDegree drink; //음료 맛이 어떤가요
-
-  @Enumerated(EnumType.STRING)
   private CoffeeType coffeeType; // 커피 스타일이 어떤가요
 
-  private String recommendDrink; //추천 음료
+  private String recommendDrinkAndDessertDescription; //추천 음료·디저트 설명
 
-  private String recommendDessert; //추천 디저트
+  @Enumerated(EnumType.STRING)
+  private CafeMoodType cafeMoodType; //카페 분위기는 어떤가요
 
   // [문화시설, 관광명소]
   private String recommendToDo; //꼭 해봐야 하는 것
 
   private String recommendSnack; //추천 간식
+
+  private String photoSpotDescription; //사진 명소 설명
 
   // [숙박]
   @Enumerated(EnumType.STRING)
@@ -106,12 +88,7 @@ public class Opinion extends BaseTimeEntity {
   @Enumerated(EnumType.STRING)
   private EvaluationDegree deafening; //방음이 잘 되나요
 
-  @Enumerated(EnumType.STRING)
-  private EvaluationDegree breakFast; //조식이 맛있나요
-
-  private Boolean existsAmenity; //부대시설이 있나요
-
-  private Boolean existsStore; //근처에 편의점이 있나요
+  private Boolean hasBreakFast; //조식이 나오나요
 
   // 양방향 설정
 
@@ -147,6 +124,13 @@ public class Opinion extends BaseTimeEntity {
     }
   }
 
+  public void addOpinionImgContent(OpinionImageContent imgContent) {
+    this.opinionImageContentList.add(imgContent);
+    if (imgContent.getOpinion() != this) {
+      imgContent.registerOpinion(this);
+    }
+  }
+
   // 이하는 업데이트 메서드
 
   public void updatePlace(Place newValue) {
@@ -167,16 +151,8 @@ public class Opinion extends BaseTimeEntity {
     this.description = newValue;
   }
 
-  public void updateKindness(EvaluationDegree newValue) {
-    this.kindness = newValue;
-  }
-
   public void updateFacilityCleanliness(EvaluationDegree newValue) {
     this.facilityCleanliness = newValue;
-  }
-
-  public void updateAccessibility(EvaluationDegree newValue) {
-    this.accessibility = newValue;
   }
 
   public void updateCanParking(Boolean newValue) {
@@ -187,48 +163,28 @@ public class Opinion extends BaseTimeEntity {
     this.waiting = newValue;
   }
 
-  public void updatePhotoSpotImageUrl(String newValue) {
-    this.photoSpotImageUrl = newValue;
-  }
-
-  public void updatePhotoSpotText(String newValue) {
-    this.photoSpotText = newValue;
-  }
-
   public void updateCostPerformance(EvaluationDegree newValue) {
     this.costPerformance = newValue;
   }
 
-  public void updateMood(String newValue) {
-    this.mood = newValue;
+  public void updateRestaurantMoodType(RestaurantMoodType newValue) {
+    this.restaurantMoodType = newValue;
   }
 
-  public void updateToiletCleanliness(EvaluationDegree newValue) {
-    this.toiletCleanliness = newValue;
-  }
-
-  public void updateFood(EvaluationDegree newValue) {
-    this.food = newValue;
-  }
-
-  public void updateRecommendFood(String newValue) {
-    this.recommendFood = newValue;
-  }
-
-  public void updateDrink(EvaluationDegree newValue) {
-    this.drink = newValue;
+  public void updateRecommendFoodDescription(String newValue) {
+    this.recommendFoodDescription = newValue;
   }
 
   public void updateCoffeeType(CoffeeType newValue) {
     this.coffeeType = newValue;
   }
 
-  public void updateRecommendDrink(String newValue) {
-    this.recommendDrink = newValue;
+  public void updateRecommendDrinkAndDessertDescription(String newValue) {
+    this.recommendDrinkAndDessertDescription = newValue;
   }
 
-  public void updateRecommendDessert(String newValue) {
-    this.recommendDessert = newValue;
+  public void updateCafeMoodType(CafeMoodType newValue) {
+    this.cafeMoodType = newValue;
   }
 
   public void updateRecommendToDo(String newValue) {
@@ -239,6 +195,10 @@ public class Opinion extends BaseTimeEntity {
     this.recommendSnack = newValue;
   }
 
+  public void updatePhotoSpotDescription(String newValue) {
+    this.photoSpotDescription = newValue;
+  }
+
   public void updateStreetNoise(EvaluationDegree newValue) {
     this.streetNoise = newValue;
   }
@@ -247,15 +207,7 @@ public class Opinion extends BaseTimeEntity {
     this.deafening = newValue;
   }
 
-  public void updateBreakFast(EvaluationDegree newValue) {
-    this.breakFast = newValue;
-  }
-
-  public void updateExistsAmenity(Boolean newValue) {
-    this.existsAmenity = newValue;
-  }
-
-  public void updateExistsStore(Boolean newValue) {
-    this.existsStore = newValue;
+  public void updateHasBreakFast(Boolean newValue) {
+    this.hasBreakFast = newValue;
   }
 }

@@ -143,29 +143,23 @@ public class OpinionService {
     targetOpinion.updateRegion(regionOfRequestPlace);
     targetOpinion.updatePlace(requestPlace);
     targetOpinion.updateDescription(request.getDescription());
-    targetOpinion.updateKindness(request.getKindness());
     targetOpinion.updateFacilityCleanliness(request.getFacilityCleanliness());
-    targetOpinion.updateAccessibility(request.getAccessibility());
     targetOpinion.updateCanParking(request.isCanParking());
     targetOpinion.updateWaiting(request.isWaiting());
-    targetOpinion.updatePhotoSpotImageUrl(request.getPhotoSpotImageUrl());
-    targetOpinion.updatePhotoSpotText(request.getPhotoSpotText());
     targetOpinion.updateCostPerformance(request.getCostPerformance());
-    targetOpinion.updateMood(request.getMood());
-    targetOpinion.updateToiletCleanliness(request.getToiletCleanliness());
-    targetOpinion.updateFood(request.getFood());
-    targetOpinion.updateRecommendFood(request.getRecommendFood());
-    targetOpinion.updateDrink(request.getDrink());
+    targetOpinion.updateRestaurantMoodType(request.getRestaurantMoodType());
+    targetOpinion.updateRecommendFoodDescription(request.getRecommendFoodDescription());
     targetOpinion.updateCoffeeType(request.getCoffeeType());
-    targetOpinion.updateRecommendDrink(request.getRecommendDrink());
-    targetOpinion.updateRecommendDessert(request.getRecommendDessert());
+    targetOpinion.updateRecommendDrinkAndDessertDescription(request.getRecommendDrinkAndDessertDescription());
+    targetOpinion.updateCafeMoodType(request.getCafeMoodType());
     targetOpinion.updateRecommendToDo(request.getRecommendToDo());
     targetOpinion.updateRecommendSnack(request.getRecommendSnack());
+    targetOpinion.updatePhotoSpotDescription(request.getPhotoSpotDescription());
     targetOpinion.updateStreetNoise(request.getStreetNoise());
     targetOpinion.updateDeafening(request.getDeafening());
-    targetOpinion.updateBreakFast(request.getBreakFast());
-    targetOpinion.updateExistsAmenity(request.isExistsAmenity());
-    targetOpinion.updateExistsStore(request.isExistsStore());
+    targetOpinion.updateHasBreakFast(request.getHasBreakFast());
+
+    // TODO - 이미지 수정 관련 로직
   }
 
   /**

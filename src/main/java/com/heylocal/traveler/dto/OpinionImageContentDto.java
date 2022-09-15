@@ -14,12 +14,10 @@ public class OpinionImageContentDto {
   public static class OpinionImageContentResponse {
     private long id;
     private String url;
-    private int placedIndex;
 
     public OpinionImageContentResponse(OpinionImageContent entity) {
       this.id = entity.getId();
       this.url = entity.getUrl();
-      this.placedIndex = entity.getPlacedIndex();
     }
   }
 }
