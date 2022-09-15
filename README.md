@@ -11,8 +11,6 @@
 | 최정인 | 팀원  |FE|
 
 ## TODO
-- Opinion 엔티티의 Region, Place 필드를 Lazy 로딩으로 설정하고, 조회할 때 fetch join을 하도록 수정
 - `Entity` <-> `DTO` Mapper 적용
   - https://jforj.tistory.com/93
-- Repository 테스트 코드의 엔티티 비교 검증 로직 중, 모든 assertEqual 을 assertSame 으로 변경
 - 답변 이미지 처리

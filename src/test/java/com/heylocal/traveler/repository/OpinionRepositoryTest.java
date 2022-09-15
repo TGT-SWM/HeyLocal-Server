@@ -54,7 +54,7 @@ class OpinionRepositoryTest {
     //THEN
     assertAll(
         //성공 케이스 - 1 - 저장이 되었는지
-        () -> assertEquals(notPersistOpinion, em.find(Opinion.class, notPersistOpinion.getId())),
+        () -> assertSame(notPersistOpinion, em.find(Opinion.class, notPersistOpinion.getId())),
         //성공 케이스 - 2 - Flush
         () -> assertDoesNotThrow(() -> em.flush())
     );

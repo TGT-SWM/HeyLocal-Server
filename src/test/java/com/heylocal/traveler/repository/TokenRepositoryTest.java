@@ -62,9 +62,9 @@ class TokenRepositoryTest {
         //성공 케이스 - 1 - SQL Flush 성공
         () -> assertDoesNotThrow(() -> em.flush()),
         //성공 케이스 - 2 - 토큰간 연관관계 확인
-        () -> assertEquals(accessToken, refreshTokenResult.getAccessToken()),
+        () -> assertSame(accessToken, refreshTokenResult.getAccessToken()),
         //성공 케이스 - 3 - 유저가 연관되었는지 확인
-        () -> assertEquals(user, refreshTokenResult.getUser())
+        () -> assertSame(user, refreshTokenResult.getUser())
     );
   }
 
@@ -89,7 +89,7 @@ class TokenRepositoryTest {
         //성공 케이스 - 2
         () -> assertAll(
             () -> assertTrue(succeedResult.isPresent()),
-            () -> assertEquals(storedRefreshToken, succeedResult.get())
+            () -> assertSame(storedRefreshToken, succeedResult.get())
         ),
         //실패 케이스 - 1 - 존재하지 않는 refresh value 로 조회
         () -> assertFalse(failResult.isPresent())
@@ -117,7 +117,7 @@ class TokenRepositoryTest {
         //성공 케이스 - 2
         () -> assertAll(
             () -> assertTrue(succeedResult.isPresent()),
-            () -> assertEquals(storedAccessToken, succeedResult.get())
+            () -> assertSame(storedAccessToken, succeedResult.get())
         ),
         //실패 케이스 - 1 - 존재하지 않는 refresh value 로 조회
         () -> assertFalse(failResult.isPresent())
