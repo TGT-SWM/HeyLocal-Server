@@ -59,7 +59,7 @@ class TravelOnRepositoryTest {
         //성공 케이스 - 1 - SQL Flush 성공
         () -> assertDoesNotThrow(() -> em.flush()),
         //성공 케이스 - 2 - 결과 확인
-        () -> assertEquals(travelOn, result)
+        () -> assertSame(travelOn, result)
     );
   }
 
@@ -119,17 +119,17 @@ class TravelOnRepositoryTest {
     //THEN
     assertAll(
         //성공 케이스 - 1 - 페이징 아이템 갯수
-        () -> assertEquals(1, onlyFirstItem.size()),
+        () -> assertSame(1, onlyFirstItem.size()),
         //성공 케이스 - 2 - 작성일 순 정렬
-        () -> assertEquals(result4, sortByCreatedDateTime.get(0)),
+        () -> assertSame(result4, sortByCreatedDateTime.get(0)),
         //성공 케이스 - 3 - 조회수 순 정렬
-        () -> assertEquals(4, sortByViews.get(0).getViews()),
+        () -> assertSame(4, sortByViews.get(0).getViews()),
         //성공 케이스 - 4 - 페이징 & 조회수 순 정렬
-        () -> assertEquals(result2, last2Item.get(0)),
+        () -> assertSame(result2, last2Item.get(0)),
         //성공 케이스 - 5 - 답변 개수 확인
-        () -> assertEquals(2, sortByOpinion.get(0).getOpinionList().size()),
+        () -> assertSame(2, sortByOpinion.get(0).getOpinionList().size()),
         //성공 케이스 - 6 - 답변 개수 순 정렬
-        () -> assertEquals(result1, sortByOpinion.get(0))
+        () -> assertSame(result1, sortByOpinion.get(0))
     );
   }
 
@@ -166,7 +166,7 @@ class TravelOnRepositoryTest {
     //THEN
     assertAll(
         //답변이 있는 여행 On 조회 결과
-        () -> assertEquals(2, hasOpinionTravelOnResult.size()),
+        () -> assertSame(2, hasOpinionTravelOnResult.size()),
         () -> assertTrue(hasOpinionTravelOnResult.contains(travelOnRegionAWithOpinion)),
         () -> assertTrue(hasOpinionTravelOnResult.contains(travelOnRegionBWithOpinion)),
         () -> assertFalse(hasOpinionTravelOnResult.contains(travelOnRegionANoOpinion)),
@@ -207,7 +207,7 @@ class TravelOnRepositoryTest {
     //THEN
     assertAll(
         //답변이 없는 여행 On 조회 결과
-        () -> assertEquals(2, noOpinionResult.size()),
+        () -> assertSame(2, noOpinionResult.size()),
         () -> assertTrue(noOpinionResult.contains(travelOnRegionANoOpinion)),
         () -> assertTrue(noOpinionResult.contains(travelOnRegionBNoOpinion)),
         () -> assertFalse(noOpinionResult.contains(travelOnRegionAWithOpinion)),
@@ -247,11 +247,11 @@ class TravelOnRepositoryTest {
     //THEN
     assertAll(
         //성공 케이스 - 1 - RegionA 로 조회한 결과
-        () -> assertEquals(2, resultWithRegionA.size()),
-        () -> assertEquals(result2, resultWithRegionA.get(0)),
+        () -> assertSame(2, resultWithRegionA.size()),
+        () -> assertSame(result2, resultWithRegionA.get(0)),
         //성공 케이스 - 2 - RegionB 로 조회한 결과
-        () -> assertEquals(2, resultWithRegionB.size()),
-        () -> assertEquals(result4, resultWithRegionB.get(0))
+        () -> assertSame(2, resultWithRegionB.size()),
+        () -> assertSame(result4, resultWithRegionB.get(0))
     );
   }
 
@@ -291,10 +291,10 @@ class TravelOnRepositoryTest {
     //THEN
     assertAll(
         //답변이 있는 여행On이 존재하는 Region에서 조회
-        () -> assertEquals(1, withOpinionResult.size()),
-        () -> assertEquals(travelOnWithOpinion, withOpinionResult.get(0)),
+        () -> assertSame(1, withOpinionResult.size()),
+        () -> assertSame(travelOnWithOpinion, withOpinionResult.get(0)),
         //답변이 있는 여행On이 존재하지 않는 Region에서 조회
-        () -> assertEquals(0, withOpinionButNotRegionResult.size())
+        () -> assertSame(0, withOpinionButNotRegionResult.size())
     );
   }
 
@@ -335,10 +335,10 @@ class TravelOnRepositoryTest {
     //THEN
     assertAll(
         //답변이 없는 여행On이 존재하는 Region에서 조회
-        () -> assertEquals(1, noOpinionResult.size()),
-        () -> assertEquals(travelOnNoOpinion, noOpinionResult.get(0)),
+        () -> assertSame(1, noOpinionResult.size()),
+        () -> assertSame(travelOnNoOpinion, noOpinionResult.get(0)),
         //답변이 없는 여행On이 존재하지 않는 Region에서 조회
-        () -> assertEquals(0, noOpinionResultButNotRegion.size())
+        () -> assertSame(0, noOpinionResultButNotRegion.size())
     );
   }
 
@@ -371,9 +371,9 @@ class TravelOnRepositoryTest {
     //THEN
     assertAll(
         //stateA 로 조회
-        () -> assertEquals(2, stateAResult.size()),
+        () -> assertSame(2, stateAResult.size()),
         //stateB 로 조회
-        () -> assertEquals(1, stateBResult.size())
+        () -> assertSame(1, stateBResult.size())
     );
   }
 
@@ -410,11 +410,11 @@ class TravelOnRepositoryTest {
     //THEN
     assertAll(
         //stateA 로 조회
-        () -> assertEquals(1, hasOpinionByStateAResult.size()),
-        () -> assertEquals(travelOnRegionAWithOpinion, hasOpinionByStateAResult.get(0)),
+        () -> assertSame(1, hasOpinionByStateAResult.size()),
+        () -> assertSame(travelOnRegionAWithOpinion, hasOpinionByStateAResult.get(0)),
         //stateB 로 조회
-        () -> assertEquals(1, hasOpinionByStateBResult.size()),
-        () -> assertEquals(travelOnRegionBWithOpinion, hasOpinionByStateBResult.get(0))
+        () -> assertSame(1, hasOpinionByStateBResult.size()),
+        () -> assertSame(travelOnRegionBWithOpinion, hasOpinionByStateBResult.get(0))
     );
   }
 
@@ -452,11 +452,11 @@ class TravelOnRepositoryTest {
     //THEN
     assertAll(
         //stateA 로 조회
-        () -> assertEquals(1, noOpinionByStateAResult.size()),
-        () -> assertEquals(travelOnRegionANoOpinion, noOpinionByStateAResult.get(0)),
+        () -> assertSame(1, noOpinionByStateAResult.size()),
+        () -> assertSame(travelOnRegionANoOpinion, noOpinionByStateAResult.get(0)),
         //stateB 로 조회
-        () -> assertEquals(1, noOpinionByStateBResult.size()),
-        () -> assertEquals(travelOnRegionBNoOpinion, noOpinionByStateBResult.get(0))
+        () -> assertSame(1, noOpinionByStateBResult.size()),
+        () -> assertSame(travelOnRegionBNoOpinion, noOpinionByStateBResult.get(0))
     );
   }
 

@@ -77,7 +77,7 @@ class PlanRepositoryTest {
 		// THEN
 		assertAll(
 				// 성공 케이스 - 1 - 작성한 모든 플랜을 잘 조회하는지
-				() -> Assertions.assertThat(foundCasePlans.size()).isEqualTo(plansCount),
+				() -> Assertions.assertThat(foundCasePlans.size()).isSameAs(plansCount),
 				// 실패 케이스 - 1 - 작성한 플랜이 없는 경우에 빈 결과를 반환하는지
 				() -> Assertions.assertThat(notFoundCasePlans).isEmpty()
 		);
@@ -101,7 +101,7 @@ class PlanRepositoryTest {
 				// 성공 케이스 - 1 - 플랜 조회 결과가 존재하는지
 				() -> Assertions.assertThat(optPlan).isPresent(),
 				// 성공 케이스 - 2 - 플랜 조회 결과가 기대와 일치하는지
-				() -> Assertions.assertThat(optPlan.get()).isEqualTo(plan),
+				() -> Assertions.assertThat(optPlan.get()).isSameAs(plan),
 				// 실패 케이스 - 1 - 존재하지 않는 플랜 조회
 				() -> Assertions.assertThat(notFoundOptPlan).isEmpty()
 		);

@@ -50,7 +50,7 @@ class UserProfileRepositoryTest {
         //성공 케이스 - 1 - SQL Flush 성공
         () -> assertDoesNotThrow(() -> em.flush()),
         //성공 케이스 - 2 - 프로필에 사용자가 연관되었는지 확인
-        () -> assertEquals(user, userProfile.getUser()),
+        () -> assertSame(user, userProfile.getUser()),
         //성공 케이스 - 3 - 프로필의 노하우 필드가 제대로 설정되었는지 확인
         () -> assertEquals(knowHow, userProfile.getKnowHow())
     );

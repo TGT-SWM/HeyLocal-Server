@@ -41,7 +41,7 @@ class RegionRepositoryTest {
             () -> regionRepository.findByStateAndCity(region.getState(), region.getCity())
         ),
         //성공 케이스 - 2 - 조회결과 확인
-        () -> assertEquals(region, result),
+        () -> assertSame(region, result),
         //성공 케이스 - 3 - SQL Flush 성공
         () -> assertDoesNotThrow(() -> em.flush())
     );
@@ -93,9 +93,9 @@ class RegionRepositoryTest {
     //THEN
     assertAll(
         //성공 케이스 - 1 - 존재하는 state 로 조회 시
-        () -> assertEquals(2, succeedResult.size()),
+        () -> assertSame(2, succeedResult.size()),
         //실패 케이스 - 1 - 존재하지 않는 state 로 조회 시
-        () -> assertEquals(0, failResult.size())
+        () -> assertSame(0, failResult.size())
     );
   }
 
@@ -124,7 +124,7 @@ class RegionRepositoryTest {
         //성공 케이스 - 1 - 결과가 존재하는지
         () -> assertTrue(succeedResult.isPresent()),
         //성공 케이스 - 2 - city가 없는 결과인지
-        () -> assertEquals(regionASimp, succeedResult.get()),
+        () -> assertSame(regionASimp, succeedResult.get()),
         //실패 케이스 - 1 - 키워드가 '시' 로 끝나는 경우
         () -> assertFalse(failResult.isPresent())
     );
@@ -150,7 +150,7 @@ class RegionRepositoryTest {
         //성공 케이스 - 1 - 결과가 존재하는지
         () -> assertTrue(succeedResult.isPresent()),
         //성공 케이스 - 2
-        () -> assertEquals(regionA, succeedResult.get())
+        () -> assertSame(regionA, succeedResult.get())
     );
   }
 }

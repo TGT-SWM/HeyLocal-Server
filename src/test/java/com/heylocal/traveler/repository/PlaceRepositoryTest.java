@@ -36,7 +36,7 @@ class PlaceRepositoryTest {
     //THEN
     assertAll(
         //성공 케이스 - 1 - 저장한 Place 조회
-        () -> assertEquals(notPersistPlace, em.find(Place.class, placeId)),
+        () -> assertSame(notPersistPlace, em.find(Place.class, placeId)),
         //성공 케이스 - 2 - Flush
         () -> assertDoesNotThrow(() -> em.flush())
     );
@@ -57,7 +57,7 @@ class PlaceRepositoryTest {
         //성공 케이스 - 1 - 조회가 되었는지
         () -> assertTrue(result.isPresent()),
         //성공 케이스 - 2 - 조회된 엔티티가 같은 것인지
-        () -> assertEquals(place, result.get())
+        () -> assertSame(place, result.get())
     );
   }
 
