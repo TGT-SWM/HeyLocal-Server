@@ -45,17 +45,9 @@ public class Opinion extends BaseTimeEntity {
   private TravelOn travelOn;
 
   // [일반]
-//  @Enumerated(EnumType.STRING)
-//  @Column(nullable = false)
-//  private EvaluationDegree kindness; //직원이 친절한가요
-
   @Enumerated(EnumType.STRING)
   @Column(nullable = false)
   private EvaluationDegree facilityCleanliness; //시설이 청결한가요
-
-//  @Enumerated(EnumType.STRING)
-//  @Column(nullable = false)
-//  private EvaluationDegree accessibility; //접근성이 좋나요
 
   @Column(nullable = false)
   private Boolean canParking; //주차장이 있나요
@@ -63,39 +55,22 @@ public class Opinion extends BaseTimeEntity {
   @Column(nullable = false)
   private Boolean waiting; //웨이팅이 있나요
 
-//  private String photoSpotImageUrl; //사진 명소 - 예시 사진
-
-//  @Column(length = 512)
-//  private String photoSpotText; //사진 명소 - 단답형
-
   @Enumerated(EnumType.STRING)
   @Column(nullable = false)
   private EvaluationDegree costPerformance; //가성비가 좋나요
 
-//  private String mood; //가게 분위기가 어떤가요 (단답형)
-
-//  @Enumerated(EnumType.STRING)
-//  private EvaluationDegree toiletCleanliness; //화장실이 깨끗한가요
-
-  // [음식점]
-//  @Enumerated(EnumType.STRING)
-//  private EvaluationDegree food; //음식맛이 어떤가요
-
+  //[음식점]
   @Enumerated(EnumType.STRING)
   private RestaurantMoodType restaurantMoodType; //식당 분위기가 어떤가요
 
   private String recommendFoodDescription; //추천 음식 설명
 
   // [카페]
-//  @Enumerated(EnumType.STRING)
-//  private EvaluationDegree drink; //음료 맛이 어떤가요
-
   @Enumerated(EnumType.STRING)
   private CoffeeType coffeeType; // 커피 스타일이 어떤가요
 
   private String recommendDrinkAndDessertDescription; //추천 음료·디저트 설명
 
-//  private String recommendDessert; //추천 디저트
   @Enumerated(EnumType.STRING)
   private CafeMoodType cafeMoodType; //카페 분위기는 어떤가요
 
@@ -113,13 +88,7 @@ public class Opinion extends BaseTimeEntity {
   @Enumerated(EnumType.STRING)
   private EvaluationDegree deafening; //방음이 잘 되나요
 
-//  @Enumerated(EnumType.STRING)
-//  private EvaluationDegree breakFast; //조식이 맛있나요
   private Boolean hasBreakFast; //조식이 나오나요
-
-//  private Boolean existsAmenity; //부대시설이 있나요
-
-//  private Boolean existsStore; //근처에 편의점이 있나요
 
   // 양방향 설정
 
