@@ -3,9 +3,7 @@ package com.heylocal.traveler.domain.plan.list;
 import com.heylocal.traveler.domain.BaseTimeEntity;
 import com.heylocal.traveler.domain.place.Place;
 import com.heylocal.traveler.domain.plan.DaySchedule;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
@@ -20,6 +18,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
+@Setter
 @SuperBuilder
 public class PlaceItem extends BaseTimeEntity {
   @Id @GeneratedValue
@@ -39,4 +38,10 @@ public class PlaceItem extends BaseTimeEntity {
   private Integer itemIndex; //오름차순
 
   private Long originalPlaceId; // 현재 대체장소일때, 원장소의 id
+
+  public void registerAt(DaySchedule daySchedule) {
+    this.schedule = daySchedule;
+    if (!daySchedule.getPlaceItemList().contains(this)) // O(N) 시간 소요 문제
+      daySchedule.addPlaceItem(this);
+  }
 }

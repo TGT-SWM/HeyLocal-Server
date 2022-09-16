@@ -37,4 +37,10 @@ public class DaySchedule extends BaseTimeEntity {
   @Builder.Default
   @OneToMany(mappedBy = "schedule", cascade = CascadeType.ALL)
   private List<PlaceItem> placeItemList = new ArrayList<>();
+
+  public void addPlaceItem(PlaceItem placeItem) {
+    placeItemList.add(placeItem);
+    if (placeItem.getSchedule() != this)
+      placeItem.registerAt(this);
+  }
 }
