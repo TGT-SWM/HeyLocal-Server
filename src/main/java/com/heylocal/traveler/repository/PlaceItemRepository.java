@@ -11,6 +11,12 @@ public class PlaceItemRepository {
 	@PersistenceContext
 	private EntityManager em;
 
+	/**
+	 * <pre>
+	 * PlaceItem을 삭제합니다.
+	 * @param placeItem PlaceItem 엔티티
+	 * </pre>
+	 */
 	public void remove(PlaceItem placeItem) {
 		em.remove(placeItem);
 	}
