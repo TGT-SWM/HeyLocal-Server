@@ -4,10 +4,7 @@ import com.heylocal.traveler.domain.BaseTimeEntity;
 import com.heylocal.traveler.domain.Region;
 import com.heylocal.traveler.domain.plan.list.PlaceItem;
 import com.heylocal.traveler.domain.travelon.opinion.Opinion;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;

@@ -2,13 +2,19 @@ package com.heylocal.traveler.service;
 
 import com.heylocal.traveler.domain.Region;
 import com.heylocal.traveler.domain.place.Place;
+import com.heylocal.traveler.domain.place.PlaceCategory;
 import com.heylocal.traveler.domain.plan.DaySchedule;
 import com.heylocal.traveler.domain.plan.Plan;
 import com.heylocal.traveler.domain.plan.list.PlaceItem;
 import com.heylocal.traveler.domain.travelon.TravelOn;
 import com.heylocal.traveler.domain.user.User;
+import com.heylocal.traveler.dto.PlaceDto.PlaceItemRequest;
 import com.heylocal.traveler.dto.PlanDto.PlanListResponse;
+import com.heylocal.traveler.dto.PlanDto.PlanSchedulesRequest;
+import com.heylocal.traveler.dto.PlanDto.ScheduleRequest;
+import com.heylocal.traveler.exception.BadRequestException;
 import com.heylocal.traveler.exception.NotFoundException;
+import com.heylocal.traveler.repository.PlaceRepository;
 import com.heylocal.traveler.repository.PlanRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,11 +34,19 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 
 class PlanServiceTest {
 	@Mock
 	private PlanRepository planRepository;
+
+	@Mock
+	private PlaceRepository placeRepository;
+
+	@Mock
+	private RegionService regionService;
 
 	@Spy
 	private Clock clock;
@@ -174,5 +188,68 @@ class PlanServiceTest {
 				// 실패 케이스 - 1 - 존재하지 않는 플랜 ID로 조회 시 예외 발생
 				() -> assertThrows(NotFoundException.class, () -> planService.getPlacesInPlan(notFoundPlanId))
 		);
+	}
+
+	@Test
+	@DisplayName("플랜 내 장소 목록 수정")
+	void updatePlacesInPlanTest() throws BadRequestException {
+		// GIVEN
+		long planId = 1L;
+		long notExistPlanId = planId + 1;
+		int days = 3;
+
+		// GIVEN - ScheduleRequest
+		List<PlaceItemRequest> places = new ArrayList<>();
+		for (int i = 0; i < 5; i++) {
+			places.add(PlaceItemRequest.builder()
+					.id(1L)
+					.itemIndex(i)
+					.category(PlaceCategory.AD5)
+					.name("NAME")
+					.address("ADDRESS")
+					.roadAddress("ROADADDRESS")
+					.lat(0.0)
+					.lng(0.0)
+					.build());
+		}
+		ScheduleRequest schedule = new ScheduleRequest(places);
+
+		// GIVEN - PlanScheduleRequest
+		List<ScheduleRequest> schedules = new ArrayList<>();
+		for (int day = 0; day < days; day++)
+			schedules.add(schedule);
+		PlanSchedulesRequest planSchedulesRequest = new PlanSchedulesRequest(schedules);
+
+		// GIVEN - DaySchedule
+		List<DaySchedule> daySchedules = new ArrayList<>();
+		for (int day = 0; day < days; day++) {
+			daySchedules.add(DaySchedule.builder()
+					.id((long) day)
+					.placeItemList(new ArrayList<>())
+					.build());
+		}
+
+		// Stub
+		Plan plan = Plan.builder()
+				.id(planId)
+				.dayScheduleList(daySchedules)
+				.build();
+		// PlanRepository
+		given(planRepository.findById(planId)).willReturn(Optional.of(plan));
+		given(planRepository.findById(notExistPlanId)).willReturn(Optional.empty());
+		// PlaceRepository
+		given(placeRepository.findById(anyLong())).willReturn(Optional.empty());
+		// RegionService
+		Region region = new Region(1L, "STATE", "CITY", null, null, null);
+		given(regionService.getRegionByAddress(anyString())).willReturn(Optional.of(region));
+
+		// WHEN - THEN
+		assertAll(
+				// 성공 케이스 - 1 - 문제 없이 장소 목록 수정을 완료
+				() -> assertDoesNotThrow(() -> planService.updatePlacesInPlan(planId, planSchedulesRequest)),
+				// 실패 케이스 - 1 - 장소 목록을 수정할 플랜이 존재하지 않음
+				() -> assertThrows(NotFoundException.class, () -> planService.updatePlacesInPlan(notExistPlanId, planSchedulesRequest))
+		);
+
 	}
 }

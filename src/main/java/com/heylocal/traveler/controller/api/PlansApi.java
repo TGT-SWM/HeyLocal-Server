@@ -3,9 +3,9 @@ package com.heylocal.traveler.controller.api;
 import com.heylocal.traveler.dto.ErrorMessageResponse;
 import com.heylocal.traveler.dto.LoginUser;
 import com.heylocal.traveler.dto.PlanDto.PlanListResponse;
-import com.heylocal.traveler.dto.PlanDto.PlanPlacesRequest;
 import com.heylocal.traveler.dto.PlanDto.PlanPlacesResponse;
 import com.heylocal.traveler.dto.PlanDto.PlanRequest;
+import com.heylocal.traveler.dto.PlanDto.PlanSchedulesRequest;
 import com.heylocal.traveler.exception.NotFoundException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -37,14 +37,14 @@ public interface PlansApi {
 	@Operation(summary = "플랜 수정", description = "플랜을 수정합니다.", tags = {"Plans"})
 	@PutMapping("/{planId}")
 	ResponseEntity<Void> updatePlan(
-			@Parameter(in = ParameterIn.PATH, description = "플랜 ID", required = true) long planId,
+			@Parameter(in = ParameterIn.PATH, description = "플랜 ID", required = true) @PathVariable long planId,
 			@Parameter(in = ParameterIn.DEFAULT, description = "플랜 정보", required = true) PlanRequest request
 	);
 
 	@Operation(summary = "플랜 삭제", description = "플랜을 삭제합니다.", tags = {"Plans"})
 	@DeleteMapping("/{planId}")
 	ResponseEntity<Void> deletePlan(
-			@Parameter(in = ParameterIn.PATH, description = "플랜 ID", required = true) long planId
+			@Parameter(in = ParameterIn.PATH, description = "플랜 ID", required = true) @PathVariable long planId
 	);
 
 	/*
@@ -62,9 +62,13 @@ public interface PlansApi {
 	) throws NotFoundException;
 
 	@Operation(summary = "플랜의 장소 목록 수정", description = "플랜의 장소 목록 수정", tags = {"Plans"})
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "201", description = "플랜의 장소 목록 수정 성공"),
+			@ApiResponse(responseCode = "404", description = "- `NO_INFO`: 플랜이 존재하지 않는 경우", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessageResponse.class)))
+	})
 	@PutMapping("/{planId}/places")
-	ResponseEntity<Void> updatePlaceInPlan(
-			@Parameter(in = ParameterIn.PATH, description = "플랜 ID", required = true) long planId,
-			@Parameter(in = ParameterIn.DEFAULT, description = "", required = true) PlanPlacesRequest request
-	);
+	void updatePlacesInPlan(
+			@Parameter(in = ParameterIn.PATH, description = "플랜 ID", required = true) @PathVariable long planId,
+			@Parameter(in = ParameterIn.DEFAULT, description = "", required = true) @RequestBody PlanSchedulesRequest request
+	) throws NotFoundException;
 }

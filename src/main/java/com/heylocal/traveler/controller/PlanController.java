@@ -3,9 +3,9 @@ package com.heylocal.traveler.controller;
 import com.heylocal.traveler.controller.api.PlansApi;
 import com.heylocal.traveler.dto.LoginUser;
 import com.heylocal.traveler.dto.PlanDto.PlanListResponse;
-import com.heylocal.traveler.dto.PlanDto.PlanPlacesRequest;
 import com.heylocal.traveler.dto.PlanDto.PlanPlacesResponse;
 import com.heylocal.traveler.dto.PlanDto.PlanRequest;
+import com.heylocal.traveler.dto.PlanDto.PlanSchedulesRequest;
 import com.heylocal.traveler.exception.NotFoundException;
 import com.heylocal.traveler.service.PlanService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -92,11 +92,10 @@ public class PlanController implements PlansApi {
 	 * 플랜의 장소 목록을 수정합니다.
 	 * @param planId 플랜 ID
 	 * @param request 장소 목록
-	 * @return
 	 * </pre>
 	 */
 	@Override
-	public ResponseEntity<Void> updatePlaceInPlan(long planId, PlanPlacesRequest request) {
-		return null;
+	public void updatePlacesInPlan(long planId, PlanSchedulesRequest request) throws NotFoundException {
+		planService.updatePlacesInPlan(planId, request);
 	}
 }
