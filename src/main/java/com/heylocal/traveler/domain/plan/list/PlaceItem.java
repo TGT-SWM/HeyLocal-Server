@@ -39,6 +39,12 @@ public class PlaceItem extends BaseTimeEntity {
 
   private Long originalPlaceId; // 현재 대체장소일때, 원장소의 id
 
+  /**
+   * <pre>
+   * 해당 DaySchedule에 PlaceItem을 추가합니다.
+   * @param daySchedule 스케줄 엔티티
+   * </pre>
+   */
   public void registerAt(DaySchedule daySchedule) {
     this.schedule = daySchedule;
     if (!daySchedule.getPlaceItemList().contains(this)) // O(N) 시간 소요 문제
