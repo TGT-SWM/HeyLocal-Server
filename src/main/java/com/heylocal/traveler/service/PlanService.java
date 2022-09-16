@@ -3,12 +3,12 @@ package com.heylocal.traveler.service;
 import com.heylocal.traveler.domain.place.Place;
 import com.heylocal.traveler.domain.plan.DaySchedule;
 import com.heylocal.traveler.domain.plan.Plan;
-import com.heylocal.traveler.dto.PlanDto.PlanListResponse;
-import com.heylocal.traveler.dto.PlanDto.PlanPlacesRequest;
-import com.heylocal.traveler.dto.PlanDto.PlanPlacesResponse;
-import com.heylocal.traveler.dto.PlanDto.PlanResponse;
+import com.heylocal.traveler.domain.plan.list.PlaceItem;
+import com.heylocal.traveler.dto.PlanDto.*;
+import com.heylocal.traveler.exception.BadRequestException;
 import com.heylocal.traveler.exception.NotFoundException;
 import com.heylocal.traveler.exception.code.NotFoundCode;
+import com.heylocal.traveler.repository.PlaceItemRepository;
 import com.heylocal.traveler.repository.PlaceRepository;
 import com.heylocal.traveler.repository.PlanRepository;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +28,10 @@ public class PlanService {
 	private final PlanRepository planRepository;
 
 	private final PlaceRepository placeRepository;
+
+	private final PlaceItemRepository placeItemRepository;
+
+	private final RegionService regionService;
 
 	private final Clock clock;
 
@@ -101,40 +105,63 @@ public class PlanService {
 	}
 
 	/**
-	 * <plan>
+	 * <pre>
 	 * 해당 플랜의 장소 목록을 업데이트합니다.
 	 * @param planId 플랜 ID
 	 * @param request 장소 정보
-	 * </plan>
+	 * </pre>
 	 */
-	public void updatePlacesInPlan(long planId, List<PlanPlacesRequest> request) {
+	@Transactional
+	public void updatePlacesInPlan(long planId, PlanSchedulesRequest request) throws NotFoundException {
 		// Plan 조회
 		// Plan이 존재하지 않는 경우에는 예외 발생
 		Optional<Plan> optPlan = planRepository.findById(planId);
 		if (optPlan.isEmpty())
-			return;
+			throw new NotFoundException(NotFoundCode.NO_INFO, "존재하지 않는 플랜입니다.");
 		Plan plan = optPlan.get();
 
 		// DTO 변환
-		// List<PlanPlacesRequest> -> List<DaySchedule>
-		List<DaySchedule> daySchedules = request.stream()
-				.map(places -> places.toEntity())
+		List<ScheduleRequest> scheduleRequests = request.getSchedules();
+		List<List<PlaceItem>> schedules = scheduleRequests.stream()
+				.map(scheduleRequest -> { // List<ScheduleRequest> -> List<List<PlaceItem>>
+					return scheduleRequest.getPlaces().stream()
+							.map(placeItemRequest -> placeItemRequest.toEntity()) // ScheduleRequest -> List<PlaceItem>
+							.collect(Collectors.toList());
+				})
 				.collect(Collectors.toList());
 
 		// 장소 엔티티 저장
-		for (DaySchedule daySchedule: daySchedules) {
-			daySchedule.getPlaceItemList().stream()
-					.map(placeItem -> placeItem.getPlace())
-					.forEach(place -> {
-						Optional<Place> optPlace = placeRepository.findById(place.getId());
+		for (List<PlaceItem> placeItems: schedules) {
+			for (PlaceItem placeItem: placeItems) {
+				// 레포지터리에서 Place 검색
+				Place place = placeItem.getPlace();
+				Optional<Place> optPlace = placeRepository.findById(place.getId());
 
-						// 장소가 저장되어 있지 않은 경우, 저장
-						if (optPlace.isEmpty())
+				// Place가 있는 경우 가져오고, 없으면 저장하기
+				optPlace.ifPresentOrElse(placeItem::setPlace, () -> {
+					try {
+						regionService.getRegionByAddress(place.getAddress()).ifPresent(region -> {
+							place.updateRegion(region);
 							placeRepository.save(place);
-					});
+						});
+					} catch (BadRequestException e) {}
+				});
+			}
 		}
 
-		// 업데이트
-		plan.updateDayScheduleList(daySchedules);
+		// 장소 스케줄 업데이트
+		int i = 0;
+		for (DaySchedule daySchedule: plan.getDayScheduleList()) {
+			List<PlaceItem> placeItems = schedules.get(i++);
+
+			// 스케줄 비우기
+			for (PlaceItem placeItem: daySchedule.getPlaceItemList())
+				placeItemRepository.remove(placeItem);
+			daySchedule.getPlaceItemList().clear();
+
+			// 장소 추가
+			for (PlaceItem placeItem: placeItems)
+				daySchedule.addPlaceItem(placeItem);
+		}
 	}
 }
