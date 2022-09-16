@@ -8,9 +8,7 @@ import com.heylocal.traveler.domain.plan.Plan;
 import com.heylocal.traveler.domain.plan.list.PlaceItem;
 import com.heylocal.traveler.domain.travelon.TravelOn;
 import com.heylocal.traveler.domain.user.User;
-import com.heylocal.traveler.dto.PlaceDto;
 import com.heylocal.traveler.dto.PlaceDto.PlaceItemRequest;
-import com.heylocal.traveler.dto.PlanDto;
 import com.heylocal.traveler.dto.PlanDto.PlanListResponse;
 import com.heylocal.traveler.dto.PlanDto.PlanSchedulesRequest;
 import com.heylocal.traveler.dto.PlanDto.ScheduleRequest;
@@ -244,7 +242,7 @@ class PlanServiceTest {
 		// RegionService
 		Region region = new Region(1L, "STATE", "CITY", null, null, null);
 		given(regionService.getRegionByAddress(anyString())).willReturn(Optional.of(region));
-		
+
 		// WHEN - THEN
 		assertAll(
 				// 성공 케이스 - 1 - 문제 없이 장소 목록 수정을 완료
