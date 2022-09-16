@@ -73,7 +73,17 @@ public class PlanDto {
 	@AllArgsConstructor
 	@Builder
 	@Schema(description = "장소 목록 수정을 위한 요청 DTO")
-	public static class PlanPlacesRequest {
+	public static class PlanSchedulesRequest {
+		List<ScheduleRequest> schedules;
+	}
+
+	@Getter
+	@Setter
+	@NoArgsConstructor
+	@AllArgsConstructor
+	@Builder
+	@Schema(description = "장소 목록 수정을 위한 요청 DTO")
+	public static class ScheduleRequest {
 		List<PlaceItemRequest> places;
 
 		public DaySchedule toEntity() {

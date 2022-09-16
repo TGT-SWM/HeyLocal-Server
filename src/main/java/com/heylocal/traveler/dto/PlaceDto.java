@@ -4,6 +4,7 @@ import com.heylocal.traveler.domain.Region;
 import com.heylocal.traveler.domain.place.Place;
 import com.heylocal.traveler.domain.place.PlaceCategory;
 import com.heylocal.traveler.domain.plan.list.PlaceItem;
+import com.heylocal.traveler.domain.plan.list.PlaceItemType;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -85,6 +86,7 @@ public class PlaceDto {
 	@Schema(description = "플랜 내 장소 아이템 수정을 위한 요청 DTO")
 	public static class PlaceItemRequest {
 		long id;
+		int itemIndex;
 		PlaceCategory category;
 		String name;
 		String roadAddress;
@@ -106,7 +108,10 @@ public class PlaceDto {
 					.build();
 
 			return PlaceItem.builder()
+					.type(PlaceItemType.ORIGINAL)
 					.place(place)
+					.itemIndex(itemIndex)
+					.originalPlaceId(null)
 					.build();
 		}
 	}
