@@ -22,7 +22,7 @@ public class PlanDto {
 	@Builder
 	@Schema(description = "스케줄 생성을 위한 요청 DTO")
 	public static class PlanRequest {
-		long id;
+		long travelOnId;
 	}
 
 	@Getter
