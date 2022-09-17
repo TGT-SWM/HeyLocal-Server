@@ -6,6 +6,8 @@ import com.heylocal.traveler.dto.PlanDto.PlanListResponse;
 import com.heylocal.traveler.dto.PlanDto.PlanPlacesResponse;
 import com.heylocal.traveler.dto.PlanDto.PlanRequest;
 import com.heylocal.traveler.dto.PlanDto.PlanSchedulesRequest;
+import com.heylocal.traveler.exception.BadRequestException;
+import com.heylocal.traveler.exception.ForbiddenException;
 import com.heylocal.traveler.exception.NotFoundException;
 import com.heylocal.traveler.service.PlanService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -40,13 +42,15 @@ public class PlanController implements PlansApi {
 	/**
 	 * <pre>
 	 * 플랜을 등록합니다.
+	 * @param loginUser 로그인 사용자 정보
 	 * @param request 플랜 정보
-	 * @return
 	 * </pre>
 	 */
 	@Override
-	public ResponseEntity<Void> createPlan(PlanRequest request) {
-		return null;
+	public void createPlan(PlanRequest request, LoginUser loginUser) throws NotFoundException, ForbiddenException, BadRequestException {
+		long userId = loginUser.getId();
+		long travelOnId = request.getTravelOnId();
+		planService.createPlan(userId, travelOnId);
 	}
 
 	/**
@@ -54,24 +58,22 @@ public class PlanController implements PlansApi {
 	 * 플랜을 수정합니다.
 	 * @param planId 플랜 ID
 	 * @param request 플랜 정보
-	 * @return
 	 * </pre>
 	 */
 	@Override
-	public ResponseEntity<Void> updatePlan(long planId, PlanRequest request) {
-		return null;
+	public void updatePlan(long planId, PlanRequest request) {
+
 	}
 
 	/**
 	 * <pre>
 	 * 플랜을 삭제합니다.
 	 * @param planId 플랜 ID
-	 * @return
 	 * </pre>
 	 */
 	@Override
-	public ResponseEntity<Void> deletePlan(long planId) {
-		return null;
+	public void deletePlan(long planId) {
+
 	}
 
 	/**

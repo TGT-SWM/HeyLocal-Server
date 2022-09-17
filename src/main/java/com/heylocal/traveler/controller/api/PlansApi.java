@@ -6,6 +6,8 @@ import com.heylocal.traveler.dto.PlanDto.PlanListResponse;
 import com.heylocal.traveler.dto.PlanDto.PlanPlacesResponse;
 import com.heylocal.traveler.dto.PlanDto.PlanRequest;
 import com.heylocal.traveler.dto.PlanDto.PlanSchedulesRequest;
+import com.heylocal.traveler.exception.BadRequestException;
+import com.heylocal.traveler.exception.ForbiddenException;
 import com.heylocal.traveler.exception.NotFoundException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -14,7 +16,6 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
@@ -29,21 +30,28 @@ public interface PlansApi {
 	);
 
 	@Operation(summary = "플랜 등록", description = "플랜을 등록합니다.", tags = {"Plans"})
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "201", description = "플랜 등록 성공"),
+			@ApiResponse(responseCode = "400", description = "- `ALREADY_EXISTS`: 이미 플랜이 있는 경우", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessageResponse.class))),
+			@ApiResponse(responseCode = "403", description = "- `NO_PERMISSION`: 권한이 없는 경우", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessageResponse.class))),
+			@ApiResponse(responseCode = "404", description = "- `NO_INFO`: 여행 On이 존재하지 않는 경우", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessageResponse.class)))
+	})
 	@PostMapping()
-	ResponseEntity<Void> createPlan(
-			@Parameter(in = ParameterIn.DEFAULT, description = "플랜 정보", required = true) PlanRequest request
-	);
+	void createPlan(
+			@Parameter(in = ParameterIn.DEFAULT, description = "플랜 정보", required = true) @RequestBody PlanRequest request,
+			@ApiIgnore LoginUser loginUser
+	) throws NotFoundException, ForbiddenException, BadRequestException;
 
 	@Operation(summary = "플랜 수정", description = "플랜을 수정합니다.", tags = {"Plans"})
 	@PutMapping("/{planId}")
-	ResponseEntity<Void> updatePlan(
+	void updatePlan(
 			@Parameter(in = ParameterIn.PATH, description = "플랜 ID", required = true) @PathVariable long planId,
-			@Parameter(in = ParameterIn.DEFAULT, description = "플랜 정보", required = true) PlanRequest request
+			@Parameter(in = ParameterIn.DEFAULT, description = "플랜 정보", required = true) @RequestBody PlanRequest request
 	);
 
 	@Operation(summary = "플랜 삭제", description = "플랜을 삭제합니다.", tags = {"Plans"})
 	@DeleteMapping("/{planId}")
-	ResponseEntity<Void> deletePlan(
+	void deletePlan(
 			@Parameter(in = ParameterIn.PATH, description = "플랜 ID", required = true) @PathVariable long planId
 	);
 

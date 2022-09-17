@@ -1,20 +1,27 @@
 package com.heylocal.traveler.service;
 
+import com.heylocal.traveler.domain.Region;
 import com.heylocal.traveler.domain.place.Place;
 import com.heylocal.traveler.domain.plan.DaySchedule;
 import com.heylocal.traveler.domain.plan.Plan;
 import com.heylocal.traveler.domain.plan.list.PlaceItem;
+import com.heylocal.traveler.domain.travelon.TravelOn;
 import com.heylocal.traveler.dto.PlanDto.*;
 import com.heylocal.traveler.exception.BadRequestException;
+import com.heylocal.traveler.exception.ForbiddenException;
 import com.heylocal.traveler.exception.NotFoundException;
+import com.heylocal.traveler.exception.code.BadRequestCode;
+import com.heylocal.traveler.exception.code.ForbiddenCode;
 import com.heylocal.traveler.exception.code.NotFoundCode;
 import com.heylocal.traveler.repository.PlaceItemRepository;
 import com.heylocal.traveler.repository.PlaceRepository;
 import com.heylocal.traveler.repository.PlanRepository;
+import com.heylocal.traveler.repository.TravelOnRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.swing.text.html.Option;
 import java.time.Clock;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -26,6 +33,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class PlanService {
 	private final PlanRepository planRepository;
+
+	private final TravelOnRepository travelOnRepository;
 
 	private final PlaceRepository placeRepository;
 
@@ -77,6 +86,57 @@ public class PlanService {
 				.ongoing(ongoing)
 				.upcoming(upcoming)
 				.build();
+	}
+
+	/**
+	 * <pre>
+	 * 플랜을 생성합니다.
+	 * @param userId 로그인 사용자 ID
+	 * @param travelOnId 여행 On ID
+	 * </pre>
+	 */
+	@Transactional
+	public void createPlan(long userId, long travelOnId) throws NotFoundException, ForbiddenException, BadRequestException {
+		// TravelOn 조회 (없으면 예외 발생)
+		Optional<TravelOn> optTravelOn = travelOnRepository.findById(travelOnId);
+		if (optTravelOn.isEmpty())
+			throw new NotFoundException(NotFoundCode.NO_INFO, "여행 On이 존재하지 않습니다.");
+		TravelOn travelOn = optTravelOn.get();
+
+		// 권한 확인
+		if (travelOn.getAuthor().getId() != userId)
+			throw new ForbiddenException(ForbiddenCode.NO_PERMISSION);
+
+		// 이미 플랜이 존재하는 경우 예외 발생
+		if (travelOn.getPlan() != null)
+			throw new BadRequestException(BadRequestCode.ALREADY_EXISTS, "이미 플랜이 존재합니다.");
+
+		// Plan 타이틀 가져오기
+		String regionName = travelOn.getRegion().getRegionName();
+		String planTitle = regionName + " 여행";
+
+		// DaySchedule 생성
+		List<DaySchedule> daySchedules = new ArrayList<>();
+		LocalDate startDate = travelOn.getTravelStartDate();
+		LocalDate endDate = travelOn.getTravelEndDate();
+		LocalDate date = startDate;
+
+		while (!date.isAfter(endDate)) {
+			DaySchedule daySchedule = DaySchedule.builder()
+					.dateTime(date)
+					.build();
+
+			daySchedules.add(daySchedule);
+			date = date.plusDays(1);
+		}
+
+		// Plan 생성하여 저장
+		Plan plan = Plan.builder()
+				.travelOn(travelOn)
+				.user(travelOn.getAuthor())
+				.build();
+		daySchedules.forEach(plan::addDaySchedule); // DaySchedule 추가
+		planRepository.save(plan); // 저장
 	}
 
 	/**
