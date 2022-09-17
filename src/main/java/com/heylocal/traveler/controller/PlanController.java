@@ -40,13 +40,15 @@ public class PlanController implements PlansApi {
 	/**
 	 * <pre>
 	 * 플랜을 등록합니다.
+	 * @param loginUser 로그인 사용자 정보
 	 * @param request 플랜 정보
 	 * </pre>
 	 */
 	@Override
-	public void createPlan(PlanRequest request) {
+	public void createPlan(PlanRequest request, LoginUser loginUser) {
+		long userId = loginUser.getId();
 		long travelOnId = request.getTravelOnId();
-		planService.createPlan(travelOnId);
+		planService.createPlan(userId, travelOnId);
 	}
 
 	/**

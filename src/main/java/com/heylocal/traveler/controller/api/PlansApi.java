@@ -14,7 +14,6 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
@@ -31,7 +30,8 @@ public interface PlansApi {
 	@Operation(summary = "플랜 등록", description = "플랜을 등록합니다.", tags = {"Plans"})
 	@PostMapping()
 	void createPlan(
-			@Parameter(in = ParameterIn.DEFAULT, description = "플랜 정보", required = true) @RequestBody PlanRequest request
+			@Parameter(in = ParameterIn.DEFAULT, description = "플랜 정보", required = true) @RequestBody PlanRequest request,
+			@ApiIgnore LoginUser loginUser
 	);
 
 	@Operation(summary = "플랜 수정", description = "플랜을 수정합니다.", tags = {"Plans"})

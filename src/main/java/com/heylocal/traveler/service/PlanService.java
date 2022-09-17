@@ -82,11 +82,14 @@ public class PlanService {
 	/**
 	 * <pre>
 	 * 플랜을 생성합니다.
+	 * @param userId 로그인 사용자 ID
 	 * @param travelOnId 여행 On ID
 	 * </pre>
 	 */
-	public void createPlan(long travelOnId) {
+	public void createPlan(long userId, long travelOnId) {
 		// TravelOn 조회 (없으면 예외 발생)
+
+		// 권한 확인
 
 		// Plan 타이틀 가져오기
 
