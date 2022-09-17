@@ -56,4 +56,11 @@ public class Region {
   public void removeOpinion(Opinion target) {
     this.getOpinionList().remove(target);
   }
+
+  public String getRegionName() {
+    if (city == null)
+      return state;
+    else
+      return state + " " + city;
+  }
 }

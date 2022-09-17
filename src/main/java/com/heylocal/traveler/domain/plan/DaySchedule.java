@@ -49,4 +49,10 @@ public class DaySchedule extends BaseTimeEntity {
     if (placeItem.getSchedule() != this)
       placeItem.registerAt(this);
   }
+
+  public void register(Plan plan) {
+    this.plan = plan;
+    if (!plan.getDayScheduleList().contains(this))
+      plan.addDaySchedule(this);
+  }
 }

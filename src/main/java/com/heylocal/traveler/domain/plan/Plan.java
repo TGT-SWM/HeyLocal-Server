@@ -49,4 +49,10 @@ public class Plan extends BaseTimeEntity {
       temp.releasePlan();
     }
   }
+
+  public void addDaySchedule(DaySchedule daySchedule) {
+    dayScheduleList.add(daySchedule);
+    if (daySchedule.getPlan() != this)
+      daySchedule.register(this);
+  }
 }

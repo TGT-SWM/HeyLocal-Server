@@ -6,6 +6,7 @@ import com.heylocal.traveler.dto.PlanDto.PlanListResponse;
 import com.heylocal.traveler.dto.PlanDto.PlanPlacesResponse;
 import com.heylocal.traveler.dto.PlanDto.PlanRequest;
 import com.heylocal.traveler.dto.PlanDto.PlanSchedulesRequest;
+import com.heylocal.traveler.exception.ForbiddenException;
 import com.heylocal.traveler.exception.NotFoundException;
 import com.heylocal.traveler.service.PlanService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -45,7 +46,7 @@ public class PlanController implements PlansApi {
 	 * </pre>
 	 */
 	@Override
-	public void createPlan(PlanRequest request, LoginUser loginUser) {
+	public void createPlan(PlanRequest request, LoginUser loginUser) throws NotFoundException, ForbiddenException {
 		long userId = loginUser.getId();
 		long travelOnId = request.getTravelOnId();
 		planService.createPlan(userId, travelOnId);
