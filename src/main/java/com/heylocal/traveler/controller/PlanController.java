@@ -45,7 +45,8 @@ public class PlanController implements PlansApi {
 	 */
 	@Override
 	public void createPlan(PlanRequest request) {
-
+		long travelOnId = request.getTravelOnId();
+		planService.createPlan(travelOnId);
 	}
 
 	/**

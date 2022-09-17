@@ -81,6 +81,20 @@ public class PlanService {
 
 	/**
 	 * <pre>
+	 * 플랜을 생성합니다.
+	 * @param travelOnId 여행 On ID
+	 * </pre>
+	 */
+	public void createPlan(long travelOnId) {
+		// TravelOn 조회 (없으면 예외 발생)
+
+		// Plan 타이틀 가져오기
+
+		// Plan 생성
+	}
+
+	/**
+	 * <pre>
 	 * 해당 플랜에 포함된 장소 리스트를 일자별로 나누어 반환
 	 * @param planId 플랜 ID
 	 * @return
