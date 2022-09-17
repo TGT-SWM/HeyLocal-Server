@@ -10,6 +10,7 @@ import com.heylocal.traveler.dto.PlanDto.*;
 import com.heylocal.traveler.exception.BadRequestException;
 import com.heylocal.traveler.exception.ForbiddenException;
 import com.heylocal.traveler.exception.NotFoundException;
+import com.heylocal.traveler.exception.code.BadRequestCode;
 import com.heylocal.traveler.exception.code.ForbiddenCode;
 import com.heylocal.traveler.exception.code.NotFoundCode;
 import com.heylocal.traveler.repository.PlaceItemRepository;
@@ -95,7 +96,7 @@ public class PlanService {
 	 * </pre>
 	 */
 	@Transactional
-	public void createPlan(long userId, long travelOnId) throws NotFoundException, ForbiddenException {
+	public void createPlan(long userId, long travelOnId) throws NotFoundException, ForbiddenException, BadRequestException {
 		// TravelOn 조회 (없으면 예외 발생)
 		Optional<TravelOn> optTravelOn = travelOnRepository.findById(travelOnId);
 		if (optTravelOn.isEmpty())
@@ -105,6 +106,10 @@ public class PlanService {
 		// 권한 확인
 		if (travelOn.getAuthor().getId() != userId)
 			throw new ForbiddenException(ForbiddenCode.NO_PERMISSION);
+
+		// 이미 플랜이 존재하는 경우 예외 발생
+		if (travelOn.getPlan() != null)
+			throw new BadRequestException(BadRequestCode.ALREADY_EXISTS, "이미 플랜이 존재합니다.");
 
 		// Plan 타이틀 가져오기
 		String regionName = travelOn.getRegion().getRegionName();
