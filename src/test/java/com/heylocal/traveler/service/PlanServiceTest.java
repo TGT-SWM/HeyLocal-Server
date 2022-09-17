@@ -13,9 +13,11 @@ import com.heylocal.traveler.dto.PlanDto.PlanListResponse;
 import com.heylocal.traveler.dto.PlanDto.PlanSchedulesRequest;
 import com.heylocal.traveler.dto.PlanDto.ScheduleRequest;
 import com.heylocal.traveler.exception.BadRequestException;
+import com.heylocal.traveler.exception.ForbiddenException;
 import com.heylocal.traveler.exception.NotFoundException;
 import com.heylocal.traveler.repository.PlaceRepository;
 import com.heylocal.traveler.repository.PlanRepository;
+import com.heylocal.traveler.repository.TravelOnRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -25,10 +27,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
 
-import java.time.Clock;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.ZoneOffset;
+import java.time.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -44,6 +43,9 @@ class PlanServiceTest {
 
 	@Mock
 	private PlaceRepository placeRepository;
+
+	@Mock
+	private TravelOnRepository travelOnRepository;
 
 	@Mock
 	private RegionService regionService;
@@ -136,6 +138,63 @@ class PlanServiceTest {
 				() -> Assertions.assertThat(failCaseResponse.getUpcoming()).isEmpty()
 		);
 
+	}
+
+	@Test
+	@DisplayName("플랜 생성")
+	void createPlanTest() {
+		// GIVEN - User
+		long userId = 1L;
+		long anotherUserId = userId + 1;
+		User user = User.builder()
+				.id(userId)
+				.build();
+
+		// GIVEN - TravelOn
+		long travelOnId = 1L;
+		long alreadyExistsTravelId = travelOnId + 1;
+		long notExistsTravelId = travelOnId + 2;
+
+		Region region = Region.builder()
+				.id(1L)
+				.state("서울특별시")
+				.build();
+
+		TravelOn travelOn = TravelOn.builder()
+				.id(travelOnId)
+				.author(user)
+				.plan(null)
+				.region(region)
+				.travelStartDate(LocalDate.of(2022, 10, 18))
+				.travelEndDate(LocalDate.of(2022, 10, 20))
+				.build();
+
+		TravelOn planAlreadyExists = TravelOn.builder()
+				.id(alreadyExistsTravelId)
+				.author(user)
+				.plan(new Plan())
+				.region(region)
+				.travelStartDate(LocalDate.of(2022, 10, 18))
+				.travelEndDate(LocalDate.of(2022, 10, 20))
+				.build();
+
+		// Stub
+		given(travelOnRepository.findById(travelOnId)).willReturn(Optional.of(travelOn));
+		given(travelOnRepository.findById(alreadyExistsTravelId)).willReturn(Optional.of(planAlreadyExists));
+		given(travelOnRepository.findById(notExistsTravelId)).willReturn(Optional.empty());
+
+
+		// WHEN - THEN
+		assertAll(
+				// 성공 케이스 - 1 - 플랜 생성 성공
+				() -> assertDoesNotThrow(() -> planService.createPlan(userId, travelOnId)),
+				// 실패 케이스 - 1 - 생성 권한 없음
+				() -> assertThrows(ForbiddenException.class, () -> planService.createPlan(anotherUserId, travelOnId)),
+				// 실패 케이스 - 2 - 이미 존재하는 플랜 생성
+				() -> assertThrows(BadRequestException.class, () -> planService.createPlan(userId, alreadyExistsTravelId)),
+				// 실패 케이스 - 3 - 여행 On이 존재하지 않음
+				() -> assertThrows(NotFoundException.class, () -> planService.createPlan(userId, notExistsTravelId))
+		);
 	}
 
 	@Test
