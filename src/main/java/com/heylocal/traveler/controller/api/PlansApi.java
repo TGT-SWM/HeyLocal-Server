@@ -2,7 +2,6 @@ package com.heylocal.traveler.controller.api;
 
 import com.heylocal.traveler.dto.ErrorMessageResponse;
 import com.heylocal.traveler.dto.LoginUser;
-import com.heylocal.traveler.dto.PlanDto;
 import com.heylocal.traveler.dto.PlanDto.*;
 import com.heylocal.traveler.exception.BadRequestException;
 import com.heylocal.traveler.exception.ForbiddenException;
@@ -49,7 +48,8 @@ public interface PlansApi {
 	@PutMapping("/{planId}")
 	void updatePlan(
 			@Parameter(in = ParameterIn.PATH, description = "플랜 ID", required = true) @PathVariable long planId,
-			@Parameter(in = ParameterIn.DEFAULT, description = "플랜 정보", required = true) @RequestBody PlanUpdateRequest request
+			@Parameter(in = ParameterIn.DEFAULT, description = "플랜 정보", required = true) @RequestBody PlanUpdateRequest request,
+			@ApiIgnore LoginUser loginUser
 	) throws ForbiddenException, NotFoundException;
 
 	@Operation(summary = "플랜 삭제", description = "플랜을 삭제합니다.", tags = {"Plans"})

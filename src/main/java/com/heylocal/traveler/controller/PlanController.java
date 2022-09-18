@@ -2,7 +2,6 @@ package com.heylocal.traveler.controller;
 
 import com.heylocal.traveler.controller.api.PlansApi;
 import com.heylocal.traveler.dto.LoginUser;
-import com.heylocal.traveler.dto.PlanDto;
 import com.heylocal.traveler.dto.PlanDto.*;
 import com.heylocal.traveler.exception.BadRequestException;
 import com.heylocal.traveler.exception.ForbiddenException;
@@ -55,10 +54,11 @@ public class PlanController implements PlansApi {
 	 * 플랜을 수정합니다.
 	 * @param planId 플랜 ID
 	 * @param request 플랜 정보
+	 * @param loginUser 로그인 사용자 정보
 	 * </pre>
 	 */
 	@Override
-	public void updatePlan(long planId, PlanUpdateRequest request) throws ForbiddenException, NotFoundException {
+	public void updatePlan(long planId, PlanUpdateRequest request, LoginUser loginUser) throws ForbiddenException, NotFoundException {
 
 	}
 
