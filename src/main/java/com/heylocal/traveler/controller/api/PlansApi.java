@@ -41,7 +41,7 @@ public interface PlansApi {
 
 	@Operation(summary = "플랜 수정", description = "플랜을 수정합니다.", tags = {"Plans"})
 	@ApiResponses(value = {
-			@ApiResponse(responseCode = "201", description = "플랜 등록 성공"),
+			@ApiResponse(responseCode = "200", description = "플랜 수정 성공"),
 			@ApiResponse(responseCode = "403", description = "- `NO_PERMISSION`: 권한이 없는 경우", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessageResponse.class))),
 			@ApiResponse(responseCode = "404", description = "- `NO_INFO`: 플랜이 존재하지 않는 경우", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessageResponse.class)))
 	})
@@ -53,10 +53,16 @@ public interface PlansApi {
 	) throws ForbiddenException, NotFoundException;
 
 	@Operation(summary = "플랜 삭제", description = "플랜을 삭제합니다.", tags = {"Plans"})
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "플랜 삭제 성공"),
+			@ApiResponse(responseCode = "403", description = "- `NO_PERMISSION`: 권한이 없는 경우", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessageResponse.class))),
+			@ApiResponse(responseCode = "404", description = "- `NO_INFO`: 플랜이 존재하지 않는 경우", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessageResponse.class)))
+	})
 	@DeleteMapping("/{planId}")
 	void deletePlan(
-			@Parameter(in = ParameterIn.PATH, description = "플랜 ID", required = true) @PathVariable long planId
-	);
+			@Parameter(in = ParameterIn.PATH, description = "플랜 ID", required = true) @PathVariable long planId,
+			@ApiIgnore LoginUser loginUser
+	) throws ForbiddenException, NotFoundException;
 
 	/*
 	 * 아래는 플랜 내 장소들에 대한 컨트롤러입니다.

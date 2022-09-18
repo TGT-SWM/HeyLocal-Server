@@ -67,10 +67,11 @@ public class PlanController implements PlansApi {
 	 * <pre>
 	 * 플랜을 삭제합니다.
 	 * @param planId 플랜 ID
+	 * @param loginUser 로그인 사용자 정보
 	 * </pre>
 	 */
 	@Override
-	public void deletePlan(long planId) {
+	public void deletePlan(long planId, LoginUser loginUser) throws ForbiddenException, NotFoundException {
 
 	}
 
