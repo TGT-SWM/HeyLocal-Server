@@ -132,6 +132,7 @@ public class PlanService {
 
 		// Plan 생성하여 저장
 		Plan plan = Plan.builder()
+				.title(planTitle)
 				.travelOn(travelOn)
 				.user(travelOn.getAuthor())
 				.build();

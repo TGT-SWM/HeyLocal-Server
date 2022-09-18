@@ -29,6 +29,9 @@ public class Plan extends BaseTimeEntity {
   @GeneratedValue
   private Long id;
 
+  @Column(nullable = false)
+  String title;
+
   @OneToOne(fetch = FetchType.LAZY)
   private TravelOn travelOn;
 
