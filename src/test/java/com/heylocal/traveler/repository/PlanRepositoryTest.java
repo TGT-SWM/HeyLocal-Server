@@ -116,6 +116,7 @@ class PlanRepositoryTest {
 	 */
 	private Plan createPlan(User user, TravelOn travelOn) {
 		return Plan.builder()
+				.title("TITLE")
 				.travelOn(travelOn)
 				.user(user)
 				.build();

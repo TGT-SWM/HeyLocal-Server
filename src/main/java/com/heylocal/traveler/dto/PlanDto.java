@@ -21,8 +21,18 @@ public class PlanDto {
 	@AllArgsConstructor
 	@Builder
 	@Schema(description = "스케줄 생성을 위한 요청 DTO")
-	public static class PlanRequest {
+	public static class PlanCreateRequest {
 		long travelOnId;
+	}
+
+	@Getter
+	@Setter
+	@NoArgsConstructor
+	@AllArgsConstructor
+	@Builder
+	@Schema(description = "스케줄 수정을 위한 요청 DTO")
+	public static class PlanUpdateRequest {
+		String title;
 	}
 
 	@Getter

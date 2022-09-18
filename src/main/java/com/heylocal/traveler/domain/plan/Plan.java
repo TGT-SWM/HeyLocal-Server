@@ -29,6 +29,9 @@ public class Plan extends BaseTimeEntity {
   @GeneratedValue
   private Long id;
 
+  @Column(nullable = false)
+  String title;
+
   @OneToOne(fetch = FetchType.LAZY)
   private TravelOn travelOn;
 
@@ -54,5 +57,9 @@ public class Plan extends BaseTimeEntity {
     dayScheduleList.add(daySchedule);
     if (daySchedule.getPlan() != this)
       daySchedule.register(this);
+  }
+
+  public void updateTitle(String title) {
+    this.title = title;
   }
 }
