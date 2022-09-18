@@ -2,17 +2,14 @@ package com.heylocal.traveler.controller;
 
 import com.heylocal.traveler.controller.api.PlansApi;
 import com.heylocal.traveler.dto.LoginUser;
-import com.heylocal.traveler.dto.PlanDto.PlanListResponse;
-import com.heylocal.traveler.dto.PlanDto.PlanPlacesResponse;
-import com.heylocal.traveler.dto.PlanDto.PlanRequest;
-import com.heylocal.traveler.dto.PlanDto.PlanSchedulesRequest;
+import com.heylocal.traveler.dto.PlanDto;
+import com.heylocal.traveler.dto.PlanDto.*;
 import com.heylocal.traveler.exception.BadRequestException;
 import com.heylocal.traveler.exception.ForbiddenException;
 import com.heylocal.traveler.exception.NotFoundException;
 import com.heylocal.traveler.service.PlanService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -47,7 +44,7 @@ public class PlanController implements PlansApi {
 	 * </pre>
 	 */
 	@Override
-	public void createPlan(PlanRequest request, LoginUser loginUser) throws NotFoundException, ForbiddenException, BadRequestException {
+	public void createPlan(PlanCreateRequest request, LoginUser loginUser) throws NotFoundException, ForbiddenException, BadRequestException {
 		long userId = loginUser.getId();
 		long travelOnId = request.getTravelOnId();
 		planService.createPlan(userId, travelOnId);
@@ -61,7 +58,7 @@ public class PlanController implements PlansApi {
 	 * </pre>
 	 */
 	@Override
-	public void updatePlan(long planId, PlanRequest request) {
+	public void updatePlan(long planId, PlanUpdateRequest request) throws ForbiddenException, NotFoundException {
 
 	}
 
