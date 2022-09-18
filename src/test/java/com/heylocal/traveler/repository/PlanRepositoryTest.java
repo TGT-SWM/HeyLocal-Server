@@ -18,7 +18,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 @Import({ PlanRepository.class })
@@ -44,6 +44,24 @@ class PlanRepositoryTest {
 				() -> Assertions.assertThat(savedPlan).isSameAs(plan),
 				// 성공 케이스 - 2 - 엔티티의 PK가 잘 generated 되었는지
 				() -> Assertions.assertThat(savedPlan.getId()).isNotNull()
+		);
+	}
+
+	@Test
+	@DisplayName("플랜 삭제")
+	void removeTest() {
+		// GIVEN
+		Plan plan = createPlan();
+		em.persist(plan);
+		long planId = plan.getId();
+
+		// WHEN
+		planRepository.remove(plan);
+
+		// THEN
+		assertAll(
+				// 성공 케이스 - 1 - 플랜 삭제 성공
+				() -> Assertions.assertThat(em.find(Plan.class, planId)).isNull()
 		);
 	}
 
