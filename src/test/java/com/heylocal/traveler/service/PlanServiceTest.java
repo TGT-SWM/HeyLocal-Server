@@ -9,8 +9,10 @@ import com.heylocal.traveler.domain.plan.list.PlaceItem;
 import com.heylocal.traveler.domain.travelon.TravelOn;
 import com.heylocal.traveler.domain.user.User;
 import com.heylocal.traveler.dto.PlaceDto.PlaceItemRequest;
+import com.heylocal.traveler.dto.PlanDto;
 import com.heylocal.traveler.dto.PlanDto.PlanListResponse;
 import com.heylocal.traveler.dto.PlanDto.PlanSchedulesRequest;
+import com.heylocal.traveler.dto.PlanDto.PlanUpdateRequest;
 import com.heylocal.traveler.dto.PlanDto.ScheduleRequest;
 import com.heylocal.traveler.exception.BadRequestException;
 import com.heylocal.traveler.exception.ForbiddenException;
@@ -195,6 +197,45 @@ class PlanServiceTest {
 				// 실패 케이스 - 3 - 여행 On이 존재하지 않음
 				() -> assertThrows(NotFoundException.class, () -> planService.createPlan(userId, notExistsTravelId))
 		);
+	}
+
+	@Test
+	@DisplayName("플랜 수정")
+	void updatePlanTest() throws ForbiddenException, NotFoundException {
+		// GIVEN
+		long userId = 1L;
+		long anotherUserId = userId + 1;
+		User user = User.builder()
+				.id(userId)
+				.build();
+
+		long planId = 1L;
+		long anotherPlanId = planId + 1;
+		Plan plan = Plan.builder()
+				.id(planId)
+				.title("Old Title")
+				.user(user)
+				.build();
+
+		given(planRepository.findById(planId)).willReturn(Optional.of(plan)); // 플랜이 있는 경우
+		given(planRepository.findById(anotherPlanId)).willReturn(Optional.empty()); // 플랜이 없는 경우
+
+		// WHEN
+		String newTitle = "New Title";
+		PlanUpdateRequest request = new PlanUpdateRequest(newTitle);
+		planService.updatePlan(planId, userId, request);
+
+		// THEN
+		assertAll(
+				// 성공 케이스 - 1 - 플랜 수정 완료
+				() -> Assertions.assertThat(plan.getTitle()).isEqualTo(newTitle),
+				// 실패 케이스 - 1 - 수정하고자 하는 플랜 자체가 존재하지 않는 경우
+				() -> assertThrows(NotFoundException.class, () -> planService.updatePlan(anotherPlanId, userId, request)),
+				// 실패 케이스 - 2 - 수정 권한이 없는 사용자가 플랜 수정을 시도하는 경우
+				() -> assertThrows(ForbiddenException.class, () -> planService.updatePlan(planId, anotherUserId, request))
+		);
+
+
 	}
 
 	@Test
