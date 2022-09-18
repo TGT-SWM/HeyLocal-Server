@@ -144,6 +144,7 @@ public class PlanService {
 	 * <pre>
 	 * 플랜을 수정합니다.
 	 * @param planId 플랜 ID
+	 * @param userId 로그인 사용자 ID
 	 * @param request 수정하는 플랜 정보
 	 * </pre>
 	 */
@@ -162,6 +163,30 @@ public class PlanService {
 		// 플랜 정보 수정
 		String title = request.getTitle();
 		plan.updateTitle(title);
+	}
+
+	/**
+	 * <pre>
+	 * 플랜을 삭제합니다.
+	 * @param planId 플랜 ID
+	 * @param userId 로그인 사용자 ID
+	 * </pre>
+	 */
+	@Transactional
+	public void deletePlan(long planId, long userId) throws ForbiddenException, NotFoundException {
+		// 플랜 조회 (없으면 예외 발생)
+		Optional<Plan> optPlan = planRepository.findById(planId);
+		if (optPlan.isEmpty())
+			throw new NotFoundException(NotFoundCode.NO_INFO, "플랜이 존재하지 않습니다.");
+		Plan plan = optPlan.get();
+
+		// 삭제 권한 검증
+		if (plan.getUser().getId() != userId)
+			throw new ForbiddenException(ForbiddenCode.NO_PERMISSION, "삭제 권한이 없습니다.");
+
+		// 플랜 삭제
+		plan.releaseTravelOn();
+		planRepository.remove(plan);
 	}
 
 	/**

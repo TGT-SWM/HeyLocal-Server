@@ -72,7 +72,8 @@ public class PlanController implements PlansApi {
 	 */
 	@Override
 	public void deletePlan(long planId, LoginUser loginUser) throws ForbiddenException, NotFoundException {
-
+		long userId = loginUser.getId();
+		planService.deletePlan(planId, userId);
 	}
 
 	/**
