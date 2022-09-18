@@ -59,7 +59,8 @@ public class PlanController implements PlansApi {
 	 */
 	@Override
 	public void updatePlan(long planId, PlanUpdateRequest request, LoginUser loginUser) throws ForbiddenException, NotFoundException {
-
+		long userId = loginUser.getId();
+		planService.updatePlan(planId, userId, request);
 	}
 
 	/**

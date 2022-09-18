@@ -105,7 +105,7 @@ public class PlanService {
 
 		// 권한 확인
 		if (travelOn.getAuthor().getId() != userId)
-			throw new ForbiddenException(ForbiddenCode.NO_PERMISSION);
+			throw new ForbiddenException(ForbiddenCode.NO_PERMISSION, "등록 권한이 없습니다.");
 
 		// 이미 플랜이 존재하는 경우 예외 발생
 		if (travelOn.getPlan() != null)
@@ -138,6 +138,30 @@ public class PlanService {
 				.build();
 		daySchedules.forEach(plan::addDaySchedule); // DaySchedule 추가
 		planRepository.save(plan); // 저장
+	}
+
+	/**
+	 * <pre>
+	 * 플랜을 수정합니다.
+	 * @param planId 플랜 ID
+	 * @param request 수정하는 플랜 정보
+	 * </pre>
+	 */
+	@Transactional
+	public void updatePlan(long planId, long userId, PlanUpdateRequest request) throws ForbiddenException, NotFoundException {
+		// 플랜 조회 (없으면 예외 발생)
+		Optional<Plan> optPlan = planRepository.findById(planId);
+		if (optPlan.isEmpty())
+			throw new NotFoundException(NotFoundCode.NO_INFO, "플랜이 존재하지 않습니다.");
+		Plan plan = optPlan.get();
+
+		// 수정 권한 검증
+		if (plan.getUser().getId() != userId)
+			throw new ForbiddenException(ForbiddenCode.NO_PERMISSION, "수정 권한이 없습니다.");
+
+		// 플랜 정보 수정
+		String title = request.getTitle();
+		plan.updateTitle(title);
 	}
 
 	/**

@@ -58,4 +58,8 @@ public class Plan extends BaseTimeEntity {
     if (daySchedule.getPlan() != this)
       daySchedule.register(this);
   }
+
+  public void updateTitle(String title) {
+    this.title = title;
+  }
 }
