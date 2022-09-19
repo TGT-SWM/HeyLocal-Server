@@ -137,10 +137,16 @@ public interface TravelOnsApi {
     ) throws BadRequestException, NotFoundException, ForbiddenException;
 
     @Operation(summary = "답변 삭제", description = "답변을 삭제합니다.", tags = {"TravelOns"})
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "답변 삭제 성공 시"),
+        @ApiResponse(responseCode = "403", description = "- `NO_PERMISSION`: 삭제할 수 없을 때", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessageResponse.class))),
+        @ApiResponse(responseCode = "404", description = "- `NO_INFO`: 존재하지 않는 정보일 때", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessageResponse.class)))
+    })
     @DeleteMapping("/{travelOnId}/opinions/{opinionId}")
-    ResponseEntity<Void> deleteOpinion(
+    void deleteOpinion(
             @Parameter(in = ParameterIn.PATH, description = "여행 On ID", required = true) @PathVariable long travelOnId,
-            @Parameter(in = ParameterIn.PATH, description = "답변 ID", required = true) @PathVariable long opinionId
-    );
+            @Parameter(in = ParameterIn.PATH, description = "답변 ID", required = true) @PathVariable long opinionId,
+            @ApiIgnore LoginUser loginUser
+    ) throws NotFoundException, ForbiddenException;
 }
 

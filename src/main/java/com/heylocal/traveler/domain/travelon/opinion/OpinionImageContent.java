@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 /**
  * 답변에 포함되는 이미지
@@ -33,9 +34,17 @@ public class OpinionImageContent extends BaseTimeEntity {
 
   public void setOpinion(Opinion opinion) {
     this.opinion = opinion;
+
     if (!opinion.getOpinionImageContentList().contains(this)) {
       opinion.setOpinionImageContentList(this);
     }
+  }
+
+  public void releaseOpinion() {
+    if (this.opinion != null) {
+      this.opinion.removeOpinionImageContent(this);
+    }
+    this.opinion = null;
   }
 
   /**
