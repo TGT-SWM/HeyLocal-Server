@@ -12,7 +12,6 @@ import com.heylocal.traveler.domain.travelon.opinion.Opinion;
 import com.heylocal.traveler.domain.user.User;
 import com.heylocal.traveler.domain.user.UserRole;
 import com.heylocal.traveler.dto.LoginUser;
-import com.heylocal.traveler.dto.OpinionDto;
 import com.heylocal.traveler.exception.BadRequestException;
 import com.heylocal.traveler.exception.ForbiddenException;
 import com.heylocal.traveler.exception.NotFoundException;
@@ -31,8 +30,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static com.heylocal.traveler.dto.OpinionDto.*;
 import static com.heylocal.traveler.dto.OpinionDto.OpinionRequest;
+import static com.heylocal.traveler.dto.OpinionDto.OpinionResponse;
 import static com.heylocal.traveler.dto.PlaceDto.PlaceRequest;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.AdditionalMatchers.not;

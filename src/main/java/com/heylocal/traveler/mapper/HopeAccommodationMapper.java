@@ -2,7 +2,6 @@ package com.heylocal.traveler.mapper;
 
 import com.heylocal.traveler.domain.travelon.TravelOn;
 import com.heylocal.traveler.domain.travelon.list.AccommodationType;
-import com.heylocal.traveler.domain.travelon.list.DrinkType;
 import com.heylocal.traveler.domain.travelon.list.HopeAccommodation;
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;

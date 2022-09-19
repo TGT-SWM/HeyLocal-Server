@@ -2,11 +2,10 @@ package com.heylocal.traveler.mapper;
 
 import com.heylocal.traveler.domain.travelon.TravelOn;
 import com.heylocal.traveler.domain.travelon.TravelTypeGroup;
-import com.heylocal.traveler.dto.TravelTypeGroupDto;
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
 
-import static com.heylocal.traveler.dto.TravelTypeGroupDto.*;
+import static com.heylocal.traveler.dto.TravelTypeGroupDto.TravelTypeGroupRequest;
 import static com.heylocal.traveler.dto.TravelTypeGroupDto.TravelTypeGroupResponse;
 
 @Mapper(builder = @Builder(disableBuilder = true))

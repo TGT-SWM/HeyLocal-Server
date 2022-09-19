@@ -1,6 +1,9 @@
 package com.heylocal.traveler.code.mapstruct.enums;
 
-import org.mapstruct.*;
+import org.mapstruct.Mapper;
+import org.mapstruct.MappingConstants;
+import org.mapstruct.ValueMapping;
+import org.mapstruct.ValueMappings;
 import org.mapstruct.factory.Mappers;
 
 @Mapper

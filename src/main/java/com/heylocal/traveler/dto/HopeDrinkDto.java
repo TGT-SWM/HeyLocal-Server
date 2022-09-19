@@ -1,7 +1,6 @@
 package com.heylocal.traveler.dto;
 
 import com.heylocal.traveler.domain.travelon.list.DrinkType;
-import com.heylocal.traveler.domain.travelon.list.HopeDrink;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 

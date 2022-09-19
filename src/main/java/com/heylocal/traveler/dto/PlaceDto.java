@@ -14,7 +14,7 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 
-import static com.heylocal.traveler.dto.RegionDto.*;
+import static com.heylocal.traveler.dto.RegionDto.RegionResponse;
 
 public class PlaceDto {
 

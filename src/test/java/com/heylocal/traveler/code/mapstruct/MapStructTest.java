@@ -15,7 +15,6 @@ import com.heylocal.traveler.code.mapstruct.expression.ExpressionMapper;
 import com.heylocal.traveler.code.mapstruct.inherit.InheritMapper;
 import com.heylocal.traveler.code.mapstruct.inherit.MyDto;
 import com.heylocal.traveler.code.mapstruct.inherit.MyEntity;
-import com.heylocal.traveler.code.mapstruct.inherit.NoInheritMapper;
 import com.heylocal.traveler.code.mapstruct.multi.MultiEntityDto;
 import com.heylocal.traveler.code.mapstruct.multi.MultiEntityMapper;
 import com.heylocal.traveler.code.mapstruct.multi.OtherEntity;
@@ -28,7 +27,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;

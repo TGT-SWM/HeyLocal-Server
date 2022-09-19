@@ -2,13 +2,13 @@ package com.heylocal.traveler.mapper;
 
 import com.heylocal.traveler.domain.plan.DaySchedule;
 import com.heylocal.traveler.domain.plan.Plan;
-import com.heylocal.traveler.dto.PlanDto;
 import org.mapstruct.Builder;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
-import static com.heylocal.traveler.dto.PlanDto.*;
+import static com.heylocal.traveler.dto.PlanDto.PlanPlacesResponse;
+import static com.heylocal.traveler.dto.PlanDto.PlanResponse;
 
 @Mapper(uses = {PlaceMapper.class}, builder = @Builder(disableBuilder = true))
 public interface PlanMapper {

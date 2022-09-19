@@ -2,7 +2,10 @@ package com.heylocal.traveler.mapper;
 
 import com.heylocal.traveler.domain.Region;
 import com.heylocal.traveler.domain.travelon.TravelOn;
-import com.heylocal.traveler.domain.travelon.list.*;
+import com.heylocal.traveler.domain.travelon.list.AccommodationType;
+import com.heylocal.traveler.domain.travelon.list.DrinkType;
+import com.heylocal.traveler.domain.travelon.list.FoodType;
+import com.heylocal.traveler.domain.travelon.list.MemberType;
 import com.heylocal.traveler.domain.user.User;
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
@@ -10,7 +13,7 @@ import org.mapstruct.factory.Mappers;
 import java.util.Set;
 
 import static com.heylocal.traveler.dto.TravelOnDto.*;
-import static com.heylocal.traveler.dto.TravelTypeGroupDto.*;
+import static com.heylocal.traveler.dto.TravelTypeGroupDto.TravelTypeGroupRequest;
 
 @Mapper(uses = {RegionMapper.class, UserMapper.class, TravelMemberMapper.class, HopeAccommodationMapper.class, HopeDrinkMapper.class, HopeFoodMapper.class, TravelTypeGroupMapper.class},
     builder = @Builder(disableBuilder = true)

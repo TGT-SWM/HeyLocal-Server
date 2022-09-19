@@ -9,7 +9,6 @@ import com.heylocal.traveler.domain.travelon.list.DrinkType;
 import com.heylocal.traveler.domain.travelon.list.FoodType;
 import com.heylocal.traveler.domain.travelon.list.MemberType;
 import com.heylocal.traveler.dto.LoginUser;
-import com.heylocal.traveler.dto.OpinionDto;
 import com.heylocal.traveler.exception.BadRequestException;
 import com.heylocal.traveler.exception.ForbiddenException;
 import com.heylocal.traveler.exception.NotFoundException;

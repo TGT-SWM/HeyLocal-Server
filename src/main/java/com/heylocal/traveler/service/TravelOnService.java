@@ -28,7 +28,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static com.heylocal.traveler.dto.TravelOnDto.*;
-import static com.heylocal.traveler.dto.TravelTypeGroupDto.*;
+import static com.heylocal.traveler.dto.TravelTypeGroupDto.TravelTypeGroupRequest;
 
 @Slf4j
 @Service

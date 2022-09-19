@@ -2,7 +2,6 @@ package com.heylocal.traveler.code.mapstruct;
 
 import com.heylocal.traveler.code.mapstruct.bean.BeanMapper;
 import com.heylocal.traveler.code.mapstruct.dependent.EntityDto;
-import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

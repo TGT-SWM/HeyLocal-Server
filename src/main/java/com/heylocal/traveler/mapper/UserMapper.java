@@ -7,7 +7,8 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
-import static com.heylocal.traveler.dto.UserDto.*;
+import static com.heylocal.traveler.dto.UserDto.UserProfileResponse;
+import static com.heylocal.traveler.dto.UserDto.UserResponse;
 
 @Mapper(builder = @Builder(disableBuilder = true))
 public interface UserMapper {

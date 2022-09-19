@@ -3,7 +3,6 @@ package com.heylocal.traveler.dto;
 import com.heylocal.traveler.domain.travelon.ActivityTasteType;
 import com.heylocal.traveler.domain.travelon.PlaceTasteType;
 import com.heylocal.traveler.domain.travelon.SnsTasteType;
-import com.heylocal.traveler.domain.travelon.TravelTypeGroup;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
