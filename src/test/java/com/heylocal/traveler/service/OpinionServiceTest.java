@@ -481,6 +481,47 @@ class OpinionServiceTest {
     );
   }
 
+  @Test
+  @DisplayName("답변 삭제")
+  void removeOpinionTest() {
+    //GIVEN
+    Region regionOfTravelOn = getRegionA();
+    long savedTravelOnId = 2L;
+    TravelOn savedTravelOn = getTravelOn(savedTravelOnId, regionOfTravelOn);
+    User opinionAuthor = User.builder().id(3L).accountId("myAccountId").nickname("myNickname").password("myPassword").userRole(UserRole.TRAVELER).build();
+    long placeId = 4L;
+    PlaceRequest placeRequest = getPlaceRequest(placeId);
+    String addressOfPlace = placeRequest.getAddress();
+    Place placeOfSavedOpinion = Place.builder()
+        .id(placeId)
+        .region(regionOfTravelOn)
+        .address(addressOfPlace)
+        .build();
+    long wrongOpinionId = 1L;
+    long savedOpinionId = 2L;
+    Opinion opinion = Opinion.builder()
+        .id(savedOpinionId)
+        .travelOn(savedTravelOn)
+        .author(opinionAuthor)
+        .region(regionOfTravelOn)
+        .place(placeOfSavedOpinion)
+        .build();
+
+    //Mock 행동 정의 - opinionRepository
+    willReturn(Optional.of(opinion)).given(opinionRepository).findByIdAndTravelOn(savedOpinionId, savedTravelOnId);
+    willReturn(Optional.empty()).given(opinionRepository).findByIdAndTravelOn(wrongOpinionId, savedTravelOnId);
+
+    //WHEN
+
+    //THEN
+    assertAll(
+        //성공 케이스 - 1
+        () -> assertDoesNotThrow(() -> opinionService.removeOpinion(savedTravelOnId, savedOpinionId)),
+        //실패 케이스 - 1
+        () -> assertThrows(NotFoundException.class, () -> opinionService.removeOpinion(savedTravelOnId, wrongOpinionId))
+    );
+  }
+
   private OpinionRequest getOpinionRequest(PlaceRequest place) {
     return OpinionRequest.builder()
         .description("myDescription")
