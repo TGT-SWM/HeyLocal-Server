@@ -8,10 +8,7 @@ import com.heylocal.traveler.domain.token.AccessToken;
 import com.heylocal.traveler.domain.token.RefreshToken;
 import com.heylocal.traveler.domain.travelon.TravelOn;
 import com.heylocal.traveler.domain.travelon.opinion.Opinion;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
@@ -27,6 +24,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
+@Setter
 @SuperBuilder
 public class User extends BaseTimeEntity {
   @Id @GeneratedValue
@@ -101,7 +99,7 @@ public class User extends BaseTimeEntity {
   public void addOpinion(Opinion opinion) {
     this.opinionList.add(opinion);
     if (opinion.getAuthor() != this) {
-      opinion.registerAuthor(this);
+      opinion.setAuthor(this);
     }
   }
 }

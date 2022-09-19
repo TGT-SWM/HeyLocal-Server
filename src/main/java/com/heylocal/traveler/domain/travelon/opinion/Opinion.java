@@ -5,10 +5,7 @@ import com.heylocal.traveler.domain.Region;
 import com.heylocal.traveler.domain.place.Place;
 import com.heylocal.traveler.domain.travelon.TravelOn;
 import com.heylocal.traveler.domain.user.User;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
@@ -24,6 +21,7 @@ import java.util.Objects;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
+@Setter
 @SuperBuilder
 public class Opinion extends BaseTimeEntity {
   @Id @GeneratedValue
@@ -96,38 +94,38 @@ public class Opinion extends BaseTimeEntity {
   @OneToMany(mappedBy = "opinion", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY) //Opinion 이 삭제되어도, S3에 저장된 경로를 알아야하므로 Cascade를 Persist만 설정
   private List<OpinionImageContent> opinionImageContentList = new ArrayList<>();
 
-  public void registerTravelOn(TravelOn travelOn) {
+  public void setTravelOn(TravelOn travelOn) {
     this.travelOn = travelOn;
     if (!travelOn.getOpinionList().contains(this)) {
       travelOn.addOpinion(this);
     }
   }
 
-  public void registerPlace(Place place) {
+  public void setPlace(Place place) {
     this.place = place;
     if (!place.getOpinionList().contains(this)) {
       place.addOpinion(this);
     }
   }
 
-  public void registerAuthor(User author) {
+  public void setAuthor(User author) {
     this.author = author;
     if (!author.getOpinionList().contains(this)) {
       author.addOpinion(this);
     }
   }
 
-  public void registerRegion(Region region) {
+  public void setRegion(Region region) {
     this.region = region;
     if (!region.getOpinionList().contains(this)) {
       region.addOpinion(this);
     }
   }
 
-  public void addOpinionImgContent(OpinionImageContent imgContent) {
+  public void setOpinionImageContentList(OpinionImageContent imgContent) {
     this.opinionImageContentList.add(imgContent);
     if (imgContent.getOpinion() != this) {
-      imgContent.registerOpinion(this);
+      imgContent.setOpinion(this);
     }
   }
 
@@ -137,14 +135,14 @@ public class Opinion extends BaseTimeEntity {
     if (!Objects.isNull(this.place)) {
       this.place.removeOpinion(this);
     }
-    registerPlace(newValue);
+    setPlace(newValue);
   }
 
   public void updateRegion(Region newValue) {
     if (!Objects.isNull(this.region)) {
       this.region.removeOpinion(this);
     }
-    registerRegion(newValue);
+    setRegion(newValue);
   }
 
   public void updateDescription(String newValue) {

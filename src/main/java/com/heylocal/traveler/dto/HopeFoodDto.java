@@ -1,7 +1,6 @@
 package com.heylocal.traveler.dto;
 
 import com.heylocal.traveler.domain.travelon.list.FoodType;
-import com.heylocal.traveler.domain.travelon.list.HopeFood;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
@@ -15,10 +14,5 @@ public class HopeFoodDto {
   public static class HopeFoodResponse {
     private long id;
     private FoodType type;
-
-    public HopeFoodResponse(HopeFood entity) {
-      this.id = entity.getId();
-      this.type = entity.getType();
-    }
   }
 }

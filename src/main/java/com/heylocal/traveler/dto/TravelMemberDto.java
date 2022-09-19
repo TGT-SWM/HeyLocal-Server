@@ -1,7 +1,6 @@
 package com.heylocal.traveler.dto;
 
 import com.heylocal.traveler.domain.travelon.list.MemberType;
-import com.heylocal.traveler.domain.travelon.list.TravelMember;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
@@ -15,10 +14,5 @@ public class TravelMemberDto {
   public static class TravelMemberResponse {
     private long id;
     private MemberType type;
-
-    public TravelMemberResponse(TravelMember entity) {
-      this.id = entity.getId();
-      this.type = entity.getMemberType();
-    }
   }
 }

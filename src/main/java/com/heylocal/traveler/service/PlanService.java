@@ -1,6 +1,5 @@
 package com.heylocal.traveler.service;
 
-import com.heylocal.traveler.domain.Region;
 import com.heylocal.traveler.domain.place.Place;
 import com.heylocal.traveler.domain.plan.DaySchedule;
 import com.heylocal.traveler.domain.plan.Plan;
@@ -15,13 +14,13 @@ import com.heylocal.traveler.exception.code.ForbiddenCode;
 import com.heylocal.traveler.exception.code.NotFoundCode;
 import com.heylocal.traveler.repository.PlaceItemRepository;
 import com.heylocal.traveler.repository.PlaceRepository;
+import com.heylocal.traveler.mapper.PlanMapper;
 import com.heylocal.traveler.repository.PlanRepository;
 import com.heylocal.traveler.repository.TravelOnRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.swing.text.html.Option;
 import java.time.Clock;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -58,7 +57,7 @@ public class PlanService {
 
 		// Plan -> PlanResponse 변환
 		List<PlanResponse> planResponses = plans.stream()
-				.map(PlanResponse::new)
+				.map(PlanMapper.INSTANCE::toPlanResponseDto)
 				.collect(Collectors.toList());
 
 		// 플랜을 날짜에 따라 분류
@@ -185,7 +184,7 @@ public class PlanService {
 		// List<DaySchedule> -> List<PlanPlacesReponse>
 		List<DaySchedule> daySchedules = plan.getDayScheduleList();
 		return daySchedules.stream()
-				.map(PlanPlacesResponse::new)
+				.map(PlanMapper.INSTANCE::toPlanPlacesResponseDto)
 				.collect(Collectors.toList());
 	}
 

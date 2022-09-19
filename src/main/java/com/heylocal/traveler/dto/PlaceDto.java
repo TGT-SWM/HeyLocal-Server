@@ -14,7 +14,7 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 
-import static com.heylocal.traveler.dto.RegionDto.*;
+import static com.heylocal.traveler.dto.RegionDto.RegionResponse;
 
 public class PlaceDto {
 
@@ -87,19 +87,6 @@ public class PlaceDto {
 		private RegionResponse region;
 		private String thumbnailUrl;
 		private String kakaoLink;
-
-		public PlaceResponse(Place entity) {
-			this.id = entity.getId();
-			this.category = entity.getCategory();
-			this.name = entity.getName();
-			this.roadAddress = entity.getRoadAddress();
-			this.address = entity.getAddress();
-			this.lat = entity.getLat();
-			this.lng = entity.getLng();
-			this.region = new RegionResponse(entity.getRegion());
-			this.thumbnailUrl = entity.getThumbnailUrl();
-			this.kakaoLink = entity.getLink();
-		}
 	}
 
 	@Getter
@@ -153,15 +140,5 @@ public class PlaceDto {
 		String roadAddress;
 		double lat;
 		double lng;
-
-		public PlaceItemResponse(PlaceItem placeItem) {
-			Place place = placeItem.getPlace();
-			this.id = place.getId();
-			this.name = place.getName();
-			this.address = place.getAddress();
-			this.roadAddress = place.getRoadAddress();
-			this.lat = place.getLat();
-			this.lng = place.getLng();
-		}
 	}
 }
