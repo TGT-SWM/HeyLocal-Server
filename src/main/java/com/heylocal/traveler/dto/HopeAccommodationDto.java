@@ -15,10 +15,5 @@ public class HopeAccommodationDto {
   public static class HopeAccommodationResponse {
     private long id;
     private AccommodationType type;
-
-    public HopeAccommodationResponse(HopeAccommodation entity) {
-      this.id = entity.getId();
-      this.type = entity.getType();
-    }
   }
 }

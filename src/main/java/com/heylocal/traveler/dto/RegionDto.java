@@ -30,11 +30,5 @@ public class RegionDto {
 		private long id;
 		private String state;
 		private String city;
-
-		public RegionResponse(Region entity) {
-			this.id = entity.getId();
-			this.state = entity.getState();
-			this.city = entity.getCity();
-		}
 	}
 }

@@ -12,6 +12,7 @@ import com.heylocal.traveler.exception.ForbiddenException;
 import com.heylocal.traveler.exception.NotFoundException;
 import com.heylocal.traveler.exception.code.ForbiddenCode;
 import com.heylocal.traveler.exception.code.NotFoundCode;
+import com.heylocal.traveler.mapper.OpinionMapper;
 import com.heylocal.traveler.repository.OpinionRepository;
 import com.heylocal.traveler.repository.PlaceRepository;
 import com.heylocal.traveler.repository.TravelOnRepository;
@@ -78,7 +79,7 @@ public class OpinionService {
     requestPlace = inquiryPlaceFromOpinionRequest(request);
 
     //새 답변 추가
-    newOpinion = request.toEntity(requestPlace, opinionAuthor, travelOn, regionOfRequestPlace);
+    newOpinion = OpinionMapper.INSTANCE.toEntity(request, requestPlace, opinionAuthor, travelOn, regionOfRequestPlace);
     opinionRepository.save(newOpinion);
   }
 
@@ -97,7 +98,7 @@ public class OpinionService {
     targetTravelOn = inquiryTravelOn(travelOnId);
 
     //List<Opinion> -> List<OpinionResponse>
-    result = targetTravelOn.getOpinionList().stream().map(OpinionResponse::new).collect(Collectors.toList());
+    result = targetTravelOn.getOpinionList().stream().map(OpinionMapper.INSTANCE::toResponseDto).collect(Collectors.toList());
 
     return result;
   }

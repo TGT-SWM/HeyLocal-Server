@@ -15,10 +15,5 @@ public class TravelMemberDto {
   public static class TravelMemberResponse {
     private long id;
     private MemberType type;
-
-    public TravelMemberResponse(TravelMember entity) {
-      this.id = entity.getId();
-      this.type = entity.getMemberType();
-    }
   }
 }

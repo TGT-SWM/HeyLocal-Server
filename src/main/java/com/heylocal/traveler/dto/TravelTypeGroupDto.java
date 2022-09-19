@@ -23,14 +23,6 @@ public class TravelTypeGroupDto {
     private ActivityTasteType activityTasteType;
     @NotNull
     private SnsTasteType snsTasteType;
-
-    public TravelTypeGroup toEntity() {
-      return TravelTypeGroup.builder()
-          .placeTasteType(placeTasteType)
-          .activityTasteType(activityTasteType)
-          .snsTasteType(snsTasteType)
-          .build();
-    }
   }
 
   @Getter
@@ -44,12 +36,5 @@ public class TravelTypeGroupDto {
     private PlaceTasteType placeTasteType;
     private ActivityTasteType activityTasteType;
     private SnsTasteType snsTasteType;
-
-    public TravelTypeGroupResponse(TravelTypeGroup entity) {
-      this.id = entity.getId();
-      this.placeTasteType = entity.getPlaceTasteType();
-      this.activityTasteType = entity.getActivityTasteType();
-      this.snsTasteType = entity.getSnsTasteType();
-    }
   }
 }

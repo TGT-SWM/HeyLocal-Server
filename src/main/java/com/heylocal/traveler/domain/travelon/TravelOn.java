@@ -9,10 +9,7 @@ import com.heylocal.traveler.domain.travelon.list.HopeFood;
 import com.heylocal.traveler.domain.travelon.list.TravelMember;
 import com.heylocal.traveler.domain.travelon.opinion.Opinion;
 import com.heylocal.traveler.domain.user.User;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.ColumnDefault;
 
@@ -29,6 +26,7 @@ import java.util.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
+@Setter
 @SuperBuilder
 public class TravelOn extends BaseTimeEntity {
   @Id @GeneratedValue
@@ -136,7 +134,7 @@ public class TravelOn extends BaseTimeEntity {
   public void addOpinion(Opinion opinion) {
     this.opinionList.add(opinion);
     if (opinion.getTravelOn() != this) {
-      opinion.registerTravelOn(this);
+      opinion.setTravelOn(this);
     }
   }
 

@@ -15,10 +15,5 @@ public class HopeFoodDto {
   public static class HopeFoodResponse {
     private long id;
     private FoodType type;
-
-    public HopeFoodResponse(HopeFood entity) {
-      this.id = entity.getId();
-      this.type = entity.getType();
-    }
   }
 }

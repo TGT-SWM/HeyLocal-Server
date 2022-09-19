@@ -13,6 +13,8 @@ import com.heylocal.traveler.exception.ForbiddenException;
 import com.heylocal.traveler.exception.NotFoundException;
 import com.heylocal.traveler.exception.code.ForbiddenCode;
 import com.heylocal.traveler.exception.code.NotFoundCode;
+import com.heylocal.traveler.mapper.TravelOnMapper;
+import com.heylocal.traveler.mapper.TravelTypeGroupMapper;
 import com.heylocal.traveler.repository.RegionRepository;
 import com.heylocal.traveler.repository.TravelOnRepository;
 import com.heylocal.traveler.repository.UserRepository;
@@ -26,6 +28,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static com.heylocal.traveler.dto.TravelOnDto.*;
+import static com.heylocal.traveler.dto.TravelTypeGroupDto.*;
 
 @Slf4j
 @Service
@@ -52,7 +55,7 @@ public class TravelOnService {
     region = regionRepository.findById(request.getRegionId()).orElseThrow(
         () -> new NotFoundException(NotFoundCode.NO_INFO, "존재하지 않는 Region ID 입니다.")
     );
-    travelOn = request.toEntity(author, region);
+    travelOn = TravelOnMapper.INSTANCE.toEntity(request, author, region);
     travelOnRepository.saveTravelOn(travelOn);
   }
 
@@ -77,7 +80,7 @@ public class TravelOnService {
 
     //List<TravelOn> -> List<TravelOnSimpleResponse>
     response = travelOnList.stream()
-        .map(TravelOnSimpleResponse::new)
+        .map(TravelOnMapper.INSTANCE::toTravelOnSimpleResponseDto)
         .collect(Collectors.toList());
 
     return response;
@@ -97,7 +100,7 @@ public class TravelOnService {
     travelOn = travelOnRepository.findById(travelOnId).orElseThrow(
         () -> new NotFoundException(NotFoundCode.NO_INFO, "존재하지 않는 여행On ID 입니다.")
     );
-    response = new TravelOnResponse(travelOn);
+    response = TravelOnMapper.INSTANCE.toTravelOnResponseDto(travelOn);
 
     return response;
   }
@@ -179,7 +182,8 @@ public class TravelOnService {
   }
 
   private void updateTravelTypeGroup(TravelOnRequest request, TravelOn originTravelOn) {
-    TravelTypeGroup travelTypeGroup = request.getTravelTypeGroup().toEntity();
+    TravelTypeGroupRequest travelTypeGroupRequest = request.getTravelTypeGroup();
+    TravelTypeGroup travelTypeGroup = TravelTypeGroupMapper.INSTANCE.toEntity(travelTypeGroupRequest);
     travelTypeGroup.registerAt(originTravelOn);
     originTravelOn.updateTravelTypeGroup(travelTypeGroup);
   }

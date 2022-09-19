@@ -15,10 +15,5 @@ public class HopeDrinkDto {
   public static class HopeDrinkResponse {
     private long id;
     private DrinkType type;
-
-    public HopeDrinkResponse(HopeDrink entity) {
-      this.id = entity.getId();
-      this.type = entity.getType();
-    }
   }
 }

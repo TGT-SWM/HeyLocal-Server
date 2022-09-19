@@ -31,10 +31,10 @@ public class OpinionImageContent extends BaseTimeEntity {
   @Column(nullable = false)
   private ImageContentType imageContentType;
 
-  public void registerOpinion(Opinion opinion) {
+  public void setOpinion(Opinion opinion) {
     this.opinion = opinion;
     if (!opinion.getOpinionImageContentList().contains(this)) {
-      opinion.addOpinionImgContent(this);
+      opinion.setOpinionImageContentList(this);
     }
   }
 

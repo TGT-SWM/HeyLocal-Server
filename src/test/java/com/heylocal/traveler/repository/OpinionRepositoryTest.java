@@ -144,7 +144,7 @@ class OpinionRepositoryTest {
         .costPerformance(EvaluationDegree.GOOD)
         .build();
 
-    opinion.registerTravelOn(travelOn);
+    opinion.setTravelOn(travelOn);
 
     return opinion;
   }

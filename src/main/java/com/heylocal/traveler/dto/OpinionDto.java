@@ -1,11 +1,9 @@
 package com.heylocal.traveler.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.heylocal.traveler.domain.Region;
-import com.heylocal.traveler.domain.place.Place;
-import com.heylocal.traveler.domain.travelon.TravelOn;
-import com.heylocal.traveler.domain.travelon.opinion.*;
-import com.heylocal.traveler.domain.user.User;
+import com.heylocal.traveler.domain.travelon.opinion.CafeMoodType;
+import com.heylocal.traveler.domain.travelon.opinion.CoffeeType;
+import com.heylocal.traveler.domain.travelon.opinion.EvaluationDegree;
+import com.heylocal.traveler.domain.travelon.opinion.RestaurantMoodType;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -13,12 +11,8 @@ import lombok.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
-import static com.heylocal.traveler.domain.travelon.opinion.OpinionImageContent.*;
-import static com.heylocal.traveler.dto.OpinionImageContentDto.OpinionImageContentResponse;
 import static com.heylocal.traveler.dto.PlaceDto.PlaceRequest;
 import static com.heylocal.traveler.dto.PlaceDto.PlaceResponse;
 import static com.heylocal.traveler.dto.UserDto.UserResponse;
@@ -89,90 +83,6 @@ public class OpinionDto {
 
 		@ApiModelProperty("조식이 나오나요")
 		private Boolean hasBreakFast;
-
-		public Opinion toEntity(Place place, User author, TravelOn travelOn, Region region) {
-			Opinion opinion = Opinion.builder()
-					.description(description)
-					.facilityCleanliness(facilityCleanliness)
-					.costPerformance(costPerformance)
-					.canParking(canParking)
-					.waiting(waiting)
-					.restaurantMoodType(restaurantMoodType)
-					.recommendFoodDescription(recommendFoodDescription)
-					.coffeeType(coffeeType)
-					.cafeMoodType(cafeMoodType)
-					.recommendToDo(recommendToDo)
-					.recommendSnack(recommendSnack)
-					.photoSpotDescription(photoSpotDescription)
-					.streetNoise(streetNoise)
-					.deafening(deafening)
-					.hasBreakFast(hasBreakFast)
-					.build();
-
-			opinion.registerPlace(place);
-			opinion.registerAuthor(author);
-			opinion.registerTravelOn(travelOn);
-			opinion.registerRegion(region);
-
-			setEntityWithGeneralImgContents(opinion);
-			setEntityWithFoodImgContents(opinion);
-			setEntityWithDrinkAndDessertImgContents(opinion);
-			setEntityWithPhotoSpotImgContents(opinion);
-
-			return opinion;
-		}
-
-		@JsonIgnore
-		private void setEntityWithGeneralImgContents(Opinion entity) {
-			this.generalImgContentUrlList.stream().forEach(
-					(item) -> {
-						OpinionImageContent imgContentEntity = OpinionImageContent.builder()
-								.url(item)
-								.imageContentType(ImageContentType.GENERAL)
-								.build();
-						imgContentEntity.registerOpinion(entity);
-					}
-			);
-		}
-
-		@JsonIgnore
-		private void setEntityWithFoodImgContents(Opinion entity) {
-			this.foodImgContentUrlList.stream().forEach(
-					(item) -> {
-						OpinionImageContent imgContentEntity = OpinionImageContent.builder()
-								.url(item)
-								.imageContentType(ImageContentType.RECOMMEND_FOOD)
-								.build();
-						imgContentEntity.registerOpinion(entity);
-					}
-			);
-		}
-
-		@JsonIgnore
-		private void setEntityWithDrinkAndDessertImgContents(Opinion entity) {
-			this.drinkAndDessertImgContentUrlList.stream().forEach(
-					(item) -> {
-						OpinionImageContent imgContentEntity = OpinionImageContent.builder()
-								.url(item)
-								.imageContentType(ImageContentType.RECOMMEND_DRINK_DESSERT)
-								.build();
-						imgContentEntity.registerOpinion(entity);
-					}
-			);
-		}
-
-		@JsonIgnore
-		private void setEntityWithPhotoSpotImgContents(Opinion entity) {
-			this.photoSpotImgContentUrlList.stream().forEach(
-					(item) -> {
-						OpinionImageContent imgContentEntity = OpinionImageContent.builder()
-								.url(item)
-								.imageContentType(ImageContentType.PHOTO_SPOT)
-								.build();
-						imgContentEntity.registerOpinion(entity);
-					}
-			);
-		}
 	}
 
 	@Getter
@@ -215,68 +125,5 @@ public class OpinionDto {
 		private EvaluationDegree streetNoise;
 		private EvaluationDegree deafening;
 		private Boolean hasBreakFast;
-
-		public OpinionResponse(Opinion entity) {
-			this.id = entity.getId();
-			this.description = entity.getDescription();
-			this.author = new UserResponse(entity.getAuthor());
-			this.place = new PlaceResponse(entity.getPlace());
-
-			//공통 질문
-			this.facilityCleanliness = entity.getFacilityCleanliness();
-			this.costPerformance = entity.getCostPerformance();
-			this.canParking = entity.getCanParking();
-			this.waiting = entity.getWaiting();
-
-			//음식점 전용 항목
-			this.restaurantMoodType = entity.getRestaurantMoodType();
-			this.recommendFoodDescription = entity.getRecommendFoodDescription();
-
-			//카페 전용 항목
-			this.coffeeType = entity.getCoffeeType();
-			this.recommendDrinkAndDessertDescription = entity.getRecommendDrinkAndDessertDescription();
-			this.cafeMoodType = entity.getCafeMoodType();
-
-			//문화시설, 관광명소 전용 항목
-			this.recommendToDo = entity.getRecommendToDo();
-			this.recommendSnack = entity.getRecommendSnack();
-			this.photoSpotDescription = entity.getPhotoSpotDescription();
-
-			//숙박 전용
-			this.streetNoise = entity.getStreetNoise();
-			this.deafening = entity.getDeafening();
-			this.hasBreakFast = entity.getHasBreakFast();
-
-			setAllImgContentsList(entity.getOpinionImageContentList());
-		}
-
-		@JsonIgnore
-		private void setAllImgContentsList(List<OpinionImageContent> opinionImageContentEntityList) {
-			this.generalImgContentUrlList = new ArrayList<>();
-			this.foodImgContentUrlList = new ArrayList<>();
-			this.drinkAndDessertImgContentUrlList = new ArrayList<>();
-			this.photoSpotImgContentUrlList = new ArrayList<>();
-
-			opinionImageContentEntityList.stream().forEach(
-					(item) -> {
-						ImageContentType imgType = item.getImageContentType();
-						String imgUrl = item.getUrl();
-						switch (imgType) {
-							case GENERAL:
-								generalImgContentUrlList.add(imgUrl);
-								break;
-							case RECOMMEND_FOOD:
-								foodImgContentUrlList.add(imgUrl);
-								break;
-							case RECOMMEND_DRINK_DESSERT:
-								drinkAndDessertImgContentUrlList.add(imgUrl);
-								break;
-							case PHOTO_SPOT:
-								photoSpotImgContentUrlList.add(imgUrl);
-								break;
-						}
-					}
-			);
-		}
 	}
 }
