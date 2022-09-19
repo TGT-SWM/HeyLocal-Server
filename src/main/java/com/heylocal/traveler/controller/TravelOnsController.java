@@ -98,18 +98,13 @@ public class TravelOnsController implements TravelOnsApi {
                              TravelOnRequest request,
                              BindingResult bindingResult,
                              LoginUser loginUser) throws BadRequestException, NotFoundException, ForbiddenException {
-    boolean isAuthor = false;
-
     if (bindingResult.hasFieldErrors()) {
       String fieldErrMsg = errorMessageProvider.getFieldErrMsg(bindingResult);
       throw new BadRequestException(BadRequestCode.BAD_INPUT_FORM, fieldErrMsg);
     }
 
     //수정 권한 확인
-    isAuthor = travelOnService.isAuthor(loginUser.getId(), travelOnId);
-    if (!isAuthor) {
-      throw new ForbiddenException(ForbiddenCode.NO_PERMISSION, "수정 권한이 없습니다.");
-    }
+    isTravelOnAuthor(travelOnId, loginUser);
 
     //수정
     travelOnService.updateTravelOn(request, travelOnId);
@@ -124,13 +119,8 @@ public class TravelOnsController implements TravelOnsApi {
    */
   @Override
   public void deleteTravelOn(long travelOnId, LoginUser loginUser) throws ForbiddenException, NotFoundException {
-    boolean isAuthor = false;
-
     //삭제 권한 확인
-    isAuthor = travelOnService.isAuthor(loginUser.getId(), travelOnId);
-    if (!isAuthor) {
-      throw new ForbiddenException(ForbiddenCode.NO_PERMISSION, "삭제 권한이 없습니다.");
-    }
+    isTravelOnAuthor(travelOnId, loginUser);
 
     //삭제
     travelOnService.removeTravelOn(travelOnId);
@@ -181,25 +171,63 @@ public class TravelOnsController implements TravelOnsApi {
   public void updateOpinion(long travelOnId, long opinionId,
                             OpinionRequest request, BindingResult bindingResult,
                             LoginUser loginUser) throws BadRequestException, NotFoundException, ForbiddenException {
-    boolean isAuthor;
-
     if (bindingResult.hasFieldErrors()) {
       String fieldErrMsg = errorMessageProvider.getFieldErrMsg(bindingResult);
       throw new BadRequestException(BadRequestCode.BAD_INPUT_FORM, fieldErrMsg);
     }
 
     //수정 권한 확인
-    isAuthor = opinionService.isAuthor(loginUser.getId(), opinionId);
-    if (!isAuthor) {
-      throw new ForbiddenException(ForbiddenCode.NO_PERMISSION, "답변 작성자만 수정할 수 있습니다.");
-    }
+    isOpinionAuthor(opinionId, loginUser);
 
     //수정
     opinionService.updateOpinion(travelOnId, opinionId, request);
   }
 
+  /**
+   * 해당 여행On 의 답변(Opinion) 삭제 핸들러
+   * @param travelOnId 삭제할 답변이 달린 여행On ID
+   * @param opinionId 삭제할 답변 ID
+   * @param loginUser
+   * @return
+   */
   @Override
-  public ResponseEntity<Void> deleteOpinion(long travelOnId, long opinionId) {
-    return null;
+  public void deleteOpinion(long travelOnId, long opinionId, LoginUser loginUser) throws NotFoundException, ForbiddenException {
+    //삭제 권한 확인
+    isOpinionAuthor(opinionId, loginUser);
+
+    //삭제
+    opinionService.removeOpinion(travelOnId, opinionId);
+  }
+
+  /**
+   * 해당 여행On의 작성자인지 확인
+   * @param travelOnId 확인할 여행On ID
+   * @param loginUser 로그인한 사용자 정보
+   * @throws NotFoundException
+   * @throws ForbiddenException
+   */
+  private void isTravelOnAuthor(long travelOnId, LoginUser loginUser) throws NotFoundException, ForbiddenException {
+    boolean isAuthor = false;
+
+    isAuthor = travelOnService.isAuthor(loginUser.getId(), travelOnId);
+    if (!isAuthor) {
+      throw new ForbiddenException(ForbiddenCode.NO_PERMISSION, "여행On 작성자만 수정·삭제할 수 있습니다.");
+    }
+  }
+
+  /**
+   * 해당 답변(opinion)의 작성자인지 확인
+   * @param opinionId 확인할 답변 ID
+   * @param loginUser 로그인한 사용자 정보
+   * @throws NotFoundException
+   * @throws ForbiddenException
+   */
+  private void isOpinionAuthor(long opinionId, LoginUser loginUser) throws NotFoundException, ForbiddenException {
+    boolean isAuthor;
+
+    isAuthor = opinionService.isAuthor(loginUser.getId(), opinionId);
+    if (!isAuthor) {
+      throw new ForbiddenException(ForbiddenCode.NO_PERMISSION, "답변 작성자만 수정·삭제할 수 있습니다.");
+    }
   }
 }

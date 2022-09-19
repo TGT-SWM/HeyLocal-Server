@@ -4,6 +4,7 @@ import com.heylocal.traveler.domain.Region;
 import com.heylocal.traveler.domain.place.Place;
 import com.heylocal.traveler.domain.travelon.TravelOn;
 import com.heylocal.traveler.domain.travelon.opinion.Opinion;
+import com.heylocal.traveler.domain.travelon.opinion.OpinionImageContent;
 import com.heylocal.traveler.domain.user.User;
 import com.heylocal.traveler.dto.LoginUser;
 import com.heylocal.traveler.dto.PlaceDto;
@@ -121,7 +122,7 @@ public class OpinionService {
     boolean isSameRegion;
     Place requestPlace;
 
-    //답변이 달릴 여행On 조회
+    //답변이 달린 여행On 조회
     targetTravelOn = inquiryTravelOn(travelOnId);
 
     //수정할 답변(Opinion) 조회
@@ -161,6 +162,24 @@ public class OpinionService {
     targetOpinion.updateHasBreakFast(request.getHasBreakFast());
 
     // TODO - 이미지 수정 관련 로직
+  }
+
+  /**
+   * 해당 여행On의 답변을 삭제하는 메서드
+   * @param travelOnId 삭제할 답변이 달린 여행On ID
+   * @param opinionId 삭제할 답변 ID
+   */
+  @Transactional
+  public void removeOpinion(long travelOnId, long opinionId) throws NotFoundException {
+    Opinion targetOpinion;
+
+    //수정할 답변(Opinion) 조회
+    targetOpinion = inquiryOpinionOfTravelOn(travelOnId, opinionId);
+
+    //S3에서 답변 관련 이미지 제거
+    removeOpinionImgInS3(targetOpinion.getOpinionImageContentList());
+
+    opinionRepository.remove(targetOpinion);
   }
 
   /**
@@ -259,6 +278,12 @@ public class OpinionService {
     );
   }
 
+  /**
+   * 여행On 을 ID 로 조회하는 메서드
+   * @param travelOnId 조회할 여행On 의 ID
+   * @return
+   * @throws NotFoundException
+   */
   private TravelOn inquiryTravelOn(long travelOnId) throws NotFoundException {
     return travelOnRepository.findById(travelOnId).orElseThrow(
         () -> new NotFoundException(NotFoundCode.NO_INFO, "존재하지 않는 여행On ID 입니다.")
@@ -278,6 +303,14 @@ public class OpinionService {
     savedPlace.updateCoordinates(newPlaceInfo.getLat(), newPlaceInfo.getLng());
     savedPlace.updateThumbnailUrl(newPlaceInfo.getThumbnailUrl());
     savedPlace.updateLink(newPlaceInfo.getKakaoLink());
+  }
+
+  /**
+   * 해당 OpinionImageContent 를 S3에서 제거하는 메서드
+   * @param opinionImageContentList 제거할 OpinionImageContent 가 담긴 리스트
+   */
+  private void removeOpinionImgInS3(List<OpinionImageContent> opinionImageContentList) {
+    // TODO - 저장되어있던 S3의 Img을 삭제하는 로직 필요
   }
 
 }

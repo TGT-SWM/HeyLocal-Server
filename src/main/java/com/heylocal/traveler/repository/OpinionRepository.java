@@ -31,6 +31,12 @@ public class OpinionRepository {
     return Optional.ofNullable(opinion);
   }
 
+  /**
+   * 답변 ID 와 여행On ID 로 답변을 조회하는 메서드
+   * @param opinionId
+   * @param travelOnId
+   * @return
+   */
   public Optional<Opinion> findByIdAndTravelOn(long opinionId, long travelOnId) {
     Opinion opinion;
     String jpql = "select o from Opinion o" +
@@ -47,5 +53,13 @@ public class OpinionRepository {
     }
 
     return Optional.of(opinion);
+  }
+
+  /**
+   * Opinion 을 삭제하는 메서드
+   * @param opinion
+   */
+  public void remove(Opinion opinion) {
+    em.remove(opinion);
   }
 }
