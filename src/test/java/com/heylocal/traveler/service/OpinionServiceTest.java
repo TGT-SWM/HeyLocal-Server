@@ -272,6 +272,10 @@ class OpinionServiceTest {
     OpinionRequest opinionRequest = OpinionRequest.builder()
         .place(placeRequest)
         .description(updateDescriptionOfOpinion)
+        .generalImgContentUrlList(new ArrayList<>())
+        .drinkAndDessertImgContentUrlList(new ArrayList<>())
+        .foodImgContentUrlList(new ArrayList<>())
+        .photoSpotImgContentUrlList(new ArrayList<>())
         .build();
 
     //Mock 행동 정의 - travelOnRepository

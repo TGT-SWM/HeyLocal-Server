@@ -141,27 +141,11 @@ public class OpinionService {
     //Opinion Request 의 Place 를 조회
     requestPlace = inquiryPlaceFromOpinionRequest(request);
 
-    //답변 수정
-    targetOpinion.updateRegion(regionOfRequestPlace);
-    targetOpinion.updatePlace(requestPlace);
-    targetOpinion.updateDescription(request.getDescription());
-    targetOpinion.updateFacilityCleanliness(request.getFacilityCleanliness());
-    targetOpinion.updateCanParking(request.isCanParking());
-    targetOpinion.updateWaiting(request.isWaiting());
-    targetOpinion.updateCostPerformance(request.getCostPerformance());
-    targetOpinion.updateRestaurantMoodType(request.getRestaurantMoodType());
-    targetOpinion.updateRecommendFoodDescription(request.getRecommendFoodDescription());
-    targetOpinion.updateCoffeeType(request.getCoffeeType());
-    targetOpinion.updateRecommendDrinkAndDessertDescription(request.getRecommendDrinkAndDessertDescription());
-    targetOpinion.updateCafeMoodType(request.getCafeMoodType());
-    targetOpinion.updateRecommendToDo(request.getRecommendToDo());
-    targetOpinion.updateRecommendSnack(request.getRecommendSnack());
-    targetOpinion.updatePhotoSpotDescription(request.getPhotoSpotDescription());
-    targetOpinion.updateStreetNoise(request.getStreetNoise());
-    targetOpinion.updateDeafening(request.getDeafening());
-    targetOpinion.updateHasBreakFast(request.getHasBreakFast());
+    // TODO - S3에 저장된 기존 Img 파일 제거 로직 추가
 
-    // TODO - 이미지 수정 관련 로직
+    //답변 수정
+    OpinionMapper.INSTANCE.updateOpinion(request, regionOfRequestPlace, requestPlace, targetOpinion);
+
   }
 
   /**

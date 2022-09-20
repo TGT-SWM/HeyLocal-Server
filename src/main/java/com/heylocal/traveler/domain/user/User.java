@@ -102,4 +102,8 @@ public class User extends BaseTimeEntity {
       opinion.setAuthor(this);
     }
   }
+
+  public void removeOpinion(Opinion target) {
+    this.opinionList.remove(target);
+  }
 }

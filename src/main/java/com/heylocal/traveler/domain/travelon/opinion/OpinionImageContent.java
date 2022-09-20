@@ -35,7 +35,7 @@ public class OpinionImageContent extends BaseTimeEntity {
     this.opinion = opinion;
 
     if (!opinion.getOpinionImageContentList().contains(this)) {
-      opinion.setOpinionImageContentList(this);
+      opinion.addOpinionImageContent(this);
     }
   }
 

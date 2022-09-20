@@ -40,6 +40,17 @@ public interface OpinionMapper {
   @Mapping(target = "photoSpotImgContentUrlList", ignore = true)
   OpinionResponse toResponseDto(Opinion opinion);
 
+  @Mapping(target = "id", ignore = true)
+  @Mapping(target = "createdDate", ignore = true)
+  @Mapping(target = "modifiedDate", ignore = true)
+  @Mapping(target = "author", ignore = true)
+  @Mapping(target = "travelOn", ignore = true)
+  @Mapping(target = "description", source = "opinionRequest.description")
+  @Mapping(target = "place", source = "place")
+  @Mapping(target = "region", source = "region")
+  @Mapping(target = "opinionImageContentList", ignore = true)
+  void updateOpinion(OpinionRequest opinionRequest, Region region, Place place, @MappingTarget Opinion opinion);
+
   @AfterMapping
   default void updateResponseDtoImgContentList(Opinion opinion, @MappingTarget OpinionResponse opinionResponse) {
     List<String> generalUrlList = new ArrayList<>();
@@ -71,6 +82,11 @@ public interface OpinionMapper {
     opinionResponse.setFoodImgContentUrlList(foodUrlList);
     opinionResponse.setDrinkAndDessertImgContentUrlList(drinkAndDessertUrlList);
     opinionResponse.setPhotoSpotImgContentUrlList(photoSpotUrlList);
+  }
+
+  @AfterMapping
+  default void removeAllImgContentListOfEntity(@MappingTarget Opinion opinion) {
+    opinion.removeAllOpinionImageContent();
   }
 
   @AfterMapping
