@@ -169,13 +169,6 @@ public class TravelOnService {
     travelOnRepository.remove(target);
   }
 
-  private void updateTravelTypeGroup(TravelOnRequest request, TravelOn originTravelOn) {
-    TravelTypeGroupRequest travelTypeGroupRequest = request.getTravelTypeGroup();
-    TravelTypeGroup travelTypeGroup = TravelTypeGroupMapper.INSTANCE.toEntity(travelTypeGroupRequest);
-    travelTypeGroup.registerAt(originTravelOn);
-    originTravelOn.updateTravelTypeGroup(travelTypeGroup);
-  }
-
   private List<TravelOn> findByRegion(AllTravelOnGetRequest request) throws NotFoundException {
     List<TravelOn> result;
     Boolean withOpinions;
@@ -228,46 +221,6 @@ public class TravelOnService {
     }
 
     return result;
-  }
-
-  private void updateTravelMembers(TravelOnRequest request, TravelOn originTravelOn) {
-    originTravelOn.removeAllTravelMember();
-    request.getMemberTypeSet().stream().forEach(
-        (item) -> {
-          TravelMember travelMember = TravelMember.builder().memberType(item).build();
-          travelMember.registerAt(originTravelOn);
-        }
-    );
-  }
-
-  private void updateHopeAccommodation(TravelOnRequest request, TravelOn originTravelOn) {
-    originTravelOn.removeAllHopeAccommodation();
-    request.getAccommodationTypeSet().stream().forEach(
-        (item) -> {
-          HopeAccommodation hopeAccommodation = HopeAccommodation.builder().type(item).build();
-          hopeAccommodation.registerAt(originTravelOn);
-        }
-    );
-  }
-
-  private void updateHopeDrink(TravelOnRequest request, TravelOn originTravelOn) {
-    originTravelOn.removeAllHopeDrink();
-    request.getDrinkTypeSet().stream().forEach(
-        (item) -> {
-          HopeDrink hopeDrink = HopeDrink.builder().type(item).build();
-          hopeDrink.registerAt(originTravelOn);
-        }
-    );
-  }
-
-  private void updateHopeFood(TravelOnRequest request, TravelOn originTravelOn) {
-    originTravelOn.removeAllHopeFood();
-    request.getFoodTypeSet().stream().forEach(
-        (item) -> {
-          HopeFood hopeFood = HopeFood.builder().type(item).build();
-          hopeFood.registerAt(originTravelOn);
-        }
-    );
   }
 
 }

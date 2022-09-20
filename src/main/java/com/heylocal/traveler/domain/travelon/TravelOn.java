@@ -138,46 +138,6 @@ public class TravelOn extends BaseTimeEntity {
     }
   }
 
-  public void updateTitle(String title) {
-    this.title = title;
-  }
-
-  public void updateDescription(String description) {
-    this.description = description;
-  }
-
-  public void updateRegion(Region region) {
-    this.region = region;
-  }
-
-  public void updateTravelStartDate(LocalDate travelStartDate) {
-    this.travelStartDate = travelStartDate;
-  }
-
-  public void updateTravelEndDate(LocalDate travelEndDate) {
-    this.travelEndDate = travelEndDate;
-  }
-
-  public void updateTransportationType(TransportationType transportationType) {
-    this.transportationType = transportationType;
-  }
-
-  public void updateAccommodationMaxCost(Integer accommodationMaxCost) {
-    this.accommodationMaxCost = accommodationMaxCost;
-  }
-
-  public void updateFoodMaxCost(Integer foodMaxCost) {
-    this.foodMaxCost = foodMaxCost;
-  }
-
-  public void updateDrinkMaxCost(Integer drinkMaxCost) {
-    this.drinkMaxCost = drinkMaxCost;
-  }
-
-  public void updateTravelTypeGroup(TravelTypeGroup travelTypeGroup) {
-    this.travelTypeGroup = travelTypeGroup;
-  }
-
   public void removeAllHopeAccommodation() {
     this.hopeAccommodationSet.clear();
   }
