@@ -14,6 +14,7 @@ import com.heylocal.traveler.exception.NotFoundException;
 import com.heylocal.traveler.exception.code.ForbiddenCode;
 import com.heylocal.traveler.exception.code.NotFoundCode;
 import com.heylocal.traveler.mapper.OpinionMapper;
+import com.heylocal.traveler.mapper.PlaceMapper;
 import com.heylocal.traveler.repository.OpinionRepository;
 import com.heylocal.traveler.repository.PlaceRepository;
 import com.heylocal.traveler.repository.TravelOnRepository;
@@ -225,7 +226,7 @@ public class OpinionService {
     existedPlaceOptional = placeRepository.findById(placeId);
 
     if (existedPlaceOptional.isEmpty()) { //기존에 저장된 장소가 없다면
-      place = request.getPlace().toEntity(regionOfRequestPlace);
+      place = PlaceMapper.INSTANCE.toEntity(request.getPlace(), regionOfRequestPlace);
       placeRepository.save(place);
 
     } else { //기존에 저장된 장소가 있다면

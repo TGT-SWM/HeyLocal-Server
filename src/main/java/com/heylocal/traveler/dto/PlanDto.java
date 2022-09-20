@@ -4,6 +4,7 @@ import com.heylocal.traveler.domain.plan.DaySchedule;
 import com.heylocal.traveler.domain.plan.list.PlaceItem;
 import com.heylocal.traveler.dto.PlaceDto.PlaceItemRequest;
 import com.heylocal.traveler.dto.PlaceDto.PlaceItemResponse;
+import com.heylocal.traveler.mapper.PlaceItemMapper;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
@@ -83,7 +84,7 @@ public class PlanDto {
 
 		public DaySchedule toEntity() {
 			List<PlaceItem> placeItems = places.stream()
-					.map(place -> place.toEntity())
+					.map(PlaceItemMapper.INSTANCE::toPlaceItemEntity)
 					.collect(Collectors.toList());
 
 			return DaySchedule.builder()

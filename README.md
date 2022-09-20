@@ -11,6 +11,5 @@
 | 최정인 | 팀원  |FE|
 
 ## TODO
-- `Entity` <-> `DTO` Mapper 적용
-  - https://jforj.tistory.com/93
+- PlaceDto 에 있는 PlaceItem DTO 클래스들 분리 (Mapper도)
 - 답변 이미지 처리
