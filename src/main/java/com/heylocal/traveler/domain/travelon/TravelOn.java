@@ -169,4 +169,8 @@ public class TravelOn extends BaseTimeEntity {
       temp.releaseTravelOn();
     }
   }
+
+  public void incrViewsByOne() {
+    this.views++;
+  }
 }
