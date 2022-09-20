@@ -84,14 +84,20 @@ public class TravelOnService {
    * @return
    * @exception NotFoundException
    */
-  @Transactional(readOnly = true)
+  @Transactional
   public TravelOnResponse inquiryTravelOn(long travelOnId) throws NotFoundException {
     TravelOnResponse response;
     TravelOn travelOn;
 
+    //여행 On 조회
     travelOn = travelOnRepository.findById(travelOnId).orElseThrow(
         () -> new NotFoundException(NotFoundCode.NO_INFO, "존재하지 않는 여행On ID 입니다.")
     );
+
+    //조회수 1 증가
+    travelOn.incrViewsByOne();
+
+    //DTO로 변환
     response = TravelOnMapper.INSTANCE.toTravelOnResponseDto(travelOn);
 
     return response;
