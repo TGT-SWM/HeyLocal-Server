@@ -71,7 +71,7 @@ public class TravelOnService {
     List<TravelOnSimpleResponse> response;
     Long regionId = request.getRegionId();
 
-    if (Objects.isNull(regionId)) { //지역 관계없이 조회하는 경우
+    if (regionId == null) { //지역 관계없이 조회하는 경우
       travelOnList = findWithoutRegion(request);
 
     } else { //Region을 기준으로 조회하는 경우
@@ -188,7 +188,7 @@ public class TravelOnService {
         () -> new NotFoundException(NotFoundCode.NO_INFO, "존재하지 않는 Region ID 입니다.")
     );
 
-    if (Objects.isNull(withOpinions)) {
+    if (withOpinions == null) {
       result = travelOnRepository.findAllByRegion(region, lastItemId, size, sortBy);
     } else if (withOpinions) {
       result = travelOnRepository.findHasOpinionByRegion(region, lastItemId, size, sortBy);
@@ -212,7 +212,7 @@ public class TravelOnService {
     lastItemId = request.getPageRequest().getLastItemId();
     size = request.getPageRequest().getSize();
 
-    if (Objects.isNull(withOpinions)) {
+    if (withOpinions == null) {
       result = travelOnRepository.findAll(lastItemId, size, sortBy);
     } else if (withOpinions) {
       result = travelOnRepository.findHasOpinion(lastItemId, size, sortBy);

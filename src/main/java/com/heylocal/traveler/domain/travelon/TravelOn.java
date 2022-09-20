@@ -157,7 +157,7 @@ public class TravelOn extends BaseTimeEntity {
     Plan temp = this.plan;
     this.plan = null;
 
-    if (!Objects.isNull(temp)) {
+    if (temp != null) {
       temp.releaseTravelOn();
     }
   }

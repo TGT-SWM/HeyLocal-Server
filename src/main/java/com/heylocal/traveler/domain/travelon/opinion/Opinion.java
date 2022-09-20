@@ -132,14 +132,14 @@ public class Opinion extends BaseTimeEntity {
   // 이하는 업데이트 메서드
 
   public void updatePlace(Place newValue) {
-    if (!Objects.isNull(this.place)) {
+    if (this.place != null) {
       this.place.removeOpinion(this);
     }
     setPlace(newValue);
   }
 
   public void updateRegion(Region newValue) {
-    if (!Objects.isNull(this.region)) {
+    if (this.region != null) {
       this.region.removeOpinion(this);
     }
     setRegion(newValue);

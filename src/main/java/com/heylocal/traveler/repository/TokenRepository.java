@@ -96,7 +96,7 @@ public class TokenRepository {
    */
   public User removeTokenPairByUserId(long userId) throws NoResultException {
     User user = em.find(User.class, userId);
-    if (!Objects.isNull(user.getRefreshToken())) {
+    if (user.getRefreshToken() != null) {
       em.remove(user.getRefreshToken());
       user.releaseAllTokens();
     }
