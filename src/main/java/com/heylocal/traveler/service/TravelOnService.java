@@ -119,20 +119,8 @@ public class TravelOnService {
         () -> new NotFoundException(NotFoundCode.NO_INFO, "존재하지 않는 여행On ID 입니다.")
     );
 
-    originTravelOn.updateTitle(request.getTitle());
-    originTravelOn.updateDescription(request.getDescription());
-    originTravelOn.updateTravelStartDate(request.getTravelStartDate());
-    originTravelOn.updateTravelEndDate(request.getTravelEndDate());
-    originTravelOn.updateTransportationType(request.getTransportationType());
-    originTravelOn.updateAccommodationMaxCost(request.getAccommodationMaxCost());
-    originTravelOn.updateFoodMaxCost(request.getFoodMaxCost());
-    originTravelOn.updateDrinkMaxCost(request.getDrinkMaxCost());
-
-    updateTravelTypeGroup(request, originTravelOn);
-    updateTravelMembers(request, originTravelOn);
-    updateHopeAccommodation(request, originTravelOn);
-    updateHopeFood(request, originTravelOn);
-    updateHopeDrink(request, originTravelOn);
+    //여행On 업데이트
+    TravelOnMapper.INSTANCE.updateTravelOn(request, originTravelOn);
   }
 
   /**

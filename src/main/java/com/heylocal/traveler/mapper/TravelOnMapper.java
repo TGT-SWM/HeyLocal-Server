@@ -42,10 +42,24 @@ public interface TravelOnMapper {
   @Mapping(target = "opinionQuantity", expression = "java(travelOn.getOpinionList().size())")
   TravelOnSimpleResponse toTravelOnSimpleResponseDto(TravelOn travelOn);
 
+  @Mapping(target = "id", ignore = true)
+  @Mapping(target = "region", ignore = true)
+  @Mapping(target = "author", ignore = true)
+  @Mapping(target = "views", ignore = true)
+  @Mapping(target = "opinionList", ignore = true)
+  @Mapping(target = "plan", ignore = true)
+  @Mapping(target = "travelMemberSet", ignore = true)
+  @Mapping(target = "hopeAccommodationSet", ignore = true)
+  @Mapping(target = "hopeFoodSet", ignore = true)
+  @Mapping(target = "hopeDrinkSet", ignore = true)
+  @Mapping(target = "travelTypeGroup", ignore = true)
+  void updateTravelOn(TravelOnRequest travelOnRequest, @MappingTarget TravelOn travelOn);
+
   @AfterMapping
   default void updateEntityHopeDrinkSet(TravelOnRequest travelOnRequest, @MappingTarget TravelOn travelOn) {
     Set<DrinkType> drinkTypeSet = travelOnRequest.getDrinkTypeSet();
 
+    travelOn.removeAllHopeDrink();
     drinkTypeSet.stream().forEach(
         (item) -> HopeDrinkMapper.INSTANCE.toEntity(travelOn, item)
     );
@@ -55,6 +69,7 @@ public interface TravelOnMapper {
   default void updateEntityHopeFoodSet(TravelOnRequest travelOnRequest, @MappingTarget TravelOn travelOn) {
     Set<FoodType> foodTypeSet = travelOnRequest.getFoodTypeSet();
 
+    travelOn.removeAllHopeFood();
     foodTypeSet.stream().forEach(
         (item) -> HopeFoodMapper.INSTANCE.toEntity(travelOn, item)
     );
@@ -64,6 +79,7 @@ public interface TravelOnMapper {
   default void updateEntityHopeAccommodationSet(TravelOnRequest travelOnRequest, @MappingTarget TravelOn travelOn) {
     Set<AccommodationType> accommodationTypeSet = travelOnRequest.getAccommodationTypeSet();
 
+    travelOn.removeAllHopeAccommodation();
     accommodationTypeSet.stream().forEach(
         (item) -> HopeAccommodationMapper.INSTANCE.toEntity(travelOn, item)
     );
@@ -73,6 +89,7 @@ public interface TravelOnMapper {
   default void updateEntityTravelMemberSet(TravelOnRequest travelOnRequest, @MappingTarget TravelOn travelOn) {
     Set<MemberType> memberTypeSet = travelOnRequest.getMemberTypeSet();
 
+    travelOn.removeAllTravelMember();
     memberTypeSet.stream().forEach(
         (item) -> TravelMemberMapper.INSTANCE.toEntity(travelOn, item)
     );
