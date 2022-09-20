@@ -8,7 +8,6 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 import static com.heylocal.traveler.dto.TravelOnDto.TravelOnSortType;
