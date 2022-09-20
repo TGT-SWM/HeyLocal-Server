@@ -119,20 +119,8 @@ public class TravelOnService {
         () -> new NotFoundException(NotFoundCode.NO_INFO, "존재하지 않는 여행On ID 입니다.")
     );
 
-    originTravelOn.updateTitle(request.getTitle());
-    originTravelOn.updateDescription(request.getDescription());
-    originTravelOn.updateTravelStartDate(request.getTravelStartDate());
-    originTravelOn.updateTravelEndDate(request.getTravelEndDate());
-    originTravelOn.updateTransportationType(request.getTransportationType());
-    originTravelOn.updateAccommodationMaxCost(request.getAccommodationMaxCost());
-    originTravelOn.updateFoodMaxCost(request.getFoodMaxCost());
-    originTravelOn.updateDrinkMaxCost(request.getDrinkMaxCost());
-
-    updateTravelTypeGroup(request, originTravelOn);
-    updateTravelMembers(request, originTravelOn);
-    updateHopeAccommodation(request, originTravelOn);
-    updateHopeFood(request, originTravelOn);
-    updateHopeDrink(request, originTravelOn);
+    //여행On 업데이트
+    TravelOnMapper.INSTANCE.updateTravelOn(request, originTravelOn);
   }
 
   /**
@@ -179,13 +167,6 @@ public class TravelOnService {
 
     //여행 On 삭제
     travelOnRepository.remove(target);
-  }
-
-  private void updateTravelTypeGroup(TravelOnRequest request, TravelOn originTravelOn) {
-    TravelTypeGroupRequest travelTypeGroupRequest = request.getTravelTypeGroup();
-    TravelTypeGroup travelTypeGroup = TravelTypeGroupMapper.INSTANCE.toEntity(travelTypeGroupRequest);
-    travelTypeGroup.registerAt(originTravelOn);
-    originTravelOn.updateTravelTypeGroup(travelTypeGroup);
   }
 
   private List<TravelOn> findByRegion(AllTravelOnGetRequest request) throws NotFoundException {
@@ -240,46 +221,6 @@ public class TravelOnService {
     }
 
     return result;
-  }
-
-  private void updateTravelMembers(TravelOnRequest request, TravelOn originTravelOn) {
-    originTravelOn.removeAllTravelMember();
-    request.getMemberTypeSet().stream().forEach(
-        (item) -> {
-          TravelMember travelMember = TravelMember.builder().memberType(item).build();
-          travelMember.registerAt(originTravelOn);
-        }
-    );
-  }
-
-  private void updateHopeAccommodation(TravelOnRequest request, TravelOn originTravelOn) {
-    originTravelOn.removeAllHopeAccommodation();
-    request.getAccommodationTypeSet().stream().forEach(
-        (item) -> {
-          HopeAccommodation hopeAccommodation = HopeAccommodation.builder().type(item).build();
-          hopeAccommodation.registerAt(originTravelOn);
-        }
-    );
-  }
-
-  private void updateHopeDrink(TravelOnRequest request, TravelOn originTravelOn) {
-    originTravelOn.removeAllHopeDrink();
-    request.getDrinkTypeSet().stream().forEach(
-        (item) -> {
-          HopeDrink hopeDrink = HopeDrink.builder().type(item).build();
-          hopeDrink.registerAt(originTravelOn);
-        }
-    );
-  }
-
-  private void updateHopeFood(TravelOnRequest request, TravelOn originTravelOn) {
-    originTravelOn.removeAllHopeFood();
-    request.getFoodTypeSet().stream().forEach(
-        (item) -> {
-          HopeFood hopeFood = HopeFood.builder().type(item).build();
-          hopeFood.registerAt(originTravelOn);
-        }
-    );
   }
 
 }
