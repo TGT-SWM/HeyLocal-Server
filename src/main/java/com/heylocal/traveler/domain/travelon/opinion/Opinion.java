@@ -90,10 +90,14 @@ public class Opinion extends BaseTimeEntity {
   // 양방향 설정
 
   @Builder.Default
-  @OneToMany(mappedBy = "opinion", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  @OneToMany(mappedBy = "opinion", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
   private List<OpinionImageContent> opinionImageContentList = new ArrayList<>();
 
   public void setTravelOn(TravelOn travelOn) {
+    if (this.travelOn != null) {
+      this.travelOn.removeOpinion(this);
+    }
+
     this.travelOn = travelOn;
     if (!travelOn.getOpinionList().contains(this)) {
       travelOn.addOpinion(this);
@@ -101,6 +105,10 @@ public class Opinion extends BaseTimeEntity {
   }
 
   public void setPlace(Place place) {
+    if (this.place != null) {
+      this.place.removeOpinion(this);
+    }
+
     this.place = place;
     if (!place.getOpinionList().contains(this)) {
       place.addOpinion(this);
@@ -108,6 +116,10 @@ public class Opinion extends BaseTimeEntity {
   }
 
   public void setAuthor(User author) {
+    if (this.author != null) {
+      this.author.removeOpinion(this);
+    }
+
     this.author = author;
     if (!author.getOpinionList().contains(this)) {
       author.addOpinion(this);
@@ -115,100 +127,28 @@ public class Opinion extends BaseTimeEntity {
   }
 
   public void setRegion(Region region) {
+    if (this.region != null) {
+      this.region.removeOpinion(this);
+    }
+
     this.region = region;
     if (!region.getOpinionList().contains(this)) {
       region.addOpinion(this);
     }
   }
 
-  public void setOpinionImageContentList(OpinionImageContent imgContent) {
+  public void addOpinionImageContent(OpinionImageContent imgContent) {
     this.opinionImageContentList.add(imgContent);
     if (imgContent.getOpinion() != this) {
       imgContent.setOpinion(this);
     }
   }
 
-  // 이하는 업데이트 메서드
-
-  public void updatePlace(Place newValue) {
-    if (this.place != null) {
-      this.place.removeOpinion(this);
-    }
-    setPlace(newValue);
-  }
-
-  public void updateRegion(Region newValue) {
-    if (this.region != null) {
-      this.region.removeOpinion(this);
-    }
-    setRegion(newValue);
-  }
-
-  public void updateDescription(String newValue) {
-    this.description = newValue;
-  }
-
-  public void updateFacilityCleanliness(EvaluationDegree newValue) {
-    this.facilityCleanliness = newValue;
-  }
-
-  public void updateCanParking(Boolean newValue) {
-    this.canParking = newValue;
-  }
-
-  public void updateWaiting(Boolean newValue) {
-    this.waiting = newValue;
-  }
-
-  public void updateCostPerformance(EvaluationDegree newValue) {
-    this.costPerformance = newValue;
-  }
-
-  public void updateRestaurantMoodType(RestaurantMoodType newValue) {
-    this.restaurantMoodType = newValue;
-  }
-
-  public void updateRecommendFoodDescription(String newValue) {
-    this.recommendFoodDescription = newValue;
-  }
-
-  public void updateCoffeeType(CoffeeType newValue) {
-    this.coffeeType = newValue;
-  }
-
-  public void updateRecommendDrinkAndDessertDescription(String newValue) {
-    this.recommendDrinkAndDessertDescription = newValue;
-  }
-
-  public void updateCafeMoodType(CafeMoodType newValue) {
-    this.cafeMoodType = newValue;
-  }
-
-  public void updateRecommendToDo(String newValue) {
-    this.recommendToDo = newValue;
-  }
-
-  public void updateRecommendSnack(String newValue) {
-    this.recommendSnack = newValue;
-  }
-
-  public void updatePhotoSpotDescription(String newValue) {
-    this.photoSpotDescription = newValue;
-  }
-
-  public void updateStreetNoise(EvaluationDegree newValue) {
-    this.streetNoise = newValue;
-  }
-
-  public void updateDeafening(EvaluationDegree newValue) {
-    this.deafening = newValue;
-  }
-
-  public void updateHasBreakFast(Boolean newValue) {
-    this.hasBreakFast = newValue;
-  }
-
   public void removeOpinionImageContent(OpinionImageContent target) {
-    this.getOpinionImageContentList().remove(target);
+    this.opinionImageContentList.remove(target);
+  }
+
+  public void removeAllOpinionImageContent() {
+    this.opinionImageContentList.clear();
   }
 }

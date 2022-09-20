@@ -156,6 +156,11 @@ public class TravelOn extends BaseTimeEntity {
   public void removeAllTravelMember() {
     this.travelMemberSet.clear();
   }
+
+  public void removeOpinion(Opinion target) {
+    this.opinionList.remove(target);
+  }
+
   public void releasePlan() {
     Plan temp = this.plan;
     this.plan = null;
