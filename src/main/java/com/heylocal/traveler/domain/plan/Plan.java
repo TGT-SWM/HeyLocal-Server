@@ -9,7 +9,6 @@ import lombok.experimental.SuperBuilder;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * 여행
@@ -46,7 +45,7 @@ public class Plan extends BaseTimeEntity {
     TravelOn temp = this.travelOn;
     this.travelOn = null;
 
-    if (!Objects.isNull(temp)) {
+    if (temp != null) {
       temp.releasePlan();
     }
   }

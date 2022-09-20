@@ -2,11 +2,6 @@ package com.heylocal.traveler.service;
 
 import com.heylocal.traveler.domain.Region;
 import com.heylocal.traveler.domain.travelon.TravelOn;
-import com.heylocal.traveler.domain.travelon.TravelTypeGroup;
-import com.heylocal.traveler.domain.travelon.list.HopeAccommodation;
-import com.heylocal.traveler.domain.travelon.list.HopeDrink;
-import com.heylocal.traveler.domain.travelon.list.HopeFood;
-import com.heylocal.traveler.domain.travelon.list.TravelMember;
 import com.heylocal.traveler.domain.user.User;
 import com.heylocal.traveler.dto.LoginUser;
 import com.heylocal.traveler.exception.ForbiddenException;
@@ -14,7 +9,6 @@ import com.heylocal.traveler.exception.NotFoundException;
 import com.heylocal.traveler.exception.code.ForbiddenCode;
 import com.heylocal.traveler.exception.code.NotFoundCode;
 import com.heylocal.traveler.mapper.TravelOnMapper;
-import com.heylocal.traveler.mapper.TravelTypeGroupMapper;
 import com.heylocal.traveler.repository.RegionRepository;
 import com.heylocal.traveler.repository.TravelOnRepository;
 import com.heylocal.traveler.repository.UserRepository;
@@ -24,11 +18,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static com.heylocal.traveler.dto.TravelOnDto.*;
-import static com.heylocal.traveler.dto.TravelTypeGroupDto.TravelTypeGroupRequest;
 
 @Slf4j
 @Service
@@ -71,7 +63,7 @@ public class TravelOnService {
     List<TravelOnSimpleResponse> response;
     Long regionId = request.getRegionId();
 
-    if (Objects.isNull(regionId)) { //지역 관계없이 조회하는 경우
+    if (regionId == null) { //지역 관계없이 조회하는 경우
       travelOnList = findWithoutRegion(request);
 
     } else { //Region을 기준으로 조회하는 경우
@@ -188,7 +180,7 @@ public class TravelOnService {
         () -> new NotFoundException(NotFoundCode.NO_INFO, "존재하지 않는 Region ID 입니다.")
     );
 
-    if (Objects.isNull(withOpinions)) {
+    if (withOpinions == null) {
       result = travelOnRepository.findAllByRegion(region, lastItemId, size, sortBy);
     } else if (withOpinions) {
       result = travelOnRepository.findHasOpinionByRegion(region, lastItemId, size, sortBy);
@@ -212,7 +204,7 @@ public class TravelOnService {
     lastItemId = request.getPageRequest().getLastItemId();
     size = request.getPageRequest().getSize();
 
-    if (Objects.isNull(withOpinions)) {
+    if (withOpinions == null) {
       result = travelOnRepository.findAll(lastItemId, size, sortBy);
     } else if (withOpinions) {
       result = travelOnRepository.findHasOpinion(lastItemId, size, sortBy);

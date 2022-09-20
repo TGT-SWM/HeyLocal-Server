@@ -8,7 +8,6 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 import static com.heylocal.traveler.dto.TravelOnDto.TravelOnSortType;
@@ -301,7 +300,7 @@ public class TravelOnRepository {
     int opinionCount;
 
     //첫 페이지인 경우(lastItemId == null), 아닌 경우 구분하여 변수 초기화
-    if (Objects.isNull(lastItemId)) {
+    if (lastItemId == null) {
       id = Long.MAX_VALUE;
       views = Integer.MAX_VALUE;
       opinionCount = Integer.MAX_VALUE;
