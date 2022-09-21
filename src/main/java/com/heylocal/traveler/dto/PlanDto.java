@@ -81,16 +81,6 @@ public class PlanDto {
 	@Schema(description = "장소 목록 수정을 위한 요청 DTO")
 	public static class ScheduleRequest {
 		List<PlaceItemRequest> places;
-
-		public DaySchedule toEntity() {
-			List<PlaceItem> placeItems = places.stream()
-					.map(PlaceItemMapper.INSTANCE::toPlaceItemEntity)
-					.collect(Collectors.toList());
-
-			return DaySchedule.builder()
-					.placeItemList(placeItems)
-					.build();
-		}
 	}
 
 	@Getter
