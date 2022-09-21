@@ -11,6 +11,4 @@
 | 최정인 | 팀원  |FE|
 
 ## TODO
-- `Entity` <-> `DTO` Mapper 적용
-  - https://jforj.tistory.com/93
 - 답변 이미지 처리

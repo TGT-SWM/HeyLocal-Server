@@ -15,6 +15,7 @@ import com.heylocal.traveler.dto.LoginUser;
 import com.heylocal.traveler.exception.BadRequestException;
 import com.heylocal.traveler.exception.ForbiddenException;
 import com.heylocal.traveler.exception.NotFoundException;
+import com.heylocal.traveler.mapper.PlaceMapper;
 import com.heylocal.traveler.repository.OpinionRepository;
 import com.heylocal.traveler.repository.PlaceRepository;
 import com.heylocal.traveler.repository.TravelOnRepository;
@@ -75,7 +76,7 @@ class OpinionServiceTest {
     long userId = 3L;
     LoginUser loginUser = LoginUser.builder().id(userId).build();
     User author = User.builder().id(userId).accountId("myAccountId").nickname("myNickname").password("myPassword123!").userRole(UserRole.TRAVELER).build();
-    Place existPlace = placeRequest.toEntity(region);
+    Place existPlace = PlaceMapper.INSTANCE.toEntity(placeRequest, region);
 
     //Mock 행동 정의 - travelOnRepository
     willReturn(Optional.of(travelOn)).given(travelOnRepository).findById(travelOnId);

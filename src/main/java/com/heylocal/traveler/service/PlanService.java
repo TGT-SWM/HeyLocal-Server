@@ -12,6 +12,7 @@ import com.heylocal.traveler.exception.NotFoundException;
 import com.heylocal.traveler.exception.code.BadRequestCode;
 import com.heylocal.traveler.exception.code.ForbiddenCode;
 import com.heylocal.traveler.exception.code.NotFoundCode;
+import com.heylocal.traveler.mapper.PlaceItemMapper;
 import com.heylocal.traveler.mapper.PlanMapper;
 import com.heylocal.traveler.repository.PlaceItemRepository;
 import com.heylocal.traveler.repository.PlaceRepository;
@@ -209,7 +210,7 @@ public class PlanService {
 		List<List<PlaceItem>> schedules = scheduleRequests.stream()
 				.map(scheduleRequest -> { // List<ScheduleRequest> -> List<List<PlaceItem>>
 					return scheduleRequest.getPlaces().stream()
-							.map(placeItemRequest -> placeItemRequest.toEntity()) // ScheduleRequest -> List<PlaceItem>
+							.map(PlaceItemMapper.INSTANCE::toPlaceItemEntity) // ScheduleRequest -> List<PlaceItem>
 							.collect(Collectors.toList());
 				})
 				.collect(Collectors.toList());

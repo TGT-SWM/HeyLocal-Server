@@ -10,7 +10,7 @@ import org.mapstruct.factory.Mappers;
 import static com.heylocal.traveler.dto.PlanDto.PlanPlacesResponse;
 import static com.heylocal.traveler.dto.PlanDto.PlanResponse;
 
-@Mapper(uses = {PlaceMapper.class}, builder = @Builder(disableBuilder = true))
+@Mapper(uses = {PlaceItemMapper.class}, builder = @Builder(disableBuilder = true))
 public interface PlanMapper {
   PlanMapper INSTANCE = Mappers.getMapper(PlanMapper.class);
 
