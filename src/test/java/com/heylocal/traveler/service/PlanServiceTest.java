@@ -8,7 +8,8 @@ import com.heylocal.traveler.domain.plan.Plan;
 import com.heylocal.traveler.domain.plan.list.PlaceItem;
 import com.heylocal.traveler.domain.travelon.TravelOn;
 import com.heylocal.traveler.domain.user.User;
-import com.heylocal.traveler.dto.PlaceDto.PlaceItemRequest;
+import com.heylocal.traveler.dto.PlaceItemDto.PlaceItemRequest;
+import com.heylocal.traveler.dto.PlaceItemDto;
 import com.heylocal.traveler.dto.PlanDto.PlanListResponse;
 import com.heylocal.traveler.dto.PlanDto.PlanSchedulesRequest;
 import com.heylocal.traveler.dto.PlanDto.PlanUpdateRequest;
@@ -303,7 +304,7 @@ class PlanServiceTest {
 		// GIVEN - ScheduleRequest
 		List<PlaceItemRequest> places = new ArrayList<>();
 		for (int i = 0; i < 5; i++) {
-			places.add(PlaceItemRequest.builder()
+			places.add(PlaceItemDto.PlaceItemRequest.builder()
 					.id(1L)
 					.itemIndex(i)
 					.category(PlaceCategory.AD5)

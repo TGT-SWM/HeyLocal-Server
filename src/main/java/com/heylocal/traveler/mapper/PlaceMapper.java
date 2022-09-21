@@ -2,8 +2,8 @@ package com.heylocal.traveler.mapper;
 
 import com.heylocal.traveler.domain.Region;
 import com.heylocal.traveler.domain.place.Place;
-import com.heylocal.traveler.domain.plan.list.PlaceItem;
 import com.heylocal.traveler.domain.plan.list.PlaceItemType;
+import com.heylocal.traveler.dto.PlaceItemDto;
 import org.mapstruct.Builder;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -31,5 +31,5 @@ public interface PlaceMapper {
   @Mapping(target = "thumbnailUrl", ignore = true)
   @Mapping(target = "opinionList", ignore = true)
   @Mapping(target = "placeItemList", ignore = true)
-  Place toEntity(PlaceItemRequest placeItemRequest);
+  Place toEntity(PlaceItemDto.PlaceItemRequest placeItemRequest);
 }

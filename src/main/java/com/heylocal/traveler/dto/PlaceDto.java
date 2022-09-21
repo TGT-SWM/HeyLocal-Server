@@ -68,36 +68,4 @@ public class PlaceDto {
 		private String kakaoLink;
 	}
 
-	@Getter
-	@Setter
-	@NoArgsConstructor
-	@AllArgsConstructor
-	@Builder
-	@Schema(description = "플랜 내 장소 아이템 수정을 위한 요청 DTO")
-	public static class PlaceItemRequest {
-		long id;
-		int itemIndex;
-		PlaceCategory category;
-		String name;
-		String roadAddress;
-		String address;
-		double lat;
-		double lng;
-		String link;
-	}
-
-	@Getter
-	@Setter
-	@NoArgsConstructor
-	@AllArgsConstructor
-	@Builder
-	@Schema(description = "플랜 내 장소 아이템 응답 DTO")
-	public static class PlaceItemResponse {
-		long id;
-		String name;
-		String address;
-		String roadAddress;
-		double lat;
-		double lng;
-	}
 }

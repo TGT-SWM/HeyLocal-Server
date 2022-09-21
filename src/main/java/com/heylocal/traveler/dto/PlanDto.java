@@ -2,8 +2,8 @@ package com.heylocal.traveler.dto;
 
 import com.heylocal.traveler.domain.plan.DaySchedule;
 import com.heylocal.traveler.domain.plan.list.PlaceItem;
-import com.heylocal.traveler.dto.PlaceDto.PlaceItemRequest;
-import com.heylocal.traveler.dto.PlaceDto.PlaceItemResponse;
+import com.heylocal.traveler.dto.PlaceItemDto.PlaceItemRequest;
+import com.heylocal.traveler.dto.PlaceItemDto.PlaceItemResponse;
 import com.heylocal.traveler.mapper.PlaceItemMapper;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
