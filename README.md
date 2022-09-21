@@ -11,5 +11,4 @@
 | 최정인 | 팀원  |FE|
 
 ## TODO
-- PlaceDto 에 있는 PlaceItem DTO 클래스들 분리 (Mapper도)
 - 답변 이미지 처리
