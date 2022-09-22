@@ -31,13 +31,9 @@ public class S3ObjectNameFormatter {
     String objectName = OPINION_IMG_FORMAT;
 
     objectName = objectName.replace(TRAVEL_ON_ID_PARAM, String.valueOf(travelOnId));
-    log.info("objectName: {}", objectName + ".png");
     objectName = objectName.replace(OPINION_ID_PARAM, String.valueOf(opinionId));
-    log.info("objectName: {}", objectName + ".png");
     objectName = objectName.replace(IMG_TYPE_PARAM, imgType.name());
-    log.info("objectName: {}", objectName + ".png");
     objectName = objectName.replace(FILE_NAME_PARAM, String.valueOf(objectIndex));
-    log.info("objectName: {}", objectName + ".png");
 
     return objectName + ".png";
   }
