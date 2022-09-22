@@ -1,6 +1,7 @@
 package com.heylocal.traveler.util.aws;
 
 import com.heylocal.traveler.domain.travelon.opinion.OpinionImageContent;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import static com.heylocal.traveler.domain.travelon.opinion.OpinionImageContent.*;
@@ -8,10 +9,11 @@ import static com.heylocal.traveler.domain.travelon.opinion.OpinionImageContent.
 /**
  * 포맷에 맞춰 S3의 Object 이름을 생성하는 클래스
  */
+@Slf4j
 @Component
 public class S3ObjectNameFormatter {
   private static final String TRAVEL_ON_ID_PARAM = "{여행OnId}";
-  private static final String OPINION_ID_PARAM = "{여행OnId}";
+  private static final String OPINION_ID_PARAM = "{답변Id}";
   private static final String IMG_TYPE_PARAM = "{이미지종류}";
   private static final String FILE_NAME_PARAM = "{파일이름}";
   private static final String OPINION_IMG_FORMAT
@@ -29,10 +31,14 @@ public class S3ObjectNameFormatter {
     String objectName = OPINION_IMG_FORMAT;
 
     objectName = objectName.replace(TRAVEL_ON_ID_PARAM, String.valueOf(travelOnId));
+    log.info("objectName: {}", objectName + ".png");
     objectName = objectName.replace(OPINION_ID_PARAM, String.valueOf(opinionId));
+    log.info("objectName: {}", objectName + ".png");
     objectName = objectName.replace(IMG_TYPE_PARAM, imgType.name());
+    log.info("objectName: {}", objectName + ".png");
     objectName = objectName.replace(FILE_NAME_PARAM, String.valueOf(objectIndex));
+    log.info("objectName: {}", objectName + ".png");
 
-    return objectName;
+    return objectName + ".png";
   }
 }

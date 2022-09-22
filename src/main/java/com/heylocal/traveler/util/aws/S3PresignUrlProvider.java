@@ -32,6 +32,7 @@ public class S3PresignUrlProvider {
     GeneratePresignedUrlRequest generatePresignedUrlRequest =
         new GeneratePresignedUrlRequest(bucketName, uploadObjectKeyName)
             .withMethod(HttpMethod.PUT)
+            .withContentType("image/png")
             .withExpiration(urlExpiration);
     URL url = amazonS3Client.generatePresignedUrl(generatePresignedUrlRequest);
     return url.toString();
