@@ -25,7 +25,7 @@ public class OpinionImageContent extends BaseTimeEntity {
   private Opinion opinion;
 
   @Column(nullable = false)
-  private String url;
+  private String objectKeyName;
 
   @Enumerated(EnumType.STRING)
   @Column(nullable = false)
