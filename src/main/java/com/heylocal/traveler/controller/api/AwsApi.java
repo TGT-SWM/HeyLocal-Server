@@ -1,7 +1,6 @@
 package com.heylocal.traveler.controller.api;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.heylocal.traveler.dto.aws.AwsSnsDto;
 import com.heylocal.traveler.exception.NotFoundException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;

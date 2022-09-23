@@ -3,6 +3,7 @@ package com.heylocal.traveler.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.heylocal.traveler.controller.api.AwsApi;
+import com.heylocal.traveler.dto.aws.S3ObjectDto;
 import com.heylocal.traveler.exception.NotFoundException;
 import com.heylocal.traveler.service.OpinionImgContentService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -10,7 +11,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RestController;
 
-import static com.heylocal.traveler.dto.aws.AwsSnsDto.AwsSnsRequest;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Slf4j
 @Tag(name = "Aws")
@@ -27,14 +29,29 @@ public class AwsController implements AwsApi {
    * @throws JsonProcessingException
    */
   @Override
-  public void postSavedOpinionImgMessage(String request) throws NotFoundException, JsonProcessingException {
+  public void postSavedOpinionImgMessage(String request) throws NotFoundException {
     //String -> AwsSnsRequest 객체
-    AwsSnsRequest awsSnsRequest;
-    awsSnsRequest = objectMapper.readValue(request, AwsSnsRequest.class);
+    S3ObjectDto s3ObjectDto = new S3ObjectDto();
+    String objectName = getObjectName(request);
+    s3ObjectDto.setKey(objectName);
 
-    log.info("전체 String 요청값: {}", request);
-    log.info("전체 Object 요청값: {}", awsSnsRequest.toString());
+    opinionImgContentService.saveOpinionImageContent(s3ObjectDto);
+  }
 
-    opinionImgContentService.saveOpinionImageContent(awsSnsRequest.getObject());
+  /**
+   * SNS 로부터 전달받은 메시지에서 S3 Object의 key 값을 추출하는 메서드
+   * @param request
+   * @return
+   */
+  private String getObjectName(String request) {
+    String objectName = "";
+    Pattern pattern = Pattern.compile("\\\\\"key\\\\\":\\\\\"opinions/.*png\\\\\"");
+    Matcher matcher = pattern.matcher(request);
+    if (matcher.find()) {
+      objectName = matcher.group().replaceAll("\\\\", "");
+      objectName = objectName.replaceAll("\"", "");
+      objectName = objectName.split(":")[1];
+    }
+    return objectName;
   }
 }
