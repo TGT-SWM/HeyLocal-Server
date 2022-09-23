@@ -36,7 +36,6 @@ public class AwsController implements AwsApi {
     s3ObjectDto.setKey(objectName);
 
     opinionImgContentService.saveOpinionImageContent(s3ObjectDto);
-    log.info("Callback 호출됨");
   }
 
   /**
