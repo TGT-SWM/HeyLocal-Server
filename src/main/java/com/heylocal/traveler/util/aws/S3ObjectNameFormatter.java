@@ -4,6 +4,9 @@ import com.heylocal.traveler.domain.travelon.opinion.OpinionImageContent;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 import static com.heylocal.traveler.domain.travelon.opinion.OpinionImageContent.*;
 
 /**
@@ -36,5 +39,29 @@ public class S3ObjectNameFormatter {
     objectName = objectName.replace(FILE_NAME_PARAM, String.valueOf(objectIndex));
 
     return objectName + ".png";
+  }
+
+  /**
+   * 답변 이미지 Object 이름으로 여행OnID·답변ID·배치순서 를 구하는 메서드
+   * @param objectName
+   * @return
+   */
+  public Map<ObjectNameProperty, String> parseObjectNameOfOpinionImg(String objectName) {
+    Map<ObjectNameProperty, String> result = new ConcurrentHashMap<>();
+    String[] splitObjectName = objectName.split("/");
+
+    result.put(ObjectNameProperty.TRAVEL_ON_ID, splitObjectName[1]);
+    result.put(ObjectNameProperty.OPINION_ID, splitObjectName[2]);
+    result.put(ObjectNameProperty.IMG_TYPE, splitObjectName[3]);
+    result.put(ObjectNameProperty.OBJECT_INDEX, splitObjectName[4].replace(".png", ""));
+
+    return result;
+  }
+
+  /**
+   * Object 이름을 구성할 때 사용되는 요소
+   */
+  public enum ObjectNameProperty {
+    TRAVEL_ON_ID, OPINION_ID, IMG_TYPE, OBJECT_INDEX
   }
 }
