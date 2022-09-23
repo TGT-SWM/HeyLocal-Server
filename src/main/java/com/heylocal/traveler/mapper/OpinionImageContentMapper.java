@@ -16,6 +16,8 @@ public interface OpinionImageContentMapper {
 
   @Mapping(target = "id", ignore = true)
   @Mapping(target = "opinion", ignore = true)
+  @Mapping(target = "objectKeyName", source = "objectKeyName")
+  @Mapping(target = "imageContentType", source = "imageContentType")
   OpinionImageContent toEntity(String objectKeyName, ImageContentType imageContentType, Opinion opinion);
 
   OpinionImageContentResponse toResponseDto(OpinionImageContent opinionImageContent);

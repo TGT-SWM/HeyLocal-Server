@@ -14,3 +14,4 @@
 - Simple Notification Service 동작 확인
 - 답변 이미지 처리
 - 엔티티 변경사항 Test DB에 반영
+  - OpinionImageContent 의 url 필드 제거

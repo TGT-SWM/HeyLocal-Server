@@ -35,18 +35,19 @@ public class OpinionImgContentService {
     Map<ObjectNameProperty, String> objectNamePropertyMap;
     ImageContentType targetImageType;
     long targetTravelOnId;
+    long targetOpinionId;
     Opinion targetOpinion;
 
     objectKeyName = s3ObjectDto.getKey();
     objectNamePropertyMap = s3ObjectNameFormatter.parseObjectNameOfOpinionImg(objectKeyName);
     targetImageType = Enum.valueOf(ImageContentType.class, objectNamePropertyMap.get(ObjectNameProperty.IMG_TYPE));
     targetTravelOnId = Long.parseLong(objectNamePropertyMap.get(ObjectNameProperty.TRAVEL_ON_ID));
-    targetOpinion = opinionRepository.findById(targetTravelOnId).orElseThrow(
-        () -> new NotFoundException(NotFoundCode.NO_INFO, "답변 ID가 존재하지 않습니다.")
+    targetOpinionId = Long.parseLong(objectNamePropertyMap.get(ObjectNameProperty.OPINION_ID));
+    targetOpinion = opinionRepository.findByIdAndTravelOn(targetOpinionId, targetTravelOnId).orElseThrow(
+        () -> new NotFoundException(NotFoundCode.NO_INFO, "해당 여행On에 이 답변 ID가 존재하지 않습니다.")
     );
 
     OpinionImageContent target = OpinionImageContentMapper.INSTANCE.toEntity(objectKeyName, targetImageType, targetOpinion);
     opinionImageContentRepository.save(target);
-    log.info("저장 성공");
   }
 }
