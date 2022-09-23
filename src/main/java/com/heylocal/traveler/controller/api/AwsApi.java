@@ -20,7 +20,6 @@ public interface AwsApi {
   })
   @PostMapping(value = "/opinion/img", consumes = "text/plain")
   void postSavedOpinionImgMessage(
-//      @Parameter(in = ParameterIn.DEFAULT, description = "Put된 S3 Object 정보", required = true) @RequestBody AwsSnsDto.AwsSnsRequest request
       @Parameter(in = ParameterIn.DEFAULT, description = "Put된 S3 Object 정보", required = true) @RequestBody String request
       ) throws NotFoundException, JsonProcessingException;
 }
