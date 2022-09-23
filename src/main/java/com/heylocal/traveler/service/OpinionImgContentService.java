@@ -10,6 +10,7 @@ import com.heylocal.traveler.repository.OpinionImageContentRepository;
 import com.heylocal.traveler.repository.OpinionRepository;
 import com.heylocal.traveler.util.aws.S3ObjectNameFormatter;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +21,7 @@ import static com.heylocal.traveler.domain.travelon.opinion.OpinionImageContent.
 import static com.heylocal.traveler.dto.OpinionImageContentDto.OpinionImageContentRequest;
 import static com.heylocal.traveler.util.aws.S3ObjectNameFormatter.*;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class OpinionImgContentService {
@@ -45,5 +47,6 @@ public class OpinionImgContentService {
 
     OpinionImageContent target = OpinionImageContentMapper.INSTANCE.toEntity(objectKeyName, targetImageType, targetOpinion);
     opinionImageContentRepository.save(target);
+    log.info("저장 성공");
   }
 }
