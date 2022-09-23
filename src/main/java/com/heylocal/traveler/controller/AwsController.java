@@ -20,12 +20,20 @@ public class AwsController implements AwsApi {
   private final OpinionImgContentService opinionImgContentService;
   private final ObjectMapper objectMapper;
 
+  /**
+   * AWS 에서 Content-Type: text/plain 으로 요청을 보내므로, 파라미터 타입을 String 으로 받아야 함.
+   * @param request 요청 HTTP Message의 바디 부분 데이터
+   * @throws NotFoundException
+   * @throws JsonProcessingException
+   */
   @Override
   public void postSavedOpinionImgMessage(String request) throws NotFoundException, JsonProcessingException {
+    //String -> AwsSnsRequest 객체
     AwsSnsRequest awsSnsRequest;
     awsSnsRequest = objectMapper.readValue(request, AwsSnsRequest.class);
 
     log.info("SNS 구독 URL: {}", awsSnsRequest.getSubscribeURL());
-//    opinionImgContentService.saveOpinionImageContent(awsSnsRequest.getObject());
+    log.info("전체 메시지: {}", request);
+    opinionImgContentService.saveOpinionImageContent(awsSnsRequest.getObject());
   }
 }
