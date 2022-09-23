@@ -19,17 +19,27 @@ import com.heylocal.traveler.repository.OpinionRepository;
 import com.heylocal.traveler.repository.PlaceRepository;
 import com.heylocal.traveler.repository.TravelOnRepository;
 import com.heylocal.traveler.repository.UserRepository;
+import com.heylocal.traveler.util.aws.S3ObjectNameFormatter;
+import com.heylocal.traveler.util.aws.S3PresignUrlProvider;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.stream.Collectors;
 
+import static com.heylocal.traveler.domain.travelon.opinion.OpinionImageContent.*;
 import static com.heylocal.traveler.dto.OpinionDto.OpinionRequest;
 import static com.heylocal.traveler.dto.OpinionDto.OpinionResponse;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class OpinionService {
@@ -39,6 +49,11 @@ public class OpinionService {
   private final TravelOnRepository travelOnRepository;
   private final PlaceRepository placeRepository;
   private final OpinionRepository opinionRepository;
+  private final S3ObjectNameFormatter s3ObjectNameFormatter;
+  private final S3PresignUrlProvider s3PresignUrlProvider;
+
+  @Value("${cloud.aws.s3.bucket}")
+  private String bucketName;
 
   /**
    * 새 답변(Opinion) 등록
@@ -50,7 +65,7 @@ public class OpinionService {
    * @throws BadRequestException
    */
   @Transactional
-  public void addNewOpinion(long travelOnId, OpinionRequest request, LoginUser loginUser) throws NotFoundException, ForbiddenException, BadRequestException {
+  public Long addNewOpinion(long travelOnId, OpinionRequest request, LoginUser loginUser) throws NotFoundException, ForbiddenException, BadRequestException {
     long authorId;
     TravelOn travelOn;
     String requestPlaceAddress;
@@ -83,6 +98,8 @@ public class OpinionService {
     //새 답변 추가
     newOpinion = OpinionMapper.INSTANCE.toEntity(request, requestPlace, opinionAuthor, travelOn, regionOfRequestPlace);
     opinionRepository.save(newOpinion);
+
+    return newOpinion.getId();
   }
 
   /**
@@ -186,6 +203,45 @@ public class OpinionService {
     opinion = opinionOptional.get();
 
     return opinion.getAuthor().getId() == userId;
+  }
+
+  /**
+   * OpinionImageType 에 따라, 각각의 Presigned URL 을 생성하는 메서드
+   * @param request
+   * @param travelOnId
+   * @param newOpinionId
+   * @return
+   */
+  public Map<ImageContentType, List<String>> getPresignedUrl(OpinionRequest request, long travelOnId, long newOpinionId) {
+    int generalImgQuantity = request.getGeneralImgQuantity();
+    int foodImgQuantity = request.getFoodImgQuantity();
+    int drinkAndDessertImgQuantity = request.getDrinkAndDessertImgQuantity();
+    int photoSpotImgQuantity = request.getPhotoSpotImgQuantity();
+    Map<ImageContentType, List<String>> result = new ConcurrentHashMap<>();
+
+    //ImageContentType 마다 반복
+    for (ImageContentType type : ImageContentType.values()) { //for 문 시작
+      ArrayList<String> urls = new ArrayList<>();
+      int quantity = 0;
+
+      if (type == ImageContentType.GENERAL) quantity = generalImgQuantity;
+      else if (type == ImageContentType.RECOMMEND_FOOD) quantity = foodImgQuantity;
+      else if (type == ImageContentType.RECOMMEND_DRINK_DESSERT) quantity = drinkAndDessertImgQuantity;
+      else if (type == ImageContentType.PHOTO_SPOT) quantity = photoSpotImgQuantity;
+
+      while (quantity > 0) { //while 문 시작
+        quantity--;
+        String objectNameOfOpinionImg =
+            s3ObjectNameFormatter.getObjectNameOfOpinionImg(travelOnId, newOpinionId, type, quantity);
+        String presignedUrl = s3PresignUrlProvider.getUploadUrl(objectNameOfOpinionImg);
+
+        urls.add(presignedUrl);
+      } //while 문 끝
+
+      result.put(type, urls);
+    } //for 문 끝
+
+    return result;
   }
 
   /**

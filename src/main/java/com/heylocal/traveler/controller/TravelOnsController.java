@@ -1,6 +1,7 @@
 package com.heylocal.traveler.controller;
 
 import com.heylocal.traveler.controller.api.TravelOnsApi;
+import com.heylocal.traveler.domain.travelon.opinion.OpinionImageContent;
 import com.heylocal.traveler.dto.LoginUser;
 import com.heylocal.traveler.exception.BadRequestException;
 import com.heylocal.traveler.exception.ForbiddenException;
@@ -17,7 +18,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Map;
 
+import static com.heylocal.traveler.domain.travelon.opinion.OpinionImageContent.*;
 import static com.heylocal.traveler.dto.OpinionDto.OpinionRequest;
 import static com.heylocal.traveler.dto.OpinionDto.OpinionResponse;
 import static com.heylocal.traveler.dto.TravelOnDto.*;
@@ -57,8 +60,8 @@ public class TravelOnsController implements TravelOnsApi {
    */
   @Override
   public void createTravelOn(TravelOnRequest request,
-                             BindingResult bindingResult,
-                             LoginUser loginUser) throws BadRequestException, NotFoundException {
+                                                  BindingResult bindingResult,
+                                                  LoginUser loginUser) throws BadRequestException, NotFoundException {
     if (bindingResult.hasFieldErrors()) {
       String errMsg = errorMessageProvider.getFieldErrMsg(bindingResult);
       throw new BadRequestException(BadRequestCode.BAD_INPUT_FORM, errMsg);
@@ -148,14 +151,17 @@ public class TravelOnsController implements TravelOnsApi {
    * @throws ForbiddenException
    */
   @Override
-  public void createOpinions(long travelOnId, OpinionRequest request, BindingResult bindingResult, LoginUser loginUser) throws BadRequestException, NotFoundException, ForbiddenException {
+  public Map<ImageContentType, List<String>> createOpinions(long travelOnId, OpinionRequest request, BindingResult bindingResult, LoginUser loginUser) throws BadRequestException, NotFoundException, ForbiddenException {
+    long newOpinionId;
+
     if (bindingResult.hasFieldErrors()) {
       String fieldErrMsg = errorMessageProvider.getFieldErrMsg(bindingResult);
       throw new BadRequestException(BadRequestCode.BAD_INPUT_FORM, fieldErrMsg);
     }
 
-    opinionService.addNewOpinion(travelOnId, request, loginUser);
+    newOpinionId = opinionService.addNewOpinion(travelOnId, request, loginUser);
 
+    return opinionService.getPresignedUrl(request, travelOnId, newOpinionId);
   }
 
   /**

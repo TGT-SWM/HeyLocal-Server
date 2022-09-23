@@ -20,6 +20,8 @@ import com.heylocal.traveler.repository.OpinionRepository;
 import com.heylocal.traveler.repository.PlaceRepository;
 import com.heylocal.traveler.repository.TravelOnRepository;
 import com.heylocal.traveler.repository.UserRepository;
+import com.heylocal.traveler.util.aws.S3ObjectNameFormatter;
+import com.heylocal.traveler.util.aws.S3PresignUrlProvider;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -52,12 +54,16 @@ class OpinionServiceTest {
   private PlaceRepository placeRepository;
   @Mock
   private OpinionRepository opinionRepository;
+  @Mock
+  private S3ObjectNameFormatter s3ObjectNameFormatter;
+  @Mock
+  private S3PresignUrlProvider s3PresignUrlProvider;
   private OpinionService opinionService;
 
   @BeforeEach
   void setUp() {
     MockitoAnnotations.openMocks(this);
-    opinionService = new OpinionService(regionService, userRepository, travelOnRepository, placeRepository, opinionRepository);
+    opinionService = new OpinionService(regionService, userRepository, travelOnRepository, placeRepository, opinionRepository, s3ObjectNameFormatter, s3PresignUrlProvider);
   }
 
   @Test
@@ -273,10 +279,10 @@ class OpinionServiceTest {
     OpinionRequest opinionRequest = OpinionRequest.builder()
         .place(placeRequest)
         .description(updateDescriptionOfOpinion)
-        .generalImgContentUrlList(new ArrayList<>())
-        .drinkAndDessertImgContentUrlList(new ArrayList<>())
-        .foodImgContentUrlList(new ArrayList<>())
-        .photoSpotImgContentUrlList(new ArrayList<>())
+//        .generalImgContentUrlList(new ArrayList<>())
+//        .drinkAndDessertImgContentUrlList(new ArrayList<>())
+//        .foodImgContentUrlList(new ArrayList<>())
+//        .photoSpotImgContentUrlList(new ArrayList<>())
         .build();
 
     //Mock 행동 정의 - travelOnRepository
@@ -531,10 +537,10 @@ class OpinionServiceTest {
     return OpinionRequest.builder()
         .description("myDescription")
         .place(place)
-        .generalImgContentUrlList(new ArrayList<>())
-        .foodImgContentUrlList(new ArrayList<>())
-        .drinkAndDessertImgContentUrlList(new ArrayList<>())
-        .photoSpotImgContentUrlList(new ArrayList<>())
+//        .generalImgContentUrlList(new ArrayList<>())
+//        .foodImgContentUrlList(new ArrayList<>())
+//        .drinkAndDessertImgContentUrlList(new ArrayList<>())
+//        .photoSpotImgContentUrlList(new ArrayList<>())
         .facilityCleanliness(EvaluationDegree.GOOD)
         .costPerformance(EvaluationDegree.GOOD)
         .waiting(false)

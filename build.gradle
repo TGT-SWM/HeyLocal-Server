@@ -28,6 +28,9 @@ dependencies {
 	implementation 'io.springfox:springfox-boot-starter:3.0.0'
 	implementation 'io.jsonwebtoken:jjwt:0.9.1'
 	implementation 'org.mapstruct:mapstruct:1.5.2.Final'
+	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
+	implementation 'org.springframework.cloud:spring-cloud-aws-context:2.2.6.RELEASE'
+	implementation 'org.springframework.cloud:spring-cloud-aws-autoconfigure:2.2.6.RELEASE'
 
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'com.h2database:h2'
@@ -39,6 +42,7 @@ dependencies {
 	testAnnotationProcessor 'org.mapstruct:mapstruct-processor:1.5.2.Final'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'io.jsonwebtoken:jjwt:0.9.1'
+	testImplementation 'io.findify:s3mock_2.12:0.2.6'
 
 	testCompileOnly 'org.projectlombok:lombok'
 }

@@ -1,5 +1,6 @@
 package com.heylocal.traveler.controller.api;
 
+import com.heylocal.traveler.domain.travelon.opinion.OpinionImageContent;
 import com.heylocal.traveler.dto.ErrorMessageResponse;
 import com.heylocal.traveler.dto.LoginUser;
 import com.heylocal.traveler.dto.OpinionDto.OpinionRequest;
@@ -25,6 +26,9 @@ import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.List;
+import java.util.Map;
+
+import static com.heylocal.traveler.domain.travelon.opinion.OpinionImageContent.*;
 
 @RequestMapping("/travel-ons")
 public interface TravelOnsApi {
@@ -105,14 +109,14 @@ public interface TravelOnsApi {
 
     @Operation(summary = "답변 등록", description = "여행 On에 답변을 등록합니다.", tags = {"TravelOns"})
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "201", description = "해당 여행On 에 답변 등록 성공 시"),
+        @ApiResponse(responseCode = "201", description = "해당 여행On 에 답변 등록 성공 시, 답변 사진을 업로드할 수 있는 Presigned URL을 반환", content = @Content(mediaType = "application/json")),
         @ApiResponse(responseCode = "400", description = "- `BAD_INPUT_FORM`: 입력 값의 형식이 올바르지 않을 때", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessageResponse.class))),
         @ApiResponse(responseCode = "403", description = "- `NO_PERMISSION`: 등록할 수 없을 때", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessageResponse.class))),
         @ApiResponse(responseCode = "404", description = "- `NO_INFO`: 존재하지 않는 정보일 때", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessageResponse.class)))
     })
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/{travelOnId}/opinions")
-    void createOpinions(
+    Map<ImageContentType, List<String>> createOpinions(
             @Parameter(in = ParameterIn.PATH, description = "여행 On ID", required = true) @PathVariable long travelOnId,
             @Parameter(in = ParameterIn.DEFAULT, description = "답변 정보", required = true) @Validated @RequestBody OpinionRequest request,
             BindingResult bindingResult,

@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Max;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
@@ -30,14 +31,18 @@ public class OpinionDto {
 		private String description;
 		@Valid
 		private PlaceRequest place;
-		@ApiModelProperty("전체(일반) 사진 url\n순서대로 배치")
-		private List<String> generalImgContentUrlList;
-		@ApiModelProperty("추천 음식 (음식점) 사진 url\n순서대로 배치")
-		private List<String> foodImgContentUrlList;
-		@ApiModelProperty("추천 음료 및 디저트 (카페) 사진 url\n순서대로 배치")
-		private List<String> drinkAndDessertImgContentUrlList;
-		@ApiModelProperty("사진 명소 (관광지 및 문화시설) 사진 url\n순서대로 배치")
-		private List<String> photoSpotImgContentUrlList;
+		@ApiModelProperty("등록할 전체(일반) 사진 개수 (3개 이하)")
+		@Max(3)
+		private int generalImgQuantity;
+		@ApiModelProperty("등록할 추천 음식 사진 개수 (3개 이하)")
+		@Max(3)
+		private int foodImgQuantity;
+		@ApiModelProperty("등록할 추천 음료 및 디저트 (카페) 사진 개수 (3개 이하)")
+		@Max(3)
+		private int drinkAndDessertImgQuantity;
+		@ApiModelProperty("등록할 사진 명소 (관광지 및 문화시설) 사진 개수 (3개 이하)")
+		@Max(3)
+		private int photoSpotImgQuantity;
 		@ApiModelProperty(value = "시설이 청결한가요", required = true)
 		@NotNull
 		private EvaluationDegree facilityCleanliness;

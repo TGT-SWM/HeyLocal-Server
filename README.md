@@ -11,4 +11,6 @@
 | 최정인 | 팀원  |FE|
 
 ## TODO
+- Simple Notification Service 동작 확인
 - 답변 이미지 처리
+- 엔티티 변경사항 Test DB에 반영

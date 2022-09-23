@@ -63,16 +63,16 @@ public interface OpinionMapper {
           ImageContentType type = item.getImageContentType();
           switch (type) {
             case GENERAL:
-              generalUrlList.add(item.getUrl());
+              generalUrlList.add(item.getObjectKeyName());
               break;
             case RECOMMEND_FOOD:
-              foodUrlList.add(item.getUrl());
+              foodUrlList.add(item.getObjectKeyName());
               break;
             case RECOMMEND_DRINK_DESSERT:
-              drinkAndDessertUrlList.add(item.getUrl());
+              drinkAndDessertUrlList.add(item.getObjectKeyName());
               break;
             case PHOTO_SPOT:
-              photoSpotUrlList.add(item.getUrl());
+              photoSpotUrlList.add(item.getObjectKeyName());
               break;
           }
         }
@@ -87,46 +87,6 @@ public interface OpinionMapper {
   @AfterMapping
   default void removeAllImgContentListOfEntity(@MappingTarget Opinion opinion) {
     opinion.removeAllOpinionImageContent();
-  }
-
-  @AfterMapping
-  default void updateEntityImgContentList(OpinionRequest opinionRequest, @MappingTarget Opinion opinion) {
-    opinionRequest.getGeneralImgContentUrlList().stream().forEach(
-        (item) -> {
-          OpinionImageContent imgContentEntity = OpinionImageContent.builder()
-              .url(item)
-              .imageContentType(ImageContentType.GENERAL)
-              .build();
-          imgContentEntity.setOpinion(opinion);
-        }
-    );
-    opinionRequest.getFoodImgContentUrlList().stream().forEach(
-        (item) -> {
-          OpinionImageContent imgContentEntity = OpinionImageContent.builder()
-              .url(item)
-              .imageContentType(ImageContentType.RECOMMEND_FOOD)
-              .build();
-          imgContentEntity.setOpinion(opinion);
-        }
-    );
-    opinionRequest.getDrinkAndDessertImgContentUrlList().stream().forEach(
-        (item) -> {
-          OpinionImageContent imgContentEntity = OpinionImageContent.builder()
-              .url(item)
-              .imageContentType(ImageContentType.RECOMMEND_DRINK_DESSERT)
-              .build();
-          imgContentEntity.setOpinion(opinion);
-        }
-    );
-    opinionRequest.getPhotoSpotImgContentUrlList().stream().forEach(
-        (item) -> {
-          OpinionImageContent imgContentEntity = OpinionImageContent.builder()
-              .url(item)
-              .imageContentType(ImageContentType.PHOTO_SPOT)
-              .build();
-          imgContentEntity.setOpinion(opinion);
-        }
-    );
   }
 
 }
