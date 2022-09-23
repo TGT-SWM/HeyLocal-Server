@@ -1,5 +1,6 @@
 package com.heylocal.traveler.controller.api;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.heylocal.traveler.dto.aws.AwsSnsDto;
 import com.heylocal.traveler.exception.NotFoundException;
 import io.swagger.v3.oas.annotations.Operation;
@@ -17,8 +18,9 @@ public interface AwsApi {
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "호출 성공")
   })
-  @PostMapping("/opinion/img")
+  @PostMapping(value = "/opinion/img", consumes = "text/plain")
   void postSavedOpinionImgMessage(
-      @Parameter(in = ParameterIn.DEFAULT, description = "Put된 S3 Object 정보", required = true) @RequestBody AwsSnsDto.AwsSnsRequest request
-      ) throws NotFoundException;
+//      @Parameter(in = ParameterIn.DEFAULT, description = "Put된 S3 Object 정보", required = true) @RequestBody AwsSnsDto.AwsSnsRequest request
+      @Parameter(in = ParameterIn.DEFAULT, description = "Put된 S3 Object 정보", required = true) @RequestBody String request
+      ) throws NotFoundException, JsonProcessingException;
 }

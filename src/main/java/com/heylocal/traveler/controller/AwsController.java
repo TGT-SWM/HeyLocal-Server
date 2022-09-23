@@ -1,5 +1,7 @@
 package com.heylocal.traveler.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.heylocal.traveler.controller.api.AwsApi;
 import com.heylocal.traveler.exception.NotFoundException;
 import com.heylocal.traveler.service.OpinionImgContentService;
@@ -16,10 +18,14 @@ import static com.heylocal.traveler.dto.aws.AwsSnsDto.AwsSnsRequest;
 @RequiredArgsConstructor
 public class AwsController implements AwsApi {
   private final OpinionImgContentService opinionImgContentService;
+  private final ObjectMapper objectMapper;
 
   @Override
-  public void postSavedOpinionImgMessage(AwsSnsRequest request) throws NotFoundException {
-    log.info("SNS 구독 URL: {}", request.getSubscribeURL());
-    opinionImgContentService.saveOpinionImageContent(request.getObject());
+  public void postSavedOpinionImgMessage(String request) throws NotFoundException, JsonProcessingException {
+    AwsSnsRequest awsSnsRequest;
+    awsSnsRequest = objectMapper.readValue(request, AwsSnsRequest.class);
+
+    log.info("SNS 구독 URL: {}", awsSnsRequest.getSubscribeURL());
+//    opinionImgContentService.saveOpinionImageContent(awsSnsRequest.getObject());
   }
 }
