@@ -1,7 +1,6 @@
 package com.heylocal.traveler.controller;
 
 import com.heylocal.traveler.controller.api.TravelOnsApi;
-import com.heylocal.traveler.domain.travelon.opinion.OpinionImageContent;
 import com.heylocal.traveler.dto.LoginUser;
 import com.heylocal.traveler.exception.BadRequestException;
 import com.heylocal.traveler.exception.ForbiddenException;
@@ -20,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import java.util.Map;
 
-import static com.heylocal.traveler.domain.travelon.opinion.OpinionImageContent.*;
+import static com.heylocal.traveler.domain.travelon.opinion.OpinionImageContent.ImageContentType;
 import static com.heylocal.traveler.dto.OpinionDto.OpinionRequest;
 import static com.heylocal.traveler.dto.OpinionDto.OpinionResponse;
 import static com.heylocal.traveler.dto.TravelOnDto.*;

@@ -1,6 +1,5 @@
 package com.heylocal.traveler.controller.api;
 
-import com.heylocal.traveler.domain.travelon.opinion.OpinionImageContent;
 import com.heylocal.traveler.dto.ErrorMessageResponse;
 import com.heylocal.traveler.dto.LoginUser;
 import com.heylocal.traveler.dto.OpinionDto.OpinionRequest;
@@ -28,7 +27,7 @@ import springfox.documentation.annotations.ApiIgnore;
 import java.util.List;
 import java.util.Map;
 
-import static com.heylocal.traveler.domain.travelon.opinion.OpinionImageContent.*;
+import static com.heylocal.traveler.domain.travelon.opinion.OpinionImageContent.ImageContentType;
 
 @RequestMapping("/travel-ons")
 public interface TravelOnsApi {

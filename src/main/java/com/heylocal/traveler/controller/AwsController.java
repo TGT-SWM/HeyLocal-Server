@@ -1,6 +1,5 @@
 package com.heylocal.traveler.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.heylocal.traveler.controller.api.AwsApi;
 import com.heylocal.traveler.dto.aws.S3ObjectDto;
 import com.heylocal.traveler.exception.NotFoundException;
@@ -23,7 +22,6 @@ public class AwsController implements AwsApi {
    * AWS 에서 Content-Type: text/plain 으로 요청을 보내므로, 파라미터 타입을 String 으로 받아야 함.
    * @param request 요청 HTTP Message의 바디 부분 데이터
    * @throws NotFoundException
-   * @throws JsonProcessingException
    */
   @Override
   public void postSavedOpinionImgMessage(String request) throws NotFoundException {

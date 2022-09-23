@@ -32,10 +32,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 import java.util.stream.Collectors;
 
-import static com.heylocal.traveler.domain.travelon.opinion.OpinionImageContent.*;
+import static com.heylocal.traveler.domain.travelon.opinion.OpinionImageContent.ImageContentType;
 import static com.heylocal.traveler.dto.OpinionDto.OpinionRequest;
 import static com.heylocal.traveler.dto.OpinionDto.OpinionResponse;
 
