@@ -95,7 +95,7 @@ public class OpinionService {
     //장소 저장 및 조회
     requestPlace = inquiryPlaceFromOpinionRequest(request);
 
-    //새 답변 추가 (사진 정보 제외)
+    //새 답변 추가
     newOpinion = OpinionMapper.INSTANCE.toEntity(request, requestPlace, opinionAuthor, travelOn, regionOfRequestPlace);
     opinionRepository.save(newOpinion);
 
@@ -212,12 +212,12 @@ public class OpinionService {
    * @param newOpinionId
    * @return
    */
-  public Map<String, List<String>> getPresignedUrl(OpinionRequest request, long travelOnId, long newOpinionId) {
+  public Map<ImageContentType, List<String>> getPresignedUrl(OpinionRequest request, long travelOnId, long newOpinionId) {
     int generalImgQuantity = request.getGeneralImgQuantity();
     int foodImgQuantity = request.getFoodImgQuantity();
     int drinkAndDessertImgQuantity = request.getDrinkAndDessertImgQuantity();
     int photoSpotImgQuantity = request.getPhotoSpotImgQuantity();
-    Map<String, List<String>> result = new ConcurrentHashMap<>();
+    Map<ImageContentType, List<String>> result = new ConcurrentHashMap<>();
 
     //ImageContentType 마다 반복
     for (ImageContentType type : ImageContentType.values()) { //for 문 시작
@@ -238,7 +238,7 @@ public class OpinionService {
         urls.add(presignedUrl);
       } //while 문 끝
 
-      result.put(type.name(), urls);
+      result.put(type, urls);
     } //for 문 끝
 
     return result;
