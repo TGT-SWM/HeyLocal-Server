@@ -32,8 +32,9 @@ public class AwsController implements AwsApi {
     AwsSnsRequest awsSnsRequest;
     awsSnsRequest = objectMapper.readValue(request, AwsSnsRequest.class);
 
-    log.info("SNS 구독 URL: {}", awsSnsRequest.getSubscribeURL());
-    log.info("전체 메시지: {}", request);
+    log.info("전체 String 요청값: {}", request);
+    log.info("전체 Object 요청값: {}", awsSnsRequest.toString());
+
     opinionImgContentService.saveOpinionImageContent(awsSnsRequest.getObject());
   }
 }
