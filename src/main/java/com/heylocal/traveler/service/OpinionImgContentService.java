@@ -15,11 +15,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Map;
-import java.util.Optional;
 
-import static com.heylocal.traveler.domain.travelon.opinion.OpinionImageContent.*;
-import static com.heylocal.traveler.dto.OpinionImageContentDto.OpinionImageContentRequest;
-import static com.heylocal.traveler.util.aws.S3ObjectNameFormatter.*;
+import static com.heylocal.traveler.domain.travelon.opinion.OpinionImageContent.ImageContentType;
+import static com.heylocal.traveler.util.aws.S3ObjectNameFormatter.ObjectNameProperty;
 
 @Slf4j
 @Service
@@ -29,6 +27,14 @@ public class OpinionImgContentService {
   private final OpinionRepository opinionRepository;
   private final S3ObjectNameFormatter s3ObjectNameFormatter;
 
+  /**
+   * <pre>
+   * OpinionImageContent 를 저장하는 메서드
+   * S3 Bucket에 저장된 Object 정보를 기반으로 저장한다.
+   * </pre>
+   * @param s3ObjectDto
+   * @throws NotFoundException
+   */
   @Transactional
   public void saveOpinionImageContent(S3ObjectDto s3ObjectDto) throws NotFoundException {
     String objectKeyName;
