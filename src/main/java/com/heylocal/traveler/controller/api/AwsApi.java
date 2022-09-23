@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @RequestMapping("/aws/sns")
@@ -18,6 +19,6 @@ public interface AwsApi {
   })
   @PostMapping("/opinion/img")
   void postSavedOpinionImgMessage(
-      @Parameter(in = ParameterIn.DEFAULT, description = "Put된 S3 Object 정보", required = true) AwsSnsDto.AwsSnsRequest request
+      @Parameter(in = ParameterIn.DEFAULT, description = "Put된 S3 Object 정보", required = true) @RequestBody AwsSnsDto.AwsSnsRequest request
       ) throws NotFoundException;
 }
