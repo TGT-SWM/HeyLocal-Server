@@ -1,15 +1,13 @@
 package com.heylocal.traveler.util.aws;
 
-import com.heylocal.traveler.domain.travelon.opinion.OpinionImageContent;
-import org.apache.tomcat.util.file.Matcher;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.Map;
 import java.util.regex.Pattern;
 
-import static com.heylocal.traveler.domain.travelon.opinion.OpinionImageContent.*;
-import static com.heylocal.traveler.util.aws.S3ObjectNameFormatter.*;
+import static com.heylocal.traveler.domain.travelon.opinion.OpinionImageContent.ImageContentType;
+import static com.heylocal.traveler.util.aws.S3ObjectNameFormatter.ObjectNameProperty;
 import static org.junit.jupiter.api.Assertions.*;
 
 class S3ObjectNameFormatterTest {

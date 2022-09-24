@@ -1,7 +1,6 @@
 package com.heylocal.traveler.service;
 
 import com.heylocal.traveler.domain.travelon.opinion.Opinion;
-import com.heylocal.traveler.domain.travelon.opinion.OpinionImageContent;
 import com.heylocal.traveler.dto.aws.S3ObjectDto;
 import com.heylocal.traveler.exception.NotFoundException;
 import com.heylocal.traveler.repository.OpinionImageContentRepository;
@@ -13,13 +12,12 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static com.heylocal.traveler.domain.travelon.opinion.OpinionImageContent.*;
-import static com.heylocal.traveler.util.aws.S3ObjectNameFormatter.*;
+import static com.heylocal.traveler.domain.travelon.opinion.OpinionImageContent.ImageContentType;
+import static com.heylocal.traveler.util.aws.S3ObjectNameFormatter.ObjectNameProperty;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.then;

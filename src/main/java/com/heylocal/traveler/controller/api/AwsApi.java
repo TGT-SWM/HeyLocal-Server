@@ -1,7 +1,5 @@
 package com.heylocal.traveler.controller.api;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.heylocal.traveler.exception.NotFoundException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;

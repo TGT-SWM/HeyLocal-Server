@@ -39,7 +39,7 @@ import static com.heylocal.traveler.domain.travelon.opinion.OpinionImageContent.
 import static com.heylocal.traveler.dto.OpinionDto.OpinionRequest;
 import static com.heylocal.traveler.dto.OpinionDto.OpinionResponse;
 import static com.heylocal.traveler.dto.PlaceDto.PlaceRequest;
-import static com.heylocal.traveler.util.aws.S3ObjectNameFormatter.*;
+import static com.heylocal.traveler.util.aws.S3ObjectNameFormatter.ObjectNameProperty;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.AdditionalMatchers.not;
 import static org.mockito.ArgumentMatchers.any;

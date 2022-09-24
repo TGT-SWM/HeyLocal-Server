@@ -1,6 +1,5 @@
 package com.heylocal.traveler.controller;
 
-import com.heylocal.traveler.exception.NotFoundException;
 import com.heylocal.traveler.service.OpinionImgContentService;
 import com.heylocal.traveler.util.aws.SnsMessageParser;
 import org.junit.jupiter.api.BeforeEach;
