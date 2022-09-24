@@ -12,6 +12,7 @@ import lombok.*;
 import javax.validation.Valid;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.heylocal.traveler.dto.PlaceDto.PlaceRequest;
@@ -101,10 +102,10 @@ public class OpinionDto {
 		private String description;
 		private UserResponse author;
 		private PlaceResponse place;
-		private List<String> generalImgContentUrlList;
-		private List<String> foodImgContentUrlList;
-		private List<String> drinkAndDessertImgContentUrlList;
-		private List<String> photoSpotImgContentUrlList;
+		private List<String> generalImgDownloadImgUrl = new ArrayList<>();
+		private List<String> foodImgDownloadImgUrl = new ArrayList<>();
+		private List<String> drinkAndDessertImgDownloadImgUrl = new ArrayList<>();
+		private List<String> photoSpotImgDownloadImgUrl = new ArrayList<>();
 
 		//공통 질문
 		private EvaluationDegree facilityCleanliness;

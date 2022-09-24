@@ -160,7 +160,7 @@ public class TravelOnsController implements TravelOnsApi {
 
     newOpinionId = opinionService.addNewOpinion(travelOnId, request, loginUser);
 
-    return opinionService.getPresignedUrl(request, travelOnId, newOpinionId);
+    return opinionService.getUploadPresignedUrl(request, travelOnId, newOpinionId);
   }
 
   /**

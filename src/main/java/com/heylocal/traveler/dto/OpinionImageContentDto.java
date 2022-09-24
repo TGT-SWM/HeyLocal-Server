@@ -22,10 +22,10 @@ public class OpinionImageContentDto {
   @NoArgsConstructor
   @AllArgsConstructor
   @Builder
-  @Schema(description = "여행 On에 대한 답변 응답 DTO")
+  @Schema(description = "답변 이미지 응답 DTO")
   public static class OpinionImageContentResponse {
     private long id;
     private ImageContentType imageContentType;
-    private String url;
+    private String objectKeyName;
   }
 }

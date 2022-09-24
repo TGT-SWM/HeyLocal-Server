@@ -1,5 +1,6 @@
 package com.heylocal.traveler.service;
 
+import com.amazonaws.HttpMethod;
 import com.heylocal.traveler.domain.Region;
 import com.heylocal.traveler.domain.place.Place;
 import com.heylocal.traveler.domain.travelon.TravelOn;
@@ -27,16 +28,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 import static com.heylocal.traveler.domain.travelon.opinion.OpinionImageContent.ImageContentType;
 import static com.heylocal.traveler.dto.OpinionDto.OpinionRequest;
 import static com.heylocal.traveler.dto.OpinionDto.OpinionResponse;
+import static com.heylocal.traveler.util.aws.S3ObjectNameFormatter.*;
 
 @Slf4j
 @Service
@@ -110,13 +109,23 @@ public class OpinionService {
   @Transactional(readOnly = true)
   public List<OpinionResponse> inquiryOpinions(long travelOnId) throws NotFoundException {
     TravelOn targetTravelOn;
-    List<OpinionResponse> result;
+    List<Opinion> opinionList;
+
+    List<OpinionResponse> result = new ArrayList<>();
 
     //답변을 조회할 여행On 조회
     targetTravelOn = inquiryTravelOn(travelOnId);
 
+    //관련 답변 리스트 조회
+    opinionList = targetTravelOn.getOpinionList();
+
     //List<Opinion> -> List<OpinionResponse>
-    result = targetTravelOn.getOpinionList().stream().map(OpinionMapper.INSTANCE::toResponseDto).collect(Collectors.toList());
+    for (Opinion opinion : opinionList) {
+      OpinionResponse responseDto = OpinionMapper.INSTANCE.toResponseDto(opinion);
+      List<OpinionImageContent> sortedImgEntityList = sortImgEntityByKeyIndex(opinion.getOpinionImageContentList());
+      sortedImgEntityList.stream().forEach( (imgEntity) -> bindingDownloadUrls(responseDto, imgEntity) );
+      result.add(responseDto);
+    }
 
     return result;
   }
@@ -211,7 +220,7 @@ public class OpinionService {
    * @param newOpinionId
    * @return
    */
-  public Map<ImageContentType, List<String>> getPresignedUrl(OpinionRequest request, long travelOnId, long newOpinionId) {
+  public Map<ImageContentType, List<String>> getUploadPresignedUrl(OpinionRequest request, long travelOnId, long newOpinionId) {
     int generalImgQuantity = request.getGeneralImgQuantity();
     int foodImgQuantity = request.getFoodImgQuantity();
     int drinkAndDessertImgQuantity = request.getDrinkAndDessertImgQuantity();
@@ -232,7 +241,7 @@ public class OpinionService {
         quantity--;
         String objectNameOfOpinionImg =
             s3ObjectNameFormatter.getObjectNameOfOpinionImg(travelOnId, newOpinionId, type, quantity);
-        String presignedUrl = s3PresignUrlProvider.getUploadUrl(objectNameOfOpinionImg);
+        String presignedUrl = s3PresignUrlProvider.getPresignedUrl(objectNameOfOpinionImg, HttpMethod.PUT);
 
         urls.add(presignedUrl);
       } //while 문 끝
@@ -328,6 +337,58 @@ public class OpinionService {
     return travelOnRepository.findById(travelOnId).orElseThrow(
         () -> new NotFoundException(NotFoundCode.NO_INFO, "존재하지 않는 여행On ID 입니다.")
     );
+  }
+
+  /**
+   * <pre>
+   * OpinionImageContent 리스트를 오브젝트 키의 OBJECT_INDEX 오름차순으로 정렬하는 메서드
+   * </pre>
+   * @param imgEntityList 정렬할 OpinionImageContent 엔티티 리스트
+   * @return
+   */
+  private List<OpinionImageContent> sortImgEntityByKeyIndex(List<OpinionImageContent> imgEntityList) {
+    //OpinionImageContent.objectKeyName 값에서 index에 해당하는 값의 오름차순으로 정렬하는 Priority-Set
+    Queue<OpinionImageContent> queue = new PriorityQueue<>(Comparator.comparing((opinionImageContent) -> {
+      String objectKey = opinionImageContent.getObjectKeyName();
+      String index = s3ObjectNameFormatter.parseObjectNameOfOpinionImg(objectKey)
+          .get(ObjectNameProperty.OBJECT_INDEX);
+      return index;
+    }));
+
+    imgEntityList.stream().forEach(queue::offer);
+
+    return queue.stream().collect(Collectors.toList());
+  }
+
+  /**
+   * OpinionResponse DTO 객체에 다운로드 Presigned URL 을 바인딩하는 메서드
+   * @param targetDto 바인딩 대상
+   * @param opinionImageContent 바인딩할 데이터를 가지고 있는 엔티티
+   */
+  private void bindingDownloadUrls(OpinionResponse targetDto, OpinionImageContent opinionImageContent) {
+    List<String> generalImgDownloadImgUrl = targetDto.getGeneralImgDownloadImgUrl();
+    List<String> foodImgDownloadImgUrl = targetDto.getFoodImgDownloadImgUrl();
+    List<String> drinkAndDessertImgDownloadImgUrl = targetDto.getDrinkAndDessertImgDownloadImgUrl();
+    List<String> photoSpotImgDownloadImgUrl = targetDto.getPhotoSpotImgDownloadImgUrl();
+
+    String objectKeyName = opinionImageContent.getObjectKeyName();
+    String presignedUrl = s3PresignUrlProvider.getPresignedUrl(objectKeyName, HttpMethod.GET);
+    ImageContentType imageContentType = opinionImageContent.getImageContentType();
+
+    switch (imageContentType) {
+      case GENERAL:
+        generalImgDownloadImgUrl.add(presignedUrl);
+        break;
+      case RECOMMEND_FOOD:
+        foodImgDownloadImgUrl.add(presignedUrl);
+        break;
+      case RECOMMEND_DRINK_DESSERT:
+        drinkAndDessertImgDownloadImgUrl.add(presignedUrl);
+        break;
+      case PHOTO_SPOT:
+        photoSpotImgDownloadImgUrl.add(presignedUrl);
+        break;
+    }
   }
 
   /**
