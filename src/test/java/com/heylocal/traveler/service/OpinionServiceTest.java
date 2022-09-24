@@ -9,6 +9,7 @@ import com.heylocal.traveler.domain.travelon.list.*;
 import com.heylocal.traveler.domain.travelon.opinion.CoffeeType;
 import com.heylocal.traveler.domain.travelon.opinion.EvaluationDegree;
 import com.heylocal.traveler.domain.travelon.opinion.Opinion;
+import com.heylocal.traveler.domain.travelon.opinion.OpinionImageContent;
 import com.heylocal.traveler.domain.user.User;
 import com.heylocal.traveler.domain.user.UserRole;
 import com.heylocal.traveler.dto.LoginUser;
@@ -30,8 +31,10 @@ import org.mockito.MockitoAnnotations;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
+import static com.heylocal.traveler.domain.travelon.opinion.OpinionImageContent.*;
 import static com.heylocal.traveler.dto.OpinionDto.OpinionRequest;
 import static com.heylocal.traveler.dto.OpinionDto.OpinionResponse;
 import static com.heylocal.traveler.dto.PlaceDto.PlaceRequest;
@@ -532,14 +535,40 @@ class OpinionServiceTest {
     );
   }
 
+  @Test
+  @DisplayName("업로드 Presigned URL 생성")
+  void getUploadPresignedUrlTest() {
+    //GIVEN
+    long travelOnIdOfOpinion = 1L;
+    long newOpinionId = 2L;
+    PlaceRequest placeRequest = getPlaceRequest(3L);
+    OpinionRequest opinionRequest = getOpinionRequest(placeRequest);
+    int generalImgQuantity = 1;
+    int foodImgQuantity = 2;
+    int drinkAndDessertImgQuantity = 3;
+    int photoSpotImgQuantity = 2;
+    opinionRequest.setGeneralImgQuantity(generalImgQuantity);
+    opinionRequest.setFoodImgQuantity(foodImgQuantity);
+    opinionRequest.setDrinkAndDessertImgQuantity(drinkAndDessertImgQuantity);
+    opinionRequest.setPhotoSpotImgQuantity(photoSpotImgQuantity);
+
+    //WHEN
+    Map<ImageContentType, List<String>> result = opinionService.getUploadPresignedUrl(opinionRequest, travelOnIdOfOpinion, newOpinionId);
+
+    //THEN
+    assertAll(
+        //성공 케이스 - 업로드할 이미지의 개수(quantity)만큼 업로드용 Presigned URL 가 생성되었는지
+        () -> assertSame(generalImgQuantity, result.get(ImageContentType.GENERAL).size()),
+        () -> assertSame(foodImgQuantity, result.get(ImageContentType.RECOMMEND_FOOD).size()),
+        () -> assertSame(drinkAndDessertImgQuantity, result.get(ImageContentType.RECOMMEND_DRINK_DESSERT).size()),
+        () -> assertSame(photoSpotImgQuantity, result.get(ImageContentType.PHOTO_SPOT).size())
+    );
+  }
+
   private OpinionRequest getOpinionRequest(PlaceRequest place) {
     return OpinionRequest.builder()
         .description("myDescription")
         .place(place)
-//        .generalImgContentUrlList(new ArrayList<>())
-//        .foodImgContentUrlList(new ArrayList<>())
-//        .drinkAndDessertImgContentUrlList(new ArrayList<>())
-//        .photoSpotImgContentUrlList(new ArrayList<>())
         .facilityCleanliness(EvaluationDegree.GOOD)
         .costPerformance(EvaluationDegree.GOOD)
         .waiting(false)
