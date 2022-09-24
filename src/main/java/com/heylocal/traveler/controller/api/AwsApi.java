@@ -18,7 +18,7 @@ public interface AwsApi {
       @ApiResponse(responseCode = "200", description = "호출 성공")
   })
   @PostMapping(value = "/opinion/img", consumes = "text/plain")
-  void postSavedOpinionImgMessage(
+  void saveOpinionImgMessage(
       @Parameter(in = ParameterIn.DEFAULT, description = "Put된 S3 Object 정보", required = true) @RequestBody String request
-      ) throws NotFoundException, JsonProcessingException;
+      ) throws Exception;
 }

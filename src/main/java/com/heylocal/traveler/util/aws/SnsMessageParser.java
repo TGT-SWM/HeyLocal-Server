@@ -15,7 +15,7 @@ public class SnsMessageParser {
    * @param snsMessageValue
    * @return
    */
-  public String getObjectName(String snsMessageValue) {
+  public String getObjectName(String snsMessageValue) throws Exception {
     String objectName = "";
     Pattern pattern = Pattern.compile(OPINION_IMG_OBJECT_KEY_REGEX);
     Matcher matcher = pattern.matcher(snsMessageValue);
@@ -23,6 +23,8 @@ public class SnsMessageParser {
       objectName = matcher.group().replaceAll("\\\\", "");
       objectName = objectName.replaceAll("\"", "");
       objectName = objectName.split(":")[1];
+    } else {
+      throw new Exception("Object 이름을 추출할 수 없습니다.");
     }
     return objectName;
   }

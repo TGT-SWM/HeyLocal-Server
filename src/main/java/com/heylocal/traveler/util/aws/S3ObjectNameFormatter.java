@@ -29,7 +29,7 @@ public class S3ObjectNameFormatter {
    * @param objectIndex 이미지 배치 순서
    * @return
    */
-  public String getObjectNameOfOpinionImg(long travelOnId, long opinionId, ImageContentType imgType, long objectIndex) {
+  public String getObjectNameOfOpinionImg(long travelOnId, long opinionId, ImageContentType imgType, int objectIndex) {
     String objectName = OPINION_IMG_FORMAT;
 
     objectName = objectName.replace(TRAVEL_ON_ID_PARAM, String.valueOf(travelOnId));

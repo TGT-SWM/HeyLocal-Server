@@ -24,7 +24,7 @@ public class AwsController implements AwsApi {
    * @throws NotFoundException
    */
   @Override
-  public void postSavedOpinionImgMessage(String request) throws NotFoundException {
+  public void saveOpinionImgMessage(String request) throws Exception {
     //String -> AwsSnsRequest 객체
     S3ObjectDto s3ObjectDto = new S3ObjectDto();
     String objectName = snsMessageParser.getObjectName(request);
