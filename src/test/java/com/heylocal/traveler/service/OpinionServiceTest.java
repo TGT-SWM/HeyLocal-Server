@@ -33,11 +33,13 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 
-import static com.heylocal.traveler.domain.travelon.opinion.OpinionImageContent.*;
+import static com.heylocal.traveler.domain.travelon.opinion.OpinionImageContent.ImageContentType;
 import static com.heylocal.traveler.dto.OpinionDto.OpinionRequest;
 import static com.heylocal.traveler.dto.OpinionDto.OpinionResponse;
 import static com.heylocal.traveler.dto.PlaceDto.PlaceRequest;
+import static com.heylocal.traveler.util.aws.S3ObjectNameFormatter.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.AdditionalMatchers.not;
 import static org.mockito.ArgumentMatchers.any;
@@ -233,24 +235,57 @@ class OpinionServiceTest {
     TravelOn travelOn = getTravelOn(travelOnId, regionA);
     Place place = Place.builder().id(1L).region(regionA).lat(10d).lng(10d).build();
     String opinionDescription = "my opinion description";
-    Opinion opinion = Opinion.builder().id(1L).place(place).description(opinionDescription).author(author).build();
-
+    long opinionId = 1L;
+    Opinion opinion = Opinion.builder().id(opinionId).place(place).description(opinionDescription).author(author).build();
     travelOn.addOpinion(opinion);
+    /* OpinionImageContent Setting */
+    OpinionImageContent imgEntity1 = setNewOpinionImageContent(travelOnId, 0, 1L, ImageContentType.GENERAL, opinion);
+    OpinionImageContent imgEntity2 = setNewOpinionImageContent(travelOnId, 1,2L, ImageContentType.GENERAL, opinion);
+    OpinionImageContent imgEntity3 = setNewOpinionImageContent(travelOnId, 2,4L, ImageContentType.RECOMMEND_FOOD, opinion);
 
     //Mock 행동 정의 - travelOnRepository
     willReturn(Optional.of(travelOn)).given(travelOnRepository).findById(travelOnId);
     willReturn(Optional.empty()).given(travelOnRepository).findById(not(eq(travelOnId)));
 
+    //Mock 행동 정의 - s3ObjectNameFormatter
+    Map<ObjectNameProperty, String> map1 = new ConcurrentHashMap<>();
+    map1.put(ObjectNameProperty.OBJECT_INDEX, String.valueOf(0));
+    Map<ObjectNameProperty, String> map2 = new ConcurrentHashMap<>();
+    map2.put(ObjectNameProperty.OBJECT_INDEX, String.valueOf(1));
+    Map<ObjectNameProperty, String> map3 = new ConcurrentHashMap<>();
+    map3.put(ObjectNameProperty.OBJECT_INDEX, String.valueOf(2));
+    willReturn(map1).given(s3ObjectNameFormatter).parseObjectNameOfOpinionImg(eq(imgEntity1.getObjectKeyName()));
+    willReturn(map2).given(s3ObjectNameFormatter).parseObjectNameOfOpinionImg(eq(imgEntity2.getObjectKeyName()));
+    willReturn(map3).given(s3ObjectNameFormatter).parseObjectNameOfOpinionImg(eq(imgEntity3.getObjectKeyName()));
+
     //WHEN
-    List<OpinionResponse> result = opinionService.inquiryOpinions(travelOnId);
+    List<OpinionResponse> resultList = opinionService.inquiryOpinions(travelOnId);
+    OpinionResponse result = resultList.get(0);
 
     //THEN
     assertAll(
         //성공 케이스 - 1 - 조회결과
-        () -> assertEquals(opinionDescription, result.get(0).getDescription()),
+        () -> assertEquals(opinionDescription, result.getDescription()),
+        //성공 케이스 - 2 - Image 엔티티 조회 결과
+        () -> assertSame(2, result.getGeneralImgDownloadImgUrl().size()),
+        () -> assertSame(1, result.getFoodImgDownloadImgUrl().size()),
+        () -> assertSame(0, result.getDrinkAndDessertImgDownloadImgUrl().size()),
+        () -> assertSame(0, result.getPhotoSpotImgDownloadImgUrl().size()),
         //실패 케이스 - 1 - 존재하지 않는 여행On ID 인 경우
         () -> assertThrows(NotFoundException.class, () -> opinionService.inquiryOpinions(travelOnId + 1))
     );
+  }
+
+  private OpinionImageContent setNewOpinionImageContent(long travelOnId, int objectIndex, long imageId, ImageContentType type, Opinion opinion) {
+    OpinionImageContent imageEntity = OpinionImageContent.builder()
+        .id(imageId)
+        .imageContentType(type)
+        .objectKeyName("opinions/" + travelOnId + "/" + opinion.getId() + "/" + type.name() + "/" + objectIndex++)
+        .build();
+
+    imageEntity.setOpinion(opinion);
+
+    return imageEntity;
   }
 
   @Test
