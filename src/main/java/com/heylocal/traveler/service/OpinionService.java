@@ -231,6 +231,7 @@ public class OpinionService {
     for (ImageContentType type : ImageContentType.values()) { //for 문 시작
       ArrayList<String> urls = new ArrayList<>();
       int quantity = 0;
+      int objectIndex = 0;
 
       if (type == ImageContentType.GENERAL) quantity = generalImgQuantity;
       else if (type == ImageContentType.RECOMMEND_FOOD) quantity = foodImgQuantity;
@@ -240,7 +241,7 @@ public class OpinionService {
       while (quantity > 0) { //while 문 시작
         quantity--;
         String objectNameOfOpinionImg =
-            s3ObjectNameFormatter.getObjectNameOfOpinionImg(travelOnId, newOpinionId, type, quantity);
+            s3ObjectNameFormatter.getObjectNameOfOpinionImg(travelOnId, newOpinionId, type, objectIndex++);
         String presignedUrl = s3PresignUrlProvider.getPresignedUrl(objectNameOfOpinionImg, HttpMethod.PUT);
 
         urls.add(presignedUrl);
