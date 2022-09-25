@@ -17,7 +17,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 /**
  * 인가 관련 인터셉터
@@ -36,7 +35,7 @@ public class AuthInterceptor implements HandlerInterceptor {
 
     //Authorization 헤더 확인
     authHeaderValue = getAuthHeaderValue(request, response);
-    if (Objects.isNull(authHeaderValue)) return false;
+    if (authHeaderValue == null) return false;
 
     //Bearer 제거
     accessTokenValue = authHeaderValue.substring("Bearer ".length());
@@ -74,7 +73,7 @@ public class AuthInterceptor implements HandlerInterceptor {
     String authHeaderValue;
 
     authHeaderValue = request.getHeader("Authorization");
-    if (Objects.isNull(authHeaderValue)) { //Authorization 헤더가 빈 경우
+    if (authHeaderValue == null) { //Authorization 헤더가 빈 경우
       responseError(response, UnauthorizedCode.NO_HTTP_HEADER_VALUE);
       return null;
     }

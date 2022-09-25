@@ -12,14 +12,16 @@ import com.heylocal.traveler.domain.travelon.opinion.Opinion;
 import com.heylocal.traveler.domain.user.User;
 import com.heylocal.traveler.domain.user.UserRole;
 import com.heylocal.traveler.dto.LoginUser;
-import com.heylocal.traveler.dto.OpinionDto;
 import com.heylocal.traveler.exception.BadRequestException;
 import com.heylocal.traveler.exception.ForbiddenException;
 import com.heylocal.traveler.exception.NotFoundException;
+import com.heylocal.traveler.mapper.PlaceMapper;
 import com.heylocal.traveler.repository.OpinionRepository;
 import com.heylocal.traveler.repository.PlaceRepository;
 import com.heylocal.traveler.repository.TravelOnRepository;
 import com.heylocal.traveler.repository.UserRepository;
+import com.heylocal.traveler.util.aws.S3ObjectNameFormatter;
+import com.heylocal.traveler.util.aws.S3PresignUrlProvider;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -31,8 +33,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static com.heylocal.traveler.dto.OpinionDto.*;
 import static com.heylocal.traveler.dto.OpinionDto.OpinionRequest;
+import static com.heylocal.traveler.dto.OpinionDto.OpinionResponse;
 import static com.heylocal.traveler.dto.PlaceDto.PlaceRequest;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.AdditionalMatchers.not;
@@ -52,12 +54,16 @@ class OpinionServiceTest {
   private PlaceRepository placeRepository;
   @Mock
   private OpinionRepository opinionRepository;
+  @Mock
+  private S3ObjectNameFormatter s3ObjectNameFormatter;
+  @Mock
+  private S3PresignUrlProvider s3PresignUrlProvider;
   private OpinionService opinionService;
 
   @BeforeEach
   void setUp() {
     MockitoAnnotations.openMocks(this);
-    opinionService = new OpinionService(regionService, userRepository, travelOnRepository, placeRepository, opinionRepository);
+    opinionService = new OpinionService(regionService, userRepository, travelOnRepository, placeRepository, opinionRepository, s3ObjectNameFormatter, s3PresignUrlProvider);
   }
 
   @Test
@@ -76,7 +82,7 @@ class OpinionServiceTest {
     long userId = 3L;
     LoginUser loginUser = LoginUser.builder().id(userId).build();
     User author = User.builder().id(userId).accountId("myAccountId").nickname("myNickname").password("myPassword123!").userRole(UserRole.TRAVELER).build();
-    Place existPlace = placeRequest.toEntity(region);
+    Place existPlace = PlaceMapper.INSTANCE.toEntity(placeRequest, region);
 
     //Mock 행동 정의 - travelOnRepository
     willReturn(Optional.of(travelOn)).given(travelOnRepository).findById(travelOnId);
@@ -273,6 +279,10 @@ class OpinionServiceTest {
     OpinionRequest opinionRequest = OpinionRequest.builder()
         .place(placeRequest)
         .description(updateDescriptionOfOpinion)
+//        .generalImgContentUrlList(new ArrayList<>())
+//        .drinkAndDessertImgContentUrlList(new ArrayList<>())
+//        .foodImgContentUrlList(new ArrayList<>())
+//        .photoSpotImgContentUrlList(new ArrayList<>())
         .build();
 
     //Mock 행동 정의 - travelOnRepository
@@ -482,14 +492,55 @@ class OpinionServiceTest {
     );
   }
 
+  @Test
+  @DisplayName("답변 삭제")
+  void removeOpinionTest() {
+    //GIVEN
+    Region regionOfTravelOn = getRegionA();
+    long savedTravelOnId = 2L;
+    TravelOn savedTravelOn = getTravelOn(savedTravelOnId, regionOfTravelOn);
+    User opinionAuthor = User.builder().id(3L).accountId("myAccountId").nickname("myNickname").password("myPassword").userRole(UserRole.TRAVELER).build();
+    long placeId = 4L;
+    PlaceRequest placeRequest = getPlaceRequest(placeId);
+    String addressOfPlace = placeRequest.getAddress();
+    Place placeOfSavedOpinion = Place.builder()
+        .id(placeId)
+        .region(regionOfTravelOn)
+        .address(addressOfPlace)
+        .build();
+    long wrongOpinionId = 1L;
+    long savedOpinionId = 2L;
+    Opinion opinion = Opinion.builder()
+        .id(savedOpinionId)
+        .travelOn(savedTravelOn)
+        .author(opinionAuthor)
+        .region(regionOfTravelOn)
+        .place(placeOfSavedOpinion)
+        .build();
+
+    //Mock 행동 정의 - opinionRepository
+    willReturn(Optional.of(opinion)).given(opinionRepository).findByIdAndTravelOn(savedOpinionId, savedTravelOnId);
+    willReturn(Optional.empty()).given(opinionRepository).findByIdAndTravelOn(wrongOpinionId, savedTravelOnId);
+
+    //WHEN
+
+    //THEN
+    assertAll(
+        //성공 케이스 - 1
+        () -> assertDoesNotThrow(() -> opinionService.removeOpinion(savedTravelOnId, savedOpinionId)),
+        //실패 케이스 - 1
+        () -> assertThrows(NotFoundException.class, () -> opinionService.removeOpinion(savedTravelOnId, wrongOpinionId))
+    );
+  }
+
   private OpinionRequest getOpinionRequest(PlaceRequest place) {
     return OpinionRequest.builder()
         .description("myDescription")
         .place(place)
-        .generalImgContentUrlList(new ArrayList<>())
-        .foodImgContentUrlList(new ArrayList<>())
-        .drinkAndDessertImgContentUrlList(new ArrayList<>())
-        .photoSpotImgContentUrlList(new ArrayList<>())
+//        .generalImgContentUrlList(new ArrayList<>())
+//        .foodImgContentUrlList(new ArrayList<>())
+//        .drinkAndDessertImgContentUrlList(new ArrayList<>())
+//        .photoSpotImgContentUrlList(new ArrayList<>())
         .facilityCleanliness(EvaluationDegree.GOOD)
         .costPerformance(EvaluationDegree.GOOD)
         .waiting(false)

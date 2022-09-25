@@ -4,6 +4,7 @@ import com.heylocal.traveler.domain.Region;
 import com.heylocal.traveler.domain.place.Place;
 import com.heylocal.traveler.domain.travelon.TravelOn;
 import com.heylocal.traveler.domain.travelon.opinion.Opinion;
+import com.heylocal.traveler.domain.travelon.opinion.OpinionImageContent;
 import com.heylocal.traveler.domain.user.User;
 import com.heylocal.traveler.dto.LoginUser;
 import com.heylocal.traveler.dto.PlaceDto;
@@ -12,21 +13,33 @@ import com.heylocal.traveler.exception.ForbiddenException;
 import com.heylocal.traveler.exception.NotFoundException;
 import com.heylocal.traveler.exception.code.ForbiddenCode;
 import com.heylocal.traveler.exception.code.NotFoundCode;
+import com.heylocal.traveler.mapper.OpinionMapper;
+import com.heylocal.traveler.mapper.PlaceMapper;
 import com.heylocal.traveler.repository.OpinionRepository;
 import com.heylocal.traveler.repository.PlaceRepository;
 import com.heylocal.traveler.repository.TravelOnRepository;
 import com.heylocal.traveler.repository.UserRepository;
+import com.heylocal.traveler.util.aws.S3ObjectNameFormatter;
+import com.heylocal.traveler.util.aws.S3PresignUrlProvider;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.stream.Collectors;
 
-import static com.heylocal.traveler.dto.OpinionDto.*;
+import static com.heylocal.traveler.domain.travelon.opinion.OpinionImageContent.*;
 import static com.heylocal.traveler.dto.OpinionDto.OpinionRequest;
+import static com.heylocal.traveler.dto.OpinionDto.OpinionResponse;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class OpinionService {
@@ -36,6 +49,11 @@ public class OpinionService {
   private final TravelOnRepository travelOnRepository;
   private final PlaceRepository placeRepository;
   private final OpinionRepository opinionRepository;
+  private final S3ObjectNameFormatter s3ObjectNameFormatter;
+  private final S3PresignUrlProvider s3PresignUrlProvider;
+
+  @Value("${cloud.aws.s3.bucket}")
+  private String bucketName;
 
   /**
    * 새 답변(Opinion) 등록
@@ -47,7 +65,7 @@ public class OpinionService {
    * @throws BadRequestException
    */
   @Transactional
-  public void addNewOpinion(long travelOnId, OpinionRequest request, LoginUser loginUser) throws NotFoundException, ForbiddenException, BadRequestException {
+  public Long addNewOpinion(long travelOnId, OpinionRequest request, LoginUser loginUser) throws NotFoundException, ForbiddenException, BadRequestException {
     long authorId;
     TravelOn travelOn;
     String requestPlaceAddress;
@@ -78,8 +96,10 @@ public class OpinionService {
     requestPlace = inquiryPlaceFromOpinionRequest(request);
 
     //새 답변 추가
-    newOpinion = request.toEntity(requestPlace, opinionAuthor, travelOn, regionOfRequestPlace);
+    newOpinion = OpinionMapper.INSTANCE.toEntity(request, requestPlace, opinionAuthor, travelOn, regionOfRequestPlace);
     opinionRepository.save(newOpinion);
+
+    return newOpinion.getId();
   }
 
   /**
@@ -97,7 +117,7 @@ public class OpinionService {
     targetTravelOn = inquiryTravelOn(travelOnId);
 
     //List<Opinion> -> List<OpinionResponse>
-    result = targetTravelOn.getOpinionList().stream().map(OpinionResponse::new).collect(Collectors.toList());
+    result = targetTravelOn.getOpinionList().stream().map(OpinionMapper.INSTANCE::toResponseDto).collect(Collectors.toList());
 
     return result;
   }
@@ -120,7 +140,7 @@ public class OpinionService {
     boolean isSameRegion;
     Place requestPlace;
 
-    //답변이 달릴 여행On 조회
+    //답변이 달린 여행On 조회
     targetTravelOn = inquiryTravelOn(travelOnId);
 
     //수정할 답변(Opinion) 조회
@@ -139,27 +159,29 @@ public class OpinionService {
     //Opinion Request 의 Place 를 조회
     requestPlace = inquiryPlaceFromOpinionRequest(request);
 
-    //답변 수정
-    targetOpinion.updateRegion(regionOfRequestPlace);
-    targetOpinion.updatePlace(requestPlace);
-    targetOpinion.updateDescription(request.getDescription());
-    targetOpinion.updateFacilityCleanliness(request.getFacilityCleanliness());
-    targetOpinion.updateCanParking(request.isCanParking());
-    targetOpinion.updateWaiting(request.isWaiting());
-    targetOpinion.updateCostPerformance(request.getCostPerformance());
-    targetOpinion.updateRestaurantMoodType(request.getRestaurantMoodType());
-    targetOpinion.updateRecommendFoodDescription(request.getRecommendFoodDescription());
-    targetOpinion.updateCoffeeType(request.getCoffeeType());
-    targetOpinion.updateRecommendDrinkAndDessertDescription(request.getRecommendDrinkAndDessertDescription());
-    targetOpinion.updateCafeMoodType(request.getCafeMoodType());
-    targetOpinion.updateRecommendToDo(request.getRecommendToDo());
-    targetOpinion.updateRecommendSnack(request.getRecommendSnack());
-    targetOpinion.updatePhotoSpotDescription(request.getPhotoSpotDescription());
-    targetOpinion.updateStreetNoise(request.getStreetNoise());
-    targetOpinion.updateDeafening(request.getDeafening());
-    targetOpinion.updateHasBreakFast(request.getHasBreakFast());
+    // TODO - S3에 저장된 기존 Img 파일 제거 로직 추가
 
-    // TODO - 이미지 수정 관련 로직
+    //답변 수정
+    OpinionMapper.INSTANCE.updateOpinion(request, regionOfRequestPlace, requestPlace, targetOpinion);
+
+  }
+
+  /**
+   * 해당 여행On의 답변을 삭제하는 메서드
+   * @param travelOnId 삭제할 답변이 달린 여행On ID
+   * @param opinionId 삭제할 답변 ID
+   */
+  @Transactional
+  public void removeOpinion(long travelOnId, long opinionId) throws NotFoundException {
+    Opinion targetOpinion;
+
+    //수정할 답변(Opinion) 조회
+    targetOpinion = inquiryOpinionOfTravelOn(travelOnId, opinionId);
+
+    //S3에서 답변 관련 이미지 제거
+    removeOpinionImgInS3(targetOpinion.getOpinionImageContentList());
+
+    opinionRepository.remove(targetOpinion);
   }
 
   /**
@@ -181,6 +203,45 @@ public class OpinionService {
     opinion = opinionOptional.get();
 
     return opinion.getAuthor().getId() == userId;
+  }
+
+  /**
+   * OpinionImageType 에 따라, 각각의 Presigned URL 을 생성하는 메서드
+   * @param request
+   * @param travelOnId
+   * @param newOpinionId
+   * @return
+   */
+  public Map<ImageContentType, List<String>> getPresignedUrl(OpinionRequest request, long travelOnId, long newOpinionId) {
+    int generalImgQuantity = request.getGeneralImgQuantity();
+    int foodImgQuantity = request.getFoodImgQuantity();
+    int drinkAndDessertImgQuantity = request.getDrinkAndDessertImgQuantity();
+    int photoSpotImgQuantity = request.getPhotoSpotImgQuantity();
+    Map<ImageContentType, List<String>> result = new ConcurrentHashMap<>();
+
+    //ImageContentType 마다 반복
+    for (ImageContentType type : ImageContentType.values()) { //for 문 시작
+      ArrayList<String> urls = new ArrayList<>();
+      int quantity = 0;
+
+      if (type == ImageContentType.GENERAL) quantity = generalImgQuantity;
+      else if (type == ImageContentType.RECOMMEND_FOOD) quantity = foodImgQuantity;
+      else if (type == ImageContentType.RECOMMEND_DRINK_DESSERT) quantity = drinkAndDessertImgQuantity;
+      else if (type == ImageContentType.PHOTO_SPOT) quantity = photoSpotImgQuantity;
+
+      while (quantity > 0) { //while 문 시작
+        quantity--;
+        String objectNameOfOpinionImg =
+            s3ObjectNameFormatter.getObjectNameOfOpinionImg(travelOnId, newOpinionId, type, quantity);
+        String presignedUrl = s3PresignUrlProvider.getUploadUrl(objectNameOfOpinionImg);
+
+        urls.add(presignedUrl);
+      } //while 문 끝
+
+      result.put(type, urls);
+    } //for 문 끝
+
+    return result;
   }
 
   /**
@@ -221,7 +282,7 @@ public class OpinionService {
     existedPlaceOptional = placeRepository.findById(placeId);
 
     if (existedPlaceOptional.isEmpty()) { //기존에 저장된 장소가 없다면
-      place = request.getPlace().toEntity(regionOfRequestPlace);
+      place = PlaceMapper.INSTANCE.toEntity(request.getPlace(), regionOfRequestPlace);
       placeRepository.save(place);
 
     } else { //기존에 저장된 장소가 있다면
@@ -258,6 +319,12 @@ public class OpinionService {
     );
   }
 
+  /**
+   * 여행On 을 ID 로 조회하는 메서드
+   * @param travelOnId 조회할 여행On 의 ID
+   * @return
+   * @throws NotFoundException
+   */
   private TravelOn inquiryTravelOn(long travelOnId) throws NotFoundException {
     return travelOnRepository.findById(travelOnId).orElseThrow(
         () -> new NotFoundException(NotFoundCode.NO_INFO, "존재하지 않는 여행On ID 입니다.")
@@ -277,6 +344,14 @@ public class OpinionService {
     savedPlace.updateCoordinates(newPlaceInfo.getLat(), newPlaceInfo.getLng());
     savedPlace.updateThumbnailUrl(newPlaceInfo.getThumbnailUrl());
     savedPlace.updateLink(newPlaceInfo.getKakaoLink());
+  }
+
+  /**
+   * 해당 OpinionImageContent 를 S3에서 제거하는 메서드
+   * @param opinionImageContentList 제거할 OpinionImageContent 가 담긴 리스트
+   */
+  private void removeOpinionImgInS3(List<OpinionImageContent> opinionImageContentList) {
+    // TODO - 저장되어있던 S3의 Img을 삭제하는 로직 필요
   }
 
 }

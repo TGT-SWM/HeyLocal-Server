@@ -1,6 +1,5 @@
 package com.heylocal.traveler.repository;
 
-import com.heylocal.traveler.domain.place.Place;
 import com.heylocal.traveler.domain.plan.list.PlaceItem;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -10,7 +9,6 @@ import org.springframework.context.annotation.Import;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.PersistenceException;
 
 import static org.junit.jupiter.api.Assertions.*;
 

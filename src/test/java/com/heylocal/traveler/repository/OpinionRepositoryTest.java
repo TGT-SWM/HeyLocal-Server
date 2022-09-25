@@ -126,6 +126,34 @@ class OpinionRepositoryTest {
     );
   }
 
+  @Test
+  @DisplayName("삭제")
+  void removeTest() {
+    //GIVEN
+    User travelOnAuthor = User.builder().accountId("myAccountId").password("myPassword").nickname("myNickname").userRole(UserRole.TRAVELER).build();
+
+    em.persist(travelOnAuthor);
+
+    TravelOn travelOnOfOpinion = saveTravelOn(travelOnAuthor, "myState", "myCity");
+    Opinion opinion = getNotPersistOpinion(travelOnOfOpinion);
+
+    em.persist(opinion);
+
+    long opinionId = opinion.getId();
+
+    //WHEN
+    opinionRepository.remove(opinion);
+
+    //THEN
+    assertAll(
+        //성공 케이스 - 1 - 정말 제거되었는지
+        () -> assertNull(em.find(Opinion.class, opinionId)),
+        //성공 케이스 - 2 - Flush 가 가능한지
+        () -> assertDoesNotThrow(() -> em.flush())
+    );
+
+  }
+
   /**
    * 영속화되지 않은 새 Opinion 엔티티를 반환하는 메서드
    * @param travelOn Opinion 이 추가될 TravelOn 엔티티
@@ -144,7 +172,7 @@ class OpinionRepositoryTest {
         .costPerformance(EvaluationDegree.GOOD)
         .build();
 
-    opinion.registerTravelOn(travelOn);
+    opinion.setTravelOn(travelOn);
 
     return opinion;
   }

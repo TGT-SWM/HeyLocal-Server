@@ -5,6 +5,7 @@ import com.heylocal.traveler.exception.BadRequestException;
 import com.heylocal.traveler.exception.NotFoundException;
 import com.heylocal.traveler.exception.code.BadRequestCode;
 import com.heylocal.traveler.exception.code.NotFoundCode;
+import com.heylocal.traveler.mapper.RegionMapper;
 import com.heylocal.traveler.repository.RegionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -35,7 +36,7 @@ public class RegionService {
     if (regionList.size() == 0) {
       throw new NotFoundException(NotFoundCode.NO_INFO, "해당 state가 존재하지 않습니다.");
     }
-    result = regionList.stream().map(RegionResponse::new).collect(Collectors.toList());
+    result = regionList.stream().map(RegionMapper.INSTANCE::toResponseDto).collect(Collectors.toList());
 
 
     return result;

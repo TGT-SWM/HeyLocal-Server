@@ -9,7 +9,6 @@ import com.heylocal.traveler.domain.travelon.list.DrinkType;
 import com.heylocal.traveler.domain.travelon.list.FoodType;
 import com.heylocal.traveler.domain.travelon.list.MemberType;
 import com.heylocal.traveler.dto.LoginUser;
-import com.heylocal.traveler.dto.OpinionDto;
 import com.heylocal.traveler.exception.BadRequestException;
 import com.heylocal.traveler.exception.ForbiddenException;
 import com.heylocal.traveler.exception.NotFoundException;
@@ -34,8 +33,7 @@ import static com.heylocal.traveler.dto.PageDto.PageRequest;
 import static com.heylocal.traveler.dto.TravelOnDto.*;
 import static com.heylocal.traveler.dto.TravelTypeGroupDto.TravelTypeGroupRequest;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.willReturn;
 import static org.mockito.BDDMockito.willThrow;
 
@@ -422,6 +420,45 @@ class TravelOnsControllerTest {
     //THEN
     assertThrows(ForbiddenException.class,
         () -> travelOnsController.updateOpinion(existTravelOnId, existOpinionId, null, bindingResult, loginUser));
+  }
+
+  @Test
+  @DisplayName("답변 삭제 핸들러")
+  void isOpinionAuthorTest() throws NotFoundException, ForbiddenException {
+    //GIVEN
+    long authorId = 1L;
+    long noAuthorId = 2L;
+    LoginUser author = LoginUser.builder().id(authorId).build();
+    LoginUser noAuthor = LoginUser.builder().id(noAuthorId).build();
+    long opinionId = 3L;
+    long notExistOpinionId = 4L;
+    long opinionIdOfDiffTravelOn = 5L;
+    long travelOnId = 6L;
+    long notExistTravelOnId = 7L;
+
+    //Mock 행동정의 - opinionService
+    willReturn(true).given(opinionService).isAuthor(authorId, opinionId);
+    willReturn(true).given(opinionService).isAuthor(authorId, opinionIdOfDiffTravelOn);
+    willThrow(NotFoundException.class).given(opinionService).isAuthor(anyLong(), eq(notExistOpinionId));
+    willThrow(NotFoundException.class).given(opinionService).removeOpinion(eq(notExistTravelOnId), anyLong());
+    willThrow(NotFoundException.class).given(opinionService).removeOpinion(travelOnId, opinionIdOfDiffTravelOn);
+
+    //WHEN
+    travelOnsController.deleteOpinion(travelOnId, opinionId, author);
+
+    //THEN
+    assertAll(
+        //성공 케이스 - 1
+        () -> assertDoesNotThrow(() -> travelOnsController.deleteOpinion(travelOnId, opinionId, author)),
+        //실패 케이스 - 1 - 삭제하려는 답변의 작성자가 아닌 경우
+        () -> assertThrows(ForbiddenException.class, () -> travelOnsController.deleteOpinion(travelOnId, opinionId, noAuthor)),
+        //실패 케이스 - 2 - 존재하지 않는 답변 ID 인 경우
+        () -> assertThrows(NotFoundException.class, () -> travelOnsController.deleteOpinion(travelOnId, notExistOpinionId, author)),
+        //실패 케이스 - 3 - 존재하지 않는 여행 ID 인 경우
+        () -> assertThrows(NotFoundException.class, () -> travelOnsController.deleteOpinion(notExistTravelOnId, opinionId, author)),
+        //실패 케이스- 4 - 해당 여행On 에 해당 답변이 존재하지 않는 경우
+        () -> assertThrows(NotFoundException.class, () -> travelOnsController.deleteOpinion(travelOnId, opinionIdOfDiffTravelOn, author))
+    );
   }
 
   /**

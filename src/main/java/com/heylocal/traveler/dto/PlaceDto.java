@@ -1,10 +1,6 @@
 package com.heylocal.traveler.dto;
 
-import com.heylocal.traveler.domain.Region;
-import com.heylocal.traveler.domain.place.Place;
 import com.heylocal.traveler.domain.place.PlaceCategory;
-import com.heylocal.traveler.domain.plan.list.PlaceItem;
-import com.heylocal.traveler.domain.plan.list.PlaceItemType;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -14,7 +10,7 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 
-import static com.heylocal.traveler.dto.RegionDto.*;
+import static com.heylocal.traveler.dto.RegionDto.RegionResponse;
 
 public class PlaceDto {
 
@@ -51,23 +47,6 @@ public class PlaceDto {
 		@ApiModelProperty(value = "카카오 장소 검색 API 에서 응답받은 카카오맵 link", required = true)
 		@NotEmpty
 		private String kakaoLink;
-
-		public Place toEntity(Region region) {
-			Place place = Place.builder()
-					.id(id)
-					.category(category)
-					.name(name)
-					.roadAddress(roadAddress)
-					.address(address)
-					.lat(lat)
-					.lng(lng)
-					.region(region)
-					.thumbnailUrl(thumbnailUrl)
-					.link(kakaoLink)
-					.build();
-
-			return place;
-		}
 	}
 
 	@Getter
@@ -87,81 +66,6 @@ public class PlaceDto {
 		private RegionResponse region;
 		private String thumbnailUrl;
 		private String kakaoLink;
-
-		public PlaceResponse(Place entity) {
-			this.id = entity.getId();
-			this.category = entity.getCategory();
-			this.name = entity.getName();
-			this.roadAddress = entity.getRoadAddress();
-			this.address = entity.getAddress();
-			this.lat = entity.getLat();
-			this.lng = entity.getLng();
-			this.region = new RegionResponse(entity.getRegion());
-			this.thumbnailUrl = entity.getThumbnailUrl();
-			this.kakaoLink = entity.getLink();
-		}
 	}
 
-	@Getter
-	@Setter
-	@NoArgsConstructor
-	@AllArgsConstructor
-	@Builder
-	@Schema(description = "플랜 내 장소 아이템 수정을 위한 요청 DTO")
-	public static class PlaceItemRequest {
-		long id;
-		int itemIndex;
-		PlaceCategory category;
-		String name;
-		String roadAddress;
-		String address;
-		double lat;
-		double lng;
-		String link;
-
-		public PlaceItem toEntity() {
-			Place place = Place.builder()
-					.id(id)
-					.category(category)
-					.name(name)
-					.roadAddress(roadAddress)
-					.address(address)
-					.lat(lat)
-					.lng(lng)
-					.link(link)
-					.build();
-
-			return PlaceItem.builder()
-					.type(PlaceItemType.ORIGINAL)
-					.place(place)
-					.itemIndex(itemIndex)
-					.originalPlaceId(null)
-					.build();
-		}
-	}
-
-	@Getter
-	@Setter
-	@NoArgsConstructor
-	@AllArgsConstructor
-	@Builder
-	@Schema(description = "플랜 내 장소 아이템 응답 DTO")
-	public static class PlaceItemResponse {
-		long id;
-		String name;
-		String address;
-		String roadAddress;
-		double lat;
-		double lng;
-
-		public PlaceItemResponse(PlaceItem placeItem) {
-			Place place = placeItem.getPlace();
-			this.id = place.getId();
-			this.name = place.getName();
-			this.address = place.getAddress();
-			this.roadAddress = place.getRoadAddress();
-			this.lat = place.getLat();
-			this.lng = place.getLng();
-		}
-	}
 }

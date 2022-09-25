@@ -16,7 +16,6 @@ import org.springframework.web.servlet.HandlerMapping;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Objects;
 
 @Slf4j
 @Component
@@ -38,11 +37,11 @@ public class NotFoundInterceptor implements HandlerInterceptor {
   private boolean is404NotFound(HttpServletRequest request) throws Exception {
     String uri = request.getRequestURI();
 
-    if (!Objects.isNull(dispatcherServlet.getHandlerMappings())) { // [if-start]
+    if (dispatcherServlet.getHandlerMappings() != null) { // [if-start]
       //DispatcherServlet 이 매핑해줄 수 있는 핸들러마다 반복
       for (HandlerMapping mapping : dispatcherServlet.getHandlerMappings()) { // [for-start]
         HandlerExecutionChain handlerExecutionChain = mapping.getHandler(request); //요청받은 request 객체를 처리할 수 있는 핸들러 get
-        if (Objects.isNull(handlerExecutionChain)) return true;
+        if (handlerExecutionChain == null) return true;
         // ResourceHttpRequestHandler 는 정적 리소스를 응답하는 핸들러이다. 우리는 정적 리소스를 응답하지 않으므로, 제외해도 무관하다.
         if (!handlerExecutionChain.getHandler().toString().contains("ResourceHttpRequestHandler"))
           return false; //매핑되는 핸들러를 찾은 경우

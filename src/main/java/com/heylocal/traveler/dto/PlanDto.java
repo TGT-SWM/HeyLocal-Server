@@ -1,12 +1,10 @@
 package com.heylocal.traveler.dto;
 
-import com.heylocal.traveler.domain.Region;
 import com.heylocal.traveler.domain.plan.DaySchedule;
-import com.heylocal.traveler.domain.plan.Plan;
 import com.heylocal.traveler.domain.plan.list.PlaceItem;
-import com.heylocal.traveler.domain.travelon.TravelOn;
-import com.heylocal.traveler.dto.PlaceDto.PlaceItemRequest;
-import com.heylocal.traveler.dto.PlaceDto.PlaceItemResponse;
+import com.heylocal.traveler.dto.PlaceItemDto.PlaceItemRequest;
+import com.heylocal.traveler.dto.PlaceItemDto.PlaceItemResponse;
+import com.heylocal.traveler.mapper.PlaceItemMapper;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
@@ -51,18 +49,6 @@ public class PlanDto {
 		// String regionThumbUrl;
 		LocalDate startDate;
 		LocalDate endDate;
-
-		public PlanResponse(Plan plan) {
-			TravelOn travelOn = plan.getTravelOn();
-			Region region = travelOn.getRegion();
-
-			this.id = plan.getId();
-			this.regionId = region.getId();
-			this.regionState = region.getState();
-			this.regionCity = region.getCity();
-			this.startDate = travelOn.getTravelStartDate();
-			this.endDate = travelOn.getTravelEndDate();
-		}
 	}
 
 	@Getter
@@ -95,16 +81,6 @@ public class PlanDto {
 	@Schema(description = "장소 목록 수정을 위한 요청 DTO")
 	public static class ScheduleRequest {
 		List<PlaceItemRequest> places;
-
-		public DaySchedule toEntity() {
-			List<PlaceItem> placeItems = places.stream()
-					.map(place -> place.toEntity())
-					.collect(Collectors.toList());
-
-			return DaySchedule.builder()
-					.placeItemList(placeItems)
-					.build();
-		}
 	}
 
 	@Getter
@@ -116,13 +92,5 @@ public class PlanDto {
 	public static class PlanPlacesResponse {
 		LocalDate date;
 		List<PlaceItemResponse> places;
-
-		public PlanPlacesResponse(DaySchedule daySchedule) {
-			List<PlaceItem> placeItems = daySchedule.getPlaceItemList();
-			this.date = daySchedule.getDateTime();
-			this.places = placeItems.stream()
-					.map(PlaceItemResponse::new)
-					.collect(Collectors.toList());
-		}
 	}
 }

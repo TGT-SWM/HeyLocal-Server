@@ -9,16 +9,16 @@ import com.heylocal.traveler.domain.travelon.list.HopeFood;
 import com.heylocal.traveler.domain.travelon.list.TravelMember;
 import com.heylocal.traveler.domain.travelon.opinion.Opinion;
 import com.heylocal.traveler.domain.user.User;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * 여행 On
@@ -29,6 +29,7 @@ import java.util.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
+@Setter
 @SuperBuilder
 public class TravelOn extends BaseTimeEntity {
   @Id @GeneratedValue
@@ -136,48 +137,8 @@ public class TravelOn extends BaseTimeEntity {
   public void addOpinion(Opinion opinion) {
     this.opinionList.add(opinion);
     if (opinion.getTravelOn() != this) {
-      opinion.registerTravelOn(this);
+      opinion.setTravelOn(this);
     }
-  }
-
-  public void updateTitle(String title) {
-    this.title = title;
-  }
-
-  public void updateDescription(String description) {
-    this.description = description;
-  }
-
-  public void updateRegion(Region region) {
-    this.region = region;
-  }
-
-  public void updateTravelStartDate(LocalDate travelStartDate) {
-    this.travelStartDate = travelStartDate;
-  }
-
-  public void updateTravelEndDate(LocalDate travelEndDate) {
-    this.travelEndDate = travelEndDate;
-  }
-
-  public void updateTransportationType(TransportationType transportationType) {
-    this.transportationType = transportationType;
-  }
-
-  public void updateAccommodationMaxCost(Integer accommodationMaxCost) {
-    this.accommodationMaxCost = accommodationMaxCost;
-  }
-
-  public void updateFoodMaxCost(Integer foodMaxCost) {
-    this.foodMaxCost = foodMaxCost;
-  }
-
-  public void updateDrinkMaxCost(Integer drinkMaxCost) {
-    this.drinkMaxCost = drinkMaxCost;
-  }
-
-  public void updateTravelTypeGroup(TravelTypeGroup travelTypeGroup) {
-    this.travelTypeGroup = travelTypeGroup;
   }
 
   public void removeAllHopeAccommodation() {
@@ -195,12 +156,21 @@ public class TravelOn extends BaseTimeEntity {
   public void removeAllTravelMember() {
     this.travelMemberSet.clear();
   }
+
+  public void removeOpinion(Opinion target) {
+    this.opinionList.remove(target);
+  }
+
   public void releasePlan() {
     Plan temp = this.plan;
     this.plan = null;
 
-    if (!Objects.isNull(temp)) {
+    if (temp != null) {
       temp.releaseTravelOn();
     }
+  }
+
+  public void incrViewsByOne() {
+    this.views++;
   }
 }

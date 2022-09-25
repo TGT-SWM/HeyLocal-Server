@@ -3,10 +3,7 @@ package com.heylocal.traveler.domain;
 import com.heylocal.traveler.domain.place.Place;
 import com.heylocal.traveler.domain.travelon.TravelOn;
 import com.heylocal.traveler.domain.travelon.opinion.Opinion;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -21,6 +18,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
+@Setter
 @Builder
 public class Region {
   @Id @GeneratedValue
@@ -49,7 +47,7 @@ public class Region {
   public void addOpinion(Opinion opinion) {
     this.getOpinionList().add(opinion);
     if (opinion.getRegion() != this) {
-      opinion.registerRegion(this);
+      opinion.setRegion(this);
     }
   }
 

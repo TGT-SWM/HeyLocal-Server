@@ -5,16 +5,12 @@ import com.heylocal.traveler.domain.Region;
 import com.heylocal.traveler.domain.place.Place;
 import com.heylocal.traveler.domain.travelon.TravelOn;
 import com.heylocal.traveler.domain.user.User;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * 여행On 의 답변(의견)
@@ -24,6 +20,7 @@ import java.util.Objects;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
+@Setter
 @SuperBuilder
 public class Opinion extends BaseTimeEntity {
   @Id @GeneratedValue
@@ -93,121 +90,65 @@ public class Opinion extends BaseTimeEntity {
   // 양방향 설정
 
   @Builder.Default
-  @OneToMany(mappedBy = "opinion", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY) //Opinion 이 삭제되어도, S3에 저장된 경로를 알아야하므로 Cascade를 Persist만 설정
+  @OneToMany(mappedBy = "opinion", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
   private List<OpinionImageContent> opinionImageContentList = new ArrayList<>();
 
-  public void registerTravelOn(TravelOn travelOn) {
+  public void setTravelOn(TravelOn travelOn) {
+    if (this.travelOn != null) {
+      this.travelOn.removeOpinion(this);
+    }
+
     this.travelOn = travelOn;
     if (!travelOn.getOpinionList().contains(this)) {
       travelOn.addOpinion(this);
     }
   }
 
-  public void registerPlace(Place place) {
+  public void setPlace(Place place) {
+    if (this.place != null) {
+      this.place.removeOpinion(this);
+    }
+
     this.place = place;
     if (!place.getOpinionList().contains(this)) {
       place.addOpinion(this);
     }
   }
 
-  public void registerAuthor(User author) {
+  public void setAuthor(User author) {
+    if (this.author != null) {
+      this.author.removeOpinion(this);
+    }
+
     this.author = author;
     if (!author.getOpinionList().contains(this)) {
       author.addOpinion(this);
     }
   }
 
-  public void registerRegion(Region region) {
+  public void setRegion(Region region) {
+    if (this.region != null) {
+      this.region.removeOpinion(this);
+    }
+
     this.region = region;
     if (!region.getOpinionList().contains(this)) {
       region.addOpinion(this);
     }
   }
 
-  public void addOpinionImgContent(OpinionImageContent imgContent) {
+  public void addOpinionImageContent(OpinionImageContent imgContent) {
     this.opinionImageContentList.add(imgContent);
     if (imgContent.getOpinion() != this) {
-      imgContent.registerOpinion(this);
+      imgContent.setOpinion(this);
     }
   }
 
-  // 이하는 업데이트 메서드
-
-  public void updatePlace(Place newValue) {
-    if (!Objects.isNull(this.place)) {
-      this.place.removeOpinion(this);
-    }
-    registerPlace(newValue);
+  public void removeOpinionImageContent(OpinionImageContent target) {
+    this.opinionImageContentList.remove(target);
   }
 
-  public void updateRegion(Region newValue) {
-    if (!Objects.isNull(this.region)) {
-      this.region.removeOpinion(this);
-    }
-    registerRegion(newValue);
-  }
-
-  public void updateDescription(String newValue) {
-    this.description = newValue;
-  }
-
-  public void updateFacilityCleanliness(EvaluationDegree newValue) {
-    this.facilityCleanliness = newValue;
-  }
-
-  public void updateCanParking(Boolean newValue) {
-    this.canParking = newValue;
-  }
-
-  public void updateWaiting(Boolean newValue) {
-    this.waiting = newValue;
-  }
-
-  public void updateCostPerformance(EvaluationDegree newValue) {
-    this.costPerformance = newValue;
-  }
-
-  public void updateRestaurantMoodType(RestaurantMoodType newValue) {
-    this.restaurantMoodType = newValue;
-  }
-
-  public void updateRecommendFoodDescription(String newValue) {
-    this.recommendFoodDescription = newValue;
-  }
-
-  public void updateCoffeeType(CoffeeType newValue) {
-    this.coffeeType = newValue;
-  }
-
-  public void updateRecommendDrinkAndDessertDescription(String newValue) {
-    this.recommendDrinkAndDessertDescription = newValue;
-  }
-
-  public void updateCafeMoodType(CafeMoodType newValue) {
-    this.cafeMoodType = newValue;
-  }
-
-  public void updateRecommendToDo(String newValue) {
-    this.recommendToDo = newValue;
-  }
-
-  public void updateRecommendSnack(String newValue) {
-    this.recommendSnack = newValue;
-  }
-
-  public void updatePhotoSpotDescription(String newValue) {
-    this.photoSpotDescription = newValue;
-  }
-
-  public void updateStreetNoise(EvaluationDegree newValue) {
-    this.streetNoise = newValue;
-  }
-
-  public void updateDeafening(EvaluationDegree newValue) {
-    this.deafening = newValue;
-  }
-
-  public void updateHasBreakFast(Boolean newValue) {
-    this.hasBreakFast = newValue;
+  public void removeAllOpinionImageContent() {
+    this.opinionImageContentList.clear();
   }
 }

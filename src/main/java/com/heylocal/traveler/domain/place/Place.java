@@ -20,6 +20,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
+@Setter
 @SuperBuilder
 public class Place extends BaseTimeEntity {
   @Id
@@ -65,7 +66,7 @@ public class Place extends BaseTimeEntity {
   public void addOpinion(Opinion opinion) {
     this.opinionList.add(opinion);
     if (opinion.getPlace() != this) {
-      opinion.registerPlace(this);
+      opinion.setPlace(this);
     }
   }
 

@@ -3,16 +3,12 @@ package com.heylocal.traveler.domain.plan;
 import com.heylocal.traveler.domain.BaseTimeEntity;
 import com.heylocal.traveler.domain.travelon.TravelOn;
 import com.heylocal.traveler.domain.user.User;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * 여행
@@ -23,6 +19,7 @@ import java.util.Objects;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
+@Setter
 @SuperBuilder
 public class Plan extends BaseTimeEntity {
   @Id
@@ -48,7 +45,7 @@ public class Plan extends BaseTimeEntity {
     TravelOn temp = this.travelOn;
     this.travelOn = null;
 
-    if (!Objects.isNull(temp)) {
+    if (temp != null) {
       temp.releasePlan();
     }
   }

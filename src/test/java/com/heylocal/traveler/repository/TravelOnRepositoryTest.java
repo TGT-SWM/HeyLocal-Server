@@ -744,7 +744,7 @@ class TravelOnRepositoryTest {
         .build();
 
     em.persist(opinion);
-    opinion.registerTravelOn(travelOn);
+    opinion.setTravelOn(travelOn);
 
     return opinion;
   }

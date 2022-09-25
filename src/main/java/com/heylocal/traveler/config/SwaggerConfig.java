@@ -48,7 +48,8 @@ public class SwaggerConfig {
             new Tag("Plans", "스케줄", 6),
             new Tag("ChatRooms", "채팅방", 7),
             new Tag("Places", "장소", 8),
-            new Tag("Regions", "지역", 9)
+            new Tag("Regions", "지역", 9),
+            new Tag("Aws", "AWS용 Callback URL", 10)
         );
   }
 

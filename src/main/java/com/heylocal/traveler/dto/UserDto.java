@@ -1,7 +1,5 @@
 package com.heylocal.traveler.dto;
 
-import com.heylocal.traveler.domain.profile.UserProfile;
-import com.heylocal.traveler.domain.user.User;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
@@ -28,13 +26,6 @@ public class UserDto {
 		String nickname;
 		int knowHow;
 		long ranking;
-
-		public UserProfileResponse(UserProfile entity, long ranking) {
-			this.imageUrl = entity.getImageUrl();
-			this.nickname = entity.getUser().getNickname();
-			this.knowHow = entity.getKnowHow();
-			this.ranking = ranking;
-		}
 	}
 
 	@Getter
@@ -49,13 +40,5 @@ public class UserDto {
 		private String nickname;
 		private String imageUrl;
 		private int knowHow;
-
-		public UserResponse(User user) {
-			this.id = user.getId();
-			this.accountId = user.getAccountId();
-			this.nickname = user.getNickname();
-			this.imageUrl = user.getUserProfile().getImageUrl();
-			this.knowHow = user.getUserProfile().getKnowHow();
-		}
 	}
 }

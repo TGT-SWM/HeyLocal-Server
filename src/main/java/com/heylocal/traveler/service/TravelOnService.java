@@ -2,17 +2,13 @@ package com.heylocal.traveler.service;
 
 import com.heylocal.traveler.domain.Region;
 import com.heylocal.traveler.domain.travelon.TravelOn;
-import com.heylocal.traveler.domain.travelon.TravelTypeGroup;
-import com.heylocal.traveler.domain.travelon.list.HopeAccommodation;
-import com.heylocal.traveler.domain.travelon.list.HopeDrink;
-import com.heylocal.traveler.domain.travelon.list.HopeFood;
-import com.heylocal.traveler.domain.travelon.list.TravelMember;
 import com.heylocal.traveler.domain.user.User;
 import com.heylocal.traveler.dto.LoginUser;
 import com.heylocal.traveler.exception.ForbiddenException;
 import com.heylocal.traveler.exception.NotFoundException;
 import com.heylocal.traveler.exception.code.ForbiddenCode;
 import com.heylocal.traveler.exception.code.NotFoundCode;
+import com.heylocal.traveler.mapper.TravelOnMapper;
 import com.heylocal.traveler.repository.RegionRepository;
 import com.heylocal.traveler.repository.TravelOnRepository;
 import com.heylocal.traveler.repository.UserRepository;
@@ -22,7 +18,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static com.heylocal.traveler.dto.TravelOnDto.*;
@@ -52,7 +47,7 @@ public class TravelOnService {
     region = regionRepository.findById(request.getRegionId()).orElseThrow(
         () -> new NotFoundException(NotFoundCode.NO_INFO, "존재하지 않는 Region ID 입니다.")
     );
-    travelOn = request.toEntity(author, region);
+    travelOn = TravelOnMapper.INSTANCE.toEntity(request, author, region);
     travelOnRepository.saveTravelOn(travelOn);
   }
 
@@ -68,7 +63,7 @@ public class TravelOnService {
     List<TravelOnSimpleResponse> response;
     Long regionId = request.getRegionId();
 
-    if (Objects.isNull(regionId)) { //지역 관계없이 조회하는 경우
+    if (regionId == null) { //지역 관계없이 조회하는 경우
       travelOnList = findWithoutRegion(request);
 
     } else { //Region을 기준으로 조회하는 경우
@@ -77,7 +72,7 @@ public class TravelOnService {
 
     //List<TravelOn> -> List<TravelOnSimpleResponse>
     response = travelOnList.stream()
-        .map(TravelOnSimpleResponse::new)
+        .map(TravelOnMapper.INSTANCE::toTravelOnSimpleResponseDto)
         .collect(Collectors.toList());
 
     return response;
@@ -89,15 +84,21 @@ public class TravelOnService {
    * @return
    * @exception NotFoundException
    */
-  @Transactional(readOnly = true)
+  @Transactional
   public TravelOnResponse inquiryTravelOn(long travelOnId) throws NotFoundException {
     TravelOnResponse response;
     TravelOn travelOn;
 
+    //여행 On 조회
     travelOn = travelOnRepository.findById(travelOnId).orElseThrow(
         () -> new NotFoundException(NotFoundCode.NO_INFO, "존재하지 않는 여행On ID 입니다.")
     );
-    response = new TravelOnResponse(travelOn);
+
+    //조회수 1 증가
+    travelOn.incrViewsByOne();
+
+    //DTO로 변환
+    response = TravelOnMapper.INSTANCE.toTravelOnResponseDto(travelOn);
 
     return response;
   }
@@ -116,20 +117,8 @@ public class TravelOnService {
         () -> new NotFoundException(NotFoundCode.NO_INFO, "존재하지 않는 여행On ID 입니다.")
     );
 
-    originTravelOn.updateTitle(request.getTitle());
-    originTravelOn.updateDescription(request.getDescription());
-    originTravelOn.updateTravelStartDate(request.getTravelStartDate());
-    originTravelOn.updateTravelEndDate(request.getTravelEndDate());
-    originTravelOn.updateTransportationType(request.getTransportationType());
-    originTravelOn.updateAccommodationMaxCost(request.getAccommodationMaxCost());
-    originTravelOn.updateFoodMaxCost(request.getFoodMaxCost());
-    originTravelOn.updateDrinkMaxCost(request.getDrinkMaxCost());
-
-    updateTravelTypeGroup(request, originTravelOn);
-    updateTravelMembers(request, originTravelOn);
-    updateHopeAccommodation(request, originTravelOn);
-    updateHopeFood(request, originTravelOn);
-    updateHopeDrink(request, originTravelOn);
+    //여행On 업데이트
+    TravelOnMapper.INSTANCE.updateTravelOn(request, originTravelOn);
   }
 
   /**
@@ -178,12 +167,6 @@ public class TravelOnService {
     travelOnRepository.remove(target);
   }
 
-  private void updateTravelTypeGroup(TravelOnRequest request, TravelOn originTravelOn) {
-    TravelTypeGroup travelTypeGroup = request.getTravelTypeGroup().toEntity();
-    travelTypeGroup.registerAt(originTravelOn);
-    originTravelOn.updateTravelTypeGroup(travelTypeGroup);
-  }
-
   private List<TravelOn> findByRegion(AllTravelOnGetRequest request) throws NotFoundException {
     List<TravelOn> result;
     Boolean withOpinions;
@@ -203,7 +186,7 @@ public class TravelOnService {
         () -> new NotFoundException(NotFoundCode.NO_INFO, "존재하지 않는 Region ID 입니다.")
     );
 
-    if (Objects.isNull(withOpinions)) {
+    if (withOpinions == null) {
       result = travelOnRepository.findAllByRegion(region, lastItemId, size, sortBy);
     } else if (withOpinions) {
       result = travelOnRepository.findHasOpinionByRegion(region, lastItemId, size, sortBy);
@@ -227,7 +210,7 @@ public class TravelOnService {
     lastItemId = request.getPageRequest().getLastItemId();
     size = request.getPageRequest().getSize();
 
-    if (Objects.isNull(withOpinions)) {
+    if (withOpinions == null) {
       result = travelOnRepository.findAll(lastItemId, size, sortBy);
     } else if (withOpinions) {
       result = travelOnRepository.findHasOpinion(lastItemId, size, sortBy);
@@ -236,46 +219,6 @@ public class TravelOnService {
     }
 
     return result;
-  }
-
-  private void updateTravelMembers(TravelOnRequest request, TravelOn originTravelOn) {
-    originTravelOn.removeAllTravelMember();
-    request.getMemberTypeSet().stream().forEach(
-        (item) -> {
-          TravelMember travelMember = TravelMember.builder().memberType(item).build();
-          travelMember.registerAt(originTravelOn);
-        }
-    );
-  }
-
-  private void updateHopeAccommodation(TravelOnRequest request, TravelOn originTravelOn) {
-    originTravelOn.removeAllHopeAccommodation();
-    request.getAccommodationTypeSet().stream().forEach(
-        (item) -> {
-          HopeAccommodation hopeAccommodation = HopeAccommodation.builder().type(item).build();
-          hopeAccommodation.registerAt(originTravelOn);
-        }
-    );
-  }
-
-  private void updateHopeDrink(TravelOnRequest request, TravelOn originTravelOn) {
-    originTravelOn.removeAllHopeDrink();
-    request.getDrinkTypeSet().stream().forEach(
-        (item) -> {
-          HopeDrink hopeDrink = HopeDrink.builder().type(item).build();
-          hopeDrink.registerAt(originTravelOn);
-        }
-    );
-  }
-
-  private void updateHopeFood(TravelOnRequest request, TravelOn originTravelOn) {
-    originTravelOn.removeAllHopeFood();
-    request.getFoodTypeSet().stream().forEach(
-        (item) -> {
-          HopeFood hopeFood = HopeFood.builder().type(item).build();
-          hopeFood.registerAt(originTravelOn);
-        }
-    );
   }
 
 }

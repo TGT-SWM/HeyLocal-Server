@@ -34,6 +34,7 @@ public class InterceptorConfig implements WebMvcConfigurer {
             "/signup/**",
             "/signin/**",
             "/auth/**",
+            "/aws/**",
             "/error");
   }
 }

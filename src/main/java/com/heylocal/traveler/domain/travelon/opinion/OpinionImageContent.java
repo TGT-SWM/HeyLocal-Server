@@ -4,6 +4,7 @@ import com.heylocal.traveler.domain.BaseTimeEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
@@ -16,6 +17,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
+@Setter
 @SuperBuilder
 public class OpinionImageContent extends BaseTimeEntity {
   @Id @GeneratedValue
@@ -24,18 +26,26 @@ public class OpinionImageContent extends BaseTimeEntity {
   @ManyToOne(optional = false, fetch = FetchType.LAZY)
   private Opinion opinion;
 
-  @Column(nullable = false)
-  private String url;
+  @Column
+  private String objectKeyName; //S3에 저장된 Object의 Key(name), null인 경우 S3에 업로드가 안됐거나 AWS SNS가 동작하지 않은 것임
 
   @Enumerated(EnumType.STRING)
   @Column(nullable = false)
   private ImageContentType imageContentType;
 
-  public void registerOpinion(Opinion opinion) {
+  public void setOpinion(Opinion opinion) {
     this.opinion = opinion;
+
     if (!opinion.getOpinionImageContentList().contains(this)) {
-      opinion.addOpinionImgContent(this);
+      opinion.addOpinionImageContent(this);
     }
+  }
+
+  public void releaseOpinion() {
+    if (this.opinion != null) {
+      this.opinion.removeOpinionImageContent(this);
+    }
+    this.opinion = null;
   }
 
   /**

@@ -9,7 +9,6 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
-import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -96,7 +95,7 @@ public class TokenRepository {
    */
   public User removeTokenPairByUserId(long userId) throws NoResultException {
     User user = em.find(User.class, userId);
-    if (!Objects.isNull(user.getRefreshToken())) {
+    if (user.getRefreshToken() != null) {
       em.remove(user.getRefreshToken());
       user.releaseAllTokens();
     }
