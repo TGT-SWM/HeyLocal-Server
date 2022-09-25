@@ -137,6 +137,9 @@ class PlanRepositoryTest {
 				.title("TITLE")
 				.travelOn(travelOn)
 				.user(user)
+				.region(travelOn.getRegion())
+				.travelStartDate(travelOn.getTravelStartDate())
+				.travelEndDate(travelOn.getTravelEndDate())
 				.build();
 	}
 

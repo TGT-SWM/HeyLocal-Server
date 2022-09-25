@@ -98,11 +98,17 @@ public interface TravelOnMapper {
   @AfterMapping
   default void updateEntityTravelTypeGroup(TravelOnRequest travelOnRequest, @MappingTarget TravelOn travelOn) {
     TravelTypeGroupRequest travelTypeGroupRequest = travelOnRequest.getTravelTypeGroup();
+    TravelTypeGroup travelTypeGroup = travelOn.getTravelTypeGroup();
+
+    if (travelTypeGroup == null) {
+      TravelTypeGroupMapper.INSTANCE.toEntity(travelTypeGroupRequest, travelOn);
+      return;
+    }
+
     PlaceTasteType placeTasteType = travelTypeGroupRequest.getPlaceTasteType();
     ActivityTasteType activityTasteType = travelTypeGroupRequest.getActivityTasteType();
     SnsTasteType snsTasteType = travelTypeGroupRequest.getSnsTasteType();
 
-    TravelTypeGroup travelTypeGroup = travelOn.getTravelTypeGroup();
     travelTypeGroup.setPlaceTasteType(placeTasteType);
     travelTypeGroup.setActivityTasteType(activityTasteType);
     travelTypeGroup.setSnsTasteType(snsTasteType);

@@ -115,6 +115,9 @@ class PlanServiceTest {
 					.id(1L)
 					.user(user)
 					.travelOn(travelOn)
+					.region(travelOn.getRegion())
+					.travelStartDate(travelOn.getTravelStartDate())
+					.travelEndDate(travelOn.getTravelEndDate())
 					.build());
 		}
 
