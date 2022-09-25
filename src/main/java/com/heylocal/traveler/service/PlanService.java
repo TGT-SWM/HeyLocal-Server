@@ -135,6 +135,9 @@ public class PlanService {
 				.title(planTitle)
 				.travelOn(travelOn)
 				.user(travelOn.getAuthor())
+				.region(travelOn.getRegion())
+				.travelStartDate(travelOn.getTravelStartDate())
+				.travelEndDate(travelOn.getTravelEndDate())
 				.build();
 		daySchedules.forEach(plan::addDaySchedule); // DaySchedule 추가
 		planRepository.save(plan); // 저장
