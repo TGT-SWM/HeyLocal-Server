@@ -1,12 +1,14 @@
 package com.heylocal.traveler.domain.plan;
 
 import com.heylocal.traveler.domain.BaseTimeEntity;
+import com.heylocal.traveler.domain.Region;
 import com.heylocal.traveler.domain.travelon.TravelOn;
 import com.heylocal.traveler.domain.user.User;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,6 +36,15 @@ public class Plan extends BaseTimeEntity {
 
   @ManyToOne(optional = false)
   private User user;
+
+  @ManyToOne(optional = false)
+  private Region region;
+
+  @Column(nullable = false)
+  private LocalDate travelStartDate;
+
+  @Column(nullable = false)
+  private LocalDate travelEndDate;
 
   //양방향 설정
 
