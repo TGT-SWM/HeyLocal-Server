@@ -14,11 +14,11 @@ import static com.heylocal.traveler.dto.PlanDto.PlanResponse;
 public interface PlanMapper {
   PlanMapper INSTANCE = Mappers.getMapper(PlanMapper.class);
 
-  @Mapping(target = "regionId", source = "plan.travelOn.region.id")
-  @Mapping(target = "regionState", source = "plan.travelOn.region.state")
-  @Mapping(target = "regionCity", source = "plan.travelOn.region.city")
-  @Mapping(target = "startDate", source = "plan.travelOn.travelStartDate")
-  @Mapping(target = "endDate", source = "plan.travelOn.travelEndDate")
+  @Mapping(target = "regionId", source = "plan.region.id")
+  @Mapping(target = "regionState", source = "plan.region.state")
+  @Mapping(target = "regionCity", source = "plan.region.city")
+  @Mapping(target = "startDate", source = "plan.travelStartDate")
+  @Mapping(target = "endDate", source = "plan.travelEndDate")
   PlanResponse toPlanResponseDto(Plan plan);
 
   @Mapping(target = "date", source = "daySchedule.dateTime")
