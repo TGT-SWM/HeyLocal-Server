@@ -1,6 +1,7 @@
 package com.heylocal.traveler.service;
 
 import com.heylocal.traveler.domain.Region;
+import com.heylocal.traveler.domain.plan.Plan;
 import com.heylocal.traveler.domain.travelon.TravelOn;
 import com.heylocal.traveler.domain.user.User;
 import com.heylocal.traveler.dto.LoginUser;
@@ -119,6 +120,13 @@ public class TravelOnService {
 
     //여행On 업데이트
     TravelOnMapper.INSTANCE.updateTravelOn(request, originTravelOn);
+
+    //연관 플랜이 있는 경우 업데이트
+    Plan plan = originTravelOn.getPlan();
+    if (plan != null) {
+      plan.updateTravelStartDate(request.getTravelStartDate());
+      plan.updateTravelEndDate(request.getTravelEndDate());
+    }
   }
 
   /**

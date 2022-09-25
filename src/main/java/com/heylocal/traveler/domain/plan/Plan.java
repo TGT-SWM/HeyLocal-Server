@@ -70,4 +70,12 @@ public class Plan extends BaseTimeEntity {
   public void updateTitle(String title) {
     this.title = title;
   }
+
+  public void updateTravelStartDate(LocalDate date) {
+    this.travelStartDate = date;
+  }
+
+  public void updateTravelEndDate(LocalDate date) {
+    this.travelEndDate = date;
+  }
 }
