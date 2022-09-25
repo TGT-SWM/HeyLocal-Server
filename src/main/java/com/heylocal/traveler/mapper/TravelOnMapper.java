@@ -1,7 +1,7 @@
 package com.heylocal.traveler.mapper;
 
 import com.heylocal.traveler.domain.Region;
-import com.heylocal.traveler.domain.travelon.TravelOn;
+import com.heylocal.traveler.domain.travelon.*;
 import com.heylocal.traveler.domain.travelon.list.AccommodationType;
 import com.heylocal.traveler.domain.travelon.list.DrinkType;
 import com.heylocal.traveler.domain.travelon.list.FoodType;
@@ -98,6 +98,13 @@ public interface TravelOnMapper {
   @AfterMapping
   default void updateEntityTravelTypeGroup(TravelOnRequest travelOnRequest, @MappingTarget TravelOn travelOn) {
     TravelTypeGroupRequest travelTypeGroupRequest = travelOnRequest.getTravelTypeGroup();
-    TravelTypeGroupMapper.INSTANCE.toEntity(travelTypeGroupRequest, travelOn);
+    PlaceTasteType placeTasteType = travelTypeGroupRequest.getPlaceTasteType();
+    ActivityTasteType activityTasteType = travelTypeGroupRequest.getActivityTasteType();
+    SnsTasteType snsTasteType = travelTypeGroupRequest.getSnsTasteType();
+
+    TravelTypeGroup travelTypeGroup = travelOn.getTravelTypeGroup();
+    travelTypeGroup.setPlaceTasteType(placeTasteType);
+    travelTypeGroup.setActivityTasteType(activityTasteType);
+    travelTypeGroup.setSnsTasteType(snsTasteType);
   }
 }
