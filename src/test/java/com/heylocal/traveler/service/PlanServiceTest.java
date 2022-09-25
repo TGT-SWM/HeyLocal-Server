@@ -237,8 +237,37 @@ class PlanServiceTest {
 				// 실패 케이스 - 2 - 수정 권한이 없는 사용자가 플랜 수정을 시도하는 경우
 				() -> assertThrows(ForbiddenException.class, () -> planService.updatePlan(planId, anotherUserId, request))
 		);
+	}
 
+	@Test
+	@DisplayName("플랜 삭제")
+	void deletePlanTest() {
+		// GIVEN
+		long userId = 1L;
+		long anotherUserId = userId + 1;
+		User user = User.builder()
+				.id(userId)
+				.build();
 
+		long planId = 1L;
+		long anotherPlanId = planId + 1;
+		Plan plan = Plan.builder()
+				.id(planId)
+				.user(user)
+				.travelOn(new TravelOn())
+				.build();
+
+		given(planRepository.findById(planId)).willReturn(Optional.of(plan));
+
+		// WHEN - THEN
+		assertAll(
+				// 성공 케이스 - 1 - 문제 없이 플랜 삭제 완료
+				() -> assertDoesNotThrow(() -> planService.deletePlan(planId, userId)),
+				// 실패 케이스 - 1 - 삭제하고자 하는 플랜이 존재하지 않는 경우
+				() -> assertThrows(NotFoundException.class, () -> planService.deletePlan(anotherPlanId, userId)),
+				// 실패 케이스 - 2 - 삭제 권한이 없는 경우
+				() -> assertThrows(ForbiddenException.class, () -> planService.deletePlan(planId, anotherUserId))
+		);
 	}
 
 	@Test
