@@ -33,6 +33,7 @@ public class DaySchedule extends BaseTimeEntity {
   //양방향 설정
 
   @Builder.Default
+  @OrderBy(value = "itemIndex ASC")
   @OneToMany(mappedBy = "schedule", cascade = CascadeType.ALL)
   private List<PlaceItem> placeItemList = new ArrayList<>();
 
