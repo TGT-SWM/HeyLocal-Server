@@ -39,6 +39,7 @@ public class PlanDto {
 		// 장소 정보를 제외한 스케줄 기본 정보
 		// 지역, 여행 기간 등
 		long id;
+		String title;
 		long regionId;
 		String regionState;
 		String regionCity;
