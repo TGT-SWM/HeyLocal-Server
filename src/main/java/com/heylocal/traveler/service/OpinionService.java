@@ -8,6 +8,7 @@ import com.heylocal.traveler.domain.travelon.opinion.Opinion;
 import com.heylocal.traveler.domain.travelon.opinion.OpinionImageContent;
 import com.heylocal.traveler.domain.user.User;
 import com.heylocal.traveler.dto.LoginUser;
+import com.heylocal.traveler.dto.OpinionImageContentDto;
 import com.heylocal.traveler.dto.PlaceDto;
 import com.heylocal.traveler.exception.BadRequestException;
 import com.heylocal.traveler.exception.ForbiddenException;
@@ -35,6 +36,7 @@ import java.util.stream.Collectors;
 import static com.heylocal.traveler.domain.travelon.opinion.OpinionImageContent.ImageContentType;
 import static com.heylocal.traveler.dto.OpinionDto.OpinionRequest;
 import static com.heylocal.traveler.dto.OpinionDto.OpinionResponse;
+import static com.heylocal.traveler.dto.OpinionImageContentDto.*;
 import static com.heylocal.traveler.util.aws.S3ObjectNameFormatter.ObjectNameProperty;
 
 @Slf4j
@@ -171,7 +173,6 @@ public class OpinionService {
 
     //답변 수정
     OpinionMapper.INSTANCE.updateOpinion(request, regionOfRequestPlace, requestPlace, targetOpinion);
-
   }
 
   /**
@@ -212,16 +213,16 @@ public class OpinionService {
 
   /**
    * OpinionImageType 에 따라, 각각의 Presigned URL 을 생성하는 메서드
-   * @param request
+   * @param imgQuantity
    * @param travelOnId
    * @param newOpinionId
    * @return
    */
-  public Map<ImageContentType, List<String>> getUploadPresignedUrl(OpinionRequest request, long travelOnId, long newOpinionId) {
-    int generalImgQuantity = request.getGeneralImgQuantity();
-    int foodImgQuantity = request.getFoodImgQuantity();
-    int drinkAndDessertImgQuantity = request.getDrinkAndDessertImgQuantity();
-    int photoSpotImgQuantity = request.getPhotoSpotImgQuantity();
+  public Map<ImageContentType, List<String>> getUploadPresignedUrl(ImageContentQuantity imgQuantity, long travelOnId, long newOpinionId) {
+    int generalImgQuantity = imgQuantity.getGeneralImgQuantity();
+    int foodImgQuantity = imgQuantity.getFoodImgQuantity();
+    int drinkAndDessertImgQuantity = imgQuantity.getDrinkAndDessertImgQuantity();
+    int photoSpotImgQuantity = imgQuantity.getPhotoSpotImgQuantity();
     Map<ImageContentType, List<String>> result = new ConcurrentHashMap<>();
 
     //ImageContentType 마다 반복

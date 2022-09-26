@@ -162,21 +162,23 @@ public class TravelOnsController implements TravelOnsApi {
 
     newOpinionId = opinionService.addNewOpinion(travelOnId, request, loginUser);
 
-    return opinionService.getUploadPresignedUrl(request, travelOnId, newOpinionId);
+    return opinionService.getUploadPresignedUrl(request.getQuantity(), travelOnId, newOpinionId);
   }
 
   /**
    * 답변(Opinion) 수정 핸들러
-   * @param travelOnId 답변이 달린 여행On ID
-   * @param opinionId 수정할 답변(Opinion) ID
-   * @param request 수정 내용
+   *
+   * @param travelOnId    답변이 달린 여행On ID
+   * @param opinionId     수정할 답변(Opinion) ID
+   * @param request       수정 내용
    * @param bindingResult
    * @param loginUser
+   * @return
    */
   @Override
-  public void updateOpinion(long travelOnId, long opinionId,
-                            OpinionRequest request, BindingResult bindingResult,
-                            LoginUser loginUser) throws BadRequestException, NotFoundException, ForbiddenException {
+  public Map<ImageContentType, List<String>> updateOpinion(long travelOnId, long opinionId,
+                                                           OpinionRequest request, BindingResult bindingResult,
+                                                           LoginUser loginUser) throws BadRequestException, NotFoundException, ForbiddenException {
     if (bindingResult.hasFieldErrors()) {
       String fieldErrMsg = errorMessageProvider.getFieldErrMsg(bindingResult);
       throw new BadRequestException(BadRequestCode.BAD_INPUT_FORM, fieldErrMsg);
@@ -185,8 +187,14 @@ public class TravelOnsController implements TravelOnsApi {
     //수정 권한 확인
     isOpinionAuthor(opinionId, loginUser);
 
-    //수정
+    //제거할 기존 이미지 엔티티 개수 계산
+
+
+    //답변 엔티티 수정
     opinionService.updateOpinion(travelOnId, opinionId, request);
+
+    //답변 이미지 업로드 Presigned URL 반환
+    return opinionService.getUploadPresignedUrl(request.getQuantity(), travelOnId, opinionId);
   }
 
   /**

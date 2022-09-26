@@ -100,7 +100,6 @@ public class OpinionImgContentService {
       //S3에서 오브젝트(이미지) 제거
       String objectKey = imgEntity.getObjectKeyName();
       removeOpinionImageFromS3(objectKey);
-
       //DB에서 엔티티 제거
       opinionImageContentRepository.remove(imgEntity);
     }//for문 끝

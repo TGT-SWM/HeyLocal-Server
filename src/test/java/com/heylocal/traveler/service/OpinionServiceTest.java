@@ -13,6 +13,7 @@ import com.heylocal.traveler.domain.travelon.opinion.OpinionImageContent;
 import com.heylocal.traveler.domain.user.User;
 import com.heylocal.traveler.domain.user.UserRole;
 import com.heylocal.traveler.dto.LoginUser;
+import com.heylocal.traveler.dto.OpinionImageContentDto;
 import com.heylocal.traveler.exception.BadRequestException;
 import com.heylocal.traveler.exception.ForbiddenException;
 import com.heylocal.traveler.exception.NotFoundException;
@@ -38,6 +39,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import static com.heylocal.traveler.domain.travelon.opinion.OpinionImageContent.ImageContentType;
 import static com.heylocal.traveler.dto.OpinionDto.OpinionRequest;
 import static com.heylocal.traveler.dto.OpinionDto.OpinionResponse;
+import static com.heylocal.traveler.dto.OpinionImageContentDto.*;
 import static com.heylocal.traveler.dto.PlaceDto.PlaceRequest;
 import static com.heylocal.traveler.util.aws.S3ObjectNameFormatter.ObjectNameProperty;
 import static org.junit.jupiter.api.Assertions.*;
@@ -582,13 +584,16 @@ class OpinionServiceTest {
     int foodImgQuantity = 2;
     int drinkAndDessertImgQuantity = 3;
     int photoSpotImgQuantity = 2;
-    opinionRequest.setGeneralImgQuantity(generalImgQuantity);
-    opinionRequest.setFoodImgQuantity(foodImgQuantity);
-    opinionRequest.setDrinkAndDessertImgQuantity(drinkAndDessertImgQuantity);
-    opinionRequest.setPhotoSpotImgQuantity(photoSpotImgQuantity);
+    ImageContentQuantity imgQuantity = ImageContentQuantity.builder()
+        .generalImgQuantity(generalImgQuantity)
+        .foodImgQuantity(foodImgQuantity)
+        .drinkAndDessertImgQuantity(drinkAndDessertImgQuantity)
+        .photoSpotImgQuantity(photoSpotImgQuantity)
+        .build();
+    opinionRequest.setQuantity(imgQuantity);
 
     //WHEN
-    Map<ImageContentType, List<String>> result = opinionService.getUploadPresignedUrl(opinionRequest, travelOnIdOfOpinion, newOpinionId);
+    Map<ImageContentType, List<String>> result = opinionService.getUploadPresignedUrl(imgQuantity, travelOnIdOfOpinion, newOpinionId);
 
     //THEN
     assertAll(

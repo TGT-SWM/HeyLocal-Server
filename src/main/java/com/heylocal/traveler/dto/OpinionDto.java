@@ -15,6 +15,7 @@ import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.heylocal.traveler.dto.OpinionImageContentDto.*;
 import static com.heylocal.traveler.dto.PlaceDto.PlaceRequest;
 import static com.heylocal.traveler.dto.PlaceDto.PlaceResponse;
 import static com.heylocal.traveler.dto.UserDto.UserResponse;
@@ -32,18 +33,8 @@ public class OpinionDto {
 		private String description;
 		@Valid
 		private PlaceRequest place;
-		@ApiModelProperty("등록할 전체(일반) 사진 개수 (3개 이하)")
-		@Max(3)
-		private int generalImgQuantity;
-		@ApiModelProperty("등록할 추천 음식 사진 개수 (3개 이하)")
-		@Max(3)
-		private int foodImgQuantity;
-		@ApiModelProperty("등록할 추천 음료 및 디저트 (카페) 사진 개수 (3개 이하)")
-		@Max(3)
-		private int drinkAndDessertImgQuantity;
-		@ApiModelProperty("등록할 사진 명소 (관광지 및 문화시설) 사진 개수 (3개 이하)")
-		@Max(3)
-		private int photoSpotImgQuantity;
+		@Valid
+		private ImageContentQuantity quantity;
 		@ApiModelProperty(value = "시설이 청결한가요", required = true)
 		@NotNull
 		private EvaluationDegree facilityCleanliness;
