@@ -90,7 +90,7 @@ public class Opinion extends BaseTimeEntity {
   // 양방향 설정
 
   @Builder.Default
-  @OneToMany(mappedBy = "opinion", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+  @OneToMany(mappedBy = "opinion", fetch = FetchType.LAZY)
   private List<OpinionImageContent> opinionImageContentList = new ArrayList<>();
 
   public void setTravelOn(TravelOn travelOn) {

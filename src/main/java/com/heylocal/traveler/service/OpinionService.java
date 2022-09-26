@@ -183,11 +183,8 @@ public class OpinionService {
   public void removeOpinion(long travelOnId, long opinionId) throws NotFoundException {
     Opinion targetOpinion;
 
-    //수정할 답변(Opinion) 조회
+    //제거할 답변(Opinion) 조회
     targetOpinion = inquiryOpinionOfTravelOn(travelOnId, opinionId);
-
-    //S3에서 답변 관련 이미지 제거
-    removeOpinionImgInS3(targetOpinion.getOpinionImageContentList());
 
     opinionRepository.remove(targetOpinion);
   }
@@ -405,14 +402,6 @@ public class OpinionService {
     savedPlace.updateCoordinates(newPlaceInfo.getLat(), newPlaceInfo.getLng());
     savedPlace.updateThumbnailUrl(newPlaceInfo.getThumbnailUrl());
     savedPlace.updateLink(newPlaceInfo.getKakaoLink());
-  }
-
-  /**
-   * 해당 OpinionImageContent 를 S3에서 제거하는 메서드
-   * @param opinionImageContentList 제거할 OpinionImageContent 가 담긴 리스트
-   */
-  private void removeOpinionImgInS3(List<OpinionImageContent> opinionImageContentList) {
-    // TODO - 저장되어있던 S3의 Img을 삭제하는 로직 필요
   }
 
 }

@@ -14,6 +14,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -24,6 +26,7 @@ import static com.heylocal.traveler.util.aws.S3ObjectNameFormatter.ObjectNamePro
 @Service
 @RequiredArgsConstructor
 public class OpinionImgContentService {
+  private final S3ClientService s3ClientService;
   private final OpinionImageContentRepository opinionImageContentRepository;
   private final OpinionRepository opinionRepository;
   private final S3ObjectNameFormatter s3ObjectNameFormatter;
@@ -62,5 +65,52 @@ public class OpinionImgContentService {
     if ( !existedImgContent.isPresent() ) {
       opinionImageContentRepository.save(target); //저장
     }
+  }
+
+  /**
+   * 해당 답변의 모든 답변 이미지 엔티티 id 를 조회하는 메서드
+   * @param opinionId
+   * @return
+   * @throws NotFoundException
+   */
+  @Transactional(readOnly = true)
+  public long[] inquiryOpinionImgContentIds(long opinionId) throws NotFoundException {
+    Opinion opinion = opinionRepository.findById(opinionId).orElseThrow(
+        () -> new NotFoundException(NotFoundCode.NO_INFO, "존재하지 않는 답변 id 입니다.")
+    );
+    List<OpinionImageContent> targetImgList = opinion.getOpinionImageContentList();
+
+    Long[] opinionImgContentIdAry = targetImgList.stream().map((imgEntity) -> imgEntity.getId()).toArray(Long[]::new);
+    long[] result = Arrays.stream(opinionImgContentIdAry).mapToLong(Long::longValue).toArray();
+
+    return result;
+  }
+
+  /**
+   * 해당 id의 OpinionImageContent 엔티티와 S3 오브젝트를 제거하는 메서드
+   * @param targetIdAry
+   * @throws NotFoundException
+   */
+  @Transactional
+  public void removeOpinionImgContents(long[] targetIdAry) throws NotFoundException {
+    for (long id : targetIdAry) { //for문 시작
+      OpinionImageContent imgEntity = opinionImageContentRepository.findById(id).orElseThrow(
+          () -> new NotFoundException(NotFoundCode.NO_INFO, "해당 id를 갖는 답변 이미지 엔티티가 없습니다.")
+      );
+      //S3에서 오브젝트(이미지) 제거
+      String objectKey = imgEntity.getObjectKeyName();
+      removeOpinionImageFromS3(objectKey);
+
+      //DB에서 엔티티 제거
+      opinionImageContentRepository.remove(imgEntity);
+    }//for문 끝
+  }
+
+  /**
+   * 해당 Key 를 갖는 오브젝트를 S3에서 제거하는 메서드
+   * @param objectKey
+   */
+  private void removeOpinionImageFromS3(String objectKey) {
+    s3ClientService.removeObject(objectKey);
   }
 }

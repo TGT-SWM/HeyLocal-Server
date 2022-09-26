@@ -26,6 +26,8 @@ import static org.mockito.Mockito.times;
 
 class OpinionImgContentServiceTest {
   @Mock
+  private S3ClientService s3ClientService;
+  @Mock
   private OpinionImageContentRepository opinionImageContentRepository;
   @Mock
   private OpinionRepository opinionRepository;
@@ -36,7 +38,7 @@ class OpinionImgContentServiceTest {
   @BeforeEach
   void setUp() {
     MockitoAnnotations.openMocks(this);
-    opinionImgContentService = new OpinionImgContentService(opinionImageContentRepository, opinionRepository, s3ObjectNameFormatter);
+    opinionImgContentService = new OpinionImgContentService(s3ClientService, opinionImageContentRepository, opinionRepository, s3ObjectNameFormatter);
   }
 
   @Test
@@ -93,4 +95,7 @@ class OpinionImgContentServiceTest {
         () -> then(opinionImageContentRepository).should(times(0)).save(any())
     );
   }
+
+  // TODO - inquiryOpinionImgContentIds
+  // TODO - removeOpinionImgContents
 }

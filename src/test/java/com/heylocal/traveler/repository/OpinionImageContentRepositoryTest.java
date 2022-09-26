@@ -50,6 +50,15 @@ class OpinionImageContentRepositoryTest {
     );
   }
 
+  // TODO - findById
+  // TODO - findByObjectKeyName
+  // TODO - remove
+
+  /**
+   * 영속화되지 않은 OpinionImageContent 엔티티를 반환하는 메서드
+   * @param objectKeyName
+   * @return
+   */
   private OpinionImageContent getNotPersistOpinionImgContent(String objectKeyName) {
     OpinionImageContent opinionImageContent = OpinionImageContent.builder()
         .imageContentType(OpinionImageContent.ImageContentType.GENERAL)

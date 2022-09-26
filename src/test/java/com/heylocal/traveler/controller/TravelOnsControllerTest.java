@@ -14,6 +14,7 @@ import com.heylocal.traveler.exception.ForbiddenException;
 import com.heylocal.traveler.exception.NotFoundException;
 import com.heylocal.traveler.exception.code.ForbiddenCode;
 import com.heylocal.traveler.exception.code.NotFoundCode;
+import com.heylocal.traveler.service.OpinionImgContentService;
 import com.heylocal.traveler.service.OpinionService;
 import com.heylocal.traveler.service.TravelOnService;
 import com.heylocal.traveler.util.error.BindingErrorMessageProvider;
@@ -46,12 +47,14 @@ class TravelOnsControllerTest {
   private OpinionService opinionService;
   @Mock
   private BindingResult bindingResult;
+  @Mock
+  private OpinionImgContentService opinionImgContentService;
   private TravelOnsController travelOnsController;
 
   @BeforeEach
   void setUp() {
     MockitoAnnotations.openMocks(this);
-    travelOnsController = new TravelOnsController(messageProvider, travelOnService, opinionService);
+    travelOnsController = new TravelOnsController(messageProvider, travelOnService, opinionService, opinionImgContentService);
   }
 
   @Test
@@ -424,7 +427,8 @@ class TravelOnsControllerTest {
 
   @Test
   @DisplayName("답변 삭제 핸들러")
-  void isOpinionAuthorTest() throws NotFoundException, ForbiddenException {
+  void deleteOpinionTest() throws NotFoundException, ForbiddenException {
+    // TODO - deleteOpinion 이미지 제거 로직 검증
     //GIVEN
     long authorId = 1L;
     long noAuthorId = 2L;

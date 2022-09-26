@@ -7,6 +7,7 @@ import com.heylocal.traveler.exception.ForbiddenException;
 import com.heylocal.traveler.exception.NotFoundException;
 import com.heylocal.traveler.exception.code.BadRequestCode;
 import com.heylocal.traveler.exception.code.ForbiddenCode;
+import com.heylocal.traveler.service.OpinionImgContentService;
 import com.heylocal.traveler.service.OpinionService;
 import com.heylocal.traveler.service.TravelOnService;
 import com.heylocal.traveler.util.error.BindingErrorMessageProvider;
@@ -33,6 +34,7 @@ public class TravelOnsController implements TravelOnsApi {
 
   private final TravelOnService travelOnService;
   private final OpinionService opinionService;
+  private final OpinionImgContentService opinionImgContentService;
 
   /**
    * 여행On 목록 조회 핸들러
@@ -199,7 +201,13 @@ public class TravelOnsController implements TravelOnsApi {
     //삭제 권한 확인
     isOpinionAuthor(opinionId, loginUser);
 
-    //삭제
+    //관련 답변 이미지 id 조회
+    long[] opinionImgContentIdAry = opinionImgContentService.inquiryOpinionImgContentIds(opinionId);
+
+    //답변 이미지 엔티티 삭제
+    opinionImgContentService.removeOpinionImgContents(opinionImgContentIdAry);
+
+    //답변 엔티티 삭제
     opinionService.removeOpinion(travelOnId, opinionId);
   }
 
