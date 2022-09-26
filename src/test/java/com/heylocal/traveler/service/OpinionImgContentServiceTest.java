@@ -1,18 +1,26 @@
 package com.heylocal.traveler.service;
 
+import com.heylocal.traveler.domain.place.PlaceCategory;
+import com.heylocal.traveler.domain.travelon.opinion.CoffeeType;
+import com.heylocal.traveler.domain.travelon.opinion.EvaluationDegree;
 import com.heylocal.traveler.domain.travelon.opinion.Opinion;
 import com.heylocal.traveler.domain.travelon.opinion.OpinionImageContent;
+import com.heylocal.traveler.dto.OpinionDto;
+import com.heylocal.traveler.dto.OpinionImageContentDto;
+import com.heylocal.traveler.dto.PlaceDto;
 import com.heylocal.traveler.dto.aws.S3ObjectDto;
 import com.heylocal.traveler.exception.NotFoundException;
 import com.heylocal.traveler.repository.OpinionImageContentRepository;
 import com.heylocal.traveler.repository.OpinionRepository;
 import com.heylocal.traveler.util.aws.S3ObjectNameFormatter;
+import com.heylocal.traveler.util.aws.S3PresignUrlProvider;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
@@ -34,12 +42,14 @@ class OpinionImgContentServiceTest {
   private OpinionRepository opinionRepository;
   @Mock
   private S3ObjectNameFormatter s3ObjectNameFormatter;
+  @Mock
+  private S3PresignUrlProvider s3PresignUrlProvider;
   private OpinionImgContentService opinionImgContentService;
 
   @BeforeEach
   void setUp() {
     MockitoAnnotations.openMocks(this);
-    opinionImgContentService = new OpinionImgContentService(s3ClientService, opinionImageContentRepository, opinionRepository, s3ObjectNameFormatter);
+    opinionImgContentService = new OpinionImgContentService(s3ClientService, opinionImageContentRepository, opinionRepository, s3ObjectNameFormatter, s3PresignUrlProvider);
   }
 
   @Test
@@ -139,6 +149,39 @@ class OpinionImgContentServiceTest {
   }
 
   @Test
+  @DisplayName("업로드 Presigned URL 생성")
+  void getUploadPresignedUrlTest() {
+    //GIVEN
+    long travelOnIdOfOpinion = 1L;
+    long newOpinionId = 2L;
+    PlaceDto.PlaceRequest placeRequest = getPlaceRequest(3L);
+    OpinionDto.OpinionRequest opinionRequest = getOpinionRequest(placeRequest);
+    int generalImgQuantity = 1;
+    int foodImgQuantity = 2;
+    int drinkAndDessertImgQuantity = 3;
+    int photoSpotImgQuantity = 2;
+    OpinionImageContentDto.ImageContentQuantity imgQuantity = OpinionImageContentDto.ImageContentQuantity.builder()
+        .generalImgQuantity(generalImgQuantity)
+        .foodImgQuantity(foodImgQuantity)
+        .drinkAndDessertImgQuantity(drinkAndDessertImgQuantity)
+        .photoSpotImgQuantity(photoSpotImgQuantity)
+        .build();
+    opinionRequest.setQuantity(imgQuantity);
+
+    //WHEN
+    Map<ImageContentType, List<String>> result = opinionImgContentService.getUploadPresignedUrl(imgQuantity, travelOnIdOfOpinion, newOpinionId);
+
+    //THEN
+    assertAll(
+        //성공 케이스 - 업로드할 이미지의 개수(quantity)만큼 업로드용 Presigned URL 가 생성되었는지
+        () -> assertSame(generalImgQuantity, result.get(ImageContentType.GENERAL).size()),
+        () -> assertSame(foodImgQuantity, result.get(ImageContentType.RECOMMEND_FOOD).size()),
+        () -> assertSame(drinkAndDessertImgQuantity, result.get(ImageContentType.RECOMMEND_DRINK_DESSERT).size()),
+        () -> assertSame(photoSpotImgQuantity, result.get(ImageContentType.PHOTO_SPOT).size())
+    );
+  }
+
+  @Test
   @DisplayName("해당 id들의 OpinionImageContent 제거")
   void removeOpinionImgContentsTest() throws NotFoundException {
     //GIVEN
@@ -169,5 +212,29 @@ class OpinionImgContentServiceTest {
         () -> then(opinionImageContentRepository).should(times(2)).findById(anyLong()),
         () -> then(opinionImageContentRepository).should(times(2)).remove(any())
     );
+  }
+
+  private OpinionDto.OpinionRequest getOpinionRequest(PlaceDto.PlaceRequest place) {
+    return OpinionDto.OpinionRequest.builder()
+        .description("myDescription")
+        .place(place)
+        .facilityCleanliness(EvaluationDegree.GOOD)
+        .costPerformance(EvaluationDegree.GOOD)
+        .waiting(false)
+        .coffeeType(CoffeeType.BITTER)
+        .build();
+  }
+
+  private PlaceDto.PlaceRequest getPlaceRequest(long placeId) {
+    return PlaceDto.PlaceRequest.builder()
+        .id(placeId)
+        .category(PlaceCategory.CE7)
+        .name("myPlace")
+        .roadAddress("myRoadAddress")
+        .address("myAddress")
+        .lat(10)
+        .lng(10)
+        .kakaoLink("myLink")
+        .build();
   }
 }

@@ -8,6 +8,7 @@ import com.heylocal.traveler.dto.TravelOnDto;
 import com.heylocal.traveler.dto.TravelOnDto.TravelOnRequest;
 import com.heylocal.traveler.dto.TravelOnDto.TravelOnResponse;
 import com.heylocal.traveler.dto.TravelOnDto.TravelOnSimpleResponse;
+import com.heylocal.traveler.dto.aws.S3PresignedUrlDto;
 import com.heylocal.traveler.exception.BadRequestException;
 import com.heylocal.traveler.exception.ForbiddenException;
 import com.heylocal.traveler.exception.NotFoundException;
@@ -130,7 +131,7 @@ public interface TravelOnsApi {
         @ApiResponse(responseCode = "404", description = "- `NO_INFO`: 존재하지 않는 정보일 때", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessageResponse.class)))
     })
     @PutMapping("/{travelOnId}/opinions/{opinionId}")
-    Map<ImageContentType, List<String>> updateOpinion(
+    List<S3PresignedUrlDto.OpinionImgUpdateUrl> updateOpinion(
             @Parameter(in = ParameterIn.PATH, description = "여행 On ID", required = true) @PathVariable long travelOnId,
             @Parameter(in = ParameterIn.PATH, description = "답변 ID", required = true) @PathVariable long opinionId,
             @Parameter(in = ParameterIn.DEFAULT, description = "답변 정보", required = true) @Validated @RequestBody OpinionRequest request,
@@ -150,5 +151,16 @@ public interface TravelOnsApi {
             @Parameter(in = ParameterIn.PATH, description = "답변 ID", required = true) @PathVariable long opinionId,
             @ApiIgnore LoginUser loginUser
     ) throws NotFoundException, ForbiddenException;
+
+    @Operation(summary = "답변 수정에 필요한 Presigned URL 조회", description = "", tags = {"TravelOns"})
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "답변 삭제 성공 시")
+    })
+    @DeleteMapping("/{travelOnId}/opinions/{opinionId}/presign")
+    void getOpinionUpdatePresignedUrl(
+        @Parameter(in = ParameterIn.PATH, description = "여행 On ID", required = true) @PathVariable long travelOnId,
+        @Parameter(in = ParameterIn.PATH, description = "답변 ID", required = true) @PathVariable long opinionId,
+        @ApiIgnore LoginUser loginUser
+    ) throws ForbiddenException, NotFoundException;
 }
 

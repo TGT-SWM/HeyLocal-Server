@@ -10,6 +10,7 @@ import com.heylocal.traveler.domain.user.User;
 import com.heylocal.traveler.dto.LoginUser;
 import com.heylocal.traveler.dto.OpinionImageContentDto;
 import com.heylocal.traveler.dto.PlaceDto;
+import com.heylocal.traveler.dto.aws.S3PresignedUrlDto;
 import com.heylocal.traveler.exception.BadRequestException;
 import com.heylocal.traveler.exception.ForbiddenException;
 import com.heylocal.traveler.exception.NotFoundException;
@@ -37,6 +38,7 @@ import static com.heylocal.traveler.domain.travelon.opinion.OpinionImageContent.
 import static com.heylocal.traveler.dto.OpinionDto.OpinionRequest;
 import static com.heylocal.traveler.dto.OpinionDto.OpinionResponse;
 import static com.heylocal.traveler.dto.OpinionImageContentDto.*;
+import static com.heylocal.traveler.dto.aws.S3PresignedUrlDto.*;
 import static com.heylocal.traveler.util.aws.S3ObjectNameFormatter.ObjectNameProperty;
 
 @Slf4j
@@ -209,46 +211,6 @@ public class OpinionService {
     opinion = opinionOptional.get();
 
     return opinion.getAuthor().getId() == userId;
-  }
-
-  /**
-   * OpinionImageType 에 따라, 각각의 Presigned URL 을 생성하는 메서드
-   * @param imgQuantity
-   * @param travelOnId
-   * @param newOpinionId
-   * @return
-   */
-  public Map<ImageContentType, List<String>> getUploadPresignedUrl(ImageContentQuantity imgQuantity, long travelOnId, long newOpinionId) {
-    int generalImgQuantity = imgQuantity.getGeneralImgQuantity();
-    int foodImgQuantity = imgQuantity.getFoodImgQuantity();
-    int drinkAndDessertImgQuantity = imgQuantity.getDrinkAndDessertImgQuantity();
-    int photoSpotImgQuantity = imgQuantity.getPhotoSpotImgQuantity();
-    Map<ImageContentType, List<String>> result = new ConcurrentHashMap<>();
-
-    //ImageContentType 마다 반복
-    for (ImageContentType type : ImageContentType.values()) { //for 문 시작
-      ArrayList<String> urls = new ArrayList<>();
-      int quantity = 0;
-      int objectIndex = 0;
-
-      if (type == ImageContentType.GENERAL) quantity = generalImgQuantity;
-      else if (type == ImageContentType.RECOMMEND_FOOD) quantity = foodImgQuantity;
-      else if (type == ImageContentType.RECOMMEND_DRINK_DESSERT) quantity = drinkAndDessertImgQuantity;
-      else if (type == ImageContentType.PHOTO_SPOT) quantity = photoSpotImgQuantity;
-
-      while (quantity > 0) { //while 문 시작
-        quantity--;
-        String objectNameOfOpinionImg =
-            s3ObjectNameFormatter.getObjectNameOfOpinionImg(travelOnId, newOpinionId, type, objectIndex++);
-        String presignedUrl = s3PresignUrlProvider.getPresignedUrl(objectNameOfOpinionImg, HttpMethod.PUT);
-
-        urls.add(presignedUrl);
-      } //while 문 끝
-
-      result.put(type, urls);
-    } //for 문 끝
-
-    return result;
   }
 
   /**

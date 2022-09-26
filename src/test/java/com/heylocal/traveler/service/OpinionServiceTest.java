@@ -572,39 +572,6 @@ class OpinionServiceTest {
     );
   }
 
-  @Test
-  @DisplayName("업로드 Presigned URL 생성")
-  void getUploadPresignedUrlTest() {
-    //GIVEN
-    long travelOnIdOfOpinion = 1L;
-    long newOpinionId = 2L;
-    PlaceRequest placeRequest = getPlaceRequest(3L);
-    OpinionRequest opinionRequest = getOpinionRequest(placeRequest);
-    int generalImgQuantity = 1;
-    int foodImgQuantity = 2;
-    int drinkAndDessertImgQuantity = 3;
-    int photoSpotImgQuantity = 2;
-    ImageContentQuantity imgQuantity = ImageContentQuantity.builder()
-        .generalImgQuantity(generalImgQuantity)
-        .foodImgQuantity(foodImgQuantity)
-        .drinkAndDessertImgQuantity(drinkAndDessertImgQuantity)
-        .photoSpotImgQuantity(photoSpotImgQuantity)
-        .build();
-    opinionRequest.setQuantity(imgQuantity);
-
-    //WHEN
-    Map<ImageContentType, List<String>> result = opinionService.getUploadPresignedUrl(imgQuantity, travelOnIdOfOpinion, newOpinionId);
-
-    //THEN
-    assertAll(
-        //성공 케이스 - 업로드할 이미지의 개수(quantity)만큼 업로드용 Presigned URL 가 생성되었는지
-        () -> assertSame(generalImgQuantity, result.get(ImageContentType.GENERAL).size()),
-        () -> assertSame(foodImgQuantity, result.get(ImageContentType.RECOMMEND_FOOD).size()),
-        () -> assertSame(drinkAndDessertImgQuantity, result.get(ImageContentType.RECOMMEND_DRINK_DESSERT).size()),
-        () -> assertSame(photoSpotImgQuantity, result.get(ImageContentType.PHOTO_SPOT).size())
-    );
-  }
-
   private OpinionRequest getOpinionRequest(PlaceRequest place) {
     return OpinionRequest.builder()
         .description("myDescription")

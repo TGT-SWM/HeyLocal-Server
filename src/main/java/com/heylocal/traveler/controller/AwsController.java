@@ -26,10 +26,16 @@ public class AwsController implements AwsApi {
   @Override
   public void saveOpinionImgMessage(String request) throws Exception {
     //String -> AwsSnsRequest 객체
-    S3ObjectDto s3ObjectDto = new S3ObjectDto();
-    String objectName = snsMessageParser.getObjectName(request);
-    s3ObjectDto.setKey(objectName);
+    log.info(request);
+//    S3ObjectDto s3ObjectDto = new S3ObjectDto();
+//    String objectName = snsMessageParser.getObjectName(request);
+//    s3ObjectDto.setKey(objectName);
+//
+//    opinionImgContentService.saveOpinionImageContent(s3ObjectDto);
+  }
 
-    opinionImgContentService.saveOpinionImageContent(s3ObjectDto);
+  @Override
+  public void deleteOpinionImgMessage(String request) throws Exception {
+    log.info(request);
   }
 }

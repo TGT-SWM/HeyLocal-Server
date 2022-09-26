@@ -15,8 +15,17 @@ public interface AwsApi {
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "호출 성공")
   })
-  @PostMapping(value = "/opinion/img", consumes = "text/plain")
+  @PostMapping(value = "/opinion/img/put", consumes = "text/plain")
   void saveOpinionImgMessage(
       @Parameter(in = ParameterIn.DEFAULT, description = "Put된 S3 Object 정보", required = true) @RequestBody String request
       ) throws Exception;
+
+  @Operation(summary = "답변 이미지 파일이 S3에서 제거되었을 때, AWS가 호출하는 Callback API", description = "AWS의 Simple Notification Service가 호출한다.", tags = {"Aws"})
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "호출 성공")
+  })
+  @PostMapping(value = "/opinion/img/delete", consumes = "text/plain")
+  void deleteOpinionImgMessage(
+      @Parameter(in = ParameterIn.DEFAULT, description = "Delete된 S3 Object 정보", required = true) @RequestBody String request
+  ) throws Exception;
 }

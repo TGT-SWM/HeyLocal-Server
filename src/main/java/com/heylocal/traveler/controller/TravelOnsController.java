@@ -2,6 +2,7 @@ package com.heylocal.traveler.controller;
 
 import com.heylocal.traveler.controller.api.TravelOnsApi;
 import com.heylocal.traveler.dto.LoginUser;
+import com.heylocal.traveler.dto.aws.S3PresignedUrlDto;
 import com.heylocal.traveler.exception.BadRequestException;
 import com.heylocal.traveler.exception.ForbiddenException;
 import com.heylocal.traveler.exception.NotFoundException;
@@ -24,6 +25,7 @@ import static com.heylocal.traveler.domain.travelon.opinion.OpinionImageContent.
 import static com.heylocal.traveler.dto.OpinionDto.OpinionRequest;
 import static com.heylocal.traveler.dto.OpinionDto.OpinionResponse;
 import static com.heylocal.traveler.dto.TravelOnDto.*;
+import static com.heylocal.traveler.dto.aws.S3PresignedUrlDto.*;
 
 @Slf4j
 @Tag(name = "TravelOns")
@@ -162,7 +164,7 @@ public class TravelOnsController implements TravelOnsApi {
 
     newOpinionId = opinionService.addNewOpinion(travelOnId, request, loginUser);
 
-    return opinionService.getUploadPresignedUrl(request.getQuantity(), travelOnId, newOpinionId);
+    return opinionImgContentService.getUploadPresignedUrl(request.getQuantity(), travelOnId, newOpinionId);
   }
 
   /**
@@ -176,9 +178,9 @@ public class TravelOnsController implements TravelOnsApi {
    * @return
    */
   @Override
-  public Map<ImageContentType, List<String>> updateOpinion(long travelOnId, long opinionId,
-                                                           OpinionRequest request, BindingResult bindingResult,
-                                                           LoginUser loginUser) throws BadRequestException, NotFoundException, ForbiddenException {
+  public List<OpinionImgUpdateUrl> updateOpinion(long travelOnId, long opinionId,
+                                                 OpinionRequest request, BindingResult bindingResult,
+                                                 LoginUser loginUser) throws BadRequestException, NotFoundException, ForbiddenException {
     if (bindingResult.hasFieldErrors()) {
       String fieldErrMsg = errorMessageProvider.getFieldErrMsg(bindingResult);
       throw new BadRequestException(BadRequestCode.BAD_INPUT_FORM, fieldErrMsg);
@@ -187,14 +189,11 @@ public class TravelOnsController implements TravelOnsApi {
     //수정 권한 확인
     isOpinionAuthor(opinionId, loginUser);
 
-    //제거할 기존 이미지 엔티티 개수 계산
-
-
-    //답변 엔티티 수정
+    //답변 엔티티 (text) 수정
     opinionService.updateOpinion(travelOnId, opinionId, request);
 
-    //답변 이미지 업로드 Presigned URL 반환
-    return opinionService.getUploadPresignedUrl(request.getQuantity(), travelOnId, opinionId);
+    //답변 이미지를 수정할 수 있는 Presigned URL 응답
+    return opinionImgContentService.getUpdatePresignedUrl(opinionId);
   }
 
   /**
@@ -217,6 +216,21 @@ public class TravelOnsController implements TravelOnsApi {
 
     //답변 엔티티 삭제
     opinionService.removeOpinion(travelOnId, opinionId);
+  }
+
+  /**
+   * 답변 수정에 필요한 Presigned URL 조회 핸들러
+   * @param travelOnId
+   * @param opinionId
+   * @param loginUser
+   */
+  @Override
+  public void getOpinionUpdatePresignedUrl(long travelOnId, long opinionId, LoginUser loginUser) throws ForbiddenException, NotFoundException {
+    //수정 권한 확인
+    isOpinionAuthor(opinionId, loginUser);
+
+    //Presigned URL 조회
+
   }
 
   /**

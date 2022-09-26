@@ -1,5 +1,6 @@
 package com.heylocal.traveler.service;
 
+import com.amazonaws.HttpMethod;
 import com.heylocal.traveler.domain.travelon.opinion.Opinion;
 import com.heylocal.traveler.domain.travelon.opinion.OpinionImageContent;
 import com.heylocal.traveler.dto.aws.S3ObjectDto;
@@ -9,17 +10,19 @@ import com.heylocal.traveler.mapper.OpinionImageContentMapper;
 import com.heylocal.traveler.repository.OpinionImageContentRepository;
 import com.heylocal.traveler.repository.OpinionRepository;
 import com.heylocal.traveler.util.aws.S3ObjectNameFormatter;
+import com.heylocal.traveler.util.aws.S3PresignUrlProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 import static com.heylocal.traveler.domain.travelon.opinion.OpinionImageContent.ImageContentType;
+import static com.heylocal.traveler.dto.OpinionImageContentDto.ImageContentQuantity;
+import static com.heylocal.traveler.dto.aws.S3PresignedUrlDto.OpinionImgUpdateUrl;
 import static com.heylocal.traveler.util.aws.S3ObjectNameFormatter.ObjectNameProperty;
 
 @Slf4j
@@ -30,6 +33,7 @@ public class OpinionImgContentService {
   private final OpinionImageContentRepository opinionImageContentRepository;
   private final OpinionRepository opinionRepository;
   private final S3ObjectNameFormatter s3ObjectNameFormatter;
+  private final S3PresignUrlProvider s3PresignUrlProvider;
 
   /**
    * <pre>
@@ -82,6 +86,104 @@ public class OpinionImgContentService {
 
     Long[] opinionImgContentIdAry = targetImgList.stream().map((imgEntity) -> imgEntity.getId()).toArray(Long[]::new);
     long[] result = Arrays.stream(opinionImgContentIdAry).mapToLong(Long::longValue).toArray();
+
+    return result;
+  }
+
+  /**
+   * OpinionImageType 에 따라, 각각의 Presigned URL 을 생성하는 메서드
+   * @param imgQuantity
+   * @param travelOnId
+   * @param newOpinionId
+   * @return
+   */
+  public Map<ImageContentType, List<String>> getUploadPresignedUrl(ImageContentQuantity imgQuantity, long travelOnId, long newOpinionId) {
+    int generalImgQuantity = imgQuantity.getGeneralImgQuantity();
+    int foodImgQuantity = imgQuantity.getFoodImgQuantity();
+    int drinkAndDessertImgQuantity = imgQuantity.getDrinkAndDessertImgQuantity();
+    int photoSpotImgQuantity = imgQuantity.getPhotoSpotImgQuantity();
+    Map<ImageContentType, List<String>> result = new ConcurrentHashMap<>();
+
+    //ImageContentType 마다 반복
+    for (ImageContentType type : ImageContentType.values()) { //for 문 시작
+      ArrayList<String> urls = new ArrayList<>();
+      int quantity = 0;
+      int objectIndex = 0;
+
+      if (type == ImageContentType.GENERAL) quantity = generalImgQuantity;
+      else if (type == ImageContentType.RECOMMEND_FOOD) quantity = foodImgQuantity;
+      else if (type == ImageContentType.RECOMMEND_DRINK_DESSERT) quantity = drinkAndDessertImgQuantity;
+      else if (type == ImageContentType.PHOTO_SPOT) quantity = photoSpotImgQuantity;
+
+      while (quantity > 0) { //while 문 시작
+        quantity--;
+        String objectNameOfOpinionImg =
+            s3ObjectNameFormatter.getObjectNameOfOpinionImg(travelOnId, newOpinionId, type, objectIndex++);
+        String presignedUrl = s3PresignUrlProvider.getPresignedUrl(objectNameOfOpinionImg, HttpMethod.PUT);
+
+        urls.add(presignedUrl);
+      } //while 문 끝
+
+      result.put(type, urls);
+    } //for 문 끝
+
+    return result;
+  }
+
+  /**
+   * <pre>
+   * OpinionImageContent 타입마다,
+   * PUT·DELETE Presigned URL을 생성하여 반환한다.
+   * 각 타입별로 PUT·DELETE Presigned URL 을 3개씩 생성한다.
+   * 이미 존재하는 이미지 개수에 관계없이, 무조건 3개의 PUT URL 을 생성한다.
+   * DELETE URL 은 이미 존재하는 이미지 개수에 맞춰 생성한다.
+   *
+   * - 이미 존재하는 object key 에 대한 PUT URL -> 이미지 수정용 URL
+   * - 존재하지 않는 object key 에 대한 PUT URL -> 이미지 추가용 URL
+   * - 이미 존재하는 object key 에 대한 DELETE URL -> 이미지 삭제용 URL
+   * - 존재하지 않는 object key 에 대한 DELETE URL -> 생성하지 않음
+   * </pre>
+   * @param opinionId 이미지 Presigned URL 을 생성할 Target 답변
+   * @return
+   */
+  @Transactional(readOnly = true)
+  public List<OpinionImgUpdateUrl> getUpdatePresignedUrl(long opinionId) throws NotFoundException {
+    //업데이트할 답변 엔티티
+    Opinion targetOpinion = opinionRepository.findById(opinionId).orElseThrow(
+        () -> new NotFoundException(NotFoundCode.NO_INFO, "존재하지 않는 답변 ID 입니다.")
+    );
+    //업데이트할 답변 이미지 엔티티들의 key들을 리스트에 담는다.
+    List<String> savedObjectKeyList = targetOpinion.getOpinionImageContentList().stream()
+        .map(OpinionImageContent::getObjectKeyName).collect(Collectors.toList());
+    //Return 할 값
+    List<OpinionImgUpdateUrl> result = new ArrayList<>();
+
+    //이미지 타입별로 반복
+    for (ImageContentType imgType : ImageContentType.values()) { //첫번째 for 문 - 시작
+      //imgType 에 해당하는 PUT·DELETE URL 들을 담고있는 객체
+      OpinionImgUpdateUrl updateUrl = new OpinionImgUpdateUrl();
+      updateUrl.setImgType(imgType);
+
+      //이미지 타입별로 최대 3개의 이미지를 가질 수 있으므로 총 3번 반복
+      for (int objectIndex = 0; objectIndex < 3; objectIndex++) { //두번째 for 문 - 시작
+        //targetOpinion 가 가질 수 있는 '답변 이미지 object key' 구하기
+        String objectNameOfOpinionImg =
+            s3ObjectNameFormatter.getObjectNameOfOpinionImg(targetOpinion.getTravelOn().getId(), opinionId, imgType, objectIndex);
+
+        //PUT URL 생성
+        String putUrl = s3PresignUrlProvider.getPresignedUrl(objectNameOfOpinionImg, HttpMethod.PUT);
+        updateUrl.getPutUrls().add(putUrl);
+
+        //해당 key 를 갖는 OpinionImageContent 엔티티가 없다면 아래 생략
+        if (!savedObjectKeyList.contains(objectNameOfOpinionImg)) continue;
+
+        //DELETE URL 생성
+        String deleteUrl = s3PresignUrlProvider.getPresignedUrl(objectNameOfOpinionImg, HttpMethod.DELETE);
+        updateUrl.getDeleteUrls().add(deleteUrl);
+      } //두번째 for 문 - 끝
+
+      result.add(updateUrl);
+    } //첫번째 for 문 - 끝
 
     return result;
   }
