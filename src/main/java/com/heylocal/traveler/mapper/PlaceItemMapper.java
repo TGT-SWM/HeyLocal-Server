@@ -25,5 +25,7 @@ public interface PlaceItemMapper {
   @Mapping(target = "roadAddress", source = "placeItem.place.roadAddress")
   @Mapping(target = "lat", source = "placeItem.place.lat")
   @Mapping(target = "lng", source = "placeItem.place.lng")
+  @Mapping(target = "category", source = "placeItem.place.category")
+  @Mapping(target = "link", source = "placeItem.place.link")
   PlaceItemDto.PlaceItemResponse toPlaceItemResponseDto(PlaceItem placeItem);
 }
