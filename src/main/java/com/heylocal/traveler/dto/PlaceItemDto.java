@@ -32,10 +32,12 @@ public class PlaceItemDto {
   @Schema(description = "플랜 내 장소 아이템 응답 DTO")
   public static class PlaceItemResponse {
     long id;
+    PlaceCategory category;
     String name;
     String address;
     String roadAddress;
     double lat;
     double lng;
+    String link;
   }
 }
