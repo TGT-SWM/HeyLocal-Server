@@ -27,7 +27,6 @@ class AwsControllerTest {
     awsController = new AwsController(opinionImgContentService, snsMessageParser);
   }
 
-  @Disabled //TODO - 제거
   @Test
   @DisplayName("AWS SNS 가 답변 이미지 관련 요청을 보내는 Callback 핸들러")
   void saveOpinionImgMessageTest() throws Exception {
