@@ -9,10 +9,6 @@ import com.heylocal.traveler.domain.user.User;
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static com.heylocal.traveler.domain.travelon.opinion.OpinionImageContent.ImageContentType;
 import static com.heylocal.traveler.dto.OpinionDto.OpinionRequest;
 import static com.heylocal.traveler.dto.OpinionDto.OpinionResponse;
 
@@ -34,10 +30,10 @@ public interface OpinionMapper {
   @Mapping(target = "opinionImageContentList", ignore = true)
   Opinion toEntity(OpinionRequest opinionRequest, Place place, User author, TravelOn travelOn, Region region);
 
-  @Mapping(target = "generalImgContentUrlList", ignore = true)
-  @Mapping(target = "foodImgContentUrlList", ignore = true)
-  @Mapping(target = "drinkAndDessertImgContentUrlList", ignore = true)
-  @Mapping(target = "photoSpotImgContentUrlList", ignore = true)
+  @Mapping(target = "generalImgDownloadImgUrl", ignore = true)
+  @Mapping(target = "foodImgDownloadImgUrl", ignore = true)
+  @Mapping(target = "drinkAndDessertImgDownloadImgUrl", ignore = true)
+  @Mapping(target = "photoSpotImgDownloadImgUrl", ignore = true)
   OpinionResponse toResponseDto(Opinion opinion);
 
   @Mapping(target = "id", ignore = true)
@@ -50,39 +46,6 @@ public interface OpinionMapper {
   @Mapping(target = "region", source = "region")
   @Mapping(target = "opinionImageContentList", ignore = true)
   void updateOpinion(OpinionRequest opinionRequest, Region region, Place place, @MappingTarget Opinion opinion);
-
-  @AfterMapping
-  default void updateResponseDtoImgContentList(Opinion opinion, @MappingTarget OpinionResponse opinionResponse) {
-    List<String> generalUrlList = new ArrayList<>();
-    List<String> foodUrlList = new ArrayList<>();
-    List<String> drinkAndDessertUrlList = new ArrayList<>();
-    List<String> photoSpotUrlList = new ArrayList<>();
-
-    opinion.getOpinionImageContentList().stream().forEach(
-        (item) -> {
-          ImageContentType type = item.getImageContentType();
-          switch (type) {
-            case GENERAL:
-              generalUrlList.add(item.getObjectKeyName());
-              break;
-            case RECOMMEND_FOOD:
-              foodUrlList.add(item.getObjectKeyName());
-              break;
-            case RECOMMEND_DRINK_DESSERT:
-              drinkAndDessertUrlList.add(item.getObjectKeyName());
-              break;
-            case PHOTO_SPOT:
-              photoSpotUrlList.add(item.getObjectKeyName());
-              break;
-          }
-        }
-    );
-
-    opinionResponse.setGeneralImgContentUrlList(generalUrlList);
-    opinionResponse.setFoodImgContentUrlList(foodUrlList);
-    opinionResponse.setDrinkAndDessertImgContentUrlList(drinkAndDessertUrlList);
-    opinionResponse.setPhotoSpotImgContentUrlList(photoSpotUrlList);
-  }
 
   @AfterMapping
   default void removeAllImgContentListOfEntity(@MappingTarget Opinion opinion) {

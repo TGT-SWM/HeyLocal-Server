@@ -1,13 +1,14 @@
 package com.heylocal.traveler.controller;
 
 import com.heylocal.traveler.controller.api.TravelOnsApi;
-import com.heylocal.traveler.domain.travelon.opinion.OpinionImageContent;
 import com.heylocal.traveler.dto.LoginUser;
+import com.heylocal.traveler.dto.aws.S3PresignedUrlDto;
 import com.heylocal.traveler.exception.BadRequestException;
 import com.heylocal.traveler.exception.ForbiddenException;
 import com.heylocal.traveler.exception.NotFoundException;
 import com.heylocal.traveler.exception.code.BadRequestCode;
 import com.heylocal.traveler.exception.code.ForbiddenCode;
+import com.heylocal.traveler.service.OpinionImgContentService;
 import com.heylocal.traveler.service.OpinionService;
 import com.heylocal.traveler.service.TravelOnService;
 import com.heylocal.traveler.util.error.BindingErrorMessageProvider;
@@ -20,10 +21,11 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import java.util.Map;
 
-import static com.heylocal.traveler.domain.travelon.opinion.OpinionImageContent.*;
+import static com.heylocal.traveler.domain.travelon.opinion.OpinionImageContent.ImageContentType;
 import static com.heylocal.traveler.dto.OpinionDto.OpinionRequest;
 import static com.heylocal.traveler.dto.OpinionDto.OpinionResponse;
 import static com.heylocal.traveler.dto.TravelOnDto.*;
+import static com.heylocal.traveler.dto.aws.S3PresignedUrlDto.*;
 
 @Slf4j
 @Tag(name = "TravelOns")
@@ -34,6 +36,7 @@ public class TravelOnsController implements TravelOnsApi {
 
   private final TravelOnService travelOnService;
   private final OpinionService opinionService;
+  private final OpinionImgContentService opinionImgContentService;
 
   /**
    * 여행On 목록 조회 핸들러
@@ -161,21 +164,23 @@ public class TravelOnsController implements TravelOnsApi {
 
     newOpinionId = opinionService.addNewOpinion(travelOnId, request, loginUser);
 
-    return opinionService.getPresignedUrl(request, travelOnId, newOpinionId);
+    return opinionImgContentService.getUploadPresignedUrl(request.getQuantity(), travelOnId, newOpinionId);
   }
 
   /**
    * 답변(Opinion) 수정 핸들러
-   * @param travelOnId 답변이 달린 여행On ID
-   * @param opinionId 수정할 답변(Opinion) ID
-   * @param request 수정 내용
+   *
+   * @param travelOnId    답변이 달린 여행On ID
+   * @param opinionId     수정할 답변(Opinion) ID
+   * @param request       수정 내용
    * @param bindingResult
    * @param loginUser
+   * @return
    */
   @Override
-  public void updateOpinion(long travelOnId, long opinionId,
-                            OpinionRequest request, BindingResult bindingResult,
-                            LoginUser loginUser) throws BadRequestException, NotFoundException, ForbiddenException {
+  public List<OpinionImgUpdateUrl> updateOpinion(long travelOnId, long opinionId,
+                                                 OpinionRequest request, BindingResult bindingResult,
+                                                 LoginUser loginUser) throws BadRequestException, NotFoundException, ForbiddenException {
     if (bindingResult.hasFieldErrors()) {
       String fieldErrMsg = errorMessageProvider.getFieldErrMsg(bindingResult);
       throw new BadRequestException(BadRequestCode.BAD_INPUT_FORM, fieldErrMsg);
@@ -184,8 +189,11 @@ public class TravelOnsController implements TravelOnsApi {
     //수정 권한 확인
     isOpinionAuthor(opinionId, loginUser);
 
-    //수정
+    //답변 엔티티 (text) 수정
     opinionService.updateOpinion(travelOnId, opinionId, request);
+
+    //답변 이미지를 수정할 수 있는 Presigned URL 응답
+    return opinionImgContentService.getUpdatePresignedUrl(opinionId);
   }
 
   /**
@@ -200,8 +208,29 @@ public class TravelOnsController implements TravelOnsApi {
     //삭제 권한 확인
     isOpinionAuthor(opinionId, loginUser);
 
-    //삭제
+    //관련 답변 이미지 id 조회
+    long[] opinionImgContentIdAry = opinionImgContentService.inquiryOpinionImgContentIds(opinionId);
+
+    //답변 이미지 엔티티 삭제
+    opinionImgContentService.removeOpinionImgContents(opinionImgContentIdAry);
+
+    //답변 엔티티 삭제
     opinionService.removeOpinion(travelOnId, opinionId);
+  }
+
+  /**
+   * 답변 수정에 필요한 Presigned URL 조회 핸들러
+   * @param travelOnId
+   * @param opinionId
+   * @param loginUser
+   */
+  @Override
+  public void getOpinionUpdatePresignedUrl(long travelOnId, long opinionId, LoginUser loginUser) throws ForbiddenException, NotFoundException {
+    //수정 권한 확인
+    isOpinionAuthor(opinionId, loginUser);
+
+    //Presigned URL 조회
+
   }
 
   /**

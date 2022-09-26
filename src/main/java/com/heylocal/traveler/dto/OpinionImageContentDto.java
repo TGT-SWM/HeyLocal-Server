@@ -1,7 +1,10 @@
 package com.heylocal.traveler.dto;
 
+import io.swagger.annotations.ApiModelProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
+
+import javax.validation.constraints.Max;
 
 import static com.heylocal.traveler.domain.travelon.opinion.OpinionImageContent.ImageContentType;
 
@@ -22,10 +25,31 @@ public class OpinionImageContentDto {
   @NoArgsConstructor
   @AllArgsConstructor
   @Builder
-  @Schema(description = "여행 On에 대한 답변 응답 DTO")
+  @Schema(description = "답변 이미지 응답 DTO")
   public static class OpinionImageContentResponse {
     private long id;
     private ImageContentType imageContentType;
-    private String url;
+    private String objectKeyName;
+  }
+
+  @Getter
+  @Setter
+  @NoArgsConstructor
+  @AllArgsConstructor
+  @Builder
+  @Schema(description = "답변 이미지 개수 DTO")
+  public static class ImageContentQuantity {
+    @ApiModelProperty("등록할 전체(일반) 사진 개수 (3개 이하)")
+    @Max(3)
+    private int generalImgQuantity;
+    @ApiModelProperty("등록할 추천 음식 사진 개수 (3개 이하)")
+    @Max(3)
+    private int foodImgQuantity;
+    @ApiModelProperty("등록할 추천 음료 및 디저트 (카페) 사진 개수 (3개 이하)")
+    @Max(3)
+    private int drinkAndDessertImgQuantity;
+    @ApiModelProperty("등록할 사진 명소 (관광지 및 문화시설) 사진 개수 (3개 이하)")
+    @Max(3)
+    private int photoSpotImgQuantity;
   }
 }

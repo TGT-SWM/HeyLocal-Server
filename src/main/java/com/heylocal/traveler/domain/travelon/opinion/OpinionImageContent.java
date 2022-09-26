@@ -26,7 +26,7 @@ public class OpinionImageContent extends BaseTimeEntity {
   @ManyToOne(optional = false, fetch = FetchType.LAZY)
   private Opinion opinion;
 
-  @Column
+  @Column(unique = true)
   private String objectKeyName; //S3에 저장된 Object의 Key(name), null인 경우 S3에 업로드가 안됐거나 AWS SNS가 동작하지 않은 것임
 
   @Enumerated(EnumType.STRING)

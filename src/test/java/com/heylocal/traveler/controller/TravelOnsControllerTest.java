@@ -9,11 +9,14 @@ import com.heylocal.traveler.domain.travelon.list.DrinkType;
 import com.heylocal.traveler.domain.travelon.list.FoodType;
 import com.heylocal.traveler.domain.travelon.list.MemberType;
 import com.heylocal.traveler.dto.LoginUser;
+import com.heylocal.traveler.dto.OpinionDto;
+import com.heylocal.traveler.dto.OpinionImageContentDto;
 import com.heylocal.traveler.exception.BadRequestException;
 import com.heylocal.traveler.exception.ForbiddenException;
 import com.heylocal.traveler.exception.NotFoundException;
 import com.heylocal.traveler.exception.code.ForbiddenCode;
 import com.heylocal.traveler.exception.code.NotFoundCode;
+import com.heylocal.traveler.service.OpinionImgContentService;
 import com.heylocal.traveler.service.OpinionService;
 import com.heylocal.traveler.service.TravelOnService;
 import com.heylocal.traveler.util.error.BindingErrorMessageProvider;
@@ -29,6 +32,8 @@ import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
+import static com.heylocal.traveler.dto.OpinionDto.*;
+import static com.heylocal.traveler.dto.OpinionImageContentDto.*;
 import static com.heylocal.traveler.dto.PageDto.PageRequest;
 import static com.heylocal.traveler.dto.TravelOnDto.*;
 import static com.heylocal.traveler.dto.TravelTypeGroupDto.TravelTypeGroupRequest;
@@ -46,12 +51,14 @@ class TravelOnsControllerTest {
   private OpinionService opinionService;
   @Mock
   private BindingResult bindingResult;
+  @Mock
+  private OpinionImgContentService opinionImgContentService;
   private TravelOnsController travelOnsController;
 
   @BeforeEach
   void setUp() {
     MockitoAnnotations.openMocks(this);
-    travelOnsController = new TravelOnsController(messageProvider, travelOnService, opinionService);
+    travelOnsController = new TravelOnsController(messageProvider, travelOnService, opinionService, opinionImgContentService);
   }
 
   @Test
@@ -272,6 +279,9 @@ class TravelOnsControllerTest {
     LoginUser loginUser = LoginUser.builder()
         .id(loginUserId)
         .build();
+    OpinionRequest request = OpinionRequest.builder()
+        .quantity(new ImageContentQuantity())
+        .build();
 
     //Mock 행동 정의 - bindingResult
     willReturn(false).given(bindingResult).hasFieldErrors();
@@ -279,7 +289,7 @@ class TravelOnsControllerTest {
     //WHEN
 
     //THEN
-    assertDoesNotThrow(() -> travelOnsController.createOpinions(travelOnId, null, bindingResult, loginUser));
+    assertDoesNotThrow(() -> travelOnsController.createOpinions(travelOnId, request, bindingResult, loginUser));
   }
 
   @Test
@@ -291,6 +301,9 @@ class TravelOnsControllerTest {
     LoginUser loginUser = LoginUser.builder()
         .id(loginUserId)
         .build();
+    OpinionRequest request = OpinionRequest.builder()
+        .quantity(new ImageContentQuantity())
+        .build();
 
     //Mock 행동 정의 - bindingResult
     willReturn(true).given(bindingResult).hasFieldErrors();
@@ -298,7 +311,7 @@ class TravelOnsControllerTest {
     //WHEN
 
     //THEN
-    assertThrows(BadRequestException.class, () -> travelOnsController.createOpinions(travelOnId, null, bindingResult, loginUser));
+    assertThrows(BadRequestException.class, () -> travelOnsController.createOpinions(travelOnId, request, bindingResult, loginUser));
   }
 
   @Test
@@ -368,6 +381,9 @@ class TravelOnsControllerTest {
     LoginUser loginUser = LoginUser.builder().id(loginUserId).build();
     long existTravelOnId = 2L;
     long existOpinionId = 3L;
+    OpinionRequest request = OpinionRequest.builder()
+        .quantity(new ImageContentQuantity())
+        .build();
 
     //Mock 행동 정의 - opinionService
     willReturn(true).given(opinionService).isAuthor(anyLong(), anyLong());
@@ -378,7 +394,7 @@ class TravelOnsControllerTest {
     //WHEN
 
     //THEN
-    assertDoesNotThrow(() -> travelOnsController.updateOpinion(existTravelOnId, existOpinionId, null, bindingResult, loginUser));
+    assertDoesNotThrow(() -> travelOnsController.updateOpinion(existTravelOnId, existOpinionId, request, bindingResult, loginUser));
   }
 
   @Test
@@ -424,7 +440,7 @@ class TravelOnsControllerTest {
 
   @Test
   @DisplayName("답변 삭제 핸들러")
-  void isOpinionAuthorTest() throws NotFoundException, ForbiddenException {
+  void deleteOpinionTest() throws NotFoundException, ForbiddenException {
     //GIVEN
     long authorId = 1L;
     long noAuthorId = 2L;

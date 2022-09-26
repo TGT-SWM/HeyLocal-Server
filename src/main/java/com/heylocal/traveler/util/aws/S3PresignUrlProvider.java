@@ -23,19 +23,33 @@ public class S3PresignUrlProvider {
   private final AmazonS3Client amazonS3Client;
 
   /**
-   * S3에 Object 를 업로드할 수 있는 Presign URL 을 획득하는 메서드
-   * @param uploadObjectKeyName 저장할 Object 의 이름 (Object의 key)
+   * S3에 접근할 수 있는 Presign URL 을 획득하는 메서드
+   * @param objectKeyName 작업할 Object 의 이름 (Object의 key)
+   * @param httpMethod Presigned URL 의 기능 설정 (GET:다운로드, PUT: 업로드, DELETE: 삭제)
    * @return Presign Upload URL
    */
-  public String getUploadUrl(String uploadObjectKeyName) {
+  public String getPresignedUrl(String objectKeyName, HttpMethod httpMethod) {
+    if (isInvalidHttpMethod(httpMethod)) {
+      throw new IllegalArgumentException("GET, PUT, HEAD, DELETE HTTP 메서드만 허용합니다.");
+    }
+
     Date urlExpiration = new Date(new Date().getTime() + expirationMillSec);
     GeneratePresignedUrlRequest generatePresignedUrlRequest =
-        new GeneratePresignedUrlRequest(bucketName, uploadObjectKeyName)
-            .withMethod(HttpMethod.PUT)
-            .withContentType("image/png")
+        new GeneratePresignedUrlRequest(bucketName, objectKeyName)
+            .withMethod(httpMethod)
             .withExpiration(urlExpiration);
+    if (httpMethod == HttpMethod.PUT) generatePresignedUrlRequest.withContentType("image/png");
+
     URL url = amazonS3Client.generatePresignedUrl(generatePresignedUrlRequest);
     return url.toString();
+  }
+
+  private boolean isInvalidHttpMethod(HttpMethod method) {
+    if (method == HttpMethod.GET) return false;
+    if (method == HttpMethod.PUT) return false;
+    if (method == HttpMethod.HEAD) return false;
+    if (method == HttpMethod.DELETE) return false;
+    return true;
   }
 
 }
