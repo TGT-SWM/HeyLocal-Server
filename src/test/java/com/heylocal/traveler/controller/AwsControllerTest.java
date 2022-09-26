@@ -3,6 +3,7 @@ package com.heylocal.traveler.controller;
 import com.heylocal.traveler.service.OpinionImgContentService;
 import com.heylocal.traveler.util.aws.SnsMessageParser;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -26,6 +27,7 @@ class AwsControllerTest {
     awsController = new AwsController(opinionImgContentService, snsMessageParser);
   }
 
+  @Disabled //TODO - 제거
   @Test
   @DisplayName("AWS SNS 가 답변 이미지 관련 요청을 보내는 Callback 핸들러")
   void saveOpinionImgMessageTest() throws Exception {
