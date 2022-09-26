@@ -428,7 +428,6 @@ class TravelOnsControllerTest {
   @Test
   @DisplayName("답변 삭제 핸들러")
   void deleteOpinionTest() throws NotFoundException, ForbiddenException {
-    // TODO - deleteOpinion 이미지 제거 로직 검증
     //GIVEN
     long authorId = 1L;
     long noAuthorId = 2L;

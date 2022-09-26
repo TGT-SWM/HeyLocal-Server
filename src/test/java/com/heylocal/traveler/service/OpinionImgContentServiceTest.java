@@ -1,6 +1,7 @@
 package com.heylocal.traveler.service;
 
 import com.heylocal.traveler.domain.travelon.opinion.Opinion;
+import com.heylocal.traveler.domain.travelon.opinion.OpinionImageContent;
 import com.heylocal.traveler.dto.aws.S3ObjectDto;
 import com.heylocal.traveler.exception.NotFoundException;
 import com.heylocal.traveler.repository.OpinionImageContentRepository;
@@ -96,6 +97,77 @@ class OpinionImgContentServiceTest {
     );
   }
 
-  // TODO - inquiryOpinionImgContentIds
-  // TODO - removeOpinionImgContents
+  @Test
+  @DisplayName("해당 답변의 모든 이미지 엔티티 id 조회")
+  void inquiryOpinionImgContentIdsTest() throws NotFoundException {
+    //GIVEN
+    long imgEntity1Id = 1L;
+    OpinionImageContent imgEntity1 = OpinionImageContent.builder()
+        .id(imgEntity1Id)
+        .imageContentType(ImageContentType.GENERAL)
+        .objectKeyName("objecy key 1")
+        .build();
+    long imgEntity2Id = 2L;
+    OpinionImageContent imgEntity2 = OpinionImageContent.builder()
+        .id(imgEntity2Id)
+        .imageContentType(ImageContentType.RECOMMEND_FOOD)
+        .objectKeyName("objecy key 2")
+        .build();
+    long opinionId = 3L;
+    Opinion opinion = Opinion.builder()
+        .id(opinionId)
+        .build();
+    imgEntity1.setOpinion(opinion);
+    imgEntity2.setOpinion(opinion);
+
+    //Mock 행동 정의 - opinionRepository
+    willReturn(Optional.of(opinion)).given(opinionRepository).findById(opinionId);
+
+    //WHEN
+    long[] imgIdsResult = opinionImgContentService.inquiryOpinionImgContentIds(opinionId);
+
+    //THEN
+    assertAll(
+        //성공 케이스 - 1 - 조회된 이미지 엔티티의 개수가 2개인지
+        () -> assertSame(2, imgIdsResult.length),
+        //성공 케이스 - 2 - 조회된 이미지 엔티티 ID가 올바른지
+        () -> assertSame(imgEntity1Id, imgIdsResult[0]),
+        () -> assertSame(imgEntity2Id, imgIdsResult[1]),
+        //실패 케이스 - 1 - 존재하지 않는 답변 ID 인 경우
+        () -> assertThrows(NotFoundException.class, () -> opinionImgContentService.inquiryOpinionImgContentIds(10))
+    );
+  }
+
+  @Test
+  @DisplayName("해당 id들의 OpinionImageContent 제거")
+  void removeOpinionImgContentsTest() throws NotFoundException {
+    //GIVEN
+    long imgEntity1Id = 1L;
+    OpinionImageContent imgEntity1 = OpinionImageContent.builder()
+        .id(imgEntity1Id)
+        .imageContentType(ImageContentType.GENERAL)
+        .objectKeyName("objecy key 1")
+        .build();
+    long imgEntity2Id = 2L;
+    OpinionImageContent imgEntity2 = OpinionImageContent.builder()
+        .id(imgEntity2Id)
+        .imageContentType(ImageContentType.RECOMMEND_FOOD)
+        .objectKeyName("objecy key 2")
+        .build();
+    long[] opinionImgContentIdAry = new long[]{imgEntity1Id, imgEntity2Id};
+
+    //Mock 행동 정의 - opinionImageContentRepository
+    willReturn(Optional.of(imgEntity1)).given(opinionImageContentRepository).findById(imgEntity1Id);
+    willReturn(Optional.of(imgEntity2)).given(opinionImageContentRepository).findById(imgEntity2Id);
+
+    //WHEN
+    opinionImgContentService.removeOpinionImgContents(opinionImgContentIdAry);
+
+    //THEN
+    assertAll(
+        //성공 케이스 - 1 - 전달된 id 개수만큼 반복하여 삭제하는지
+        () -> then(opinionImageContentRepository).should(times(2)).findById(anyLong()),
+        () -> then(opinionImageContentRepository).should(times(2)).remove(any())
+    );
+  }
 }

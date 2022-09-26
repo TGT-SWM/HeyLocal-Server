@@ -21,6 +21,7 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -50,9 +51,67 @@ class OpinionImageContentRepositoryTest {
     );
   }
 
-  // TODO - findById
-  // TODO - findByObjectKeyName
-  // TODO - remove
+  @Test
+  @DisplayName("ID 로 OpinionImageContent 조회")
+  void findByIdTest() {
+    //GIVEN
+    String objectKeyName = "my object key";
+    OpinionImageContent opinionImgContent = getNotPersistOpinionImgContent(objectKeyName);
+    em.persist(opinionImgContent);
+    long opinionImgContentId = opinionImgContent.getId();
+
+    //WHEN
+    Optional<OpinionImageContent> result = opinionImageContentRepository.findById(opinionImgContentId);
+
+    //THEN
+    assertAll(
+        //성공 케이스 - 1 - 조회되었는지
+        () -> assertTrue(result.isPresent()),
+        //성공 케이스 - 2 - 조회된 엔티티가 올바른지
+        () -> assertSame(opinionImgContent, result.get()),
+        //성공 케이스 - 3 - Flush
+        () -> assertDoesNotThrow(() -> em.flush())
+    );
+  }
+
+  @Test
+  @DisplayName("Object Key 로 조회")
+  void findByObjectKeyNameTest() {
+    //GIVEN
+    String objectKeyName = "my object key";
+    OpinionImageContent opinionImgContent = getNotPersistOpinionImgContent(objectKeyName);
+    em.persist(opinionImgContent);
+
+    //WHEN
+    Optional<OpinionImageContent> result = opinionImageContentRepository.findByObjectKeyName(objectKeyName);
+
+    //THEN
+    assertAll(
+        //성공 케이스 - 1 - 조회되었는지
+        () -> assertTrue(result.isPresent()),
+        //성공 케이스 - 2 - 조회된 엔티티가 올바른지
+        () -> assertSame(opinionImgContent, result.get())
+    );
+  }
+
+  @Test
+  @DisplayName("엔티티 제거")
+  void removeTest() {
+    //GIVEN
+    String objectKeyName = "my object key";
+    OpinionImageContent opinionImgContent = getNotPersistOpinionImgContent(objectKeyName);
+    em.persist(opinionImgContent);
+
+    //WHEN
+
+    //THEN
+    assertAll(
+        //성공 케이스 - 1 - 예외없이 제거가 되는지
+        () -> assertDoesNotThrow(() -> opinionImageContentRepository.remove(opinionImgContent)),
+        //성공 케이스 - 2 - Flush
+        () -> assertDoesNotThrow(() -> em.flush())
+    );
+  }
 
   /**
    * 영속화되지 않은 OpinionImageContent 엔티티를 반환하는 메서드
