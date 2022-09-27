@@ -90,6 +90,15 @@ public class OpinionImgContentService {
     return result;
   }
 
+  @Transactional(readOnly = true)
+  public long inquiryOpinionImgContentId(String objectKeyName) throws NotFoundException {
+    OpinionImageContent opinionImageContent = opinionImageContentRepository.findByObjectKeyName(objectKeyName).orElseThrow(
+        () -> new NotFoundException(NotFoundCode.NO_INFO, "존재하지 않는 오브젝트 Key 입니다.")
+    );
+
+    return opinionImageContent.getId();
+  }
+
   /**
    * OpinionImageType 에 따라, 각각의 Presigned URL 을 생성하는 메서드
    * @param imgQuantity
@@ -191,27 +200,32 @@ public class OpinionImgContentService {
   /**
    * 해당 id의 OpinionImageContent 엔티티와 S3 오브젝트를 제거하는 메서드
    * @param targetIdAry
-   * @throws NotFoundException
    */
   @Transactional
-  public void removeOpinionImgContents(long[] targetIdAry) throws NotFoundException {
+  public void removeOpinionImgContents(long[] targetIdAry) {
     for (long id : targetIdAry) { //for문 시작
-      OpinionImageContent imgEntity = opinionImageContentRepository.findById(id).orElseThrow(
-          () -> new NotFoundException(NotFoundCode.NO_INFO, "해당 id를 갖는 답변 이미지 엔티티가 없습니다.")
-      );
-      //S3에서 오브젝트(이미지) 제거
-      String objectKey = imgEntity.getObjectKeyName();
-      removeOpinionImageFromS3(objectKey);
+      Optional<OpinionImageContent> imgOptional = opinionImageContentRepository.findById(id);
+      if (imgOptional.isEmpty()) continue; //만약 id가 존재하지 않는다면 무시
+
+      OpinionImageContent imgEntity = imgOptional.get();
+      //S3에서 오브젝트 제거
+      s3ClientService.removeObject(imgEntity.getObjectKeyName());
       //DB에서 엔티티 제거
       opinionImageContentRepository.remove(imgEntity);
     }//for문 끝
   }
 
   /**
-   * 해당 Key 를 갖는 오브젝트를 S3에서 제거하는 메서드
-   * @param objectKey
+   * DB 에서 OpinionImageContent 엔티티를 제거하는 메서드
+   * @param imgEntityId
+   * @throws NotFoundException
    */
-  private void removeOpinionImageFromS3(String objectKey) {
-    s3ClientService.removeObject(objectKey);
+  @Transactional
+  public void removeImgEntityFromDb(long imgEntityId) throws NotFoundException {
+    Optional<OpinionImageContent> imgOptional = opinionImageContentRepository.findById(imgEntityId);
+    OpinionImageContent imgEntity = opinionImageContentRepository.findById(imgEntityId).orElseThrow(
+        () -> new NotFoundException(NotFoundCode.NO_INFO, "존재하지 않는 OpinionImageContent ID 입니다.")
+    );
+    opinionImageContentRepository.remove(imgEntity);
   }
 }
