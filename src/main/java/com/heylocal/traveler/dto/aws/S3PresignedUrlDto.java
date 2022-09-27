@@ -6,7 +6,7 @@ import lombok.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.heylocal.traveler.domain.travelon.opinion.OpinionImageContent.*;
+import static com.heylocal.traveler.domain.travelon.opinion.OpinionImageContent.ImageContentType;
 
 public class S3PresignedUrlDto {
   @Getter

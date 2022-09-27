@@ -3,7 +3,6 @@ package com.heylocal.traveler.controller;
 import com.heylocal.traveler.service.OpinionImgContentService;
 import com.heylocal.traveler.util.aws.SnsMessageParser;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
