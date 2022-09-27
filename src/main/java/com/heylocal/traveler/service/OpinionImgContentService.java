@@ -229,7 +229,6 @@ public class OpinionImgContentService {
    */
   @Transactional
   public void removeImgEntityFromDb(long imgEntityId) throws NotFoundException {
-    Optional<OpinionImageContent> imgOptional = opinionImageContentRepository.findById(imgEntityId);
     OpinionImageContent imgEntity = opinionImageContentRepository.findById(imgEntityId).orElseThrow(
         () -> new NotFoundException(NotFoundCode.NO_INFO, "존재하지 않는 OpinionImageContent ID 입니다.")
     );

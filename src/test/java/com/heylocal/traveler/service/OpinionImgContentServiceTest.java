@@ -109,7 +109,7 @@ class OpinionImgContentServiceTest {
 
   @Test
   @DisplayName("해당 답변의 모든 이미지 엔티티 id 조회")
-  void inquiryOpinionImgContentIdsTest() throws NotFoundException {
+  void inquiryOpinionImgContentIdTest() throws NotFoundException {
     //GIVEN
     long imgEntity1Id = 1L;
     OpinionImageContent imgEntity1 = OpinionImageContent.builder()
@@ -213,6 +213,9 @@ class OpinionImgContentServiceTest {
         () -> then(opinionImageContentRepository).should(times(2)).remove(any())
     );
   }
+
+  // TODO - getUpdatePresignedUrl
+  // TODO - removeImgEntityFromDb
 
   private OpinionDto.OpinionRequest getOpinionRequest(PlaceDto.PlaceRequest place) {
     return OpinionDto.OpinionRequest.builder()

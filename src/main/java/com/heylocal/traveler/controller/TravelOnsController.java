@@ -219,21 +219,6 @@ public class TravelOnsController implements TravelOnsApi {
   }
 
   /**
-   * 답변 수정에 필요한 Presigned URL 조회 핸들러
-   * @param travelOnId
-   * @param opinionId
-   * @param loginUser
-   */
-  @Override
-  public void getOpinionUpdatePresignedUrl(long travelOnId, long opinionId, LoginUser loginUser) throws ForbiddenException, NotFoundException {
-    //수정 권한 확인
-    isOpinionAuthor(opinionId, loginUser);
-
-    //Presigned URL 조회
-
-  }
-
-  /**
    * 해당 여행On의 작성자인지 확인
    * @param travelOnId 확인할 여행On ID
    * @param loginUser 로그인한 사용자 정보

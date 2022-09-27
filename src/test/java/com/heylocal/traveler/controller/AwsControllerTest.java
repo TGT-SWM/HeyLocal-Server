@@ -51,4 +51,6 @@ class AwsControllerTest {
 
   }
 
+  // TODO - deleteOpinionImgMessage
+
 }
