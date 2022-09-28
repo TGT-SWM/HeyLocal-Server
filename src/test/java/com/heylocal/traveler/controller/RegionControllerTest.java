@@ -13,7 +13,9 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.BDDMockito.then;
 import static org.mockito.BDDMockito.willThrow;
+import static org.mockito.Mockito.times;
 
 class RegionControllerTest {
   @Mock
@@ -41,8 +43,14 @@ class RegionControllerTest {
 
     //THEN
     assertAll(
-        //성공 케이스 - 1 - 정상 state 으로 요청 시
+        //성공 케이스 - 1 - 정상 state 로 요청 시
         () -> assertDoesNotThrow(() -> regionController.getRegions(existState)),
+        //성공 케이스 - 2 - 빈 state 로 요청 시
+        () -> {
+          regionController.getRegions(null);
+          regionController.getRegions("");
+          then(regionService).should(times(2)).inquiryAllRegions();
+        },
         //실패 케이스 - 1 - 존재하지 않는 state 으로 요청 시
         () -> assertThrows(NotFoundException.class, () -> regionController.getRegions(notExistState))
     );
