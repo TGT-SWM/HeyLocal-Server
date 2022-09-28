@@ -57,11 +57,9 @@ public class TravelOnDto {
 		@NotEmpty
 		@Builder.Default
 		private Set<AccommodationType> accommodationTypeSet = new HashSet<>();
-		private int foodMaxCost;
 		@NotEmpty
 		@Builder.Default
 		private Set<FoodType> foodTypeSet = new HashSet<>();
-		private int drinkMaxCost;
 		@NotEmpty
 		@Builder.Default
 		private Set<DrinkType> drinkTypeSet = new HashSet<>();
@@ -105,9 +103,7 @@ public class TravelOnDto {
 		private Set<TravelMemberResponse> travelMemberSet;
 		private Integer accommodationMaxCost;
 		private Set<HopeAccommodationResponse> hopeAccommodationSet;
-		private Integer foodMaxCost;
 		private Set<HopeFoodResponse> hopeFoodSet;
-		private Integer drinkMaxCost;
 		private Set<HopeDrinkResponse> hopeDrinkSet;
 		private TravelTypeGroupResponse travelTypeGroup;
 		private LocalDateTime createdDateTime;
