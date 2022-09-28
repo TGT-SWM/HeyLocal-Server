@@ -27,7 +27,7 @@ class AwsControllerTest {
   }
 
   @Test
-  @DisplayName("AWS SNS 가 답변 이미지 관련 요청을 보내는 Callback 핸들러")
+  @DisplayName("AWS SNS 가 답변 이미지 등록 요청을 보내는 Callback 핸들러")
   void saveOpinionImgMessageTest() throws Exception {
     //GIVEN
     String requestMessage = "SNS 가 보내는 S3 Bucket Object 정보";
@@ -50,6 +50,21 @@ class AwsControllerTest {
 
   }
 
-  // TODO - deleteOpinionImgMessage
+  @Test
+  @DisplayName("AWS SNS 가 답변 이미지 삭제 요청을 보내는 Callback 핸들러")
+  void deleteOpinionImgMessageTest() throws Exception {
+    //GIVEN
+    String requestMessage = "SNS 가 보내는 S3 Bucket Object 정보";
+    String wrongRequestMessage = "\"Wrong Object Data\"";
 
+    //Mock 행동 정의 - snsMessageParser
+    String objectName = "/opinions/3/2/GENERAL/0.png";
+    willReturn(objectName).given(snsMessageParser).getObjectName(eq(requestMessage));
+    willThrow(Exception.class).given(snsMessageParser).getObjectName(eq(wrongRequestMessage));
+
+    //WHEN
+
+    //THEN
+    assertDoesNotThrow(() -> awsController.deleteOpinionImgMessage(requestMessage));
+  }
 }

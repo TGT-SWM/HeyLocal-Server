@@ -1,6 +1,7 @@
 package com.heylocal.traveler.service;
 
 import com.heylocal.traveler.domain.place.PlaceCategory;
+import com.heylocal.traveler.domain.travelon.TravelOn;
 import com.heylocal.traveler.domain.travelon.opinion.CoffeeType;
 import com.heylocal.traveler.domain.travelon.opinion.EvaluationDegree;
 import com.heylocal.traveler.domain.travelon.opinion.Opinion;
@@ -9,6 +10,7 @@ import com.heylocal.traveler.dto.OpinionDto;
 import com.heylocal.traveler.dto.OpinionImageContentDto;
 import com.heylocal.traveler.dto.PlaceDto;
 import com.heylocal.traveler.dto.aws.S3ObjectDto;
+import com.heylocal.traveler.dto.aws.S3PresignedUrlDto;
 import com.heylocal.traveler.exception.NotFoundException;
 import com.heylocal.traveler.repository.OpinionImageContentRepository;
 import com.heylocal.traveler.repository.OpinionRepository;
@@ -28,6 +30,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import static com.heylocal.traveler.domain.travelon.opinion.OpinionImageContent.ImageContentType;
 import static com.heylocal.traveler.util.aws.S3ObjectNameFormatter.ObjectNameProperty;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.AdditionalMatchers.and;
+import static org.mockito.AdditionalMatchers.not;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.BDDMockito.willReturn;
@@ -214,8 +218,94 @@ class OpinionImgContentServiceTest {
     );
   }
 
-  // TODO - getUpdatePresignedUrl
-  // TODO - removeImgEntityFromDb
+  @Test
+  @DisplayName("OpinionImageContent 타입마다, 업데이트용 PUT·DELETE Presigned URL을 생성하여 반환")
+  void getUpdatePresignedUrlTest() throws NotFoundException {
+    //GIVEN
+    long notExistOpinionId = 1L;
+    long opinionId = 2L;
+    String firstObjectKey = "opinions/1/1/GENERAL/0.png";
+    OpinionImageContent opinionImageContent1 = OpinionImageContent.builder()
+        .id(1L)
+        .imageContentType(ImageContentType.GENERAL)
+        .objectKeyName(firstObjectKey)
+        .build();
+    String secondObjectKey = "opinions/1/1/GENERAL/1.png";
+    OpinionImageContent opinionImageContent2 = OpinionImageContent.builder()
+        .id(2L)
+        .imageContentType(ImageContentType.GENERAL)
+        .objectKeyName(secondObjectKey)
+        .build();
+    TravelOn travelOn = TravelOn.builder()
+        .id(1L)
+        .build();
+    Opinion opinion = Opinion.builder()
+        .id(opinionId)
+        .build();
+    opinion.setTravelOn(travelOn);
+    opinionImageContent1.setOpinion(opinion);
+    opinionImageContent2.setOpinion(opinion);
+
+    //Mock 행동 정의 - opinionRepository
+    willReturn(Optional.of(opinion)).given(opinionRepository).findById(opinionId);
+    willReturn(Optional.empty()).given(opinionRepository).findById(notExistOpinionId);
+
+    //Mock 행동 정의 - s3ObjectNameFormatter
+    willReturn(firstObjectKey).given(s3ObjectNameFormatter).getObjectNameOfOpinionImg(anyLong(), eq(opinionId), eq(ImageContentType.GENERAL), eq(0));
+    willReturn(secondObjectKey).given(s3ObjectNameFormatter).getObjectNameOfOpinionImg(anyLong(), eq(opinionId), eq(ImageContentType.GENERAL), eq(1));
+    willReturn("not exist object key").given(s3ObjectNameFormatter).getObjectNameOfOpinionImg(anyLong(), eq(opinionId), eq(ImageContentType.GENERAL), eq(2));
+    willReturn("not exist object key").given(s3ObjectNameFormatter).getObjectNameOfOpinionImg(anyLong(), eq(opinionId), not(eq(ImageContentType.GENERAL)), anyInt());
+
+    //Mock 행동 정의 - s3PresignUrlProvider
+    willReturn("url...").given(s3PresignUrlProvider).getPresignedUrl(any(), any());
+
+    //WHEN
+    List<S3PresignedUrlDto.OpinionImgUpdateUrl> result = opinionImgContentService.getUpdatePresignedUrl(opinionId);
+
+    //THEN
+    assertAll(
+        //성공 케이스 - 1 - GENERAL 타입 관련 URL
+        () -> assertSame(ImageContentType.GENERAL, result.get(0).getImgType()),
+        () -> assertSame(1, result.get(0).getNewPutUrls().size()),
+        () -> assertSame(2, result.get(0).getUpdatePutUrls().size()),
+        //성공 케이스 - 2 - RECOMMEND_FOOD 타입 관련 URL
+        () -> assertSame(ImageContentType.RECOMMEND_FOOD, result.get(1).getImgType()),
+        () -> assertSame(3, result.get(1).getNewPutUrls().size()),
+        () -> assertSame(0, result.get(1).getUpdatePutUrls().size()),
+        //성공 케이스 - 3 - RECOMMEND_DRINK_DESSERT 타입 관련 URL
+        () -> assertSame(ImageContentType.RECOMMEND_DRINK_DESSERT, result.get(2).getImgType()),
+        () -> assertSame(3, result.get(2).getNewPutUrls().size()),
+        () -> assertSame(0, result.get(2).getUpdatePutUrls().size()),
+        //성공 케이스 - 4 - PHOTO_SPOT 타입 관련 URL
+        () -> assertSame(ImageContentType.PHOTO_SPOT, result.get(3).getImgType()),
+        () -> assertSame(3, result.get(3).getNewPutUrls().size()),
+        () -> assertSame(0, result.get(3).getUpdatePutUrls().size()),
+        //실패 케이스 - 1 - 존재하지 않는 답변 Id 인 경우
+        () -> assertThrows(NotFoundException.class, () -> opinionImgContentService.getUpdatePresignedUrl(notExistOpinionId))
+    );
+  }
+
+  @Test
+  @DisplayName("DB 에서 답변 이미지 제거")
+  void removeImgEntityFromDbTest() throws NotFoundException {
+    //GIVEN
+    long imgEntityId = 1L;
+    long notExistImgEntityId = 2L;
+
+    //Mock 행동 정의 - opinionImageContentRepository
+    willReturn(Optional.of(new OpinionImageContent())).given(opinionImageContentRepository).findById(imgEntityId);
+    willReturn(Optional.empty()).given(opinionImageContentRepository).findById(notExistImgEntityId);
+
+    //WHEN
+
+    //THEN
+    assertAll(
+        //성공 케이스
+        () -> assertDoesNotThrow(() -> opinionImgContentService.removeImgEntityFromDb(imgEntityId)),
+        //실패 케이스 - 존재하지 않는 ID 인 경우
+        () -> assertThrows(NotFoundException.class, () -> opinionImgContentService.removeImgEntityFromDb(notExistImgEntityId))
+    );
+  }
 
   private OpinionDto.OpinionRequest getOpinionRequest(PlaceDto.PlaceRequest place) {
     return OpinionDto.OpinionRequest.builder()

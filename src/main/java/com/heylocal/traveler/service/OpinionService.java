@@ -166,8 +166,6 @@ public class OpinionService {
     //Opinion Request 의 Place 를 조회
     requestPlace = inquiryPlaceFromOpinionRequest(request);
 
-    // TODO - S3에 저장된 기존 Img 파일 제거 로직 추가
-
     //답변 수정
     OpinionMapper.INSTANCE.updateOpinion(request, regionOfRequestPlace, requestPlace, targetOpinion);
   }
