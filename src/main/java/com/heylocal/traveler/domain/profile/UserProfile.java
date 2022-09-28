@@ -1,6 +1,7 @@
 package com.heylocal.traveler.domain.profile;
 
 import com.heylocal.traveler.domain.BaseTimeEntity;
+import com.heylocal.traveler.domain.Region;
 import com.heylocal.traveler.domain.user.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -26,7 +27,12 @@ public class UserProfile extends BaseTimeEntity {
   @Id @GeneratedValue
   private Long id;
 
+  private String introduce;
+
   private String imageUrl;
+
+  @ManyToOne
+  private Region activityRegion;
 
   @OneToOne(optional = false)
   private User user;

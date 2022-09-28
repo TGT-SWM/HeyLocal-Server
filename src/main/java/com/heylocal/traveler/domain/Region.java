@@ -1,6 +1,7 @@
 package com.heylocal.traveler.domain;
 
 import com.heylocal.traveler.domain.place.Place;
+import com.heylocal.traveler.domain.profile.UserProfile;
 import com.heylocal.traveler.domain.travelon.TravelOn;
 import com.heylocal.traveler.domain.travelon.opinion.Opinion;
 import lombok.*;
@@ -43,6 +44,10 @@ public class Region {
   @Builder.Default
   @OneToMany(mappedBy = "region", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   private List<TravelOn> travelOnList = new ArrayList<>();
+
+  @Builder.Default
+  @OneToMany(mappedBy = "activityRegion", fetch = FetchType.LAZY)
+  private List<UserProfile> activityUser = new ArrayList<>(); //주 활동 지역으로 갖는 유저 프로필
 
   public void addOpinion(Opinion opinion) {
     this.getOpinionList().add(opinion);
