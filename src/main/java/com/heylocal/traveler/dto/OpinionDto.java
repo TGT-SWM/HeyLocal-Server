@@ -10,12 +10,11 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Max;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.heylocal.traveler.dto.OpinionImageContentDto.*;
+import static com.heylocal.traveler.dto.OpinionImageContentDto.ImageContentQuantity;
 import static com.heylocal.traveler.dto.PlaceDto.PlaceRequest;
 import static com.heylocal.traveler.dto.PlaceDto.PlaceResponse;
 import static com.heylocal.traveler.dto.UserDto.UserResponse;

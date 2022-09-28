@@ -2,7 +2,6 @@ package com.heylocal.traveler.controller;
 
 import com.heylocal.traveler.controller.api.TravelOnsApi;
 import com.heylocal.traveler.dto.LoginUser;
-import com.heylocal.traveler.dto.aws.S3PresignedUrlDto;
 import com.heylocal.traveler.exception.BadRequestException;
 import com.heylocal.traveler.exception.ForbiddenException;
 import com.heylocal.traveler.exception.NotFoundException;
@@ -25,7 +24,7 @@ import static com.heylocal.traveler.domain.travelon.opinion.OpinionImageContent.
 import static com.heylocal.traveler.dto.OpinionDto.OpinionRequest;
 import static com.heylocal.traveler.dto.OpinionDto.OpinionResponse;
 import static com.heylocal.traveler.dto.TravelOnDto.*;
-import static com.heylocal.traveler.dto.aws.S3PresignedUrlDto.*;
+import static com.heylocal.traveler.dto.aws.S3PresignedUrlDto.OpinionImgUpdateUrl;
 
 @Slf4j
 @Tag(name = "TravelOns")
@@ -216,21 +215,6 @@ public class TravelOnsController implements TravelOnsApi {
 
     //답변 엔티티 삭제
     opinionService.removeOpinion(travelOnId, opinionId);
-  }
-
-  /**
-   * 답변 수정에 필요한 Presigned URL 조회 핸들러
-   * @param travelOnId
-   * @param opinionId
-   * @param loginUser
-   */
-  @Override
-  public void getOpinionUpdatePresignedUrl(long travelOnId, long opinionId, LoginUser loginUser) throws ForbiddenException, NotFoundException {
-    //수정 권한 확인
-    isOpinionAuthor(opinionId, loginUser);
-
-    //Presigned URL 조회
-
   }
 
   /**

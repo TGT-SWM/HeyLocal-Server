@@ -151,16 +151,5 @@ public interface TravelOnsApi {
             @Parameter(in = ParameterIn.PATH, description = "답변 ID", required = true) @PathVariable long opinionId,
             @ApiIgnore LoginUser loginUser
     ) throws NotFoundException, ForbiddenException;
-
-    @Operation(summary = "답변 수정에 필요한 Presigned URL 조회", description = "", tags = {"TravelOns"})
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "답변 삭제 성공 시")
-    })
-    @DeleteMapping("/{travelOnId}/opinions/{opinionId}/presign")
-    void getOpinionUpdatePresignedUrl(
-        @Parameter(in = ParameterIn.PATH, description = "여행 On ID", required = true) @PathVariable long travelOnId,
-        @Parameter(in = ParameterIn.PATH, description = "답변 ID", required = true) @PathVariable long opinionId,
-        @ApiIgnore LoginUser loginUser
-    ) throws ForbiddenException, NotFoundException;
 }
 

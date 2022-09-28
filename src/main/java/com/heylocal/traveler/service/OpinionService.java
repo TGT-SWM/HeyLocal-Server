@@ -8,9 +8,7 @@ import com.heylocal.traveler.domain.travelon.opinion.Opinion;
 import com.heylocal.traveler.domain.travelon.opinion.OpinionImageContent;
 import com.heylocal.traveler.domain.user.User;
 import com.heylocal.traveler.dto.LoginUser;
-import com.heylocal.traveler.dto.OpinionImageContentDto;
 import com.heylocal.traveler.dto.PlaceDto;
-import com.heylocal.traveler.dto.aws.S3PresignedUrlDto;
 import com.heylocal.traveler.exception.BadRequestException;
 import com.heylocal.traveler.exception.ForbiddenException;
 import com.heylocal.traveler.exception.NotFoundException;
@@ -31,14 +29,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 import static com.heylocal.traveler.domain.travelon.opinion.OpinionImageContent.ImageContentType;
 import static com.heylocal.traveler.dto.OpinionDto.OpinionRequest;
 import static com.heylocal.traveler.dto.OpinionDto.OpinionResponse;
-import static com.heylocal.traveler.dto.OpinionImageContentDto.*;
-import static com.heylocal.traveler.dto.aws.S3PresignedUrlDto.*;
 import static com.heylocal.traveler.util.aws.S3ObjectNameFormatter.ObjectNameProperty;
 
 @Slf4j
@@ -170,8 +165,6 @@ public class OpinionService {
 
     //Opinion Request 의 Place 를 조회
     requestPlace = inquiryPlaceFromOpinionRequest(request);
-
-    // TODO - S3에 저장된 기존 Img 파일 제거 로직 추가
 
     //답변 수정
     OpinionMapper.INSTANCE.updateOpinion(request, regionOfRequestPlace, requestPlace, targetOpinion);
