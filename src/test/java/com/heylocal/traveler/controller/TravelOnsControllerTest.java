@@ -536,9 +536,7 @@ class TravelOnsControllerTest {
         .memberTypeSet(memberTypeSet)
         .accommodationMaxCost(accommodationMaxCost)
         .accommodationTypeSet(accommodationTypeSet)
-        .foodMaxCost(foodMaxCost)
         .foodTypeSet(foodTypeSet)
-        .drinkMaxCost(drinkMaxCost)
         .drinkTypeSet(drinkTypeSet)
         .travelTypeGroup(travelTypeGroupRequest)
         .build();

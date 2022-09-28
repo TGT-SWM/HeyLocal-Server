@@ -213,8 +213,6 @@ class PlanRepositoryTest {
 				.travelEndDate(LocalDate.now())
 				.transportationType(TransportationType.PUBLIC)
 				.accommodationMaxCost(0)
-				.foodMaxCost(0)
-				.drinkMaxCost(0)
 				.build();
 	}
 }

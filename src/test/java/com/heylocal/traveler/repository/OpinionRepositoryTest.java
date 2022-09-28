@@ -207,8 +207,6 @@ class OpinionRepositoryTest {
         .description(description)
         .transportationType(transportationType)
         .accommodationMaxCost(accommodationMaxCost)
-        .foodMaxCost(foodMaxCost)
-        .drinkMaxCost(drinkMaxCost)
         .createdDate(LocalDateTime.now())
         .build();
     em.persist(travelOn);
