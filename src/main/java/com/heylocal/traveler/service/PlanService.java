@@ -254,7 +254,7 @@ public class PlanService {
 				optPlace.ifPresentOrElse(placeItem::setPlace, () -> {
 					try {
 						regionService.getRegionByAddress(place.getAddress()).ifPresent(region -> {
-							place.updateRegion(region);
+							place.setRegion(region);
 							placeRepository.save(place);
 						});
 					} catch (BadRequestException e) {}
