@@ -11,6 +11,7 @@ import org.mapstruct.factory.Mappers;
 public interface EntityUpdateMapper {
   EntityUpdateMapper INSTANCE = Mappers.getMapper(EntityUpdateMapper.class);
 
+  @Mapping(target = "id", ignore = true)
   @Mapping(target = "entity", source = "dto.entityDto")
   @Mapping(target = "otherEntityList", source = "dto.otherEntityDtoList")
   void updateEntity(DependentOtherDto dto, @MappingTarget DependentOtherEntity oldEntity);
