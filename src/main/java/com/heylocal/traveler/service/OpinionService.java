@@ -33,8 +33,6 @@ import java.util.stream.Collectors;
 
 import static com.heylocal.traveler.domain.travelon.opinion.OpinionImageContent.ImageContentType;
 import static com.heylocal.traveler.dto.OpinionDto.*;
-import static com.heylocal.traveler.dto.OpinionDto.NewOpinionRequestRequest;
-import static com.heylocal.traveler.dto.OpinionDto.OpinionResponse;
 import static com.heylocal.traveler.util.aws.S3ObjectNameFormatter.ObjectNameProperty;
 
 @Slf4j
@@ -357,13 +355,7 @@ public class OpinionService {
    * @param newPlaceInfo 해당 장소의 새 정보
    */
   private void updatePlace(Place savedPlace, PlaceDto.PlaceRequest newPlaceInfo) {
-    savedPlace.updateCategory(newPlaceInfo.getCategory());
-    savedPlace.updateName(newPlaceInfo.getName());
-    savedPlace.updateRoadAddress(newPlaceInfo.getRoadAddress());
-    savedPlace.updateAddress(newPlaceInfo.getAddress());
-    savedPlace.updateCoordinates(newPlaceInfo.getLat(), newPlaceInfo.getLng());
-    savedPlace.updateThumbnailUrl(newPlaceInfo.getThumbnailUrl());
-    savedPlace.updateLink(newPlaceInfo.getKakaoLink());
+    PlaceMapper.INSTANCE.updatePlace(newPlaceInfo, savedPlace);
   }
 
 }

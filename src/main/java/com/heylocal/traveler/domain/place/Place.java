@@ -70,39 +70,6 @@ public class Place extends BaseTimeEntity {
     }
   }
 
-
-  public void updateName(String newName) {
-    this.name = newName;
-  }
-  public void updateRoadAddress(String newRoadAddress) {
-    this.roadAddress = roadAddress;
-  }
-
-  public void updateAddress(String newAddress) {
-    this.address = newAddress;
-  }
-
-  public void updateCoordinates(double lat, double lng) {
-    this.lat = lat;
-    this.lng = lng;
-  }
-
-  public void updateCategory(PlaceCategory category) {
-    this.category = category;
-  }
-
-  public void updateRegion(Region region) {
-    this.region = region;
-  }
-
-  public void updateThumbnailUrl(String thumbnailUrl) {
-    this.thumbnailUrl = thumbnailUrl;
-  }
-
-  public void updateLink(String link) {
-    this.link = link;
-  }
-
   public void removeOpinion(Opinion target) {
     this.getOpinionList().remove(target);
   }

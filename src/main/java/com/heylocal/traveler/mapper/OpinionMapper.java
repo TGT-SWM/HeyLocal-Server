@@ -6,12 +6,10 @@ import com.heylocal.traveler.domain.travelon.TravelOn;
 import com.heylocal.traveler.domain.travelon.opinion.Opinion;
 import com.heylocal.traveler.domain.travelon.opinion.OpinionImageContent;
 import com.heylocal.traveler.domain.user.User;
-import com.heylocal.traveler.dto.OpinionDto;
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
 
 import static com.heylocal.traveler.dto.OpinionDto.*;
-import static com.heylocal.traveler.dto.OpinionDto.OpinionResponse;
 
 /**
  * target에 Lombok 의 @Builder 를 사용하면 @AfterMapping 이 제대로 동작하지 않는 버그가 존재함.
