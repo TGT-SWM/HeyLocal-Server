@@ -8,6 +8,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -24,16 +25,26 @@ public class OpinionDto {
 	@Setter
 	@NoArgsConstructor
 	@AllArgsConstructor
-	@Builder
+	@SuperBuilder
 	@ApiModel
 	@Schema(description = "답변 생성을 위한 요청 DTO")
-	public static class OpinionRequest {
+	public static class NewOpinionRequestRequest extends OpinionOnlyTextRequest {
+		@Valid
+		private ImageContentQuantity quantity;
+	}
+
+	@Getter
+	@Setter
+	@NoArgsConstructor
+	@AllArgsConstructor
+	@SuperBuilder
+	@ApiModel
+	@Schema(description = "답변 항목 중, 텍스트 정보만 포함하는 DTO")
+	public static class OpinionOnlyTextRequest {
 		@ApiModelProperty("상세 설명")
 		private String description;
 		@Valid
 		private PlaceRequest place;
-		@Valid
-		private ImageContentQuantity quantity;
 		@ApiModelProperty(value = "시설이 청결한가요", required = true)
 		@NotNull
 		private EvaluationDegree facilityCleanliness;

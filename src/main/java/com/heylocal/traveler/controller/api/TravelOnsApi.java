@@ -2,7 +2,7 @@ package com.heylocal.traveler.controller.api;
 
 import com.heylocal.traveler.dto.ErrorMessageResponse;
 import com.heylocal.traveler.dto.LoginUser;
-import com.heylocal.traveler.dto.OpinionDto.OpinionRequest;
+import com.heylocal.traveler.dto.OpinionDto;
 import com.heylocal.traveler.dto.OpinionDto.OpinionResponse;
 import com.heylocal.traveler.dto.TravelOnDto;
 import com.heylocal.traveler.dto.TravelOnDto.TravelOnRequest;
@@ -118,7 +118,7 @@ public interface TravelOnsApi {
     @PostMapping("/{travelOnId}/opinions")
     Map<ImageContentType, List<String>> createOpinions(
             @Parameter(in = ParameterIn.PATH, description = "여행 On ID", required = true) @PathVariable long travelOnId,
-            @Parameter(in = ParameterIn.DEFAULT, description = "답변 정보", required = true) @Validated @RequestBody OpinionRequest request,
+            @Parameter(in = ParameterIn.DEFAULT, description = "답변 정보", required = true) @Validated @RequestBody OpinionDto.NewOpinionRequestRequest request,
             BindingResult bindingResult,
             @ApiIgnore LoginUser loginUser
     ) throws BadRequestException, NotFoundException, ForbiddenException;
@@ -134,7 +134,7 @@ public interface TravelOnsApi {
     List<S3PresignedUrlDto.OpinionImgUpdateUrl> updateOpinion(
             @Parameter(in = ParameterIn.PATH, description = "여행 On ID", required = true) @PathVariable long travelOnId,
             @Parameter(in = ParameterIn.PATH, description = "답변 ID", required = true) @PathVariable long opinionId,
-            @Parameter(in = ParameterIn.DEFAULT, description = "답변 정보", required = true) @Validated @RequestBody OpinionRequest request,
+            @Parameter(in = ParameterIn.DEFAULT, description = "답변 정보", required = true) @Validated @RequestBody OpinionDto.OpinionOnlyTextRequest request,
             BindingResult bindingResult,
             @ApiIgnore LoginUser loginUser
     ) throws BadRequestException, NotFoundException, ForbiddenException;

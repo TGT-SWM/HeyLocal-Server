@@ -6,10 +6,11 @@ import com.heylocal.traveler.domain.travelon.TravelOn;
 import com.heylocal.traveler.domain.travelon.opinion.Opinion;
 import com.heylocal.traveler.domain.travelon.opinion.OpinionImageContent;
 import com.heylocal.traveler.domain.user.User;
+import com.heylocal.traveler.dto.OpinionDto;
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
 
-import static com.heylocal.traveler.dto.OpinionDto.OpinionRequest;
+import static com.heylocal.traveler.dto.OpinionDto.*;
 import static com.heylocal.traveler.dto.OpinionDto.OpinionResponse;
 
 /**
@@ -23,12 +24,12 @@ public interface OpinionMapper {
   @Mapping(target = "id", ignore = true)
   @Mapping(target = "createdDate", ignore = true)
   @Mapping(target = "modifiedDate", ignore = true)
-  @Mapping(target = "description", source = "opinionRequest.description")
+  @Mapping(target = "description", source = "newOpinionRequest.description")
   @Mapping(target = "place", source = "place")
   @Mapping(target = "author", source = "author")
   @Mapping(target = "region", source = "region")
   @Mapping(target = "opinionImageContentList", ignore = true)
-  Opinion toEntity(OpinionRequest opinionRequest, Place place, User author, TravelOn travelOn, Region region);
+  Opinion toEntity(NewOpinionRequestRequest newOpinionRequest, Place place, User author, TravelOn travelOn, Region region);
 
   @Mapping(target = "generalImgDownloadImgUrl", ignore = true)
   @Mapping(target = "foodImgDownloadImgUrl", ignore = true)
@@ -45,7 +46,7 @@ public interface OpinionMapper {
   @Mapping(target = "place", source = "place")
   @Mapping(target = "region", source = "region")
   @Mapping(target = "opinionImageContentList", ignore = true)
-  void updateOpinion(OpinionRequest opinionRequest, Region region, Place place, @MappingTarget Opinion opinion);
+  void updateOpinion(OpinionOnlyTextRequest opinionRequest, Region region, Place place, @MappingTarget Opinion opinion);
 
   @AfterMapping
   default void removeAllImgContentListOfEntity(@MappingTarget Opinion opinion) {
