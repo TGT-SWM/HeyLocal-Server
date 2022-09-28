@@ -21,8 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.heylocal.traveler.domain.travelon.opinion.OpinionImageContent.ImageContentType;
-import static com.heylocal.traveler.dto.OpinionDto.OpinionRequest;
-import static com.heylocal.traveler.dto.OpinionDto.OpinionResponse;
+import static com.heylocal.traveler.dto.OpinionDto.*;
 import static com.heylocal.traveler.dto.TravelOnDto.*;
 import static com.heylocal.traveler.dto.aws.S3PresignedUrlDto.OpinionImgUpdateUrl;
 
@@ -153,7 +152,7 @@ public class TravelOnsController implements TravelOnsApi {
    * @throws ForbiddenException
    */
   @Override
-  public Map<ImageContentType, List<String>> createOpinions(long travelOnId, OpinionRequest request, BindingResult bindingResult, LoginUser loginUser) throws BadRequestException, NotFoundException, ForbiddenException {
+  public Map<ImageContentType, List<String>> createOpinions(long travelOnId, NewOpinionRequestRequest request, BindingResult bindingResult, LoginUser loginUser) throws BadRequestException, NotFoundException, ForbiddenException {
     long newOpinionId;
 
     if (bindingResult.hasFieldErrors()) {
@@ -178,7 +177,7 @@ public class TravelOnsController implements TravelOnsApi {
    */
   @Override
   public List<OpinionImgUpdateUrl> updateOpinion(long travelOnId, long opinionId,
-                                                 OpinionRequest request, BindingResult bindingResult,
+                                                 OpinionOnlyTextRequest request, BindingResult bindingResult,
                                                  LoginUser loginUser) throws BadRequestException, NotFoundException, ForbiddenException {
     if (bindingResult.hasFieldErrors()) {
       String fieldErrMsg = errorMessageProvider.getFieldErrMsg(bindingResult);

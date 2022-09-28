@@ -13,6 +13,7 @@ import com.heylocal.traveler.domain.travelon.opinion.OpinionImageContent;
 import com.heylocal.traveler.domain.user.User;
 import com.heylocal.traveler.domain.user.UserRole;
 import com.heylocal.traveler.dto.LoginUser;
+import com.heylocal.traveler.dto.OpinionDto;
 import com.heylocal.traveler.exception.BadRequestException;
 import com.heylocal.traveler.exception.ForbiddenException;
 import com.heylocal.traveler.exception.NotFoundException;
@@ -36,7 +37,7 @@ import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static com.heylocal.traveler.domain.travelon.opinion.OpinionImageContent.ImageContentType;
-import static com.heylocal.traveler.dto.OpinionDto.OpinionRequest;
+import static com.heylocal.traveler.dto.OpinionDto.NewOpinionRequestRequest;
 import static com.heylocal.traveler.dto.OpinionDto.OpinionResponse;
 import static com.heylocal.traveler.dto.PlaceDto.PlaceRequest;
 import static com.heylocal.traveler.util.aws.S3ObjectNameFormatter.ObjectNameProperty;
@@ -81,7 +82,7 @@ class OpinionServiceTest {
     Region region = getRegionA();
     PlaceRequest placeRequest = getPlaceRequest(placeId);
     String placeAddress = placeRequest.getAddress();
-    OpinionRequest opinionRequest = getOpinionRequest(placeRequest);
+    OpinionDto.NewOpinionRequestRequest newOpinionRequest = getOpinionRequest(placeRequest);
     TravelOn travelOn = getTravelOn(travelOnId, region);
     long userId = 3L;
     LoginUser loginUser = LoginUser.builder().id(userId).build();
@@ -106,13 +107,13 @@ class OpinionServiceTest {
     assertAll(
         //성공 케이스 - 1 - 기존에 저장되었던 place 가 아닌 경우
         () -> assertAll(
-            () -> assertDoesNotThrow(() -> opinionService.addNewOpinion(travelOnId, opinionRequest, loginUser)),
+            () -> assertDoesNotThrow(() -> opinionService.addNewOpinion(travelOnId, newOpinionRequest, loginUser)),
             () -> then(placeRepository).should(times(1)).save(any()),
             () -> then(opinionRepository).should(times(1)).save(any())
         ),
         //성공 케이스 - 2 - 기존에 저장되었던 place 인 경우
         () -> assertAll(
-            () -> assertDoesNotThrow(() -> opinionService.addNewOpinion(travelOnId, opinionRequest, loginUser)),
+            () -> assertDoesNotThrow(() -> opinionService.addNewOpinion(travelOnId, newOpinionRequest, loginUser)),
             () -> then(placeRepository).should(times(1)).save(any()),
             () -> then(opinionRepository).should(times(2)).save(any())
         )
@@ -127,7 +128,7 @@ class OpinionServiceTest {
     long placeId = 2L;
     Region region = getRegionA();
     PlaceRequest placeRequest = getPlaceRequest(placeId);
-    OpinionRequest opinionRequest = getOpinionRequest(placeRequest);
+    NewOpinionRequestRequest newOpinionRequest = getOpinionRequest(placeRequest);
     long userId = 3L;
     LoginUser loginUser = LoginUser.builder().id(userId).build();
 
@@ -138,7 +139,7 @@ class OpinionServiceTest {
 
     //THEN
     //실패 케이스 - 1 - 존재하지 않는 여행On ID 인 경우
-    assertThrows(NotFoundException.class, () -> opinionService.addNewOpinion(travelOnId, opinionRequest, loginUser));
+    assertThrows(NotFoundException.class, () -> opinionService.addNewOpinion(travelOnId, newOpinionRequest, loginUser));
   }
 
   @Test
@@ -150,7 +151,7 @@ class OpinionServiceTest {
     Region region = getRegionA();
     PlaceRequest placeRequest = getPlaceRequest(placeId);
     String placeAddress = placeRequest.getAddress();
-    OpinionRequest opinionRequest = getOpinionRequest(placeRequest);
+    NewOpinionRequestRequest newOpinionRequest = getOpinionRequest(placeRequest);
     TravelOn travelOn = getTravelOn(travelOnId, region);
     long userId = 3L;
     LoginUser loginUser = LoginUser.builder().id(userId).build();
@@ -165,7 +166,7 @@ class OpinionServiceTest {
 
     //THEN
     //실패 케이스 - 1 - 주소가 잘못된 경우
-    assertThrows(NotFoundException.class, () -> opinionService.addNewOpinion(travelOnId, opinionRequest, loginUser));
+    assertThrows(NotFoundException.class, () -> opinionService.addNewOpinion(travelOnId, newOpinionRequest, loginUser));
   }
 
   @Test
@@ -177,7 +178,7 @@ class OpinionServiceTest {
     Region region = getRegionA();
     PlaceRequest placeRequest = getPlaceRequest(placeId);
     String placeAddress = placeRequest.getAddress();
-    OpinionRequest opinionRequest = getOpinionRequest(placeRequest);
+    OpinionDto.NewOpinionRequestRequest newOpinionRequest = getOpinionRequest(placeRequest);
     TravelOn travelOn = getTravelOn(travelOnId, region);
     long userId = 3L;
     LoginUser loginUser = LoginUser.builder().id(userId).build();
@@ -192,7 +193,7 @@ class OpinionServiceTest {
 
     //THEN
     //실패 케이스 - 1 - 주소 형식이 잘못된 경우
-    assertThrows(BadRequestException.class, () -> opinionService.addNewOpinion(travelOnId, opinionRequest, loginUser));
+    assertThrows(BadRequestException.class, () -> opinionService.addNewOpinion(travelOnId, newOpinionRequest, loginUser));
   }
 
   @Test
@@ -205,7 +206,7 @@ class OpinionServiceTest {
     Region regionB = getRegionB();
     PlaceRequest placeRequest = getPlaceRequest(placeId);
     String placeAddress = placeRequest.getAddress();
-    OpinionRequest opinionRequest = getOpinionRequest(placeRequest);
+    OpinionDto.NewOpinionRequestRequest newOpinionRequest = getOpinionRequest(placeRequest);
     TravelOn travelOn = getTravelOn(travelOnId, regionA);
     long userId = 3L;
     LoginUser loginUser = LoginUser.builder().id(userId).build();
@@ -220,7 +221,7 @@ class OpinionServiceTest {
 
     //THEN
     //실패 케이스 - 1 - 여행On의 지역과 다른 지역의 장소로 답변한 경우
-    assertThrows(ForbiddenException.class, () -> opinionService.addNewOpinion(travelOnId, opinionRequest, loginUser));
+    assertThrows(ForbiddenException.class, () -> opinionService.addNewOpinion(travelOnId, newOpinionRequest, loginUser));
   }
 
   @Test
@@ -313,7 +314,7 @@ class OpinionServiceTest {
         .place(placeOfSavedOpinion)
         .build();
     String updateDescriptionOfOpinion = "changed description";
-    OpinionRequest opinionRequest = OpinionRequest.builder()
+    OpinionDto.NewOpinionRequestRequest newOpinionRequest = OpinionDto.NewOpinionRequestRequest.builder()
         .place(placeRequest)
         .description(updateDescriptionOfOpinion)
 //        .generalImgContentUrlList(new ArrayList<>())
@@ -335,7 +336,7 @@ class OpinionServiceTest {
     willReturn(Optional.of(placeOfSavedOpinion)).given(placeRepository).findById(placeId);
 
     //WHEN
-    opinionService.updateOpinion(savedTravelOnId, savedOpinionId, opinionRequest);
+    opinionService.updateOpinion(savedTravelOnId, savedOpinionId, newOpinionRequest);
 
     //THEN
     assertEquals(updateDescriptionOfOpinion, savedOpinion.getDescription());
@@ -350,7 +351,7 @@ class OpinionServiceTest {
     PlaceRequest placeRequest = getPlaceRequest(placeId);
     long savedOpinionId = 1L;
     String updateDescriptionOfOpinion = "changed description";
-    OpinionRequest opinionRequest = OpinionRequest.builder()
+    OpinionDto.NewOpinionRequestRequest newOpinionRequest = NewOpinionRequestRequest.builder()
         .place(placeRequest)
         .description(updateDescriptionOfOpinion)
         .build();
@@ -363,7 +364,7 @@ class OpinionServiceTest {
     //THEN
     assertThrows(
         NotFoundException.class,
-        () -> opinionService.updateOpinion(savedTravelOnId, savedOpinionId, opinionRequest)
+        () -> opinionService.updateOpinion(savedTravelOnId, savedOpinionId, newOpinionRequest)
     );
   }
 
@@ -378,7 +379,7 @@ class OpinionServiceTest {
     PlaceRequest placeRequest = getPlaceRequest(placeId);
     long savedOpinionId = 1L;
     String updateDescriptionOfOpinion = "changed description";
-    OpinionRequest opinionRequest = OpinionRequest.builder()
+    OpinionDto.NewOpinionRequestRequest newOpinionRequest = NewOpinionRequestRequest.builder()
         .place(placeRequest)
         .description(updateDescriptionOfOpinion)
         .build();
@@ -394,7 +395,7 @@ class OpinionServiceTest {
     //THEN
     assertThrows(
         NotFoundException.class,
-        () -> opinionService.updateOpinion(savedTravelOnId, savedOpinionId, opinionRequest)
+        () -> opinionService.updateOpinion(savedTravelOnId, savedOpinionId, newOpinionRequest)
     );
   }
 
@@ -424,7 +425,7 @@ class OpinionServiceTest {
         .place(placeOfSavedOpinion)
         .build();
     String updateDescriptionOfOpinion = "changed description";
-    OpinionRequest opinionRequest = OpinionRequest.builder()
+    NewOpinionRequestRequest newOpinionRequest = OpinionDto.NewOpinionRequestRequest.builder()
         .place(placeRequest)
         .description(updateDescriptionOfOpinion)
         .build();
@@ -443,7 +444,7 @@ class OpinionServiceTest {
     //THEN
     assertThrows(
         NotFoundException.class,
-        () -> opinionService.updateOpinion(savedTravelOnId, savedOpinionId, opinionRequest)
+        () -> opinionService.updateOpinion(savedTravelOnId, savedOpinionId, newOpinionRequest)
     );
   }
 
@@ -475,7 +476,7 @@ class OpinionServiceTest {
     String diffRegionAddress = "different region address";
     PlaceRequest diffRegionPlaceRequest = getPlaceRequest(placeId + 1, diffRegionAddress);
     String updateDescriptionOfOpinion = "changed description";
-    OpinionRequest opinionRequest = OpinionRequest.builder()
+    OpinionDto.NewOpinionRequestRequest newOpinionRequest = OpinionDto.NewOpinionRequestRequest.builder()
         .place(diffRegionPlaceRequest)
         .description(updateDescriptionOfOpinion)
         .build();
@@ -498,7 +499,7 @@ class OpinionServiceTest {
     //THEN
     assertThrows(
         ForbiddenException.class,
-        () -> opinionService.updateOpinion(savedTravelOnId, savedOpinionId, opinionRequest)
+        () -> opinionService.updateOpinion(savedTravelOnId, savedOpinionId, newOpinionRequest)
     );
   }
 
@@ -570,8 +571,8 @@ class OpinionServiceTest {
     );
   }
 
-  private OpinionRequest getOpinionRequest(PlaceRequest place) {
-    return OpinionRequest.builder()
+  private NewOpinionRequestRequest getOpinionRequest(PlaceRequest place) {
+    return OpinionDto.NewOpinionRequestRequest.builder()
         .description("myDescription")
         .place(place)
         .facilityCleanliness(EvaluationDegree.GOOD)

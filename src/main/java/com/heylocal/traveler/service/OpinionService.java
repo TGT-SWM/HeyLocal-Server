@@ -32,7 +32,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.heylocal.traveler.domain.travelon.opinion.OpinionImageContent.ImageContentType;
-import static com.heylocal.traveler.dto.OpinionDto.OpinionRequest;
+import static com.heylocal.traveler.dto.OpinionDto.*;
+import static com.heylocal.traveler.dto.OpinionDto.NewOpinionRequestRequest;
 import static com.heylocal.traveler.dto.OpinionDto.OpinionResponse;
 import static com.heylocal.traveler.util.aws.S3ObjectNameFormatter.ObjectNameProperty;
 
@@ -62,7 +63,7 @@ public class OpinionService {
    * @throws BadRequestException
    */
   @Transactional
-  public Long addNewOpinion(long travelOnId, OpinionRequest request, LoginUser loginUser) throws NotFoundException, ForbiddenException, BadRequestException {
+  public Long addNewOpinion(long travelOnId, NewOpinionRequestRequest request, LoginUser loginUser) throws NotFoundException, ForbiddenException, BadRequestException {
     long authorId;
     TravelOn travelOn;
     String requestPlaceAddress;
@@ -115,8 +116,13 @@ public class OpinionService {
     //답변을 조회할 여행On 조회
     targetTravelOn = inquiryTravelOn(travelOnId);
 
-    //관련 답변 리스트 조회
-    opinionList = targetTravelOn.getOpinionList();
+    //관련 답변 리스트 조회 (id 내림차순 정렬)
+    opinionList = targetTravelOn.getOpinionList().stream().sorted((item1, item2) -> {
+      long id1 = item1.getId();
+      long id2 = item2.getId();
+      if (id1 < id2) return 1;
+      return -1;
+    }).collect(Collectors.toList());
 
     //List<Opinion> -> List<OpinionResponse>
     for (Opinion opinion : opinionList) {
@@ -139,7 +145,7 @@ public class OpinionService {
    * @throws ForbiddenException
    */
   @Transactional
-  public void updateOpinion(long travelOnId, long opinionId, OpinionRequest request) throws NotFoundException, BadRequestException, ForbiddenException {
+  public void updateOpinion(long travelOnId, long opinionId, OpinionOnlyTextRequest request) throws NotFoundException, BadRequestException, ForbiddenException {
     Opinion targetOpinion;
     TravelOn targetTravelOn;
     String requestPlaceAddress;
@@ -231,7 +237,7 @@ public class OpinionService {
    * @param request Opinion 정보
    * @return
    */
-  private Place inquiryPlaceFromOpinionRequest(OpinionRequest request) throws NotFoundException, BadRequestException {
+  private Place inquiryPlaceFromOpinionRequest(OpinionOnlyTextRequest request) throws NotFoundException, BadRequestException {
     Place place;
     long placeId;
     Optional<Place> existedPlaceOptional;

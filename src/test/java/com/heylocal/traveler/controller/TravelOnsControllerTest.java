@@ -9,6 +9,7 @@ import com.heylocal.traveler.domain.travelon.list.DrinkType;
 import com.heylocal.traveler.domain.travelon.list.FoodType;
 import com.heylocal.traveler.domain.travelon.list.MemberType;
 import com.heylocal.traveler.dto.LoginUser;
+import com.heylocal.traveler.dto.OpinionDto;
 import com.heylocal.traveler.exception.BadRequestException;
 import com.heylocal.traveler.exception.ForbiddenException;
 import com.heylocal.traveler.exception.NotFoundException;
@@ -30,7 +31,6 @@ import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
-import static com.heylocal.traveler.dto.OpinionDto.OpinionRequest;
 import static com.heylocal.traveler.dto.OpinionImageContentDto.ImageContentQuantity;
 import static com.heylocal.traveler.dto.PageDto.PageRequest;
 import static com.heylocal.traveler.dto.TravelOnDto.*;
@@ -277,7 +277,7 @@ class TravelOnsControllerTest {
     LoginUser loginUser = LoginUser.builder()
         .id(loginUserId)
         .build();
-    OpinionRequest request = OpinionRequest.builder()
+    OpinionDto.NewOpinionRequestRequest request = OpinionDto.NewOpinionRequestRequest.builder()
         .quantity(new ImageContentQuantity())
         .build();
 
@@ -299,7 +299,7 @@ class TravelOnsControllerTest {
     LoginUser loginUser = LoginUser.builder()
         .id(loginUserId)
         .build();
-    OpinionRequest request = OpinionRequest.builder()
+    OpinionDto.NewOpinionRequestRequest request = OpinionDto.NewOpinionRequestRequest.builder()
         .quantity(new ImageContentQuantity())
         .build();
 
@@ -379,7 +379,7 @@ class TravelOnsControllerTest {
     LoginUser loginUser = LoginUser.builder().id(loginUserId).build();
     long existTravelOnId = 2L;
     long existOpinionId = 3L;
-    OpinionRequest request = OpinionRequest.builder()
+    OpinionDto.NewOpinionRequestRequest request = OpinionDto.NewOpinionRequestRequest.builder()
         .quantity(new ImageContentQuantity())
         .build();
 

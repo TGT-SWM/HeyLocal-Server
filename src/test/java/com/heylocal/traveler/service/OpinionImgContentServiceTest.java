@@ -159,7 +159,7 @@ class OpinionImgContentServiceTest {
     long travelOnIdOfOpinion = 1L;
     long newOpinionId = 2L;
     PlaceDto.PlaceRequest placeRequest = getPlaceRequest(3L);
-    OpinionDto.OpinionRequest opinionRequest = getOpinionRequest(placeRequest);
+    OpinionDto.NewOpinionRequestRequest newOpinionRequest = getOpinionRequest(placeRequest);
     int generalImgQuantity = 1;
     int foodImgQuantity = 2;
     int drinkAndDessertImgQuantity = 3;
@@ -170,7 +170,7 @@ class OpinionImgContentServiceTest {
         .drinkAndDessertImgQuantity(drinkAndDessertImgQuantity)
         .photoSpotImgQuantity(photoSpotImgQuantity)
         .build();
-    opinionRequest.setQuantity(imgQuantity);
+    newOpinionRequest.setQuantity(imgQuantity);
 
     //WHEN
     Map<ImageContentType, List<String>> result = opinionImgContentService.getUploadPresignedUrl(imgQuantity, travelOnIdOfOpinion, newOpinionId);
@@ -307,8 +307,8 @@ class OpinionImgContentServiceTest {
     );
   }
 
-  private OpinionDto.OpinionRequest getOpinionRequest(PlaceDto.PlaceRequest place) {
-    return OpinionDto.OpinionRequest.builder()
+  private OpinionDto.NewOpinionRequestRequest getOpinionRequest(PlaceDto.PlaceRequest place) {
+    return OpinionDto.NewOpinionRequestRequest.builder()
         .description("myDescription")
         .place(place)
         .facilityCleanliness(EvaluationDegree.GOOD)
