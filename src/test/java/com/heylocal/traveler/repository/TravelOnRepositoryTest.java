@@ -549,8 +549,6 @@ class TravelOnRepositoryTest {
         .description(description)
         .transportationType(transportationType)
         .accommodationMaxCost(accommodationMaxCost)
-        .foodMaxCost(foodMaxCost)
-        .drinkMaxCost(drinkMaxCost)
         .build();
     em.persist(travelOn);
 
@@ -653,8 +651,6 @@ class TravelOnRepositoryTest {
         .description(description)
         .transportationType(transportationType)
         .accommodationMaxCost(accommodationMaxCost)
-        .foodMaxCost(foodMaxCost)
-        .drinkMaxCost(drinkMaxCost)
         .createdDate(createdDateTime)
         .build();
     em.persist(travelOn);

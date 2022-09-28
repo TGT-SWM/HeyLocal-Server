@@ -639,8 +639,6 @@ class OpinionServiceTest {
         .description(description)
         .transportationType(transportationType)
         .accommodationMaxCost(accommodationMaxCost)
-        .foodMaxCost(foodMaxCost)
-        .drinkMaxCost(drinkMaxCost)
         .build();
 
     TravelMember travelMember1 = TravelMember.builder()

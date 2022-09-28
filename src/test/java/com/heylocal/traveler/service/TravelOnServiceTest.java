@@ -380,9 +380,7 @@ class TravelOnServiceTest {
         .memberTypeSet(memberTypeSet)
         .accommodationMaxCost(accommodationMaxCost)
         .accommodationTypeSet(accommodationTypeSet)
-        .foodMaxCost(foodMaxCost)
         .foodTypeSet(foodTypeSet)
-        .drinkMaxCost(drinkMaxCost)
         .drinkTypeSet(drinkTypeSet)
         .travelTypeGroup(travelTypeGroupRequest)
         .build();
@@ -421,8 +419,6 @@ class TravelOnServiceTest {
         .description(description)
         .transportationType(transportationType)
         .accommodationMaxCost(accommodationMaxCost)
-        .foodMaxCost(foodMaxCost)
-        .drinkMaxCost(drinkMaxCost)
         .build();
 
     TravelMember travelMember1 = TravelMember.builder()
