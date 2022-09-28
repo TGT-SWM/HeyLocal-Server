@@ -38,6 +38,19 @@ public class RegionService {
     }
     result = regionList.stream().map(RegionMapper.INSTANCE::toResponseDto).collect(Collectors.toList());
 
+    return result;
+  }
+
+  /**
+   * 모든 Region 조회
+   * @return
+   */
+  @Transactional(readOnly = true)
+  public List<RegionResponse> inquiryAllRegions() {
+    List<RegionResponse> result;
+    List<Region> regionList = regionRepository.findAll();
+
+    result = regionList.stream().map(RegionMapper.INSTANCE::toResponseDto).collect(Collectors.toList());
 
     return result;
   }

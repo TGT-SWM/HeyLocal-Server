@@ -15,6 +15,24 @@ public class RegionRepository {
   private EntityManager em;
 
   /**
+   * <pre>
+   * 특별시, 광역시, 제주도, 그 외 시·군 을 조회하는 메서드
+   * </pre>
+   * @return
+   */
+  public List<Region> findAll() {
+    String jpql = "select r from Region r" +
+        " where (r.state not in ('서울특별시', '부산광역시', '대구광역시', '인천광역시', '광주광역시', '대전광역시', '울산광역시', '세종특별자치시', '제주특별자치도')" +
+          " and r.city not like '%구')" +
+        " or (r.state in ('서울특별시', '부산광역시', '대구광역시', '인천광역시', '광주광역시', '대전광역시', '울산광역시', '세종특별자치시', '제주특별자치도')" +
+          " and r.city is null)";
+
+    List<Region> result = em.createQuery(jpql, Region.class).getResultList();
+
+    return result;
+  }
+
+  /**
    * id 로 Region 엔티티를 조회하는 메서드
    * @param id
    * @return

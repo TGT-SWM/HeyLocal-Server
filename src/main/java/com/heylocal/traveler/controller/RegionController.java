@@ -26,7 +26,11 @@ public class RegionController implements RegionsApi {
 	public List<RegionResponse> getRegions(String state) throws NotFoundException {
 		List<RegionResponse> response;
 
-		response = regionService.inquiryRegions(state);
+		if (state == null || state.isEmpty()) { //만약 state가 없다면
+			response = regionService.inquiryAllRegions();
+		} else { //만약 state가 있다면
+			response = regionService.inquiryRegions(state);
+		}
 
 		return response;
 	}
