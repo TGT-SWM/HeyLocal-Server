@@ -116,8 +116,13 @@ public class OpinionService {
     //답변을 조회할 여행On 조회
     targetTravelOn = inquiryTravelOn(travelOnId);
 
-    //관련 답변 리스트 조회
-    opinionList = targetTravelOn.getOpinionList();
+    //관련 답변 리스트 조회 (id 내림차순 정렬)
+    opinionList = targetTravelOn.getOpinionList().stream().sorted((item1, item2) -> {
+      long id1 = item1.getId();
+      long id2 = item2.getId();
+      if (id1 < id2) return 1;
+      return -1;
+    }).collect(Collectors.toList());
 
     //List<Opinion> -> List<OpinionResponse>
     for (Opinion opinion : opinionList) {
