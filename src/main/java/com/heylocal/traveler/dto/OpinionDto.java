@@ -103,9 +103,13 @@ public class OpinionDto {
 		private String description;
 		private UserResponse author;
 		private PlaceResponse place;
+		@Builder.Default
 		private List<String> generalImgDownloadImgUrl = new ArrayList<>();
+		@Builder.Default
 		private List<String> foodImgDownloadImgUrl = new ArrayList<>();
+		@Builder.Default
 		private List<String> drinkAndDessertImgDownloadImgUrl = new ArrayList<>();
+		@Builder.Default
 		private List<String> photoSpotImgDownloadImgUrl = new ArrayList<>();
 
 		//공통 질문
