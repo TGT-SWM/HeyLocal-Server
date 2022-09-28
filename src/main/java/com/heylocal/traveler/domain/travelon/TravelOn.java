@@ -64,13 +64,6 @@ public class TravelOn extends BaseTimeEntity {
   @Column(nullable = false)
   private Integer accommodationMaxCost;
 
-  @Column(nullable = false)
-  private Integer foodMaxCost;
-
-  @Column(nullable = false)
-  private Integer drinkMaxCost;
-
-
   //양방향 설정
 
   @Builder.Default
