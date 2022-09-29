@@ -27,6 +27,7 @@ import static com.heylocal.traveler.dto.PageDto.PageRequest;
 import static com.heylocal.traveler.dto.RegionDto.RegionResponse;
 import static com.heylocal.traveler.dto.TravelMemberDto.TravelMemberResponse;
 import static com.heylocal.traveler.dto.TravelTypeGroupDto.TravelTypeGroupResponse;
+import static com.heylocal.traveler.dto.UserDto.UserProfileResponse;
 import static com.heylocal.traveler.dto.UserDto.UserResponse;
 
 public class TravelOnDto {
@@ -122,7 +123,7 @@ public class TravelOnDto {
 		private RegionResponse region;
 		private LocalDateTime createdDateTime;
 		private LocalDateTime modifiedDate;
-		private UserResponse author;
+		private UserProfileResponse author;
 		private String description;
 		private int views;
 		private int opinionQuantity;
