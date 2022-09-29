@@ -33,8 +33,14 @@ public interface OpinionMapper {
   @Mapping(target = "foodImgDownloadImgUrl", ignore = true)
   @Mapping(target = "drinkAndDessertImgDownloadImgUrl", ignore = true)
   @Mapping(target = "photoSpotImgDownloadImgUrl", ignore = true)
-//  @Mapping(target = "author", expression = "java(UserMapper.INSTANCE.toUserProfileResponseDto(opinion.getAuthor().getUserProfile()))")
   @Mapping(target = "author", source = "opinion.author")
+  OpinionWithPlaceResponse toWithPlaceResponseDto(Opinion opinion);
+
+  @InheritConfiguration(name = "toWithPlaceResponseDto")
+  @Mapping(target = "generalImgDownloadImgUrl", ignore = true)
+  @Mapping(target = "foodImgDownloadImgUrl", ignore = true)
+  @Mapping(target = "drinkAndDessertImgDownloadImgUrl", ignore = true)
+  @Mapping(target = "photoSpotImgDownloadImgUrl", ignore = true)
   OpinionResponse toResponseDto(Opinion opinion);
 
   @Mapping(target = "id", ignore = true)

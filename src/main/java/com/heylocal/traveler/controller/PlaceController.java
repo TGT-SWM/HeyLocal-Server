@@ -1,23 +1,30 @@
 package com.heylocal.traveler.controller;
 
 import com.heylocal.traveler.controller.api.PlacesApi;
-import com.heylocal.traveler.dto.OpinionDto;
-import com.heylocal.traveler.dto.PageDto;
+import com.heylocal.traveler.exception.BadRequestException;
 import com.heylocal.traveler.exception.NotFoundException;
+import com.heylocal.traveler.exception.code.BadRequestCode;
+import com.heylocal.traveler.service.OpinionService;
 import com.heylocal.traveler.service.PlaceService;
+import com.heylocal.traveler.util.error.BindingErrorMessageProvider;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+import static com.heylocal.traveler.dto.OpinionDto.*;
+import static com.heylocal.traveler.dto.PageDto.*;
 import static com.heylocal.traveler.dto.PlaceDto.PlaceResponse;
 
 @Tag(name = "Places")
 @RestController
 @RequiredArgsConstructor
 public class PlaceController implements PlacesApi {
+	private final BindingErrorMessageProvider errorMessageProvider;
 	private final PlaceService placeService;
+	private final OpinionService opinionService;
 
 	/**
 	 * 장소 정보를 조회하는 핸들러
@@ -31,13 +38,21 @@ public class PlaceController implements PlacesApi {
 	}
 
 	/**
+	 * 해당 장소를 선택한 답변 목록 조회
 	 * @param placeId
 	 * @param pageRequest
 	 * @return
 	 */
 	@Override
-	public List<OpinionDto.OpinionResponse> getPlaceOpinions(long placeId, PageDto.PageRequest pageRequest) {
-		return null;
+	public List<OpinionResponse> getPlaceOpinions(long placeId, PageRequest pageRequest,
+																												 BindingResult bindingResult) throws BadRequestException {
+		if (bindingResult.hasFieldErrors()) {
+			String errMsg = errorMessageProvider.getFieldErrMsg(bindingResult);
+			throw new BadRequestException(BadRequestCode.BAD_INPUT_FORM, errMsg);
+		}
+
+		List<OpinionResponse> opinionResponseList = opinionService.inquiryOpinionsByPlace(placeId, pageRequest);
+		return opinionResponseList;
 	}
 
 	/**

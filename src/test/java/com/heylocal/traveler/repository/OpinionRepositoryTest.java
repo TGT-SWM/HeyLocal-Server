@@ -126,6 +126,8 @@ class OpinionRepositoryTest {
     );
   }
 
+  // TODO - findByPlaceId, 페이징 안하는 findByPlaceId
+
   @Test
   @DisplayName("삭제")
   void removeTest() {

@@ -38,7 +38,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import static com.heylocal.traveler.domain.travelon.opinion.OpinionImageContent.ImageContentType;
 import static com.heylocal.traveler.dto.OpinionDto.NewOpinionRequestRequest;
-import static com.heylocal.traveler.dto.OpinionDto.OpinionResponse;
 import static com.heylocal.traveler.dto.PlaceDto.PlaceRequest;
 import static com.heylocal.traveler.util.aws.S3ObjectNameFormatter.ObjectNameProperty;
 import static org.junit.jupiter.api.Assertions.*;
@@ -260,8 +259,8 @@ class OpinionServiceTest {
     willReturn(map3).given(s3ObjectNameFormatter).parseObjectNameOfOpinionImg(eq(imgEntity3.getObjectKeyName()));
 
     //WHEN
-    List<OpinionResponse> resultList = opinionService.inquiryOpinions(travelOnId);
-    OpinionResponse result = resultList.get(0);
+    List<OpinionDto.OpinionWithPlaceResponse> resultList = opinionService.inquiryOpinions(travelOnId);
+    OpinionDto.OpinionWithPlaceResponse result = resultList.get(0);
 
     //THEN
     assertAll(
@@ -570,6 +569,8 @@ class OpinionServiceTest {
         () -> assertThrows(NotFoundException.class, () -> opinionService.removeOpinion(savedTravelOnId, wrongOpinionId))
     );
   }
+
+  // TODO - inquiryOpinionsByPlace
 
   private NewOpinionRequestRequest getOpinionRequest(PlaceRequest place) {
     return OpinionDto.NewOpinionRequestRequest.builder()

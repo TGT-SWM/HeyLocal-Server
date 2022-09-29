@@ -1,11 +1,14 @@
 package com.heylocal.traveler.repository;
 
 import com.heylocal.traveler.domain.travelon.opinion.Opinion;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -53,6 +56,50 @@ public class OpinionRepository {
     }
 
     return Optional.of(opinion);
+  }
+
+  /**
+   * 장소 Id 로 조회하는 메서드
+   * @param placeId 장소 Id
+   * @return
+   */
+  public List<Opinion> findByPlaceId(long placeId) {
+    String jpql = "select o from Opinion o" +
+        " where o.place.id = :placeId";
+
+    List<Opinion> result = em.createQuery(jpql, Opinion.class)
+        .setParameter("placeId", placeId)
+        .getResultList();
+
+    return result;
+  }
+
+  /**
+   * <pre>
+   * 장소 Id 로 조회하는 메서드
+   * 페이징 처리까지 수행한다.
+   * </pre>
+   * @param placeId 장소 Id
+   * @param lastItemId 클라이언트가 받은 마지막 답변 Id (null인 경우, 처음부터 조회)
+   * @param size 한 페이지당 표시할 답변 개수
+   * @return
+   */
+  public List<Opinion> findByPlaceId(long placeId, @Nullable Long lastItemId, int size) {
+    String jpql = "select o from Opinion o" +
+        " where o.id < :lastItemId" +
+        " and o.place.id = :placeId" +
+        " order by o.id desc";
+
+    TypedQuery<Opinion> typedQuery = em.createQuery(jpql, Opinion.class)
+        .setParameter("placeId", placeId);
+
+    if (lastItemId == null) {
+      typedQuery.setParameter("lastItemId", Long.MAX_VALUE);
+    } else {
+      typedQuery.setParameter("lastItemId", lastItemId);
+    }
+
+    return typedQuery.setMaxResults(size).getResultList();
   }
 
   /**
