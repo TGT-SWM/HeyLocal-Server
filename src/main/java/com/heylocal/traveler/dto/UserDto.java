@@ -45,7 +45,5 @@ public class UserDto {
 		private long id;
 		private String accountId;
 		private String nickname;
-		private String imageUrl;
-		private int knowHow;
 	}
 }

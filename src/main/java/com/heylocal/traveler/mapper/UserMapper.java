@@ -17,7 +17,9 @@ public interface UserMapper {
   @Mapping(target = "nickname", source = "entity.user.nickname")
   UserProfileResponse toUserProfileResponseDto(UserProfile entity, long ranking);
 
-  @Mapping(target = "imageUrl", source = "user.userProfile.imageUrl")
-  @Mapping(target = "knowHow", source = "user.userProfile.knowHow")
+  @Mapping(target = "nickname", source = "entity.user.nickname")
+  @Mapping(target = "ranking", constant = "0L")
+  UserProfileResponse toUserProfileResponseDto(UserProfile entity);
+
   UserResponse toUserResponseDto(User user);
 }

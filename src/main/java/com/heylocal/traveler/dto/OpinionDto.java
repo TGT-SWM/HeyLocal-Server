@@ -18,6 +18,7 @@ import java.util.List;
 import static com.heylocal.traveler.dto.OpinionImageContentDto.ImageContentQuantity;
 import static com.heylocal.traveler.dto.PlaceDto.PlaceRequest;
 import static com.heylocal.traveler.dto.PlaceDto.PlaceResponse;
+import static com.heylocal.traveler.dto.UserDto.*;
 import static com.heylocal.traveler.dto.UserDto.UserResponse;
 
 public class OpinionDto {
@@ -101,7 +102,7 @@ public class OpinionDto {
 	public static class OpinionResponse {
 		private long id;
 		private String description;
-		private UserResponse author;
+		private UserProfileResponse author;
 		private PlaceResponse place;
 		@Builder.Default
 		private List<String> generalImgDownloadImgUrl = new ArrayList<>();
