@@ -19,7 +19,10 @@ public class AwsController implements AwsApi {
   private final SnsMessageParser snsMessageParser;
 
   /**
+   * <pre>
    * AWS 에서 Content-Type: text/plain 으로 요청을 보내므로, 파라미터 타입을 String 으로 받아야 함.
+   * S3에 파일이 저장된 경우, SNS 가 호출하는 API 핸들러
+   * </pre>
    * @param request 요청 HTTP Message의 바디 부분 데이터
    * @throws NotFoundException
    */
@@ -31,6 +34,14 @@ public class AwsController implements AwsApi {
     opinionImgContentService.saveOpinionImageContent(s3ObjectDto);
   }
 
+  /**
+   * <pre>
+   * AWS 에서 Content-Type: text/plain 으로 요청을 보내므로, 파라미터 타입을 String 으로 받아야 함.
+   * S3에서 파일이 제거된 경우, SNS 가 호출하는 API 핸들러
+   * </pre>
+   * @param request
+   * @throws Exception
+   */
   @Override
   public void deleteOpinionImgMessage(String request) throws Exception {
     //String -> AwsSnsRequest 객체
