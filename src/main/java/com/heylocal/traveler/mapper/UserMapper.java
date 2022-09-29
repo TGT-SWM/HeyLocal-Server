@@ -10,7 +10,7 @@ import org.mapstruct.factory.Mappers;
 import static com.heylocal.traveler.dto.UserDto.UserProfileResponse;
 import static com.heylocal.traveler.dto.UserDto.UserResponse;
 
-@Mapper(builder = @Builder(disableBuilder = true))
+@Mapper(uses = {RegionMapper.class}, builder = @Builder(disableBuilder = true))
 public interface UserMapper {
   UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);
 

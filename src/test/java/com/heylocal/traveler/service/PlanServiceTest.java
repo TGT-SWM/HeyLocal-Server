@@ -375,7 +375,7 @@ class PlanServiceTest {
 		// PlaceRepository
 		given(placeRepository.findById(anyLong())).willReturn(Optional.empty());
 		// RegionService
-		Region region = new Region(1L, "STATE", "CITY", null, null, null);
+		Region region = new Region(1L, "STATE", "CITY", null, null, null, null);
 		given(regionService.getRegionByAddress(anyString())).willReturn(Optional.of(region));
 
 		// WHEN - THEN
