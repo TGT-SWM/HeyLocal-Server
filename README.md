@@ -11,5 +11,4 @@
 | 최정인 | 팀원  |FE|
 
 ## TODO
-- 여행On 상세 조회 시, UserProfile을 포함하도록
 - UserProfile 수정 DTO 로 자기소개글을 받을 때, 글자수 제한 필요
