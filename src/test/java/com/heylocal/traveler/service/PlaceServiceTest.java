@@ -1,6 +1,5 @@
 package com.heylocal.traveler.service;
 
-import com.heylocal.traveler.domain.Region;
 import com.heylocal.traveler.domain.place.Place;
 import com.heylocal.traveler.dto.PlaceDto;
 import com.heylocal.traveler.exception.NotFoundException;

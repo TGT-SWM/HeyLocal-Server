@@ -3,7 +3,6 @@ package com.heylocal.traveler.controller;
 import com.heylocal.traveler.controller.api.PlacesApi;
 import com.heylocal.traveler.dto.OpinionDto;
 import com.heylocal.traveler.dto.PageDto;
-import com.heylocal.traveler.dto.PlaceDto;
 import com.heylocal.traveler.exception.NotFoundException;
 import com.heylocal.traveler.service.PlaceService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -12,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-import static com.heylocal.traveler.dto.PlaceDto.*;
+import static com.heylocal.traveler.dto.PlaceDto.PlaceResponse;
 
 @Tag(name = "Places")
 @RestController

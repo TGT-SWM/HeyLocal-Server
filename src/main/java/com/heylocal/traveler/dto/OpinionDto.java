@@ -18,8 +18,7 @@ import java.util.List;
 import static com.heylocal.traveler.dto.OpinionImageContentDto.ImageContentQuantity;
 import static com.heylocal.traveler.dto.PlaceDto.PlaceRequest;
 import static com.heylocal.traveler.dto.PlaceDto.PlaceResponse;
-import static com.heylocal.traveler.dto.UserDto.*;
-import static com.heylocal.traveler.dto.UserDto.UserResponse;
+import static com.heylocal.traveler.dto.UserDto.UserProfileResponse;
 
 public class OpinionDto {
 	@Getter
