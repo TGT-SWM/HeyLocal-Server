@@ -57,7 +57,7 @@ public class UserController implements UsersApi {
 	 * @return
 	 */
 	@Override
-	public List<OpinionDto.OpinionResponse> getUserOpinions(long userId, PageRequest pageRequest) {
+  public List<OpinionDto.OpinionWithPlaceResponse> getUserOpinions(long userId, PageDto.PageRequest pageRequest) {
 		return null;
 	}
 

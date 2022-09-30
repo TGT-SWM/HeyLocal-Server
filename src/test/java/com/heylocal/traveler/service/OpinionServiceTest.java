@@ -14,6 +14,7 @@ import com.heylocal.traveler.domain.user.User;
 import com.heylocal.traveler.domain.user.UserRole;
 import com.heylocal.traveler.dto.LoginUser;
 import com.heylocal.traveler.dto.OpinionDto;
+import com.heylocal.traveler.dto.PageDto;
 import com.heylocal.traveler.exception.BadRequestException;
 import com.heylocal.traveler.exception.ForbiddenException;
 import com.heylocal.traveler.exception.NotFoundException;
@@ -31,6 +32,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -38,7 +40,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import static com.heylocal.traveler.domain.travelon.opinion.OpinionImageContent.ImageContentType;
 import static com.heylocal.traveler.dto.OpinionDto.NewOpinionRequestRequest;
-import static com.heylocal.traveler.dto.OpinionDto.OpinionResponse;
 import static com.heylocal.traveler.dto.PlaceDto.PlaceRequest;
 import static com.heylocal.traveler.util.aws.S3ObjectNameFormatter.ObjectNameProperty;
 import static org.junit.jupiter.api.Assertions.*;
@@ -260,8 +261,8 @@ class OpinionServiceTest {
     willReturn(map3).given(s3ObjectNameFormatter).parseObjectNameOfOpinionImg(eq(imgEntity3.getObjectKeyName()));
 
     //WHEN
-    List<OpinionResponse> resultList = opinionService.inquiryOpinions(travelOnId);
-    OpinionResponse result = resultList.get(0);
+    List<OpinionDto.OpinionWithPlaceResponse> resultList = opinionService.inquiryOpinions(travelOnId);
+    OpinionDto.OpinionWithPlaceResponse result = resultList.get(0);
 
     //THEN
     assertAll(
@@ -568,6 +569,35 @@ class OpinionServiceTest {
         () -> assertDoesNotThrow(() -> opinionService.removeOpinion(savedTravelOnId, savedOpinionId)),
         //실패 케이스 - 1
         () -> assertThrows(NotFoundException.class, () -> opinionService.removeOpinion(savedTravelOnId, wrongOpinionId))
+    );
+  }
+
+  @Test
+  @DisplayName("해당 장소와 연관된 답변들을 조회하는 메서드")
+  void inquiryOpinionsByPlaceTest() {
+    //GIVEN
+    long placeId = 1L;
+    PageDto.PageRequest pageRequest = PageDto.PageRequest.builder().lastItemId(null).size(2).build();
+
+    //Mock 행동 정의 - opinionRepository
+    List<Opinion> opinionList = new ArrayList<>();
+    long opinion1Id = 1L;
+    long opinion2Id = 2L;
+    Opinion opinion1 = Opinion.builder().id(opinion1Id).build();
+    Opinion opinion2 = Opinion.builder().id(opinion2Id).build();
+    opinionList.add(opinion1);
+    opinionList.add(opinion2);
+    willReturn(opinionList).given(opinionRepository).findByPlaceId(placeId, null, 2);
+
+    //WHEN
+    List<OpinionDto.OpinionResponse> result = opinionService.inquiryOpinionsByPlace(placeId, pageRequest);
+
+    //THEN
+    assertAll(
+        //성공 케이스 - 1 - 정상 응답
+        () -> assertSame(2, result.size()),
+        () -> assertSame(opinion1Id, result.get(0).getId()),
+        () -> assertSame(opinion2Id, result.get(1).getId())
     );
   }
 

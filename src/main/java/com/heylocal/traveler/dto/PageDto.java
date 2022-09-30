@@ -4,6 +4,8 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
+import javax.validation.constraints.Positive;
+
 public class PageDto {
 	@Getter
 	@Setter
@@ -21,6 +23,7 @@ public class PageDto {
 
 		/** 응답으로 받고자 하는 아이템의 최대 개수 */
 		@ApiParam(value = "응답으로 받고자 하는 아이템의 최대 개수", required = true)
+		@Positive
 		int size;
 	}
 }

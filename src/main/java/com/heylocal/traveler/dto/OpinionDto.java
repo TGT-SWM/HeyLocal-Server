@@ -96,13 +96,12 @@ public class OpinionDto {
 	@Setter
 	@NoArgsConstructor
 	@AllArgsConstructor
-	@Builder
+	@SuperBuilder
 	@Schema(description = "여행 On에 대한 답변 응답 DTO")
 	public static class OpinionResponse {
 		private long id;
 		private String description;
 		private UserProfileResponse author;
-		private PlaceResponse place;
 		@Builder.Default
 		private List<String> generalImgDownloadImgUrl = new ArrayList<>();
 		@Builder.Default
@@ -136,5 +135,15 @@ public class OpinionDto {
 		private EvaluationDegree streetNoise;
 		private EvaluationDegree deafening;
 		private Boolean hasBreakFast;
+	}
+
+	@Getter
+	@Setter
+	@NoArgsConstructor
+	@AllArgsConstructor
+	@SuperBuilder
+	@Schema(description = "여행 On에 대한 답변 및 관련 장소 응답 DTO")
+	public static class OpinionWithPlaceResponse extends OpinionResponse {
+		private PlaceResponse place;
 	}
 }

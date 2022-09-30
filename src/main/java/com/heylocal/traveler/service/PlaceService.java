@@ -1,6 +1,7 @@
 package com.heylocal.traveler.service;
 
 import com.heylocal.traveler.domain.place.Place;
+import com.heylocal.traveler.dto.OpinionDto;
 import com.heylocal.traveler.exception.NotFoundException;
 import com.heylocal.traveler.exception.code.NotFoundCode;
 import com.heylocal.traveler.mapper.PlaceMapper;
@@ -9,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import static com.heylocal.traveler.dto.OpinionDto.*;
 import static com.heylocal.traveler.dto.PlaceDto.PlaceResponse;
 
 @Service
@@ -31,4 +33,5 @@ public class PlaceService {
 
     return response;
   }
+
 }

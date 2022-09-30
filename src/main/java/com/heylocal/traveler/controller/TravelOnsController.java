@@ -61,8 +61,8 @@ public class TravelOnsController implements TravelOnsApi {
    */
   @Override
   public void createTravelOn(TravelOnRequest request,
-                                                  BindingResult bindingResult,
-                                                  LoginUser loginUser) throws BadRequestException, NotFoundException {
+                             BindingResult bindingResult,
+                             LoginUser loginUser) throws BadRequestException, NotFoundException {
     if (bindingResult.hasFieldErrors()) {
       String errMsg = errorMessageProvider.getFieldErrMsg(bindingResult);
       throw new BadRequestException(BadRequestCode.BAD_INPUT_FORM, errMsg);
@@ -136,8 +136,8 @@ public class TravelOnsController implements TravelOnsApi {
    * @throws NotFoundException 여행On ID가 존재하지 않을 경우
    */
   @Override
-  public List<OpinionResponse> getOpinions(long travelOnId) throws NotFoundException {
-    List<OpinionResponse> response = opinionService.inquiryOpinions(travelOnId);
+  public List<OpinionWithPlaceResponse> getOpinions(long travelOnId) throws NotFoundException {
+    List<OpinionWithPlaceResponse> response = opinionService.inquiryOpinions(travelOnId);
 
     return response;
   }
