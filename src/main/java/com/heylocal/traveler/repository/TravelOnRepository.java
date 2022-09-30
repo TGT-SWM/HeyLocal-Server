@@ -47,6 +47,26 @@ public class TravelOnRepository {
   }
 
   /**
+   * 여행 On을 사용자 ID로 조회하는 메서드
+   * @param userId 사용자 ID
+   * @param lastItemId 클라이언트가 마지막으로 받은 아이템의 ID (Nullable)
+   * @param size 한 페이지의 아이템 개수
+   * @param sortType 정렬 기준
+   * @return 여행 On의 리스트
+   */
+  public List<TravelOn> findAllByUserId(long userId, Long lastItemId, int size, TravelOnSortType sortType) {
+    String jpql = "select t from TravelOn t" +
+            " where t.author.id = :userId"
+            + getPaginationCondition("t", sortType, lastItemId);
+
+    jpql = appendJpqlWithOrderBy(jpql, sortType);
+    return em.createQuery(jpql, TravelOn.class)
+            .setParameter("userId", userId)
+            .setMaxResults(size)
+            .getResultList();
+  }
+
+  /**
    * 여행On 을 id 로 찾는 메서드
    * @param id 찾을 id
    * @return
