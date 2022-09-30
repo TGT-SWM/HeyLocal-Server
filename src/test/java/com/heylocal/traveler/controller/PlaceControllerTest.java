@@ -69,4 +69,26 @@ class PlaceControllerTest {
     //실패 케이스 - 페이지 사이즈가 0 이하인 경우
     assertThrows(BadRequestException.class, () -> placeController.getPlaceOpinions(placeId, invalidPageRequest, bindingResult));
   }
+
+  @Test
+  @DisplayName("인기 장소 조회 핸들러")
+  void getHotPlacesTest() {
+    //GIVEN
+    long placeId = 1L;
+    PageRequest validPageRequest = PageRequest.builder().lastItemId(null).size(3).build();
+    PageRequest invalidPageRequest = PageRequest.builder().lastItemId(null).size(0).build();
+
+    //Mock 행동 정의 - bindingResult
+    willReturn(false).willReturn(true).given(bindingResult).hasFieldErrors();
+
+    //WHEN
+
+    //THEN
+    assertAll(
+        //성공 케이스 - 1 - 페이징 요청 정상 값
+        () -> assertDoesNotThrow(() -> placeController.getPlaceOpinions(placeId, validPageRequest, bindingResult)),
+        //실패 케이스 - 1 - 페이징 요청 비정상 값
+        () -> assertThrows(BadRequestException.class, () -> placeController.getPlaceOpinions(placeId, validPageRequest, bindingResult))
+    );
+  }
 }
