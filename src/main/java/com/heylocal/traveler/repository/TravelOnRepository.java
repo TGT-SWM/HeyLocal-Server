@@ -57,7 +57,7 @@ public class TravelOnRepository {
   public List<TravelOn> findAllByUserId(long userId, Long lastItemId, int size, TravelOnSortType sortType) {
     String jpql = "select t from TravelOn t" +
             " where t.author.id = :userId"
-            + getPaginationCondition("t", sortType, lastItemId);
+            + " and " + getPaginationCondition("t", sortType, lastItemId);
 
     jpql = appendJpqlWithOrderBy(jpql, sortType);
     return em.createQuery(jpql, TravelOn.class)
