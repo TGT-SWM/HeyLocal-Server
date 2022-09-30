@@ -9,7 +9,11 @@ import com.heylocal.traveler.domain.travelon.opinion.EvaluationDegree;
 import com.heylocal.traveler.domain.travelon.opinion.Opinion;
 import com.heylocal.traveler.domain.user.User;
 import com.heylocal.traveler.domain.user.UserRole;
+import com.heylocal.traveler.dto.PageDto;
+import com.heylocal.traveler.dto.PageDto.PageRequest;
 import lombok.extern.slf4j.Slf4j;
+import net.bytebuddy.asm.Advice;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +24,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -130,6 +135,60 @@ class TravelOnRepositoryTest {
         () -> assertSame(2, sortByOpinion.get(0).getOpinionList().size()),
         //성공 케이스 - 6 - 답변 개수 순 정렬
         () -> assertSame(result1, sortByOpinion.get(0))
+    );
+  }
+
+  @Test
+  @DisplayName("사용자 ID로 여행 On 조회")
+  void findAllByUserIdTest() {
+    // GIVEN (User)
+    User author = User.builder()
+            .accountId("testAccountId")
+            .password("testPassword")
+            .nickname("testNickname")
+            .userRole(UserRole.TRAVELER)
+            .build();
+    em.persist(author);
+
+    // GIVEN (TravelOn)
+    final int travelOnCnt = 5;
+    List<TravelOn> travelOns = new ArrayList<>();
+    LocalDateTime now = LocalDateTime.now();
+    for (int i = 0; i < travelOnCnt; i++)
+      travelOns.add(saveTravelOn(author, "state", "city", now.plusHours(i), 0));
+
+    // GIVEN (Opinion)
+    final int opinionCnt = 3;
+    for (int i = 0; i < opinionCnt; i++)
+      saveAnotherOpinion(travelOns.get(travelOnCnt - 1));
+
+    // GIVEN (Paging)
+    final Long lastItemId = null;
+    final int size = 3;
+
+    // WHEN
+    List<TravelOn> allTravelOns = travelOnRepository.findAllByUserId(
+            author.getId(),
+            null,
+            travelOnCnt,
+            TravelOnSortType.DATE
+    );
+
+    List<TravelOn> pagedTravelOns = travelOnRepository.findAllByUserId(
+            author.getId(),
+            lastItemId,
+            size,
+            TravelOnSortType.DATE
+    );
+
+    // THEN
+    assertAll(
+            // 성공 케이스 - 1 - 작성한 여행 On 조회
+            () -> Assertions.assertThat(allTravelOns.size()).isEqualTo(travelOnCnt),
+            // 성공 케이스 - 2 - 받은 lastItemId와 size만큼의 결과 반환
+            () -> Assertions.assertThat(pagedTravelOns.size()).isEqualTo(size),
+            // 성공 케이스 - 3 - 답변 개수 확인
+            () -> Assertions.assertThat(allTravelOns.get(0).getOpinionList().size()).isEqualTo(opinionCnt)
     );
   }
 
