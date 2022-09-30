@@ -5,6 +5,8 @@ import com.heylocal.traveler.domain.plan.Plan;
 import com.heylocal.traveler.domain.travelon.TravelOn;
 import com.heylocal.traveler.domain.user.User;
 import com.heylocal.traveler.dto.LoginUser;
+import com.heylocal.traveler.dto.PageDto;
+import com.heylocal.traveler.dto.PageDto.PageRequest;
 import com.heylocal.traveler.exception.ForbiddenException;
 import com.heylocal.traveler.exception.NotFoundException;
 import com.heylocal.traveler.exception.code.ForbiddenCode;
@@ -77,6 +79,27 @@ public class TravelOnService {
         .collect(Collectors.toList());
 
     return response;
+  }
+
+  /**
+   * 여행 On 목록을 사용자 ID로 조회
+   * @param userId 사용자 ID
+   * @param pageRequest 요청하는 페이지 정보
+   * @return 여행 On 목록
+   */
+  public List<TravelOnSimpleResponse> inquirySimpleTravelOns(long userId, PageRequest pageRequest) {
+    // 여행 On 조회
+    List<TravelOn> travelOns = travelOnRepository.findAllByUserId(
+            userId,
+            pageRequest.getLastItemId(),
+            pageRequest.getSize(),
+            TravelOnSortType.DATE
+    );
+
+    // List<TravelOn> -> List<TravelOnSimpleResponse>
+    return travelOns.stream()
+            .map(TravelOnMapper.INSTANCE::toTravelOnSimpleResponseDto)
+            .collect(Collectors.toList());
   }
 
   /**
