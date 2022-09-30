@@ -1,25 +1,37 @@
 package com.heylocal.traveler.controller;
 
+import com.heylocal.traveler.exception.BadRequestException;
 import com.heylocal.traveler.exception.NotFoundException;
+import com.heylocal.traveler.service.OpinionService;
 import com.heylocal.traveler.service.PlaceService;
+import com.heylocal.traveler.util.error.BindingErrorMessageProvider;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.validation.BindingResult;
 
+import static com.heylocal.traveler.dto.PageDto.*;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.BDDMockito.willReturn;
 import static org.mockito.BDDMockito.willThrow;
 
 class PlaceControllerTest {
   @Mock
+  private BindingErrorMessageProvider errorMessageProvider;
+  @Mock
   private PlaceService placeService;
+  @Mock
+  private OpinionService opinionService;
+  @Mock
+  private BindingResult bindingResult;
   private PlaceController placeController;
 
   @BeforeEach
   void setUp() {
     MockitoAnnotations.openMocks(this);
-    placeController = new PlaceController(placeService);
+    placeController = new PlaceController(errorMessageProvider, placeService, opinionService);
   }
 
   @Test
@@ -41,5 +53,20 @@ class PlaceControllerTest {
         //실패 케이스 - 1 - 존재하지 않는 Place ID 로 조회시
         () -> assertThrows(NotFoundException.class, () -> placeController.getPlace(notExistPlaceId))
     );
+  }
+
+  @Test
+  @DisplayName("특정 장소에 대한 답변 목록 조회")
+  void getPlaceOpinionsTest() throws BadRequestException {
+    //GIVEN
+    long placeId = 1L;
+    PageRequest invalidPageRequest = PageRequest.builder().lastItemId(null).size(0).build();
+
+    //WHEN
+    willReturn(true).given(bindingResult).hasFieldErrors();
+
+    //THEN
+    //실패 케이스 - 페이지 사이즈가 0 이하인 경우
+    assertThrows(BadRequestException.class, () -> placeController.getPlaceOpinions(placeId, invalidPageRequest, bindingResult));
   }
 }

@@ -9,6 +9,7 @@ import com.heylocal.traveler.domain.travelon.opinion.EvaluationDegree;
 import com.heylocal.traveler.domain.travelon.opinion.Opinion;
 import com.heylocal.traveler.domain.user.User;
 import com.heylocal.traveler.domain.user.UserRole;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,10 +21,12 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@Slf4j
 @Import({OpinionRepository.class})
 @DataJpaTest
 class OpinionRepositoryTest {
@@ -126,7 +129,37 @@ class OpinionRepositoryTest {
     );
   }
 
-  // TODO - findByPlaceId, 페이징 안하는 findByPlaceId
+  @Test
+  @DisplayName("장소 Id 로 답변 조회 + 페이징")
+  void findByPlaceIdTest() {
+    //GIVEN
+    User author = User.builder().accountId("accountId").password("password123!").nickname("nickname").userRole(UserRole.TRAVELER).build();
+    em.persist(author);
+
+    TravelOn travelOnA = saveTravelOn(author, "myState", "myCity");
+    Opinion opinionA1 = getNotPersistOpinion(travelOnA);
+    Opinion opinionA2 = getNotPersistOpinion(travelOnA, opinionA1.getPlace());
+    Opinion opinionA3 = getNotPersistOpinion(travelOnA, opinionA1.getPlace());
+
+    em.persist(opinionA1);
+    em.persist(opinionA2);
+    em.persist(opinionA3);
+
+    //WHEN
+    List<Opinion> firstPage = opinionRepository.findByPlaceId(placeId, null, 2);
+    List<Opinion> secondPage = opinionRepository.findByPlaceId(placeId, firstPage.get(1).getId(), 2);
+
+
+    //THEN
+    assertAll(
+        //성공 케이스 - 1 - 첫번째 페이징 결과
+        () -> assertSame(2, firstPage.size()),
+        () -> assertSame(opinionA3, firstPage.get(0)),
+        //성공 케이스 - 2 - 두번째 페이징 결과
+        () -> assertSame(1, secondPage.size()),
+        () -> assertSame(opinionA1, secondPage.get(0))
+    );
+  }
 
   @Test
   @DisplayName("삭제")
@@ -180,6 +213,29 @@ class OpinionRepositoryTest {
   }
 
   /**
+   * 영속화되지 않은 새 Opinion 엔티티를 반환하는 메서드
+   * @param travelOn Opinion 이 추가될 TravelOn 엔티티
+   * @param place 관련 장소
+   * @return
+   */
+  private Opinion getNotPersistOpinion(TravelOn travelOn, Place place) {
+    Opinion opinion = Opinion.builder()
+        .travelOn(travelOn)
+        .author(travelOn.getAuthor()) //테스트용으로 여행On 작성자가 답변을 달았다고 가정
+        .region(travelOn.getRegion())
+        .place(place)
+        .facilityCleanliness(EvaluationDegree.GOOD)
+        .canParking(true)
+        .waiting(false)
+        .costPerformance(EvaluationDegree.GOOD)
+        .build();
+
+    opinion.setTravelOn(travelOn);
+
+    return opinion;
+  }
+
+  /**
    * 새 TravelOn 엔티티를 저장하는 메서드
    * @param author
    * @param state
@@ -194,8 +250,6 @@ class OpinionRepositoryTest {
     String description = "test description";
     TransportationType transportationType = TransportationType.OWN_CAR;
     int accommodationMaxCost = 100000;
-    int foodMaxCost = 100000;
-    int drinkMaxCost = 100000;
 
     Region region = getPersistRegion(state, city);
 

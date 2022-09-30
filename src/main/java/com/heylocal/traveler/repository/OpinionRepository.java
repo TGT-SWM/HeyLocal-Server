@@ -59,22 +59,6 @@ public class OpinionRepository {
   }
 
   /**
-   * 장소 Id 로 조회하는 메서드
-   * @param placeId 장소 Id
-   * @return
-   */
-  public List<Opinion> findByPlaceId(long placeId) {
-    String jpql = "select o from Opinion o" +
-        " where o.place.id = :placeId";
-
-    List<Opinion> result = em.createQuery(jpql, Opinion.class)
-        .setParameter("placeId", placeId)
-        .getResultList();
-
-    return result;
-  }
-
-  /**
    * <pre>
    * 장소 Id 로 조회하는 메서드
    * 페이징 처리까지 수행한다.

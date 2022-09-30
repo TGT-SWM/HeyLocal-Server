@@ -222,6 +222,8 @@ public class OpinionService {
     List<OpinionResponse> result = new ArrayList<>();
     Long lastItemId = pageRequest.getLastItemId();
     int size = pageRequest.getSize();
+
+    //해당 장소 ID와 연관된 답변 조회
     List<Opinion> opinionList = opinionRepository.findByPlaceId(placeId, lastItemId, size);
 
     //List<Opinion> -> List<OpinionResponse>
