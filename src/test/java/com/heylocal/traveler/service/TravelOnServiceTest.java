@@ -9,12 +9,14 @@ import com.heylocal.traveler.domain.user.User;
 import com.heylocal.traveler.domain.user.UserRole;
 import com.heylocal.traveler.dto.LoginUser;
 import com.heylocal.traveler.dto.PageDto;
+import com.heylocal.traveler.dto.PageDto.PageRequest;
 import com.heylocal.traveler.dto.TravelTypeGroupDto;
 import com.heylocal.traveler.exception.ForbiddenException;
 import com.heylocal.traveler.exception.NotFoundException;
 import com.heylocal.traveler.repository.RegionRepository;
 import com.heylocal.traveler.repository.TravelOnRepository;
 import com.heylocal.traveler.repository.UserRepository;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -22,9 +24,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 import static com.heylocal.traveler.dto.TravelOnDto.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -222,6 +222,49 @@ class TravelOnServiceTest {
   }
 
   @Test
+  @DisplayName("모든 여행 On 조회 - 사용자 ID를 기준으로 조회")
+  void inquirySimpleTravelOnsTestWithUserId() {
+    // GIVEN (Request)
+    long userId = 1L;
+    long noTravelOnUserId = userId + 1;
+    PageRequest pageRequest = new PageRequest(null, 10);
+
+    // GIVEN (TravelOn)
+    long travelOnCnt = 10;
+    List<TravelOn> travelOns = new ArrayList<>();
+    for (int i = 0; i < travelOnCnt; i++)
+      travelOns.add(new TravelOn());
+
+    given(
+            travelOnRepository.findAllByUserId(
+                    userId,
+                    pageRequest.getLastItemId(),
+                    pageRequest.getSize(),
+                    TravelOnSortType.DATE)
+    ).willReturn(travelOns);
+
+    given(
+            travelOnRepository.findAllByUserId(
+                    noTravelOnUserId,
+                    pageRequest.getLastItemId(),
+                    pageRequest.getSize(),
+                    TravelOnSortType.DATE)
+    ).willReturn(new ArrayList<TravelOn>());
+
+    // WHEN
+    List<TravelOnSimpleResponse> successResp = travelOnService.inquirySimpleTravelOns(userId, pageRequest);
+    List<TravelOnSimpleResponse> failResp = travelOnService.inquirySimpleTravelOns(noTravelOnUserId, pageRequest);
+
+    // THEN
+    assertAll(
+            // 성공 케이스 - 1 - 여행 On 조회 성공
+            () -> Assertions.assertThat(successResp.size()).isEqualTo(travelOnCnt),
+            // 실패 케이스 - 1 - 작성한 여행 On이 없는 경우
+            () -> Assertions.assertThat(failResp).isEmpty()
+    );
+  }
+
+  @Test
   @DisplayName("여행 On 상세 조회")
   void inquiryTravelOnTest() {
     //GIVEN
@@ -324,7 +367,7 @@ class TravelOnServiceTest {
    * @return
    */
   private AllTravelOnGetRequest getAllTravelOnRequest() {
-    PageDto.PageRequest pageRequest = PageDto.PageRequest.builder()
+    PageRequest pageRequest = PageRequest.builder()
         .lastItemId(0L)
         .size(10)
         .build();
