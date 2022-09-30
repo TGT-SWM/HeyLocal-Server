@@ -3,9 +3,12 @@ package com.heylocal.traveler.controller;
 import com.heylocal.traveler.controller.api.UsersApi;
 import com.heylocal.traveler.dto.OpinionDto;
 import com.heylocal.traveler.dto.PageDto;
+import com.heylocal.traveler.dto.PageDto.PageRequest;
 import com.heylocal.traveler.dto.TravelOnDto;
 import com.heylocal.traveler.dto.UserDto;
+import com.heylocal.traveler.service.TravelOnService;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -13,7 +16,10 @@ import java.util.List;
 
 @Tag(name = "Users")
 @RestController
+@RequiredArgsConstructor
 public class UserController implements UsersApi {
+	private final TravelOnService travelOnService;
+
 	/**
 	 * @param userId
 	 * @return
@@ -39,8 +45,8 @@ public class UserController implements UsersApi {
 	 * @return
 	 */
 	@Override
-	public List<TravelOnDto.TravelOnSimpleResponse> getUserTravelOns(long userId, PageDto.PageRequest pageRequest) {
-		return null;
+	public List<TravelOnDto.TravelOnSimpleResponse> getUserTravelOns(long userId, PageRequest pageRequest) {
+		return travelOnService.inquirySimpleTravelOns(userId, pageRequest);
 	}
 
 	/**
@@ -49,7 +55,7 @@ public class UserController implements UsersApi {
 	 * @return
 	 */
 	@Override
-	public List<OpinionDto.OpinionResponse> getUserOpinions(long userId, PageDto.PageRequest pageRequest) {
+	public List<OpinionDto.OpinionResponse> getUserOpinions(long userId, PageRequest pageRequest) {
 		return null;
 	}
 
