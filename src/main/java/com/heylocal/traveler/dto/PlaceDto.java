@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -53,7 +54,7 @@ public class PlaceDto {
 	@Setter
 	@NoArgsConstructor
 	@AllArgsConstructor
-	@Builder
+	@SuperBuilder
 	@Schema(description = "장소 상세 정보 응답 DTO")
 	public static class PlaceResponse {
 		private long id;
@@ -66,6 +67,16 @@ public class PlaceDto {
 		private RegionResponse region;
 		private String thumbnailUrl;
 		private String kakaoLink;
+	}
+
+	@Getter
+	@Setter
+	@NoArgsConstructor
+	@AllArgsConstructor
+	@SuperBuilder
+	@Schema(description = "장소 상세 정보 응답 DTO")
+	public static class PlaceWithOpinionSizeResponse extends PlaceResponse {
+		private int opinionSize;
 	}
 
 }

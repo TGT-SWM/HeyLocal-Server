@@ -2,6 +2,7 @@ package com.heylocal.traveler.controller.api;
 
 import com.heylocal.traveler.dto.OpinionDto;
 import com.heylocal.traveler.dto.PageDto.PageRequest;
+import com.heylocal.traveler.dto.PlaceDto;
 import com.heylocal.traveler.dto.PlaceDto.PlaceResponse;
 import com.heylocal.traveler.exception.BadRequestException;
 import com.heylocal.traveler.exception.NotFoundException;
@@ -34,5 +35,5 @@ public interface PlacesApi {
 
 	@Operation(summary = "인기 장소 조회", description = "상위 N개의 인기 장소 목록을 조회합니다.", tags = {"Places"})
 	@GetMapping("/hot")
-	List<PlaceResponse> getHotPlaces();
+	List<PlaceDto.PlaceWithOpinionSizeResponse> getHotPlaces();
 }
