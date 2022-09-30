@@ -5,12 +5,10 @@ import com.heylocal.traveler.domain.place.Place;
 import com.heylocal.traveler.domain.plan.list.PlaceItemType;
 import com.heylocal.traveler.dto.PlaceDto;
 import com.heylocal.traveler.dto.PlaceItemDto;
-import org.mapstruct.Builder;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
+import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
 
+import static com.heylocal.traveler.dto.PlaceDto.*;
 import static com.heylocal.traveler.dto.PlaceDto.PlaceRequest;
 import static com.heylocal.traveler.dto.PlaceDto.PlaceResponse;
 
@@ -27,8 +25,13 @@ public interface PlaceMapper {
   @Mapping(target = "modifiedDate", ignore = true)
   Place toEntity(PlaceRequest placeRequest, Region region);
 
+  @Named("toPlaceResponseDto")
   @Mapping(target = "kakaoLink", source = "link")
   PlaceResponse toPlaceResponseDto(Place place);
+
+  @Mapping(target = "kakaoLink", source = "link")
+  @Mapping(target = "opinionSize", expression = "java(place.getOpinionList().size())")
+  PlaceWithOpinionSizeResponse toPlaceWithOpinionSizeResponseDto(Place place);
 
   @Mapping(target = "region", ignore = true)
   @Mapping(target = "thumbnailUrl", ignore = true)
@@ -48,5 +51,5 @@ public interface PlaceMapper {
   @Mapping(target = "lng", source = "lng")
   @Mapping(target = "thumbnailUrl", source = "thumbnailUrl")
   @Mapping(target = "link", source = "kakaoLink")
-  void updatePlace(PlaceDto.PlaceRequest placeRequest, @MappingTarget Place place);
+  void updatePlace(PlaceRequest placeRequest, @MappingTarget Place place);
 }

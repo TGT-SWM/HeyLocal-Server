@@ -1,6 +1,7 @@
 package com.heylocal.traveler.controller;
 
 import com.heylocal.traveler.controller.api.PlacesApi;
+import com.heylocal.traveler.dto.PlaceDto;
 import com.heylocal.traveler.exception.BadRequestException;
 import com.heylocal.traveler.exception.NotFoundException;
 import com.heylocal.traveler.exception.code.BadRequestCode;
@@ -16,6 +17,7 @@ import java.util.List;
 
 import static com.heylocal.traveler.dto.OpinionDto.*;
 import static com.heylocal.traveler.dto.PageDto.*;
+import static com.heylocal.traveler.dto.PlaceDto.*;
 import static com.heylocal.traveler.dto.PlaceDto.PlaceResponse;
 
 @Tag(name = "Places")
@@ -56,10 +58,11 @@ public class PlaceController implements PlacesApi {
 	}
 
 	/**
-	 * @return
+	 * 인기 장소 조회 핸들러
+	 * @return 인기가 높은 순으로 정렬
 	 */
 	@Override
-	public List<PlaceResponse> getHotPlaces() {
-		return null;
+	public List<PlaceWithOpinionSizeResponse> getHotPlaces() {
+		return placeService.inquiryMostOpinedPlace(null);
 	}
 }

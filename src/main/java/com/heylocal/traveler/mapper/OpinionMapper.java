@@ -34,6 +34,7 @@ public interface OpinionMapper {
   @Mapping(target = "drinkAndDessertImgDownloadImgUrl", ignore = true)
   @Mapping(target = "photoSpotImgDownloadImgUrl", ignore = true)
   @Mapping(target = "author", source = "opinion.author")
+  @Mapping(target = "place", qualifiedByName = "toPlaceResponseDto")
   OpinionWithPlaceResponse toWithPlaceResponseDto(Opinion opinion);
 
   @InheritConfiguration(name = "toWithPlaceResponseDto")
