@@ -33,6 +33,7 @@ import java.util.stream.Collectors;
 
 import static com.heylocal.traveler.domain.travelon.opinion.OpinionImageContent.ImageContentType;
 import static com.heylocal.traveler.dto.OpinionDto.*;
+import static com.heylocal.traveler.dto.PageDto.*;
 import static com.heylocal.traveler.util.aws.S3ObjectNameFormatter.ObjectNameProperty;
 
 @Slf4j
@@ -105,11 +106,11 @@ public class OpinionService {
    * @throws NotFoundException 여행On ID 가 존재하지 않을 경우
    */
   @Transactional(readOnly = true)
-  public List<OpinionResponse> inquiryOpinions(long travelOnId) throws NotFoundException {
+  public List<OpinionWithPlaceResponse> inquiryOpinions(long travelOnId) throws NotFoundException {
     TravelOn targetTravelOn;
     List<Opinion> opinionList;
+    List<OpinionWithPlaceResponse> result = new ArrayList<>();
 
-    List<OpinionResponse> result = new ArrayList<>();
 
     //답변을 조회할 여행On 조회
     targetTravelOn = inquiryTravelOn(travelOnId);
@@ -124,7 +125,7 @@ public class OpinionService {
 
     //List<Opinion> -> List<OpinionResponse>
     for (Opinion opinion : opinionList) {
-      OpinionResponse responseDto = OpinionMapper.INSTANCE.toResponseDto(opinion);
+      OpinionWithPlaceResponse responseDto = OpinionMapper.INSTANCE.toWithPlaceResponseDto(opinion);
       List<OpinionImageContent> sortedImgEntityList = sortImgEntityByKeyIndex(opinion.getOpinionImageContentList());
       sortedImgEntityList.stream().forEach( (imgEntity) -> bindingDownloadUrls(responseDto, imgEntity) );
       result.add(responseDto);
@@ -208,6 +209,32 @@ public class OpinionService {
     opinion = opinionOptional.get();
 
     return opinion.getAuthor().getId() == userId;
+  }
+
+  /**
+   * 해당 장소와 연관된 답변들을 조회하는 메서드
+   * @param placeId 장소 ID
+   * @param pageRequest 페이지 정보
+   * @return
+   */
+  @Transactional(readOnly = true)
+  public List<OpinionResponse> inquiryOpinionsByPlace(long placeId, PageRequest pageRequest) {
+    List<OpinionResponse> result = new ArrayList<>();
+    Long lastItemId = pageRequest.getLastItemId();
+    int size = pageRequest.getSize();
+
+    //해당 장소 ID와 연관된 답변 조회
+    List<Opinion> opinionList = opinionRepository.findByPlaceId(placeId, lastItemId, size);
+
+    //List<Opinion> -> List<OpinionResponse>
+    for (Opinion opinion : opinionList) {
+      OpinionResponse responseDto = OpinionMapper.INSTANCE.toResponseDto(opinion);
+      List<OpinionImageContent> sortedImgEntityList = sortImgEntityByKeyIndex(opinion.getOpinionImageContentList());
+      sortedImgEntityList.stream().forEach( (imgEntity) -> bindingDownloadUrls(responseDto, imgEntity) );
+      result.add(responseDto);
+    }
+
+    return result;
   }
 
   /**

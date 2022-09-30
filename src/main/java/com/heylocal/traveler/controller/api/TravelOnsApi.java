@@ -3,7 +3,7 @@ package com.heylocal.traveler.controller.api;
 import com.heylocal.traveler.dto.ErrorMessageResponse;
 import com.heylocal.traveler.dto.LoginUser;
 import com.heylocal.traveler.dto.OpinionDto;
-import com.heylocal.traveler.dto.OpinionDto.OpinionResponse;
+import com.heylocal.traveler.dto.OpinionDto.OpinionWithPlaceResponse;
 import com.heylocal.traveler.dto.TravelOnDto;
 import com.heylocal.traveler.dto.TravelOnDto.TravelOnRequest;
 import com.heylocal.traveler.dto.TravelOnDto.TravelOnResponse;
@@ -103,7 +103,7 @@ public interface TravelOnsApi {
         @ApiResponse(responseCode = "404", description = "- `NO_INFO`: 존재하지 않는 정보일 때", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessageResponse.class)))
     })
     @GetMapping("/{travelOnId}/opinions")
-    List<OpinionResponse> getOpinions(
+    List<OpinionWithPlaceResponse> getOpinions(
             @Parameter(in = ParameterIn.PATH, description = "여행 On ID", required = true) @PathVariable long travelOnId
     ) throws NotFoundException;
 

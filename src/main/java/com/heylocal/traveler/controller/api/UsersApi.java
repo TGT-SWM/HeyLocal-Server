@@ -1,7 +1,7 @@
 package com.heylocal.traveler.controller.api;
 
 import com.heylocal.traveler.dto.ErrorMessageResponse;
-import com.heylocal.traveler.dto.OpinionDto.OpinionResponse;
+import com.heylocal.traveler.dto.OpinionDto.OpinionWithPlaceResponse;
 import com.heylocal.traveler.dto.PageDto.PageRequest;
 import com.heylocal.traveler.dto.TravelOnDto.TravelOnSimpleResponse;
 import com.heylocal.traveler.dto.UserDto.UserProfileRequest;
@@ -51,7 +51,7 @@ public interface UsersApi {
 
 	@Operation(summary = "작성한 답변 조회", description = "사용자가 작성한 답변 목록을 조회합니다.", tags = {"Users"})
 	@GetMapping("/{userId}/opinions")
-	List<OpinionResponse> getUserOpinions(
+	List<OpinionWithPlaceResponse> getUserOpinions(
 			@Parameter(in = ParameterIn.PATH, description = "사용자 ID", required = true) @PathVariable long userId,
 			@Parameter(in = ParameterIn.QUERY, description = "페이징", required = true) PageRequest pageRequest
 	);
