@@ -30,7 +30,6 @@ public interface UsersApi {
 			@Parameter(in = ParameterIn.PATH, description = "사용자 ID", required = true) @PathVariable long userId
 	);
 
-	// TODO: userId를 파라미터로 받지 않고, 로그인된 유저에 대해 요청을 처리할 것인지 논의
 	@Operation(summary = "사용자 프로필 수정", description = "사용자의 프로필을 수정합니다.", tags = {"Users"})
 	@PutMapping("/{userId}/profile")
 	@ApiResponses(
