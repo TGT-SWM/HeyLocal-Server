@@ -27,6 +27,7 @@ public interface OpinionMapper {
   @Mapping(target = "author", source = "author")
   @Mapping(target = "region", source = "region")
   @Mapping(target = "opinionImageContentList", ignore = true)
+  @Mapping(target = "countAccept", constant = "0")
   Opinion toEntity(NewOpinionRequestRequest newOpinionRequest, Place place, User author, TravelOn travelOn, Region region);
 
   @Mapping(target = "generalImgDownloadImgUrl", ignore = true)
@@ -49,10 +50,11 @@ public interface OpinionMapper {
   @Mapping(target = "modifiedDate", ignore = true)
   @Mapping(target = "author", ignore = true)
   @Mapping(target = "travelOn", ignore = true)
+  @Mapping(target = "opinionImageContentList", ignore = true)
+  @Mapping(target = "countAccept", ignore = true)
   @Mapping(target = "description", source = "opinionRequest.description")
   @Mapping(target = "place", source = "place")
   @Mapping(target = "region", source = "region")
-  @Mapping(target = "opinionImageContentList", ignore = true)
   void updateOpinion(OpinionOnlyTextRequest opinionRequest, Region region, Place place, @MappingTarget Opinion opinion);
 
   @AfterMapping

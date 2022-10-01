@@ -7,7 +7,9 @@ import com.heylocal.traveler.dto.PageDto.PageRequest;
 import com.heylocal.traveler.dto.TravelOnDto;
 import com.heylocal.traveler.dto.TravelOnDto.TravelOnSimpleResponse;
 import com.heylocal.traveler.dto.UserDto;
+import com.heylocal.traveler.exception.NotFoundException;
 import com.heylocal.traveler.service.TravelOnService;
+import com.heylocal.traveler.service.UserService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -20,14 +22,16 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserController implements UsersApi {
 	private final TravelOnService travelOnService;
+	private final UserService userService;
 
 	/**
+	 * 사용자 프로필 조회 핸들러
 	 * @param userId
 	 * @return
 	 */
 	@Override
-	public UserDto.UserProfileResponse getUserProfile(long userId) {
-		return null;
+	public UserDto.UserProfileResponse getUserProfile(long userId) throws NotFoundException {
+		return userService.inquiryUserProfile(userId);
 	}
 
 	/**

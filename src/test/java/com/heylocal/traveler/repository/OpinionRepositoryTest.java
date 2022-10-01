@@ -204,6 +204,7 @@ class OpinionRepositoryTest {
         .facilityCleanliness(EvaluationDegree.GOOD)
         .canParking(true)
         .waiting(false)
+        .countAccept(0)
         .costPerformance(EvaluationDegree.GOOD)
         .build();
 
@@ -227,6 +228,7 @@ class OpinionRepositoryTest {
         .facilityCleanliness(EvaluationDegree.GOOD)
         .canParking(true)
         .waiting(false)
+        .countAccept(0)
         .costPerformance(EvaluationDegree.GOOD)
         .build();
 

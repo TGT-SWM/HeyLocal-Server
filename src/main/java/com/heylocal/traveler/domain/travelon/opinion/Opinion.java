@@ -41,6 +41,9 @@ public class Opinion extends BaseTimeEntity {
   @ManyToOne(optional = false, fetch = FetchType.LAZY)
   private TravelOn travelOn;
 
+  @Column(nullable = false)
+  private Integer countAccept;
+
   // [일반]
   @Enumerated(EnumType.STRING)
   @Column(nullable = false)

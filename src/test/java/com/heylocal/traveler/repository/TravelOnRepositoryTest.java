@@ -794,6 +794,7 @@ class TravelOnRepositoryTest {
         .place(place)
         .facilityCleanliness(EvaluationDegree.GOOD)
         .canParking(true)
+        .countAccept(0)
         .waiting(false)
         .costPerformance(EvaluationDegree.GOOD)
         .build();

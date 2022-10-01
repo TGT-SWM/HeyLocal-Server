@@ -4,7 +4,9 @@ import com.heylocal.traveler.dto.PageDto;
 import com.heylocal.traveler.dto.PageDto.PageRequest;
 import com.heylocal.traveler.dto.TravelOnDto;
 import com.heylocal.traveler.dto.TravelOnDto.TravelOnSimpleResponse;
+import com.heylocal.traveler.exception.NotFoundException;
 import com.heylocal.traveler.service.TravelOnService;
+import com.heylocal.traveler.service.UserService;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -17,11 +19,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.*;
 
 class UserControllerTest {
 	@Mock
 	private TravelOnService travelOnService;
+	@Mock
+	private UserService userService;
 
 	@InjectMocks
 	private UserController userController;
@@ -58,6 +62,27 @@ class UserControllerTest {
 				() -> Assertions.assertThat(successResp.size()).isEqualTo(travelOnCnt),
 				// 실패 케이스 - 1 - 작성한 여행 On이 없는 경우
 				() -> Assertions.assertThat(failResp).isEmpty()
+		);
+	}
+
+	@Test
+	@DisplayName("사용자 프로필 조회 핸들러")
+	void getUserProfileTest() throws NotFoundException {
+		//GIVEN
+		long existUserId = 1;
+		long notExistUserId = 2;
+
+		//Mock 행동 정의 - userService
+		willThrow(NotFoundException.class).given(userService).inquiryUserProfile(notExistUserId);
+
+		//WHEN
+
+		//THEN
+		assertAll(
+				//성공 케이스
+				() -> assertDoesNotThrow(() -> userController.getUserProfile(existUserId)),
+				//실패 케이스
+				() -> assertThrows(NotFoundException.class, () -> userController.getUserProfile(notExistUserId))
 		);
 	}
 }
