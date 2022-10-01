@@ -89,10 +89,10 @@ public class User extends BaseTimeEntity {
     this.accessToken = null;
   }
 
-  public void registerUserProfile(UserProfile profile) {
+  public void setUserProfile(UserProfile profile) {
     this.userProfile = profile;
     if (userProfile.getUser() != this) {
-      userProfile.associateUser(this);
+      userProfile.setUser(this);
     }
   }
 

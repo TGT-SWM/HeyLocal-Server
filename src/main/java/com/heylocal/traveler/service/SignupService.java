@@ -85,7 +85,7 @@ public class SignupService {
             .imageUrl(null)
             .build();
     userProfileRepository.saveUserProfile(userProfile);
-    user.registerUserProfile(userProfile);
+    user.setUserProfile(userProfile);
   }
 
   /**

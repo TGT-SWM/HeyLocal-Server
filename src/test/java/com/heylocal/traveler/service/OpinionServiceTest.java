@@ -231,7 +231,7 @@ class OpinionServiceTest {
     //GIVEN
     User author = User.builder().id(1L).accountId("myAccountId").nickname("myNickname").password("myPassword").userRole(UserRole.TRAVELER).build();
     UserProfile profile = UserProfile.builder().id(1L).knowHow(0).build();
-    profile.associateUser(author);
+    profile.setUser(author);
     Region regionA = getRegionA();
     long travelOnId = 1L;
     TravelOn travelOn = getTravelOn(travelOnId, regionA);
@@ -656,7 +656,7 @@ class OpinionServiceTest {
 
     User author = User.builder().id(1L).accountId("accountId").password("password").nickname("nickname").userRole(UserRole.TRAVELER).build();
     UserProfile profile = UserProfile.builder().id(1L).knowHow(100).build();
-    author.registerUserProfile(profile);
+    author.setUserProfile(profile);
 
     travelOn = TravelOn.builder()
         .id(id)

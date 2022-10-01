@@ -8,7 +8,6 @@ import com.heylocal.traveler.domain.travelon.opinion.Opinion;
 import com.heylocal.traveler.domain.user.User;
 import com.heylocal.traveler.domain.user.UserRole;
 import com.heylocal.traveler.dto.LoginUser;
-import com.heylocal.traveler.dto.PageDto;
 import com.heylocal.traveler.dto.PageDto.PageRequest;
 import com.heylocal.traveler.dto.TravelTypeGroupDto;
 import com.heylocal.traveler.exception.ForbiddenException;
@@ -449,7 +448,7 @@ class TravelOnServiceTest {
     Region region = Region.builder().id(1L).state("경기도").city("성남시").build();
     User author = User.builder().id(1L).accountId("accountId").password("password").nickname("nickname").userRole(UserRole.TRAVELER).build();
     UserProfile profile = UserProfile.builder().id(1L).knowHow(100).build();
-    author.registerUserProfile(profile);
+    author.setUserProfile(profile);
 
     travelOn = TravelOn.builder()
         .id(id)

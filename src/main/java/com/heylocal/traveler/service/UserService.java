@@ -27,7 +27,6 @@ public class UserService {
   public UserProfileResponse inquiryUserProfile(long userId) throws NotFoundException {
     User targetUser;
     UserProfile targetProfile;
-    int acceptOpinionCount = 0;
 
     //사용자, 프로필 조회
     targetUser = userRepository.findById(userId).orElseThrow(
