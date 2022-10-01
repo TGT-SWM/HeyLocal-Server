@@ -35,13 +35,6 @@ public class UserService {
     );
     targetProfile = targetUser.getUserProfile();
 
-    int acceptedOpinionCount = countAcceptedOpinion(targetUser);
-
-    return UserMapper.INSTANCE.toUserProfileResponseDto(targetProfile, acceptedOpinionCount);
-  }
-
-  private int countAcceptedOpinion(User user) {
-    int count = user.getOpinionList().stream().mapToInt(Opinion::getCountAccept).sum();
-    return count;
+    return UserMapper.INSTANCE.toUserProfileResponseDto(targetProfile);
   }
 }

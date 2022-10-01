@@ -384,5 +384,4 @@ public class OpinionService {
   private void updatePlace(Place savedPlace, PlaceDto.PlaceRequest newPlaceInfo) {
     PlaceMapper.INSTANCE.updatePlace(newPlaceInfo, savedPlace);
   }
-
 }
