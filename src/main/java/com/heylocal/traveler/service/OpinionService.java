@@ -125,7 +125,7 @@ public class OpinionService {
 
     //List<Opinion> -> List<OpinionResponse>
     for (Opinion opinion : opinionList) {
-      OpinionWithPlaceResponse responseDto = OpinionMapper.INSTANCE.toWithPlaceResponseDto(opinion);
+      OpinionWithPlaceResponse responseDto = OpinionMapper.INSTANCE.toWithPlaceResponseDto(opinion, s3PresignUrlProvider);
       List<OpinionImageContent> sortedImgEntityList = sortImgEntityByKeyIndex(opinion.getOpinionImageContentList());
       sortedImgEntityList.stream().forEach( (imgEntity) -> bindingDownloadUrls(responseDto, imgEntity) );
       result.add(responseDto);
@@ -228,7 +228,7 @@ public class OpinionService {
 
     //List<Opinion> -> List<OpinionResponse>
     for (Opinion opinion : opinionList) {
-      OpinionResponse responseDto = OpinionMapper.INSTANCE.toResponseDto(opinion);
+      OpinionResponse responseDto = OpinionMapper.INSTANCE.toResponseDto(opinion, s3PresignUrlProvider);
       List<OpinionImageContent> sortedImgEntityList = sortImgEntityByKeyIndex(opinion.getOpinionImageContentList());
       sortedImgEntityList.stream().forEach( (imgEntity) -> bindingDownloadUrls(responseDto, imgEntity) );
       result.add(responseDto);

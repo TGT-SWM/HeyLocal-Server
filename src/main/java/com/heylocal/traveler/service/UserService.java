@@ -40,14 +40,7 @@ public class UserService {
     targetProfile = targetUser.getUserProfile();
 
     //프로필 응답 DTO 생성
-    responseDto = UserMapper.INSTANCE.toUserProfileResponseDto(targetProfile);
-
-    //프로필 이미지 다운로드 Presigned Url 바인딩
-    String imgKey = targetProfile.getImageObjectKeyName();
-    if (imgKey != null) {
-      String downloadUrl = s3PresignUrlProvider.getPresignedUrl(imgKey, HttpMethod.GET);
-      responseDto.setProfileImgDownloadUrl(downloadUrl);
-    }
+    responseDto = UserMapper.INSTANCE.toUserProfileResponseDto(targetProfile, s3PresignUrlProvider);
 
     return responseDto;
   }

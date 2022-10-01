@@ -97,7 +97,7 @@ public class TravelOnDto {
 		private String description;
 		private int views;
 		private RegionResponse region;
-		private UserResponse author;
+		private UserProfileResponse author;
 		private LocalDate travelStartDate;
 		private LocalDate travelEndDate;
 		private TransportationType transportationType;
