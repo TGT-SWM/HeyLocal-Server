@@ -33,6 +33,7 @@ public class UserDto {
 		private int knowHow;
 		private long ranking;
 		private RegionResponse activityRegion;
+		private int acceptedOpinionCount;
 	}
 
 	@Getter

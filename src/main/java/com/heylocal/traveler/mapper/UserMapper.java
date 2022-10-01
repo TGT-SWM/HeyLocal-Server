@@ -15,17 +15,20 @@ public interface UserMapper {
   UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);
 
   @Mapping(target = "nickname", source = "userProfile.user.nickname")
-  UserProfileResponse toUserProfileResponseDto(UserProfile userProfile, long ranking);
+  @Mapping(target = "ranking", ignore = true)
+  UserProfileResponse toUserProfileResponseDto(UserProfile userProfile, int acceptedOpinionCount);
 
   @Mapping(target = "nickname", source = "userProfile.user.nickname")
   @Mapping(target = "ranking", constant = "0L")
+  @Mapping(target = "acceptedOpinionCount", ignore = true)
   UserProfileResponse toUserProfileResponseDto(UserProfile userProfile);
 
   @Mapping(target = "introduce", source = "user.userProfile.introduce")
   @Mapping(target = "imageUrl", source = "user.userProfile.imageUrl")
   @Mapping(target = "knowHow", source = "user.userProfile.knowHow")
-  @Mapping(target = "ranking", constant = "0L")
   @Mapping(target = "activityRegion", source = "user.userProfile.activityRegion")
+  @Mapping(target = "ranking", ignore = true)
+  @Mapping(target = "acceptedOpinionCount", ignore = true)
   UserProfileResponse toUserProfileResponseDto(User user);
 
   UserResponse toUserResponseDto(User user);

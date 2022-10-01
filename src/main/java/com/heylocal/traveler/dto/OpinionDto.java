@@ -110,6 +110,7 @@ public class OpinionDto {
 		private List<String> drinkAndDessertImgDownloadImgUrl = new ArrayList<>();
 		@Builder.Default
 		private List<String> photoSpotImgDownloadImgUrl = new ArrayList<>();
+		private int countAccept;
 
 		//공통 질문
 		private EvaluationDegree facilityCleanliness;

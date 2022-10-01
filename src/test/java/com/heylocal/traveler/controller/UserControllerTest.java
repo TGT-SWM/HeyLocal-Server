@@ -60,4 +60,6 @@ class UserControllerTest {
 				() -> Assertions.assertThat(failResp).isEmpty()
 		);
 	}
+
+	// TODO - getUserProfile
 }
