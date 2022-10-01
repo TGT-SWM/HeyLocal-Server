@@ -82,7 +82,7 @@ public class SignupService {
     userProfile = UserProfile.builder()
             .user(user)
             .knowHow(0)
-            .imageUrl(null)
+            .imageObjectKeyName(null)
             .build();
     userProfileRepository.saveUserProfile(userProfile);
     user.setUserProfile(userProfile);

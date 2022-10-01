@@ -18,8 +18,11 @@ public class S3ObjectNameFormatter {
   private static final String OPINION_ID_PARAM = "{답변Id}";
   private static final String IMG_TYPE_PARAM = "{이미지종류}";
   private static final String FILE_NAME_PARAM = "{파일이름}";
+  private static final String USER_ID_PARAM = "{유저Id}";
   private static final String OPINION_IMG_FORMAT
       = "opinions/" + TRAVEL_ON_ID_PARAM + "/" + OPINION_ID_PARAM + "/" + IMG_TYPE_PARAM + "/" + FILE_NAME_PARAM;
+  private static final String PROFILE_IMG_FORMAT
+      = "profiles/" + USER_ID_PARAM + "/" + FILE_NAME_PARAM;
 
   /**
    * 답변 이미지를 S3에 저장할 때의 이름을 패턴에 맞춰 생성
@@ -58,9 +61,37 @@ public class S3ObjectNameFormatter {
   }
 
   /**
+   * 사용자 프로필 이미지를 S3에 저장할 때의 이름을 패턴에 맞춰 생성
+   * @param userId 사용자 Id
+   * @return
+   */
+  public String getObjectNameOfProfileImg(long userId) {
+    String objectName = PROFILE_IMG_FORMAT;
+
+    objectName = objectName.replace(USER_ID_PARAM, String.valueOf(userId));
+    objectName = objectName.replace(FILE_NAME_PARAM, "profile.png");
+
+    return objectName;
+  }
+
+  /**
+   * 사용자 프로필 이미지 Object 이름으로 사용자 Id 를 구하는 메서드
+   * @param objectName 파싱할 오브젝트 Key
+   * @return
+   */
+  public Map<ObjectNameProperty, String> parseObjectNameOfProfileImg(String objectName) {
+    Map<ObjectNameProperty, String> result = new ConcurrentHashMap<>();
+    String[] splitObjectName = objectName.split("/");
+
+    result.put(ObjectNameProperty.USER_ID, splitObjectName[1]);
+
+    return result;
+  }
+
+  /**
    * Object 이름을 구성할 때 사용되는 요소
    */
   public enum ObjectNameProperty {
-    TRAVEL_ON_ID, OPINION_ID, IMG_TYPE, OBJECT_INDEX
+    TRAVEL_ON_ID, OPINION_ID, IMG_TYPE, OBJECT_INDEX, USER_ID
   }
 }

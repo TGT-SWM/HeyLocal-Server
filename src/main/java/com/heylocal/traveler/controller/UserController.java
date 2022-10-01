@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+import static com.heylocal.traveler.dto.UserDto.*;
+
 @Tag(name = "Users")
 @RestController
 @RequiredArgsConstructor
@@ -29,8 +31,12 @@ public class UserController implements UsersApi {
 	 * @return
 	 */
 	@Override
-	public UserDto.UserProfileResponse getUserProfile(long userId) throws NotFoundException {
-		return userService.inquiryUserProfile(userId);
+	public UserProfileResponse getUserProfile(long userId) throws NotFoundException {
+		UserProfileResponse response;
+
+		response = userService.inquiryUserProfile(userId); //ProfileResponse DTO 구하기
+
+		return response;
 	}
 
 	/**
@@ -39,7 +45,7 @@ public class UserController implements UsersApi {
 	 * @return
 	 */
 	@Override
-	public ResponseEntity<Void> updateUserProfile(long userId, UserDto.UserProfileRequest request) {
+	public ResponseEntity<Void> updateUserProfile(long userId, UserProfileRequest request) {
 		return null;
 	}
 
@@ -68,7 +74,7 @@ public class UserController implements UsersApi {
 	 * @return
 	 */
 	@Override
-	public List<UserDto.UserProfileResponse> getRanking() {
+	public List<UserProfileResponse> getRanking() {
 		return null;
 	}
 }

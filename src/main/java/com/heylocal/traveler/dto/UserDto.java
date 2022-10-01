@@ -27,9 +27,10 @@ public class UserDto {
 	@Builder
 	@Schema(description = "사용자 프로필 응답 DTO")
 	public static class UserProfileResponse {
+		private long userId;
 		private String introduce;
-		private String imageUrl;
 		private String nickname;
+		private String profileImgDownloadUrl;
 		private int knowHow;
 		private long ranking;
 		private RegionResponse activityRegion;
