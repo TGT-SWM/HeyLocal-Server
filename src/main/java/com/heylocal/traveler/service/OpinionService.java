@@ -33,7 +33,7 @@ import java.util.stream.Collectors;
 
 import static com.heylocal.traveler.domain.travelon.opinion.OpinionImageContent.ImageContentType;
 import static com.heylocal.traveler.dto.OpinionDto.*;
-import static com.heylocal.traveler.dto.PageDto.*;
+import static com.heylocal.traveler.dto.PageDto.PageRequest;
 import static com.heylocal.traveler.util.aws.S3ObjectNameFormatter.ObjectNameProperty;
 
 @Slf4j

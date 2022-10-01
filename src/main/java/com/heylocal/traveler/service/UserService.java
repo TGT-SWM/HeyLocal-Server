@@ -1,7 +1,6 @@
 package com.heylocal.traveler.service;
 
 import com.heylocal.traveler.domain.profile.UserProfile;
-import com.heylocal.traveler.domain.travelon.opinion.Opinion;
 import com.heylocal.traveler.domain.user.User;
 import com.heylocal.traveler.exception.NotFoundException;
 import com.heylocal.traveler.exception.code.NotFoundCode;

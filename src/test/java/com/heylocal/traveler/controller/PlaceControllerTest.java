@@ -12,7 +12,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.validation.BindingResult;
 
-import static com.heylocal.traveler.dto.PageDto.*;
+import static com.heylocal.traveler.dto.PageDto.PageRequest;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.willReturn;
 import static org.mockito.BDDMockito.willThrow;

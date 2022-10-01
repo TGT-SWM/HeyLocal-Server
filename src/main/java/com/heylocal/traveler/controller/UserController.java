@@ -4,7 +4,6 @@ import com.heylocal.traveler.controller.api.UsersApi;
 import com.heylocal.traveler.dto.OpinionDto;
 import com.heylocal.traveler.dto.PageDto;
 import com.heylocal.traveler.dto.PageDto.PageRequest;
-import com.heylocal.traveler.dto.TravelOnDto;
 import com.heylocal.traveler.dto.TravelOnDto.TravelOnSimpleResponse;
 import com.heylocal.traveler.dto.UserDto;
 import com.heylocal.traveler.exception.NotFoundException;

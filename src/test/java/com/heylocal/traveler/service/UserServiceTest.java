@@ -3,7 +3,6 @@ package com.heylocal.traveler.service;
 import com.heylocal.traveler.domain.profile.UserProfile;
 import com.heylocal.traveler.domain.user.User;
 import com.heylocal.traveler.domain.user.UserRole;
-import com.heylocal.traveler.dto.UserDto;
 import com.heylocal.traveler.exception.NotFoundException;
 import com.heylocal.traveler.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,7 +13,7 @@ import org.mockito.MockitoAnnotations;
 
 import java.util.Optional;
 
-import static com.heylocal.traveler.dto.UserDto.*;
+import static com.heylocal.traveler.dto.UserDto.UserProfileResponse;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.willReturn;
 
