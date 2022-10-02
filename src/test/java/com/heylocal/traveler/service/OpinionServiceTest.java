@@ -19,6 +19,7 @@ import com.heylocal.traveler.exception.BadRequestException;
 import com.heylocal.traveler.exception.ForbiddenException;
 import com.heylocal.traveler.exception.NotFoundException;
 import com.heylocal.traveler.mapper.PlaceMapper;
+import com.heylocal.traveler.mapper.context.S3UrlUserContext;
 import com.heylocal.traveler.repository.OpinionRepository;
 import com.heylocal.traveler.repository.PlaceRepository;
 import com.heylocal.traveler.repository.TravelOnRepository;
@@ -64,12 +65,14 @@ class OpinionServiceTest {
   private S3ObjectNameFormatter s3ObjectNameFormatter;
   @Mock
   private S3PresignUrlProvider s3PresignUrlProvider;
+  @Mock
+  private S3UrlUserContext s3UserUrlContext;
   private OpinionService opinionService;
 
   @BeforeEach
   void setUp() {
     MockitoAnnotations.openMocks(this);
-    opinionService = new OpinionService(regionService, userRepository, travelOnRepository, placeRepository, opinionRepository, s3ObjectNameFormatter, s3PresignUrlProvider);
+    opinionService = new OpinionService(regionService, userRepository, travelOnRepository, placeRepository, opinionRepository, s3ObjectNameFormatter, s3PresignUrlProvider, s3UserUrlContext);
   }
 
   @Test

@@ -4,6 +4,7 @@ import com.heylocal.traveler.domain.profile.UserProfile;
 import com.heylocal.traveler.domain.user.User;
 import com.heylocal.traveler.domain.user.UserRole;
 import com.heylocal.traveler.exception.NotFoundException;
+import com.heylocal.traveler.mapper.context.S3UrlUserContext;
 import com.heylocal.traveler.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -20,12 +21,14 @@ import static org.mockito.BDDMockito.willReturn;
 class UserServiceTest {
   @Mock
   private UserRepository userRepository;
+  @Mock
+  private S3UrlUserContext s3UserUrlContext;
   private UserService userService;
 
   @BeforeEach
   void setUp() {
     MockitoAnnotations.openMocks(this);
-    userService = new UserService(userRepository);
+    userService = new UserService(userRepository, s3UserUrlContext);
   }
 
   @Test

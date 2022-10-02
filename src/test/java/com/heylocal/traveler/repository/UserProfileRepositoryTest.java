@@ -38,7 +38,6 @@ class UserProfileRepositoryTest {
     UserProfile userProfile = UserProfile.builder()
             .user(user)
             .knowHow(knowHow)
-            .imageUrl(null)
             .build();
 
     em.persist(user);

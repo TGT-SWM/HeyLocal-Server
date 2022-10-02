@@ -12,6 +12,7 @@ import com.heylocal.traveler.dto.PageDto.PageRequest;
 import com.heylocal.traveler.dto.TravelTypeGroupDto;
 import com.heylocal.traveler.exception.ForbiddenException;
 import com.heylocal.traveler.exception.NotFoundException;
+import com.heylocal.traveler.mapper.context.S3UrlUserContext;
 import com.heylocal.traveler.repository.RegionRepository;
 import com.heylocal.traveler.repository.TravelOnRepository;
 import com.heylocal.traveler.repository.UserRepository;
@@ -38,12 +39,14 @@ class TravelOnServiceTest {
   private RegionRepository regionRepository;
   @Mock
   private UserRepository userRepository;
+  @Mock
+  private S3UrlUserContext s3UserUrlContext;
   private TravelOnService travelOnService;
 
   @BeforeEach
   void setUp() {
     MockitoAnnotations.openMocks(this);
-    travelOnService = new TravelOnService(travelOnRepository, regionRepository, userRepository);
+    travelOnService = new TravelOnService(travelOnRepository, regionRepository, userRepository, s3UserUrlContext);
   }
 
   @Test
