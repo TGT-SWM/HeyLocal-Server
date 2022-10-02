@@ -11,5 +11,4 @@
 | 최정인 | 팀원  |FE|
 
 ## TODO
-- Test Code 오류 수정
 - UserProfile 수정 DTO 로 자기소개글을 받을 때, 글자수 제한 필요
