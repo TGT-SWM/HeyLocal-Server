@@ -18,13 +18,11 @@ import com.heylocal.traveler.util.error.BindingErrorMessageProvider;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
 
 import static com.heylocal.traveler.dto.UserDto.UserProfileRequest;
@@ -79,8 +77,8 @@ public class UserController implements UsersApi {
 		//프로필 업데이트
 		userService.updateProfile(userId, request);
 
-		//프로필 이미지 업로드 Presigned URL 반환
-		return userService.getImgPutPresignedUrl(userId);
+		//프로필 이미지 업로드·제거 Presigned URL 반환
+		return userService.getImgUpdatePresignedUrl(userId);
 	}
 
 	/**

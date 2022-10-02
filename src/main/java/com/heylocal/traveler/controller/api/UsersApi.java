@@ -38,9 +38,10 @@ public interface UsersApi {
 	) throws NotFoundException;
 
 	@Operation(summary = "사용자 프로필 수정", description = "사용자의 프로필을 수정합니다.", tags = {"Users"})
-	@ApiResponses(
+	@ApiResponses({
+			@ApiResponse(responseCode = "200", description = "수정 성공 시, 프로필 이미지를 등록·수정·제거하는 URL 응답"),
 			@ApiResponse(responseCode = "403", description = "권한이 없는 경우", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessageResponse.class))})
-	)
+	})
 	@PutMapping("/{userId}/profile")
 	Map<String, String> updateUserProfile(
 			@Parameter(in = ParameterIn.PATH, description = "사용자 ID", required = true) @PathVariable long userId,

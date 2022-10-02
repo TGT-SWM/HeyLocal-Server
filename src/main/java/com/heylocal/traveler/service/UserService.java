@@ -5,10 +5,7 @@ import com.heylocal.traveler.domain.Region;
 import com.heylocal.traveler.domain.profile.UserProfile;
 import com.heylocal.traveler.domain.user.User;
 import com.heylocal.traveler.dto.LoginUser;
-import com.heylocal.traveler.dto.UserDto;
-import com.heylocal.traveler.exception.ForbiddenException;
 import com.heylocal.traveler.exception.NotFoundException;
-import com.heylocal.traveler.exception.code.ForbiddenCode;
 import com.heylocal.traveler.exception.code.NotFoundCode;
 import com.heylocal.traveler.mapper.UserMapper;
 import com.heylocal.traveler.mapper.context.S3UrlUserContext;
@@ -99,16 +96,37 @@ public class UserService {
   }
 
   /**
-   * 프로필 이미지를 Put 하는 Presigned URL 을 반환하는 메서드
+   * 프로필 이미지를 업데이트하는 Presigned URL 을 반환하는 메서드
    * @param userId 사용자 Id
    * @return
    */
-  public Map<String, String> getImgPutPresignedUrl(long userId) {
-    String objectName = s3ObjectNameFormatter.getObjectNameOfProfileImg(userId);
-    String presignedUrl = s3PresignUrlProvider.getPresignedUrl(objectName, HttpMethod.PUT);
+  public Map<String, String> getImgUpdatePresignedUrl(long userId) throws NotFoundException {
+    String savedObjectName;
+    String objectName;
+    String putUrl;
+    String deleteUrl;
     Map<String, String> result = new ConcurrentHashMap<>();
 
-    result.put("imgUploadUrl", presignedUrl);
+    //기존에 저장된 Object Key(Name) 조회
+    savedObjectName = userRepository.findById(userId).orElseThrow(
+        () -> new NotFoundException(NotFoundCode.NO_INFO, "존재하지 않는 사용자 ID입니다.")
+    ).getUserProfile().getImageObjectKeyName();
+    //새 Object Key(Name) 생성
+    objectName = s3ObjectNameFormatter.getObjectNameOfProfileImg(userId);
+    //Put Presigned URL 생성
+    putUrl = s3PresignUrlProvider.getPresignedUrl(objectName, HttpMethod.PUT);
+    //Delete Presigned URL 생성
+    deleteUrl = s3PresignUrlProvider.getPresignedUrl(objectName, HttpMethod.DELETE);
+
+    if (savedObjectName == null) {       //저장된 Object Key(Name) 이 없다면
+      result.put("newPutUrl", putUrl);
+      result.put("updatePutUrl", "");
+      result.put("deleteUrl", "");
+    } else {                             //저장된 Object Key(Name) 이 있다면
+      result.put("newPutUrl", "");
+      result.put("updatePutUrl", putUrl);
+      result.put("deleteUrl", deleteUrl);
+    }
 
     return result;
   }
