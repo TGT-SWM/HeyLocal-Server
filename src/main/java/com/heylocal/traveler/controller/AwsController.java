@@ -4,6 +4,7 @@ import com.heylocal.traveler.controller.api.AwsApi;
 import com.heylocal.traveler.dto.aws.S3ObjectDto;
 import com.heylocal.traveler.exception.NotFoundException;
 import com.heylocal.traveler.service.OpinionImgContentService;
+import com.heylocal.traveler.service.UserService;
 import com.heylocal.traveler.util.aws.SnsMessageParser;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class AwsController implements AwsApi {
   private final OpinionImgContentService opinionImgContentService;
+  private final UserService userService;
   private final SnsMessageParser snsMessageParser;
 
   /**
@@ -63,9 +65,9 @@ public class AwsController implements AwsApi {
   @Override
   public void saveProfileImgMessage(String request) throws Exception {
     //String -> AwsSnsRequest 객체
-//    S3ObjectDto s3ObjectDto = mapToProfileImgS3ObjectDto(request);
-    log.info("PUT: {}", request);
+    S3ObjectDto s3ObjectDto = mapToProfileImgS3ObjectDto(request);
 
+    userService.saveProfileObjectKey(s3ObjectDto);
   }
 
   /**
@@ -79,8 +81,9 @@ public class AwsController implements AwsApi {
   @Override
   public void deleteProfileImgMessage(String request) throws Exception {
     //String -> AwsSnsRequest 객체
-//    S3ObjectDto s3ObjectDto = mapToProfileImgS3ObjectDto(request);
-    log.info("DELETE: {}", request);
+    S3ObjectDto s3ObjectDto = mapToProfileImgS3ObjectDto(request);
+
+    userService.removeProfileObjectKey(s3ObjectDto);
   }
 
   private S3ObjectDto mapToOpinionImgS3ObjectDto(String request) throws Exception {

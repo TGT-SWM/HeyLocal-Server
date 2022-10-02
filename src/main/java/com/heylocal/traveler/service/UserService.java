@@ -5,6 +5,7 @@ import com.heylocal.traveler.domain.Region;
 import com.heylocal.traveler.domain.profile.UserProfile;
 import com.heylocal.traveler.domain.user.User;
 import com.heylocal.traveler.dto.LoginUser;
+import com.heylocal.traveler.dto.aws.S3ObjectDto;
 import com.heylocal.traveler.exception.NotFoundException;
 import com.heylocal.traveler.exception.code.NotFoundCode;
 import com.heylocal.traveler.mapper.UserMapper;
@@ -129,6 +130,59 @@ public class UserService {
     }
 
     return result;
+  }
+
+  /**
+   * 해당 Key를 UserProfile 엔티티에 저장하는 메서드
+   * @param s3ObjectDto key 정보
+   */
+  @Transactional
+  public void saveProfileObjectKey(S3ObjectDto s3ObjectDto) throws NotFoundException {
+    //사용자 프로필 엔티티 조회
+    UserProfile targetProfile = inquiryUserProfileByObjectKey(s3ObjectDto);
+
+    //해당 프로필 엔티티에 Object Key(Name) 설정
+    targetProfile.setImageObjectKeyName(s3ObjectDto.getKey());
+  }
+
+  /**
+   * 해당 Key를 UserProfile 엔티티에서 제거하는 메서드
+   * @param s3ObjectDto key 정보
+   */
+  @Transactional
+  public void removeProfileObjectKey(S3ObjectDto s3ObjectDto) throws NotFoundException {
+    //사용자 프로필 엔티티 조회
+    UserProfile targetProfile = inquiryUserProfileByObjectKey(s3ObjectDto);
+
+    //해당 프로필 엔티티에서 Object Key(Name) 제거
+    targetProfile.setImageObjectKeyName(null);
+  }
+
+  /**
+   * Object Key(Name)으로 사용자 프로필 엔티티를 조회하는 메서드
+   * @param s3ObjectDto
+   * @return
+   * @throws NotFoundException
+   */
+  private UserProfile inquiryUserProfileByObjectKey(S3ObjectDto s3ObjectDto) throws NotFoundException {
+    String key;
+    String stringUserId;
+    long userId;
+    User targetUser;
+    UserProfile targetProfile;
+
+    //해당 사용자의 Id 조회
+    key = s3ObjectDto.getKey();
+    stringUserId =
+        s3ObjectNameFormatter.parseObjectNameOfProfileImg(key).get(S3ObjectNameFormatter.ObjectNameProperty.USER_ID);
+    userId = Long.parseLong(stringUserId);
+
+    //해당 사용자의 프로필 엔티티 조회
+    targetUser = userRepository.findById(userId).orElseThrow(
+        () -> new NotFoundException(NotFoundCode.NO_INFO, "존재하지 않는 사용자 ID 입니다.")
+    );
+    targetProfile = targetUser.getUserProfile();
+    return targetProfile;
   }
 
   /**
