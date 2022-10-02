@@ -11,10 +11,10 @@ import com.heylocal.traveler.exception.NotFoundException;
 import com.heylocal.traveler.exception.code.ForbiddenCode;
 import com.heylocal.traveler.exception.code.NotFoundCode;
 import com.heylocal.traveler.mapper.TravelOnMapper;
+import com.heylocal.traveler.mapper.context.S3UrlUserContext;
 import com.heylocal.traveler.repository.RegionRepository;
 import com.heylocal.traveler.repository.TravelOnRepository;
 import com.heylocal.traveler.repository.UserRepository;
-import com.heylocal.traveler.util.aws.S3PresignUrlProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -33,7 +33,7 @@ public class TravelOnService {
   private final TravelOnRepository travelOnRepository;
   private final RegionRepository regionRepository;
   private final UserRepository userRepository;
-  private final S3PresignUrlProvider s3PresignUrlProvider;
+  private final S3UrlUserContext s3UserUrlContext;
 
   /**
    * 새로운 여행On을 등록하는 메서드
@@ -76,7 +76,7 @@ public class TravelOnService {
 
     //List<TravelOn> -> List<TravelOnSimpleResponse>
     response = travelOnList.stream()
-        .map((travelOn) -> TravelOnMapper.INSTANCE.toTravelOnSimpleResponseDto(travelOn, s3PresignUrlProvider))
+        .map((travelOn) -> TravelOnMapper.INSTANCE.toTravelOnSimpleResponseDto(travelOn, s3UserUrlContext))
         .collect(Collectors.toList());
 
     return response;
@@ -99,7 +99,7 @@ public class TravelOnService {
 
     // List<TravelOn> -> List<TravelOnSimpleResponse>
     return travelOns.stream()
-            .map((travelOn) -> TravelOnMapper.INSTANCE.toTravelOnSimpleResponseDto(travelOn, s3PresignUrlProvider))
+            .map((travelOn) -> TravelOnMapper.INSTANCE.toTravelOnSimpleResponseDto(travelOn, s3UserUrlContext))
             .collect(Collectors.toList());
   }
 
@@ -123,7 +123,7 @@ public class TravelOnService {
     travelOn.incrViewsByOne();
 
     //DTO로 변환
-    response = TravelOnMapper.INSTANCE.toTravelOnResponseDto(travelOn, s3PresignUrlProvider);
+    response = TravelOnMapper.INSTANCE.toTravelOnResponseDto(travelOn, s3UserUrlContext);
 
     return response;
   }

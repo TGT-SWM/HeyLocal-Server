@@ -16,6 +16,7 @@ import com.heylocal.traveler.exception.code.ForbiddenCode;
 import com.heylocal.traveler.exception.code.NotFoundCode;
 import com.heylocal.traveler.mapper.OpinionMapper;
 import com.heylocal.traveler.mapper.PlaceMapper;
+import com.heylocal.traveler.mapper.context.S3UrlUserContext;
 import com.heylocal.traveler.repository.OpinionRepository;
 import com.heylocal.traveler.repository.PlaceRepository;
 import com.heylocal.traveler.repository.TravelOnRepository;
@@ -48,6 +49,7 @@ public class OpinionService {
   private final OpinionRepository opinionRepository;
   private final S3ObjectNameFormatter s3ObjectNameFormatter;
   private final S3PresignUrlProvider s3PresignUrlProvider;
+  private final S3UrlUserContext s3UserUrlContext;
 
   @Value("${cloud.aws.s3.bucket}")
   private String bucketName;
@@ -125,7 +127,7 @@ public class OpinionService {
 
     //List<Opinion> -> List<OpinionResponse>
     for (Opinion opinion : opinionList) {
-      OpinionWithPlaceResponse responseDto = OpinionMapper.INSTANCE.toWithPlaceResponseDto(opinion, s3PresignUrlProvider);
+      OpinionWithPlaceResponse responseDto = OpinionMapper.INSTANCE.toWithPlaceResponseDto(opinion, s3UserUrlContext);
       List<OpinionImageContent> sortedImgEntityList = sortImgEntityByKeyIndex(opinion.getOpinionImageContentList());
       sortedImgEntityList.stream().forEach( (imgEntity) -> bindingDownloadUrls(responseDto, imgEntity) );
       result.add(responseDto);
@@ -228,7 +230,7 @@ public class OpinionService {
 
     //List<Opinion> -> List<OpinionResponse>
     for (Opinion opinion : opinionList) {
-      OpinionResponse responseDto = OpinionMapper.INSTANCE.toResponseDto(opinion, s3PresignUrlProvider);
+      OpinionResponse responseDto = OpinionMapper.INSTANCE.toResponseDto(opinion, s3UserUrlContext);
       List<OpinionImageContent> sortedImgEntityList = sortImgEntityByKeyIndex(opinion.getOpinionImageContentList());
       sortedImgEntityList.stream().forEach( (imgEntity) -> bindingDownloadUrls(responseDto, imgEntity) );
       result.add(responseDto);

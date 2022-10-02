@@ -7,7 +7,7 @@ import com.heylocal.traveler.domain.travelon.list.DrinkType;
 import com.heylocal.traveler.domain.travelon.list.FoodType;
 import com.heylocal.traveler.domain.travelon.list.MemberType;
 import com.heylocal.traveler.domain.user.User;
-import com.heylocal.traveler.util.aws.S3PresignUrlProvider;
+import com.heylocal.traveler.mapper.context.S3UrlUserContext;
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
 
@@ -37,11 +37,11 @@ public interface TravelOnMapper {
 
   @Mapping(target = "createdDateTime", source = "createdDate")
   @Mapping(target = "modifiedDate", source = "modifiedDate")
-  TravelOnResponse toTravelOnResponseDto(TravelOn travelOn, @Context S3PresignUrlProvider s3PresignUrlProvider);
+  TravelOnResponse toTravelOnResponseDto(TravelOn travelOn, @Context S3UrlUserContext s3UserUrlContext);
 
   @Mapping(target = "createdDateTime", source = "createdDate")
   @Mapping(target = "opinionQuantity", expression = "java(travelOn.getOpinionList().size())")
-  TravelOnSimpleResponse toTravelOnSimpleResponseDto(TravelOn travelOn, @Context S3PresignUrlProvider s3PresignUrlProvider);
+  TravelOnSimpleResponse toTravelOnSimpleResponseDto(TravelOn travelOn, @Context S3UrlUserContext s3UserUrlContext);
 
   @Mapping(target = "id", ignore = true)
   @Mapping(target = "region", ignore = true)
