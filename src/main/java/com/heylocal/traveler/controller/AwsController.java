@@ -63,7 +63,7 @@ public class AwsController implements AwsApi {
   @Override
   public void saveProfileImgMessage(String request) throws Exception {
     //String -> AwsSnsRequest 객체
-    S3ObjectDto s3ObjectDto = mapToProfileImgS3ObjectDto(request);
+//    S3ObjectDto s3ObjectDto = mapToProfileImgS3ObjectDto(request);
     log.info("PUT: {}", request);
 
   }
@@ -79,7 +79,7 @@ public class AwsController implements AwsApi {
   @Override
   public void deleteProfileImgMessage(String request) throws Exception {
     //String -> AwsSnsRequest 객체
-    S3ObjectDto s3ObjectDto = mapToProfileImgS3ObjectDto(request);
+//    S3ObjectDto s3ObjectDto = mapToProfileImgS3ObjectDto(request);
     log.info("DELETE: {}", request);
   }
 
