@@ -3,14 +3,11 @@ package com.heylocal.traveler.mapper;
 import com.heylocal.traveler.domain.Region;
 import com.heylocal.traveler.domain.place.Place;
 import com.heylocal.traveler.domain.plan.list.PlaceItemType;
-import com.heylocal.traveler.dto.PlaceDto;
 import com.heylocal.traveler.dto.PlaceItemDto;
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
 
 import static com.heylocal.traveler.dto.PlaceDto.*;
-import static com.heylocal.traveler.dto.PlaceDto.PlaceRequest;
-import static com.heylocal.traveler.dto.PlaceDto.PlaceResponse;
 
 @Mapper(uses = {RegionMapper.class}, builder = @Builder(disableBuilder = true), imports = {PlaceItemType.class})
 public interface PlaceMapper {

@@ -29,7 +29,7 @@ public class UserProfile extends BaseTimeEntity {
 
   private String introduce;
 
-  private String imageUrl;
+  private String imageObjectKeyName;
 
   @ManyToOne
   private Region activityRegion;

@@ -3,6 +3,7 @@ package com.heylocal.traveler.mapper;
 import com.heylocal.traveler.domain.profile.UserProfile;
 import com.heylocal.traveler.domain.travelon.opinion.Opinion;
 import com.heylocal.traveler.domain.user.User;
+import com.heylocal.traveler.mapper.context.S3UrlUserContext;
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
 
@@ -14,21 +15,26 @@ public interface UserMapper {
   UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);
 
   @Mapping(target = "nickname", source = "userProfile.user.nickname")
+  @Mapping(target = "userId", source = "userProfile.user.id")
   @Mapping(target = "acceptedOpinionCount", ignore = true)
-  UserProfileResponse toUserProfileResponseDto(UserProfile userProfile, long ranking);
+  @Mapping(target = "profileImgDownloadUrl", ignore = true)
+  UserProfileResponse toUserProfileResponseDto(UserProfile userProfile, long ranking, @Context S3UrlUserContext s3UserUrlContext);
 
   @Mapping(target = "nickname", source = "userProfile.user.nickname")
+  @Mapping(target = "userId", source = "userProfile.user.id")
   @Mapping(target = "ranking", ignore = true)
   @Mapping(target = "acceptedOpinionCount", ignore = true)
-  UserProfileResponse toUserProfileResponseDto(UserProfile userProfile);
+  @Mapping(target = "profileImgDownloadUrl", ignore = true)
+  UserProfileResponse toUserProfileResponseDto(UserProfile userProfile, @Context S3UrlUserContext s3UserUrlContext);
 
   @Mapping(target = "introduce", source = "user.userProfile.introduce")
-  @Mapping(target = "imageUrl", source = "user.userProfile.imageUrl")
   @Mapping(target = "knowHow", source = "user.userProfile.knowHow")
   @Mapping(target = "activityRegion", source = "user.userProfile.activityRegion")
+  @Mapping(target = "userId", source = "user.id")
   @Mapping(target = "ranking", ignore = true)
   @Mapping(target = "acceptedOpinionCount", ignore = true)
-  UserProfileResponse toUserProfileResponseDto(User user);
+  @Mapping(target = "profileImgDownloadUrl", ignore = true)
+  UserProfileResponse toUserProfileResponseDto(User user, @Context S3UrlUserContext s3UserUrlContext);
 
   UserResponse toUserResponseDto(User user);
 

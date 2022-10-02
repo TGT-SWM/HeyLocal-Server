@@ -5,13 +5,13 @@ import com.heylocal.traveler.domain.plan.Plan;
 import com.heylocal.traveler.domain.travelon.TravelOn;
 import com.heylocal.traveler.domain.user.User;
 import com.heylocal.traveler.dto.LoginUser;
-import com.heylocal.traveler.dto.PageDto;
 import com.heylocal.traveler.dto.PageDto.PageRequest;
 import com.heylocal.traveler.exception.ForbiddenException;
 import com.heylocal.traveler.exception.NotFoundException;
 import com.heylocal.traveler.exception.code.ForbiddenCode;
 import com.heylocal.traveler.exception.code.NotFoundCode;
 import com.heylocal.traveler.mapper.TravelOnMapper;
+import com.heylocal.traveler.mapper.context.S3UrlUserContext;
 import com.heylocal.traveler.repository.RegionRepository;
 import com.heylocal.traveler.repository.TravelOnRepository;
 import com.heylocal.traveler.repository.UserRepository;
@@ -33,6 +33,7 @@ public class TravelOnService {
   private final TravelOnRepository travelOnRepository;
   private final RegionRepository regionRepository;
   private final UserRepository userRepository;
+  private final S3UrlUserContext s3UserUrlContext;
 
   /**
    * 새로운 여행On을 등록하는 메서드
@@ -75,7 +76,7 @@ public class TravelOnService {
 
     //List<TravelOn> -> List<TravelOnSimpleResponse>
     response = travelOnList.stream()
-        .map(TravelOnMapper.INSTANCE::toTravelOnSimpleResponseDto)
+        .map((travelOn) -> TravelOnMapper.INSTANCE.toTravelOnSimpleResponseDto(travelOn, s3UserUrlContext))
         .collect(Collectors.toList());
 
     return response;
@@ -98,7 +99,7 @@ public class TravelOnService {
 
     // List<TravelOn> -> List<TravelOnSimpleResponse>
     return travelOns.stream()
-            .map(TravelOnMapper.INSTANCE::toTravelOnSimpleResponseDto)
+            .map((travelOn) -> TravelOnMapper.INSTANCE.toTravelOnSimpleResponseDto(travelOn, s3UserUrlContext))
             .collect(Collectors.toList());
   }
 
@@ -122,7 +123,7 @@ public class TravelOnService {
     travelOn.incrViewsByOne();
 
     //DTO로 변환
-    response = TravelOnMapper.INSTANCE.toTravelOnResponseDto(travelOn);
+    response = TravelOnMapper.INSTANCE.toTravelOnResponseDto(travelOn, s3UserUrlContext);
 
     return response;
   }

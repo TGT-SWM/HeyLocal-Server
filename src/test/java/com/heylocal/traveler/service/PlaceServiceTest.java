@@ -1,7 +1,6 @@
 package com.heylocal.traveler.service;
 
 import com.heylocal.traveler.domain.place.Place;
-import com.heylocal.traveler.dto.PlaceDto;
 import com.heylocal.traveler.exception.NotFoundException;
 import com.heylocal.traveler.repository.PlaceRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,7 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static com.heylocal.traveler.dto.PlaceDto.*;
+import static com.heylocal.traveler.dto.PlaceDto.PlaceResponse;
+import static com.heylocal.traveler.dto.PlaceDto.PlaceWithOpinionSizeResponse;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.willReturn;
 

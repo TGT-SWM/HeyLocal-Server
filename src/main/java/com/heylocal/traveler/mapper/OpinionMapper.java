@@ -6,6 +6,7 @@ import com.heylocal.traveler.domain.travelon.TravelOn;
 import com.heylocal.traveler.domain.travelon.opinion.Opinion;
 import com.heylocal.traveler.domain.travelon.opinion.OpinionImageContent;
 import com.heylocal.traveler.domain.user.User;
+import com.heylocal.traveler.mapper.context.S3UrlUserContext;
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
 
@@ -34,16 +35,15 @@ public interface OpinionMapper {
   @Mapping(target = "foodImgDownloadImgUrl", ignore = true)
   @Mapping(target = "drinkAndDessertImgDownloadImgUrl", ignore = true)
   @Mapping(target = "photoSpotImgDownloadImgUrl", ignore = true)
-  @Mapping(target = "author", source = "opinion.author")
   @Mapping(target = "place", qualifiedByName = "toPlaceResponseDto")
-  OpinionWithPlaceResponse toWithPlaceResponseDto(Opinion opinion);
+  OpinionWithPlaceResponse toWithPlaceResponseDto(Opinion opinion, @Context S3UrlUserContext s3UserUrlContext);
 
   @InheritConfiguration(name = "toWithPlaceResponseDto")
   @Mapping(target = "generalImgDownloadImgUrl", ignore = true)
   @Mapping(target = "foodImgDownloadImgUrl", ignore = true)
   @Mapping(target = "drinkAndDessertImgDownloadImgUrl", ignore = true)
   @Mapping(target = "photoSpotImgDownloadImgUrl", ignore = true)
-  OpinionResponse toResponseDto(Opinion opinion);
+  OpinionResponse toResponseDto(Opinion opinion, @Context S3UrlUserContext s3UserUrlContext);
 
   @Mapping(target = "id", ignore = true)
   @Mapping(target = "createdDate", ignore = true)

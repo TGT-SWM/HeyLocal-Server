@@ -1,8 +1,6 @@
 package com.heylocal.traveler.service;
 
 import com.heylocal.traveler.domain.place.Place;
-import com.heylocal.traveler.dto.OpinionDto;
-import com.heylocal.traveler.dto.PlaceDto;
 import com.heylocal.traveler.exception.NotFoundException;
 import com.heylocal.traveler.exception.code.NotFoundCode;
 import com.heylocal.traveler.mapper.PlaceMapper;
@@ -15,9 +13,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.heylocal.traveler.dto.OpinionDto.*;
-import static com.heylocal.traveler.dto.PlaceDto.*;
 import static com.heylocal.traveler.dto.PlaceDto.PlaceResponse;
+import static com.heylocal.traveler.dto.PlaceDto.PlaceWithOpinionSizeResponse;
 
 @Service
 @RequiredArgsConstructor

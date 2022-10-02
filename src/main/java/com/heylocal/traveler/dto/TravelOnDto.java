@@ -28,7 +28,6 @@ import static com.heylocal.traveler.dto.RegionDto.RegionResponse;
 import static com.heylocal.traveler.dto.TravelMemberDto.TravelMemberResponse;
 import static com.heylocal.traveler.dto.TravelTypeGroupDto.TravelTypeGroupResponse;
 import static com.heylocal.traveler.dto.UserDto.UserProfileResponse;
-import static com.heylocal.traveler.dto.UserDto.UserResponse;
 
 public class TravelOnDto {
 	@Getter
@@ -97,7 +96,7 @@ public class TravelOnDto {
 		private String description;
 		private int views;
 		private RegionResponse region;
-		private UserResponse author;
+		private UserProfileResponse author;
 		private LocalDate travelStartDate;
 		private LocalDate travelEndDate;
 		private TransportationType transportationType;
