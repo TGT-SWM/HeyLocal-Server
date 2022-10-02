@@ -66,4 +66,6 @@ class UserServiceTest {
         () -> assertThrows(NotFoundException.class, () -> userService.inquiryUserProfile(notExistUserId))
     );
   }
+
+  // TODO - canUpdateProfile
 }

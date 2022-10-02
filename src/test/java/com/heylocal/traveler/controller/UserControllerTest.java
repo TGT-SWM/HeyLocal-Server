@@ -84,4 +84,6 @@ class UserControllerTest {
 				() -> assertThrows(NotFoundException.class, () -> userController.getUserProfile(notExistUserId))
 		);
 	}
+
+	// TODO - updateUserProfile
 }

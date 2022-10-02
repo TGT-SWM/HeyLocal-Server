@@ -1,22 +1,32 @@
 package com.heylocal.traveler.service;
 
+import com.heylocal.traveler.domain.Region;
 import com.heylocal.traveler.domain.profile.UserProfile;
 import com.heylocal.traveler.domain.user.User;
+import com.heylocal.traveler.dto.LoginUser;
+import com.heylocal.traveler.dto.UserDto;
+import com.heylocal.traveler.exception.ForbiddenException;
 import com.heylocal.traveler.exception.NotFoundException;
+import com.heylocal.traveler.exception.code.ForbiddenCode;
 import com.heylocal.traveler.exception.code.NotFoundCode;
 import com.heylocal.traveler.mapper.UserMapper;
 import com.heylocal.traveler.mapper.context.S3UrlUserContext;
+import com.heylocal.traveler.repository.RegionRepository;
 import com.heylocal.traveler.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import static com.heylocal.traveler.dto.UserDto.*;
 import static com.heylocal.traveler.dto.UserDto.UserProfileResponse;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserService {
   private final UserRepository userRepository;
+  private final RegionRepository regionRepository;
   private final S3UrlUserContext s3UserUrlContext;
 
   /**
@@ -40,5 +50,66 @@ public class UserService {
     responseDto = UserMapper.INSTANCE.toUserProfileResponseDto(targetProfile, s3UserUrlContext);
 
     return responseDto;
+  }
+
+  /**
+   * 사용자 프로필을 수정하는 메서드
+   * @param targetUserId 수정할 프로필을 갖는 사용자 Id
+   * @param request 수정 내용
+   */
+  @Transactional
+  public void updateProfile(long targetUserId, UserProfileRequest request) throws NotFoundException {
+    int activityRegionId = request.getActivityRegionId();
+    Region activityRegion = regionRepository.findById(activityRegionId).orElseThrow(
+        () -> new NotFoundException(NotFoundCode.NO_INFO, "존재하지 않는 지역 ID 입니다")
+    );
+    UserProfile userProfile;
+
+    //비즈니스 요구에 맞는 Region 인지 검증
+    if (!isValidRegion(activityRegion)) {
+      throw new NotFoundException(NotFoundCode.NO_INFO, "잘못된 지역 ID 입니다");
+    }
+
+    //수정할 프로필 조회
+    userProfile = userRepository.findById(targetUserId).orElseThrow(
+        () -> new NotFoundException(NotFoundCode.NO_INFO, "존재하지 않는 사용자 ID 입니다.")
+    ).getUserProfile();
+
+    //프로필 수정
+    UserMapper.INSTANCE.updateUserProfile(request, activityRegion, userProfile);
+  }
+
+  /**
+   * 프로필을 수정할 수 있는 권한이 있는지 확인하는 메서드
+   * @param targetUserId 수정할 프로필을 갖는 사용자 Id
+   * @param loginUser 로그인한 사용자
+   * @return true:수정가능, false:수정불가
+   */
+  public boolean canUpdateProfile(long targetUserId, LoginUser loginUser) {
+    if (targetUserId != loginUser.getId()) return false;
+    return true;
+  }
+
+  /**
+   * 비즈니스 요구에 맞는 Region 인지 검증하는 메서드
+   * @param region 검증할 Region 엔티티
+   * @return
+   */
+  private boolean isValidRegion(Region region) {
+    String state = region.getState();
+    String city = region.getCity();
+
+    if (state.equals("서울특별시") && city != null) return false;
+    if (state.equals("부산광역시") && city != null) return false;
+    if (state.equals("대구광역시") && city != null) return false;
+    if (state.equals("인천광역시") && city != null) return false;
+    if (state.equals("광주광역시") && city != null) return false;
+    if (state.equals("대전광역시") && city != null) return false;
+    if (state.equals("울산광역시") && city != null) return false;
+    if (state.equals("세종특별자치시") && city != null) return false;
+    if (state.equals("제주특별자치도") && city != null) return false;
+    if (state.endsWith("도") && city.endsWith("구")) return false;
+
+    return true;
   }
 }

@@ -117,4 +117,26 @@ public class RegionRepository {
 
     return Optional.of(region);
   }
+
+  /**
+   * city 가 null 이고 해당 state를 갖는 Region 을 조회하는 메서드
+   * @param state
+   * @return
+   */
+  public Optional<Region> findByStateAndCityIsNull(String state) {
+    Region region;
+    String jpql = "select r from Region r" +
+        " where r.state = :state" +
+        " and r.city is null";
+
+    try {
+      region = em.createQuery(jpql, Region.class)
+          .setParameter("state", state)
+          .getSingleResult();
+    } catch (NoResultException e) {
+      return Optional.empty();
+    }
+
+    return Optional.of(region);
+  }
 }
