@@ -5,7 +5,10 @@ import com.heylocal.traveler.domain.user.User;
 import com.heylocal.traveler.domain.user.UserRole;
 import com.heylocal.traveler.exception.NotFoundException;
 import com.heylocal.traveler.mapper.context.S3UrlUserContext;
+import com.heylocal.traveler.repository.RegionRepository;
 import com.heylocal.traveler.repository.UserRepository;
+import com.heylocal.traveler.util.aws.S3ObjectNameFormatter;
+import com.heylocal.traveler.util.aws.S3PresignUrlProvider;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -22,13 +25,19 @@ class UserServiceTest {
   @Mock
   private UserRepository userRepository;
   @Mock
+  private RegionRepository regionRepository;
+  @Mock
   private S3UrlUserContext s3UserUrlContext;
+  @Mock
+  private S3PresignUrlProvider s3PresignUrlProvider;
+  @Mock
+  private S3ObjectNameFormatter s3ObjectNameFormatter;
   private UserService userService;
 
   @BeforeEach
   void setUp() {
     MockitoAnnotations.openMocks(this);
-    userService = new UserService(userRepository, s3UserUrlContext);
+    userService = new UserService(userRepository, regionRepository, s3UserUrlContext, s3PresignUrlProvider, s3ObjectNameFormatter);
   }
 
   @Test
