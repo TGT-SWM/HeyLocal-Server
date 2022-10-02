@@ -16,15 +16,17 @@ class SnsMessageParserTest {
     String snsMessage = getSnsMessageExample(objectName);
 
     //WHEN
-    String result = snsMessageParser.getObjectName(snsMessage);
+    String result = snsMessageParser.getOpinionImgObjectName(snsMessage);
 
     //THEN
     assertAll(
         //성공 케이스
-        () -> assertDoesNotThrow(() -> snsMessageParser.getObjectName(snsMessage)),
+        () -> assertDoesNotThrow(() -> snsMessageParser.getOpinionImgObjectName(snsMessage)),
         () -> assertEquals(objectName, result)
     );
   }
+
+  // TODO - getProfileImgObjectName
 
   private String getSnsMessageExample(String objectName) {
     return "{\n" +
