@@ -1,6 +1,9 @@
 package com.heylocal.traveler.controller;
 
+import com.heylocal.traveler.dto.aws.S3ObjectDto;
+import com.heylocal.traveler.exception.NotFoundException;
 import com.heylocal.traveler.service.OpinionImgContentService;
+import com.heylocal.traveler.service.UserService;
 import com.heylocal.traveler.util.aws.SnsMessageParser;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -17,13 +20,15 @@ class AwsControllerTest {
   @Mock
   private OpinionImgContentService opinionImgContentService;
   @Mock
+  private UserService userService;
+  @Mock
   private SnsMessageParser snsMessageParser;
   private AwsController awsController;
 
   @BeforeEach
   void setUp() {
     MockitoAnnotations.openMocks(this);
-    awsController = new AwsController(opinionImgContentService, snsMessageParser);
+    awsController = new AwsController(opinionImgContentService, userService, snsMessageParser);
   }
 
   @Test
@@ -68,6 +73,47 @@ class AwsControllerTest {
     assertDoesNotThrow(() -> awsController.deleteOpinionImgMessage(requestMessage));
   }
 
-  // TODO - saveProfileImgMessage
-  // TODO - deleteProfileImgMessage
+  @Test
+  @DisplayName("프로필 이미지 Object Key 저장 핸들러")
+  void saveProfileImgMessageTest() throws Exception {
+    //GIVEN
+    String validRequestData = "my valid request data";
+    String invalidRequestData = "my invalid request data";
+
+    //Mock 행동 정의 - snsMessageParser
+    willReturn("my object name").given(snsMessageParser).getProfileImgObjectName(eq(validRequestData));
+    willThrow(Exception.class).given(snsMessageParser).getProfileImgObjectName(eq(invalidRequestData));
+
+    //WHEN
+
+    //THEN
+    assertAll(
+        //성공 케이스 - 전달받은 요청 데이터에서 올바른 Object Key 를 구할 수 있을 때
+        () -> assertDoesNotThrow(() -> awsController.saveProfileImgMessage(validRequestData)),
+        //성공 케이스 - 전달받은 요청 데이터에서 올바른 Object Key 를 구할 수 없을 때
+        () -> assertThrows(Exception.class, () -> awsController.saveProfileImgMessage(invalidRequestData))
+    );
+  }
+
+  @Test
+  @DisplayName("프로필 이미지 Object Key 제거 핸들러")
+  void deleteProfileImgMessageTest() throws Exception {
+    //GIVEN
+    String validRequestData = "my valid request data";
+    String invalidRequestData = "my invalid request data";
+
+    //Mock 행동 정의 - snsMessageParser
+    willReturn("my object name").given(snsMessageParser).getProfileImgObjectName(eq(validRequestData));
+    willThrow(Exception.class).given(snsMessageParser).getProfileImgObjectName(eq(invalidRequestData));
+
+    //WHEN
+
+    //THEN
+    assertAll(
+        //성공 케이스 - 전달받은 요청 데이터에서 올바른 Object Key 를 구할 수 있을 때
+        () -> assertDoesNotThrow(() -> awsController.deleteProfileImgMessage(validRequestData)),
+        //성공 케이스 - 전달받은 요청 데이터에서 올바른 Object Key 를 구할 수 없을 때
+        () -> assertThrows(Exception.class, () -> awsController.deleteProfileImgMessage(invalidRequestData))
+    );
+  }
 }

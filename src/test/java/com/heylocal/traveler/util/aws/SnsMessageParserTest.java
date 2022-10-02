@@ -26,7 +26,19 @@ class SnsMessageParserTest {
     );
   }
 
-  // TODO - getProfileImgObjectName
+  @Test
+  @DisplayName("SNS 로부터 전달받은 메시지에서 사용자 프로필 이미지 Object Key(Name) 추출")
+  void getProfileImgObjectNameTest() throws Exception {
+    //GIVEN
+    String objectName = "profiles/1/profile.png";
+    String snsMessage = getSnsMessageExample(objectName);
+
+    //WHEN
+    String result = snsMessageParser.getProfileImgObjectName(snsMessage);
+
+    //THEN
+    assertEquals(objectName, result);
+  }
 
   private String getSnsMessageExample(String objectName) {
     return "{\n" +

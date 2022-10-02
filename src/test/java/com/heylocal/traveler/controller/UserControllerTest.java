@@ -1,10 +1,15 @@
 package com.heylocal.traveler.controller;
 
+import com.heylocal.traveler.dto.LoginUser;
 import com.heylocal.traveler.dto.PageDto.PageRequest;
 import com.heylocal.traveler.dto.TravelOnDto.TravelOnSimpleResponse;
+import com.heylocal.traveler.dto.UserDto;
+import com.heylocal.traveler.exception.BadRequestException;
+import com.heylocal.traveler.exception.ForbiddenException;
 import com.heylocal.traveler.exception.NotFoundException;
 import com.heylocal.traveler.service.TravelOnService;
 import com.heylocal.traveler.service.UserService;
+import com.heylocal.traveler.util.error.BindingErrorMessageProvider;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -12,19 +17,24 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.validation.BindingResult;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.willThrow;
+import static org.mockito.BDDMockito.*;
 
 class UserControllerTest {
 	@Mock
 	private TravelOnService travelOnService;
 	@Mock
 	private UserService userService;
+	@Mock
+	private BindingErrorMessageProvider errorMessageProvider;
+	@Mock
+	private BindingResult bindingResult;
 
 	@InjectMocks
 	private UserController userController;
@@ -32,6 +42,7 @@ class UserControllerTest {
 	@BeforeEach
 	void setup() {
 		MockitoAnnotations.openMocks(this);
+		ReflectionTestUtils.setField(userController, "nicknamePattern", "^[a-zA-Z0-9]{2,20}$");
 	}
 
 	@Test
@@ -85,6 +96,98 @@ class UserControllerTest {
 		);
 	}
 
-	// TODO - updateUserProfile
-	// TODO -
+	@Test
+	@DisplayName("사용자 프로필 수정 핸들러 - 성공 케이스")
+	void updateUserProfileSucceedTest() {
+		//GIVEN
+		long targetUserId = 1L;
+		LoginUser loginUser = LoginUser.builder().id(targetUserId).build();
+		String validNickname = "validNickname";
+		UserDto.UserProfileRequest request = UserDto.UserProfileRequest.builder()
+				.nickname(validNickname)
+				.build();
+
+		//Mock 행동 정의 - userService
+		willReturn(true).given(userService).canUpdateProfile(targetUserId, loginUser);
+
+		//Mock 행동 정의 - bindingResult
+		willReturn(false).given(bindingResult).hasFieldErrors();
+
+		//WHEN
+
+		//THEN
+		//성공 케이스
+		assertDoesNotThrow(() -> userController.updateUserProfile(targetUserId, request, bindingResult, loginUser));
+	}
+
+	@Test
+	@DisplayName("사용자 프로필 수정 핸들러 - 프로필 수정 대상과 로그인 사용자가 다른 경우")
+	void updateUserProfileForbiddenTest() {
+		//GIVEN
+		long targetUserId = 1L;
+		LoginUser loginUser = LoginUser.builder().id(2L).build();
+		String validNickname = "validNickname";
+		UserDto.UserProfileRequest request = UserDto.UserProfileRequest.builder()
+				.nickname(validNickname)
+				.build();
+
+		//Mock 행동 정의 - userService
+		willReturn(false).given(userService).canUpdateProfile(targetUserId, loginUser);
+
+		//WHEN
+
+		//THEN
+		assertThrows(ForbiddenException.class, () -> userController.updateUserProfile(targetUserId, request, bindingResult, loginUser));
+	}
+
+	@Test
+	@DisplayName("사용자 프로필 수정 핸들러 - 프로필 수정 Input 형식이 잘못된 경우")
+	void updateUserProfileWrongValueTest() {
+		//GIVEN
+		long targetUserId = 1L;
+		LoginUser loginUser = LoginUser.builder().id(2L).build();
+		String validNickname = "validNickname";
+		int invalidRegionId = -1;
+		UserDto.UserProfileRequest request = UserDto.UserProfileRequest.builder()
+				.activityRegionId(invalidRegionId)
+				.nickname(validNickname)
+				.build();
+
+		//Mock 행동 정의 - userService
+		willReturn(true).given(userService).canUpdateProfile(targetUserId, loginUser);
+
+		//Mock 행동 정의 - bindingResult
+		willReturn(true).given(bindingResult).hasFieldErrors();
+
+		//Mock 행동 정의 - errorMessageProvider
+		willReturn("지역 아이디는 0 이상이어야 합니다.").given(errorMessageProvider).getFieldErrMsg(bindingResult);
+
+		//WHEN
+
+		//THEN
+		assertThrows(BadRequestException.class, () -> userController.updateUserProfile(targetUserId, request, bindingResult, loginUser));
+	}
+
+	@Test
+	@DisplayName("사용자 프로필 수정 핸들러 - 닉네임 형식이 잘못된 경우")
+	void updateUserProfileWrongNicknameFormTest() {
+		//GIVEN
+		long targetUserId = 1L;
+		LoginUser loginUser = LoginUser.builder().id(2L).build();
+		String invalidNickname = "invalidNickname!@#$$%";
+		UserDto.UserProfileRequest request = UserDto.UserProfileRequest.builder()
+				.nickname(invalidNickname)
+				.build();
+
+		//Mock 행동 정의 - userService
+		willReturn(true).given(userService).canUpdateProfile(targetUserId, loginUser);
+
+		//Mock 행동 정의 - bindingResult
+		willReturn(false).given(bindingResult).hasFieldErrors();
+
+		//WHEN
+
+		//THEN
+		assertThrows(BadRequestException.class, () -> userController.updateUserProfile(targetUserId, request, bindingResult, loginUser));
+	}
 }
