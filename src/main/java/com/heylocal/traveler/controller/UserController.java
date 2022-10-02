@@ -5,7 +5,6 @@ import com.heylocal.traveler.dto.OpinionDto;
 import com.heylocal.traveler.dto.PageDto;
 import com.heylocal.traveler.dto.PageDto.PageRequest;
 import com.heylocal.traveler.dto.TravelOnDto.TravelOnSimpleResponse;
-import com.heylocal.traveler.dto.UserDto;
 import com.heylocal.traveler.exception.NotFoundException;
 import com.heylocal.traveler.service.TravelOnService;
 import com.heylocal.traveler.service.UserService;
@@ -16,7 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-import static com.heylocal.traveler.dto.UserDto.*;
+import static com.heylocal.traveler.dto.UserDto.UserProfileRequest;
+import static com.heylocal.traveler.dto.UserDto.UserProfileResponse;
 
 @Tag(name = "Users")
 @RestController
