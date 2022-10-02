@@ -11,4 +11,5 @@
 | 최정인 | 팀원  |FE|
 
 ## TODO
-- UserProfile 수정 DTO 로 자기소개글을 받을 때, 글자수 제한 필요
+- 프로필 이미지 업로드 Callback API 작성
+- 프로필 수정 API 관련 테스트코드 작성

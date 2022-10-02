@@ -29,7 +29,7 @@ public class AwsController implements AwsApi {
   @Override
   public void saveOpinionImgMessage(String request) throws Exception {
     //String -> AwsSnsRequest 객체
-    S3ObjectDto s3ObjectDto = mapToS3ObjectDto(request);
+    S3ObjectDto s3ObjectDto = mapToOpinionImgS3ObjectDto(request);
 
     opinionImgContentService.saveOpinionImageContent(s3ObjectDto);
   }
@@ -45,16 +45,54 @@ public class AwsController implements AwsApi {
   @Override
   public void deleteOpinionImgMessage(String request) throws Exception {
     //String -> AwsSnsRequest 객체
-    S3ObjectDto s3ObjectDto = mapToS3ObjectDto(request);
+    S3ObjectDto s3ObjectDto = mapToOpinionImgS3ObjectDto(request);
 
     long targetImgEntityId = opinionImgContentService.inquiryOpinionImgContentId(s3ObjectDto.getKey());
 
     opinionImgContentService.removeImgEntityFromDb(targetImgEntityId);
   }
 
-  private S3ObjectDto mapToS3ObjectDto(String request) throws Exception {
+  /**
+   * <pre>
+   * AWS 에서 Content-Type: text/plain 으로 요청을 보내므로, 파라미터 타입을 String 으로 받아야 함.
+   * S3에서 파일이 저장된 경우, SNS 가 호출하는 API 핸들러
+   * </pre>
+   * @param request
+   * @throws Exception
+   */
+  @Override
+  public void saveProfileImgMessage(String request) throws Exception {
+    //String -> AwsSnsRequest 객체
+    S3ObjectDto s3ObjectDto = mapToProfileImgS3ObjectDto(request);
+    log.info("PUT: {}", request);
+
+  }
+
+  /**
+   * <pre>
+   * AWS 에서 Content-Type: text/plain 으로 요청을 보내므로, 파라미터 타입을 String 으로 받아야 함.
+   * S3에서 파일이 제거된 경우, SNS 가 호출하는 API 핸들러
+   * </pre>
+   * @param request
+   * @throws Exception
+   */
+  @Override
+  public void deleteProfileImgMessage(String request) throws Exception {
+    //String -> AwsSnsRequest 객체
+    S3ObjectDto s3ObjectDto = mapToProfileImgS3ObjectDto(request);
+    log.info("DELETE: {}", request);
+  }
+
+  private S3ObjectDto mapToOpinionImgS3ObjectDto(String request) throws Exception {
     S3ObjectDto s3ObjectDto = new S3ObjectDto();
-    String objectName = snsMessageParser.getObjectName(request);
+    String objectName = snsMessageParser.getOpinionImgObjectName(request);
+    s3ObjectDto.setKey(objectName);
+    return s3ObjectDto;
+  }
+
+  private S3ObjectDto mapToProfileImgS3ObjectDto(String request) throws Exception {
+    S3ObjectDto s3ObjectDto = new S3ObjectDto();
+    String objectName = snsMessageParser.getProfileImgObjectName(request);
     s3ObjectDto.setKey(objectName);
     return s3ObjectDto;
   }

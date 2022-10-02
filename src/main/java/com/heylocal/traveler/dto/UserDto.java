@@ -2,6 +2,11 @@ package com.heylocal.traveler.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
+import org.hibernate.validator.constraints.Length;
+
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 
 import static com.heylocal.traveler.dto.RegionDto.RegionRequest;
 import static com.heylocal.traveler.dto.RegionDto.RegionResponse;
@@ -14,10 +19,12 @@ public class UserDto {
 	@Builder
 	@Schema(description = "사용자 프로필 수정을 위한 요청 DTO")
 	public static class UserProfileRequest {
-		private String imageUrl;
+		@NotEmpty
 		private String nickname;
+		@Length(max = 255)
 		private String introduce;
-		private RegionRequest activityRegion;
+		@PositiveOrZero
+		private int activityRegionId;
 	}
 
 	@Getter

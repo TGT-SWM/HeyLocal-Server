@@ -35,8 +35,8 @@ class AwsControllerTest {
 
     //Mock 행동 정의 - snsMessageParser
     String objectName = "/opinions/3/2/GENERAL/0.png";
-    willReturn(objectName).given(snsMessageParser).getObjectName(eq(requestMessage));
-    willThrow(Exception.class).given(snsMessageParser).getObjectName(eq(wrongRequestMessage));
+    willReturn(objectName).given(snsMessageParser).getOpinionImgObjectName(eq(requestMessage));
+    willThrow(Exception.class).given(snsMessageParser).getOpinionImgObjectName(eq(wrongRequestMessage));
 
     //WHEN
 
@@ -59,12 +59,15 @@ class AwsControllerTest {
 
     //Mock 행동 정의 - snsMessageParser
     String objectName = "/opinions/3/2/GENERAL/0.png";
-    willReturn(objectName).given(snsMessageParser).getObjectName(eq(requestMessage));
-    willThrow(Exception.class).given(snsMessageParser).getObjectName(eq(wrongRequestMessage));
+    willReturn(objectName).given(snsMessageParser).getOpinionImgObjectName(eq(requestMessage));
+    willThrow(Exception.class).given(snsMessageParser).getOpinionImgObjectName(eq(wrongRequestMessage));
 
     //WHEN
 
     //THEN
     assertDoesNotThrow(() -> awsController.deleteOpinionImgMessage(requestMessage));
   }
+
+  // TODO - saveProfileImgMessage
+  // TODO - deleteProfileImgMessage
 }

@@ -60,6 +60,13 @@ public class Region {
     this.getOpinionList().remove(target);
   }
 
+  public void removeActivityUser(UserProfile target) {
+    if (target.getActivityRegion() == this) {
+      target.releaseActivityRegion();
+    }
+    this.getActivityUser().remove(target);
+  }
+
   public String getRegionName() {
     if (city == null)
       return state;

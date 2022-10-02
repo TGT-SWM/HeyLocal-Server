@@ -47,4 +47,16 @@ public class UserProfile extends BaseTimeEntity {
       user.setUserProfile(this);
     }
   }
+
+  public void setActivityRegion(Region activityRegion) {
+    Region tmp = this.activityRegion;
+    this.activityRegion = activityRegion;
+    if (tmp != null && tmp.getActivityUser().contains(this)) {
+      tmp.removeActivityUser(this);
+    }
+  }
+
+  public void releaseActivityRegion() {
+    this.activityRegion = null;
+  }
 }

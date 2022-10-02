@@ -1,12 +1,15 @@
 package com.heylocal.traveler.mapper;
 
+import com.heylocal.traveler.domain.Region;
 import com.heylocal.traveler.domain.profile.UserProfile;
 import com.heylocal.traveler.domain.travelon.opinion.Opinion;
 import com.heylocal.traveler.domain.user.User;
+import com.heylocal.traveler.dto.UserDto;
 import com.heylocal.traveler.mapper.context.S3UrlUserContext;
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
 
+import static com.heylocal.traveler.dto.UserDto.*;
 import static com.heylocal.traveler.dto.UserDto.UserProfileResponse;
 import static com.heylocal.traveler.dto.UserDto.UserResponse;
 
@@ -37,6 +40,12 @@ public interface UserMapper {
   UserProfileResponse toUserProfileResponseDto(User user, @Context S3UrlUserContext s3UserUrlContext);
 
   UserResponse toUserResponseDto(User user);
+
+  default void updateUserProfile(UserProfileRequest userProfileRequest, Region activityRegion, UserProfile userProfile) {
+    userProfile.setIntroduce(userProfileRequest.getIntroduce());
+    userProfile.getUser().setNickname(userProfileRequest.getNickname());
+    userProfile.setActivityRegion(activityRegion);
+  }
 
   @AfterMapping
   default void countAcceptedOpinion(User user, @MappingTarget UserProfileResponse userProfileResponse) {
