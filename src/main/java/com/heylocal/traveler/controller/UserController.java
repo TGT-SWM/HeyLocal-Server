@@ -23,6 +23,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
 
 import static com.heylocal.traveler.dto.UserDto.UserProfileRequest;
@@ -56,11 +58,11 @@ public class UserController implements UsersApi {
 	 * 사용자 프로필 수정 핸들러
 	 * @param userId
 	 * @param request
-	 * @return
+	 * @return 프로필 이미지 수정 Presigned URL
 	 */
 	@Override
-	public void updateUserProfile(long userId, UserProfileRequest request,
-																BindingResult bindingResult, LoginUser loginUser) throws BadRequestException, ForbiddenException, NotFoundException {
+	public Map<String, String> updateUserProfile(long userId, UserProfileRequest request,
+																							 BindingResult bindingResult, LoginUser loginUser) throws BadRequestException, ForbiddenException, NotFoundException {
 		//수정 권한 검증
 		boolean canUpdate = userService.canUpdateProfile(userId, loginUser);
 		if (!canUpdate) throw new ForbiddenException(ForbiddenCode.NO_PERMISSION, "프로필 수정 권한이 없습니다.");
@@ -76,6 +78,9 @@ public class UserController implements UsersApi {
 
 		//프로필 업데이트
 		userService.updateProfile(userId, request);
+
+		//프로필 이미지 업로드 Presigned URL 반환
+		return userService.getImgPutPresignedUrl(userId);
 	}
 
 	/**

@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.List;
+import java.util.Map;
 
 @RequestMapping("/users")
 public interface UsersApi {
@@ -41,7 +42,7 @@ public interface UsersApi {
 			@ApiResponse(responseCode = "403", description = "권한이 없는 경우", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessageResponse.class))})
 	)
 	@PutMapping("/{userId}/profile")
-	void updateUserProfile(
+	Map<String, String> updateUserProfile(
 			@Parameter(in = ParameterIn.PATH, description = "사용자 ID", required = true) @PathVariable long userId,
 			@Parameter(in = ParameterIn.DEFAULT, description = "프로필 정보", required = true) @Validated @RequestBody UserProfileRequest request,
 			BindingResult bindingResult,

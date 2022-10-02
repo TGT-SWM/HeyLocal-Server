@@ -1,5 +1,6 @@
 package com.heylocal.traveler.service;
 
+import com.amazonaws.HttpMethod;
 import com.heylocal.traveler.domain.Region;
 import com.heylocal.traveler.domain.profile.UserProfile;
 import com.heylocal.traveler.domain.user.User;
@@ -13,10 +14,15 @@ import com.heylocal.traveler.mapper.UserMapper;
 import com.heylocal.traveler.mapper.context.S3UrlUserContext;
 import com.heylocal.traveler.repository.RegionRepository;
 import com.heylocal.traveler.repository.UserRepository;
+import com.heylocal.traveler.util.aws.S3ObjectNameFormatter;
+import com.heylocal.traveler.util.aws.S3PresignUrlProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import static com.heylocal.traveler.dto.UserDto.*;
 import static com.heylocal.traveler.dto.UserDto.UserProfileResponse;
@@ -28,6 +34,8 @@ public class UserService {
   private final UserRepository userRepository;
   private final RegionRepository regionRepository;
   private final S3UrlUserContext s3UserUrlContext;
+  private final S3PresignUrlProvider s3PresignUrlProvider;
+  private final S3ObjectNameFormatter s3ObjectNameFormatter;
 
   /**
    * 사용자 프로필을 조회하는 메서드
@@ -88,6 +96,21 @@ public class UserService {
   public boolean canUpdateProfile(long targetUserId, LoginUser loginUser) {
     if (targetUserId != loginUser.getId()) return false;
     return true;
+  }
+
+  /**
+   * 프로필 이미지를 Put 하는 Presigned URL 을 반환하는 메서드
+   * @param userId 사용자 Id
+   * @return
+   */
+  public Map<String, String> getImgPutPresignedUrl(long userId) {
+    String objectName = s3ObjectNameFormatter.getObjectNameOfProfileImg(userId);
+    String presignedUrl = s3PresignUrlProvider.getPresignedUrl(objectName, HttpMethod.PUT);
+    Map<String, String> result = new ConcurrentHashMap<>();
+
+    result.put("imgUploadUrl", presignedUrl);
+
+    return result;
   }
 
   /**
