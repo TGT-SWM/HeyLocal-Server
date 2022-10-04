@@ -50,7 +50,6 @@ public class OpinionService {
   private final OpinionRepository opinionRepository;
   private final S3ObjectNameFormatter s3ObjectNameFormatter;
   private final S3PresignUrlProvider s3PresignUrlProvider;
-  private final S3UrlUserContext s3UserUrlContext;
   private final S3UrlOpinionContext s3UrlOpinionContext;
 
   @Value("${cloud.aws.s3.bucket}")
