@@ -37,10 +37,12 @@ public interface TravelOnMapper {
 
   @Mapping(target = "createdDateTime", source = "createdDate")
   @Mapping(target = "modifiedDate", source = "modifiedDate")
+  @Mapping(target = "author", qualifiedByName = "toUserProfileResponseDtoByUserWithContext")
   TravelOnResponse toTravelOnResponseDto(TravelOn travelOn, @Context S3UrlUserContext s3UserUrlContext);
 
   @Mapping(target = "createdDateTime", source = "createdDate")
   @Mapping(target = "opinionQuantity", expression = "java(travelOn.getOpinionList().size())")
+  @Mapping(target = "author", qualifiedByName = "toUserProfileResponseDtoByUserWithContext")
   TravelOnSimpleResponse toTravelOnSimpleResponseDto(TravelOn travelOn, @Context S3UrlUserContext s3UserUrlContext);
 
   @Mapping(target = "id", ignore = true)

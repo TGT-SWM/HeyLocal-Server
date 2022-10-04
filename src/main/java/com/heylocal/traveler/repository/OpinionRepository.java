@@ -87,6 +87,30 @@ public class OpinionRepository {
   }
 
   /**
+   * <pre>
+   * 특정 사용자 ID 로 답변을 조회하는 메서드
+   * Id 내림차순으로 페이징하여 조회한다.
+   * </pre>
+   * @param userId 사용자 Id
+   * @param lastItemId 마지막으로 받은 답변 Id
+   * @param size 페이지 당 아이템 개수
+   * @return
+   */
+  public List<Opinion> findByUserIdOrderByIdDesc(long userId, long lastItemId, int size) {
+    String jpql = "select o from Opinion o" +
+        " where o.author.id = :userId" +
+        " and o.id < :lastItemId";
+
+    List<Opinion> resultList = em.createQuery(jpql, Opinion.class)
+        .setParameter("userId", userId)
+        .setParameter("lastItemId", lastItemId)
+        .setMaxResults(size)
+        .getResultList();
+
+    return resultList;
+  }
+
+  /**
    * Opinion 을 삭제하는 메서드
    * @param opinion
    */
