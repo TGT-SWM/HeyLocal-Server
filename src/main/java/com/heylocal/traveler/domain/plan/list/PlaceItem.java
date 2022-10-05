@@ -10,6 +10,8 @@ import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 /**
  * 스케줄표에 들어갈 항목(장소+순서)
@@ -41,6 +43,8 @@ public class PlaceItem extends BaseTimeEntity {
   private Integer itemIndex; //오름차순
 
   private Long originalPlaceId; // 현재 대체장소일때, 원장소의 id
+
+  private LocalTime arrivalTime; // 도착 시간
 
   /**
    * <pre>

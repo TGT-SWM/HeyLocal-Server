@@ -4,6 +4,9 @@ import com.heylocal.traveler.domain.place.PlaceCategory;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+
 public class PlaceItemDto {
 
   @Getter
@@ -22,6 +25,7 @@ public class PlaceItemDto {
     double lat;
     double lng;
     String link;
+    LocalTime arrivalTime;
   }
 
   @Getter
@@ -39,5 +43,6 @@ public class PlaceItemDto {
     double lat;
     double lng;
     String link;
+    LocalTime arrivalTime;
   }
 }
