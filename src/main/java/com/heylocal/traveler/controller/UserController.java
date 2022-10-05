@@ -2,7 +2,6 @@ package com.heylocal.traveler.controller;
 
 import com.heylocal.traveler.controller.api.UsersApi;
 import com.heylocal.traveler.dto.LoginUser;
-import com.heylocal.traveler.dto.OpinionDto;
 import com.heylocal.traveler.dto.PageDto;
 import com.heylocal.traveler.dto.PageDto.PageRequest;
 import com.heylocal.traveler.dto.TravelOnDto.TravelOnSimpleResponse;
@@ -91,7 +90,12 @@ public class UserController implements UsersApi {
 	 * @return 여행 On 목록
 	 */
 	@Override
-	public List<TravelOnSimpleResponse> getUserTravelOns(long userId, PageRequest pageRequest) {
+	public List<TravelOnSimpleResponse> getUserTravelOns(long userId, PageRequest pageRequest, BindingResult bindingResult) throws BadRequestException {
+		if (bindingResult.hasFieldErrors()) {
+			String fieldErrMsg = errorMessageProvider.getFieldErrMsg(bindingResult);
+			throw new BadRequestException(BadRequestCode.BAD_INPUT_FORM, fieldErrMsg);
+		}
+
 		return travelOnService.inquirySimpleTravelOns(userId, pageRequest);
 	}
 
@@ -102,9 +106,13 @@ public class UserController implements UsersApi {
 	 * @return
 	 */
 	@Override
-  public List<OpinionWithPlaceResponse> getUserOpinions(long userId, PageDto.PageRequest pageRequest) throws NotFoundException {
-		List<OpinionWithPlaceResponse> result = opinionService.inquiryOpinions(userId, pageRequest);
-		return result;
+  public List<OpinionWithPlaceResponse> getUserOpinions(long userId, PageDto.PageRequest pageRequest, BindingResult bindingResult) throws NotFoundException, BadRequestException {
+		if (bindingResult.hasFieldErrors()) {
+			String fieldErrMsg = errorMessageProvider.getFieldErrMsg(bindingResult);
+			throw new BadRequestException(BadRequestCode.BAD_INPUT_FORM, fieldErrMsg);
+		}
+
+		return opinionService.inquiryOpinionsByUserId(userId, pageRequest);
 	}
 
 	/**

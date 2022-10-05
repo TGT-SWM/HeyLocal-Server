@@ -137,7 +137,7 @@ public class TravelOnsController implements TravelOnsApi {
    */
   @Override
   public List<OpinionWithPlaceResponse> getOpinions(long travelOnId) throws NotFoundException {
-    List<OpinionWithPlaceResponse> response = opinionService.inquiryOpinions(travelOnId);
+    List<OpinionWithPlaceResponse> response = opinionService.inquiryOpinionsByUserId(travelOnId);
 
     return response;
   }

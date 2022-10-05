@@ -7,6 +7,7 @@ import com.heylocal.traveler.dto.UserDto;
 import com.heylocal.traveler.exception.BadRequestException;
 import com.heylocal.traveler.exception.ForbiddenException;
 import com.heylocal.traveler.exception.NotFoundException;
+import com.heylocal.traveler.service.OpinionService;
 import com.heylocal.traveler.service.TravelOnService;
 import com.heylocal.traveler.service.UserService;
 import com.heylocal.traveler.util.error.BindingErrorMessageProvider;
@@ -32,6 +33,8 @@ class UserControllerTest {
 	@Mock
 	private UserService userService;
 	@Mock
+	private OpinionService opinionService;
+	@Mock
 	private BindingErrorMessageProvider errorMessageProvider;
 	@Mock
 	private BindingResult bindingResult;
@@ -47,7 +50,7 @@ class UserControllerTest {
 
 	@Test
 	@DisplayName("작성한 여행 On 조회")
-	void getUserTravelOnsTest() {
+	void getUserTravelOnsTest() throws BadRequestException {
 		// GIVEN (Request)
 		long userId = 1L;
 		long noTravelOnUserId = userId + 1;
@@ -62,9 +65,12 @@ class UserControllerTest {
 		given(travelOnService.inquirySimpleTravelOns(userId, pageRequest)).willReturn(travelOnResp);
 		given(travelOnService.inquirySimpleTravelOns(noTravelOnUserId, pageRequest)).willReturn(new ArrayList<TravelOnSimpleResponse>());
 
+		// GIVEN (BindingResult)
+		willReturn(false).given(bindingResult).hasFieldErrors();
+
 		// WHEN
-		List<TravelOnSimpleResponse> successResp = userController.getUserTravelOns(userId, pageRequest);
-		List<TravelOnSimpleResponse> failResp = userController.getUserTravelOns(noTravelOnUserId, pageRequest);
+		List<TravelOnSimpleResponse> successResp = userController.getUserTravelOns(userId, pageRequest, bindingResult);
+		List<TravelOnSimpleResponse> failResp = userController.getUserTravelOns(noTravelOnUserId, pageRequest, bindingResult);
 
 		// THEN
 		assertAll(
@@ -189,5 +195,34 @@ class UserControllerTest {
 
 		//THEN
 		assertThrows(BadRequestException.class, () -> userController.updateUserProfile(targetUserId, request, bindingResult, loginUser));
+	}
+
+	@Test
+	@DisplayName("특정 사용자가 작성한 답변 목록 조회 핸들러")
+	void getUserOpinionsTest() {
+		//GIVEN
+		long targetUserId = 1L;
+		PageRequest validPageRequest = PageRequest.builder()
+				.lastItemId(null)
+				.size(1)
+				.build();
+		PageRequest invalidPageRequest = PageRequest.builder()
+				.lastItemId(null)
+				.size(0)
+				.build();
+
+		//Mock 행동 정의 - bindingResult
+		willReturn(false).willReturn(true).given(bindingResult).hasFieldErrors();
+
+		//WHEN
+
+		//THEN
+		assertAll(
+				//성공 케이스 - 페이징 요청이 올바른 경우
+				() -> assertDoesNotThrow(() -> userController.getUserOpinions(targetUserId, validPageRequest, bindingResult)),
+				//실패 케이스 - 페이징 요청이 올바르지 않은 경우
+				() -> assertThrows(BadRequestException.class, () -> userController.getUserOpinions(targetUserId, invalidPageRequest, bindingResult))
+		);
+
 	}
 }

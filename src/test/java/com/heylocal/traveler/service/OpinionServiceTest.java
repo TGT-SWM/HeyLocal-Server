@@ -20,7 +20,6 @@ import com.heylocal.traveler.exception.ForbiddenException;
 import com.heylocal.traveler.exception.NotFoundException;
 import com.heylocal.traveler.mapper.PlaceMapper;
 import com.heylocal.traveler.mapper.context.S3UrlOpinionContext;
-import com.heylocal.traveler.mapper.context.S3UrlUserContext;
 import com.heylocal.traveler.repository.OpinionRepository;
 import com.heylocal.traveler.repository.PlaceRepository;
 import com.heylocal.traveler.repository.TravelOnRepository;
@@ -36,14 +35,11 @@ import org.mockito.MockitoAnnotations;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
 
 import static com.heylocal.traveler.domain.travelon.opinion.OpinionImageContent.ImageContentType;
 import static com.heylocal.traveler.dto.OpinionDto.NewOpinionRequestRequest;
 import static com.heylocal.traveler.dto.PlaceDto.PlaceRequest;
-import static com.heylocal.traveler.util.aws.S3ObjectNameFormatter.ObjectNameProperty;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.AdditionalMatchers.not;
 import static org.mockito.ArgumentMatchers.any;
@@ -250,7 +246,7 @@ class OpinionServiceTest {
     willReturn(Optional.empty()).given(travelOnRepository).findById(not(eq(travelOnId)));
 
     //WHEN
-    List<OpinionDto.OpinionWithPlaceResponse> resultList = opinionService.inquiryOpinions(travelOnId);
+    List<OpinionDto.OpinionWithPlaceResponse> resultList = opinionService.inquiryOpinionsByUserId(travelOnId);
     OpinionDto.OpinionWithPlaceResponse result = resultList.get(0);
 
     //THEN
@@ -258,7 +254,7 @@ class OpinionServiceTest {
         //성공 케이스 - 1 - 조회결과
         () -> assertEquals(opinionDescription, result.getDescription()),
         //실패 케이스 - 1 - 존재하지 않는 여행On ID 인 경우
-        () -> assertThrows(NotFoundException.class, () -> opinionService.inquiryOpinions(travelOnId + 1))
+        () -> assertThrows(NotFoundException.class, () -> opinionService.inquiryOpinionsByUserId(travelOnId + 1))
     );
   }
 
@@ -272,6 +268,37 @@ class OpinionServiceTest {
     imageEntity.setOpinion(opinion);
 
     return imageEntity;
+  }
+
+  @Test
+  @DisplayName("특정 사용자의 모든 답변 조회")
+  void inquiryOpinionsByUserIdTest() throws NotFoundException {
+    //GIVEN
+    long validUserId = 1L;
+    long invalidUserId = 2L;
+    PageDto.PageRequest pageRequest = PageDto.PageRequest.builder()
+        .lastItemId(null)
+        .size(3)
+        .build();
+
+    //Mock 행동 정의 - userRepository
+    willReturn(Optional.of(new User())).given(userRepository).findById(validUserId);
+    willReturn(Optional.empty()).given(userRepository).findById(invalidUserId);
+
+    //Mock 행동 정의 - opinionRepository
+    List<Opinion> opinionList = new ArrayList<>();
+    Opinion opinion1 = Opinion.builder().id(1L).build();
+    Opinion opinion2 = Opinion.builder().id(2L).build();
+
+    //WHEN
+
+    //THEN
+    assertAll(
+        //성공 케이스
+        () -> assertDoesNotThrow(() -> opinionService.inquiryOpinionsByUserId(validUserId, pageRequest)),
+        //실패 케이스 - 존재하지 않는 사용자 ID인 경우
+        () -> assertThrows(NotFoundException.class, () -> opinionService.inquiryOpinionsByUserId(invalidUserId, pageRequest))
+    );
   }
 
   @Test

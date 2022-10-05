@@ -17,7 +17,6 @@ import com.heylocal.traveler.exception.code.NotFoundCode;
 import com.heylocal.traveler.mapper.OpinionMapper;
 import com.heylocal.traveler.mapper.PlaceMapper;
 import com.heylocal.traveler.mapper.context.S3UrlOpinionContext;
-import com.heylocal.traveler.mapper.context.S3UrlUserContext;
 import com.heylocal.traveler.repository.OpinionRepository;
 import com.heylocal.traveler.repository.PlaceRepository;
 import com.heylocal.traveler.repository.TravelOnRepository;
@@ -109,7 +108,7 @@ public class OpinionService {
    * @throws NotFoundException 여행On ID 가 존재하지 않을 경우
    */
   @Transactional(readOnly = true)
-  public List<OpinionWithPlaceResponse> inquiryOpinions(long travelOnId) throws NotFoundException {
+  public List<OpinionWithPlaceResponse> inquiryOpinionsByUserId(long travelOnId) throws NotFoundException {
     TravelOn targetTravelOn;
     List<Opinion> opinionList;
     List<OpinionWithPlaceResponse> result = new ArrayList<>();
@@ -143,7 +142,7 @@ public class OpinionService {
    * @throws NotFoundException 여행On ID 가 존재하지 않을 경우
    */
   @Transactional(readOnly = true)
-  public List<OpinionWithPlaceResponse> inquiryOpinions(long userId, PageRequest pageRequest) throws NotFoundException {
+  public List<OpinionWithPlaceResponse> inquiryOpinionsByUserId(long userId, PageRequest pageRequest) throws NotFoundException {
     List<Opinion> opinionList;
     Long pagingLastItemId = pageRequest.getLastItemId();
     int pagingSize = pageRequest.getSize();
