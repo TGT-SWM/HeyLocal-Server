@@ -99,7 +99,8 @@ public class OpinionRepository {
   public List<Opinion> findByUserIdOrderByIdDesc(long userId, long lastItemId, int size) {
     String jpql = "select o from Opinion o" +
         " where o.author.id = :userId" +
-        " and o.id < :lastItemId";
+        " and o.id < :lastItemId" +
+        " order by o.id desc";
 
     List<Opinion> resultList = em.createQuery(jpql, Opinion.class)
         .setParameter("userId", userId)
