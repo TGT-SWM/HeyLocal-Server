@@ -17,12 +17,14 @@ import static com.heylocal.traveler.dto.UserDto.UserResponse;
 public interface UserMapper {
   UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);
 
+  @Named("toUserProfileResponseDtoByUserProfileAndRankingWithContext")
   @Mapping(target = "nickname", source = "userProfile.user.nickname")
   @Mapping(target = "userId", source = "userProfile.user.id")
   @Mapping(target = "acceptedOpinionCount", ignore = true)
   @Mapping(target = "profileImgDownloadUrl", ignore = true)
   UserProfileResponse toUserProfileResponseDto(UserProfile userProfile, long ranking, @Context S3UrlUserContext s3UserUrlContext);
 
+  @Named("toUserProfileResponseDtoByUserProfileWithContext")
   @Mapping(target = "nickname", source = "userProfile.user.nickname")
   @Mapping(target = "userId", source = "userProfile.user.id")
   @Mapping(target = "ranking", ignore = true)
@@ -30,6 +32,7 @@ public interface UserMapper {
   @Mapping(target = "profileImgDownloadUrl", ignore = true)
   UserProfileResponse toUserProfileResponseDto(UserProfile userProfile, @Context S3UrlUserContext s3UserUrlContext);
 
+  @Named("toUserProfileResponseDtoByUserWithContext")
   @Mapping(target = "introduce", source = "user.userProfile.introduce")
   @Mapping(target = "knowHow", source = "user.userProfile.knowHow")
   @Mapping(target = "activityRegion", source = "user.userProfile.activityRegion")
@@ -38,6 +41,10 @@ public interface UserMapper {
   @Mapping(target = "acceptedOpinionCount", ignore = true)
   @Mapping(target = "profileImgDownloadUrl", ignore = true)
   UserProfileResponse toUserProfileResponseDto(User user, @Context S3UrlUserContext s3UserUrlContext);
+
+  @Named("toUserProfileResponseDtoByUserWithoutContext")
+  @InheritConfiguration(name = "toUserProfileResponseDto")
+  UserProfileResponse toUserProfileResponseDtoNoUrl(User user);
 
   UserResponse toUserResponseDto(User user);
 

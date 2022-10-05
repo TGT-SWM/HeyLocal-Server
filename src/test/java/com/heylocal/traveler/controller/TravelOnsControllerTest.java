@@ -358,7 +358,7 @@ class TravelOnsControllerTest {
     long notExistTravelOnId = 2L;
 
     //Mock 행동 정의 - opinionService
-    willThrow(NotFoundException.class).given(opinionService).inquiryOpinions(notExistTravelOnId);
+    willThrow(NotFoundException.class).given(opinionService).inquiryOpinionsByUserId(notExistTravelOnId);
 
     //WHEN
 

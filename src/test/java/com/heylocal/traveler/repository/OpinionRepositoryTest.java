@@ -189,6 +189,47 @@ class OpinionRepositoryTest {
 
   }
 
+  @Test
+  @DisplayName("사용자 ID로 답변 조회, ID 오름차순으로 조회")
+  void findByUserIdOrderByIdDescTest() {
+    //GIVEN
+    User travelOnAuthor = User.builder().accountId("myAccountId").password("myPassword").nickname("myNickname").userRole(UserRole.TRAVELER).build();
+
+    em.persist(travelOnAuthor);
+
+    TravelOn travelOnOfOpinion = saveTravelOn(travelOnAuthor, "myState", "myCity");
+    Opinion opinion1 = getNotPersistOpinion(travelOnOfOpinion);
+    Opinion opinion2 = getNotPersistOpinion(travelOnOfOpinion);
+    Opinion opinion3 = getNotPersistOpinion(travelOnOfOpinion);
+
+    em.persist(opinion1);
+    em.persist(opinion2);
+    em.persist(opinion3);
+
+    long authorId = opinion1.getAuthor().getId();
+
+    //WHEN
+    List<Opinion> allResult = opinionRepository.findByUserIdOrderByIdDesc(authorId, Long.MAX_VALUE, 3);
+    List<Opinion> last2Result = opinionRepository.findByUserIdOrderByIdDesc(authorId, opinion3.getId(), 3);
+    List<Opinion> last1Result = opinionRepository.findByUserIdOrderByIdDesc(authorId, opinion2.getId(), 3);
+
+    //THEN
+    assertAll(
+        //모든 Opinion 조회시
+        () -> assertSame(3, allResult.size()),
+        () -> assertSame(opinion3, allResult.get(0)),
+        () -> assertSame(opinion2, allResult.get(1)),
+        () -> assertSame(opinion1, allResult.get(2)),
+        //마지막 2개 Opinion 조회시
+        () -> assertSame(2, last2Result.size()),
+        () -> assertSame(opinion2, last2Result.get(0)),
+        () -> assertSame(opinion1, last2Result.get(1)),
+        //마지막 1개 Opinion 조회시
+        () -> assertSame(1, last1Result.size()),
+        () -> assertSame(opinion1, last1Result.get(0))
+    );
+  }
+
   /**
    * 영속화되지 않은 새 Opinion 엔티티를 반환하는 메서드
    * @param travelOn Opinion 이 추가될 TravelOn 엔티티

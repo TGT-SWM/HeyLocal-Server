@@ -2,7 +2,6 @@ package com.heylocal.traveler.controller;
 
 import com.heylocal.traveler.controller.api.UsersApi;
 import com.heylocal.traveler.dto.LoginUser;
-import com.heylocal.traveler.dto.OpinionDto;
 import com.heylocal.traveler.dto.PageDto;
 import com.heylocal.traveler.dto.PageDto.PageRequest;
 import com.heylocal.traveler.dto.TravelOnDto.TravelOnSimpleResponse;
@@ -12,6 +11,7 @@ import com.heylocal.traveler.exception.NotFoundException;
 import com.heylocal.traveler.exception.code.BadRequestCode;
 import com.heylocal.traveler.exception.code.ForbiddenCode;
 import com.heylocal.traveler.exception.code.SignupCode;
+import com.heylocal.traveler.service.OpinionService;
 import com.heylocal.traveler.service.TravelOnService;
 import com.heylocal.traveler.service.UserService;
 import com.heylocal.traveler.util.error.BindingErrorMessageProvider;
@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import static com.heylocal.traveler.dto.OpinionDto.*;
 import static com.heylocal.traveler.dto.UserDto.UserProfileRequest;
 import static com.heylocal.traveler.dto.UserDto.UserProfileResponse;
 
@@ -36,6 +37,7 @@ public class UserController implements UsersApi {
 	private String nicknamePattern;
 	private final TravelOnService travelOnService;
 	private final UserService userService;
+	private final OpinionService opinionService;
 	private final BindingErrorMessageProvider errorMessageProvider;
 
 	/**
@@ -88,18 +90,29 @@ public class UserController implements UsersApi {
 	 * @return 여행 On 목록
 	 */
 	@Override
-	public List<TravelOnSimpleResponse> getUserTravelOns(long userId, PageRequest pageRequest) {
+	public List<TravelOnSimpleResponse> getUserTravelOns(long userId, PageRequest pageRequest, BindingResult bindingResult) throws BadRequestException {
+		if (bindingResult.hasFieldErrors()) {
+			String fieldErrMsg = errorMessageProvider.getFieldErrMsg(bindingResult);
+			throw new BadRequestException(BadRequestCode.BAD_INPUT_FORM, fieldErrMsg);
+		}
+
 		return travelOnService.inquirySimpleTravelOns(userId, pageRequest);
 	}
 
 	/**
-	 * @param userId
-	 * @param pageRequest
+	 * 특정 사용자가 작성한 답변 목록을 페이징하여 조회하는 핸들러
+	 * @param userId 사용자 ID
+	 * @param pageRequest 요청 페이지 정보
 	 * @return
 	 */
 	@Override
-  public List<OpinionDto.OpinionWithPlaceResponse> getUserOpinions(long userId, PageDto.PageRequest pageRequest) {
-		return null;
+  public List<OpinionWithPlaceResponse> getUserOpinions(long userId, PageDto.PageRequest pageRequest, BindingResult bindingResult) throws NotFoundException, BadRequestException {
+		if (bindingResult.hasFieldErrors()) {
+			String fieldErrMsg = errorMessageProvider.getFieldErrMsg(bindingResult);
+			throw new BadRequestException(BadRequestCode.BAD_INPUT_FORM, fieldErrMsg);
+		}
+
+		return opinionService.inquiryOpinionsByUserId(userId, pageRequest);
 	}
 
 	/**

@@ -16,7 +16,7 @@ import com.heylocal.traveler.exception.code.ForbiddenCode;
 import com.heylocal.traveler.exception.code.NotFoundCode;
 import com.heylocal.traveler.mapper.OpinionMapper;
 import com.heylocal.traveler.mapper.PlaceMapper;
-import com.heylocal.traveler.mapper.context.S3UrlUserContext;
+import com.heylocal.traveler.mapper.context.S3UrlOpinionContext;
 import com.heylocal.traveler.repository.OpinionRepository;
 import com.heylocal.traveler.repository.PlaceRepository;
 import com.heylocal.traveler.repository.TravelOnRepository;
@@ -49,7 +49,7 @@ public class OpinionService {
   private final OpinionRepository opinionRepository;
   private final S3ObjectNameFormatter s3ObjectNameFormatter;
   private final S3PresignUrlProvider s3PresignUrlProvider;
-  private final S3UrlUserContext s3UserUrlContext;
+  private final S3UrlOpinionContext s3UrlOpinionContext;
 
   @Value("${cloud.aws.s3.bucket}")
   private String bucketName;
@@ -108,7 +108,7 @@ public class OpinionService {
    * @throws NotFoundException 여행On ID 가 존재하지 않을 경우
    */
   @Transactional(readOnly = true)
-  public List<OpinionWithPlaceResponse> inquiryOpinions(long travelOnId) throws NotFoundException {
+  public List<OpinionWithPlaceResponse> inquiryOpinionsByUserId(long travelOnId) throws NotFoundException {
     TravelOn targetTravelOn;
     List<Opinion> opinionList;
     List<OpinionWithPlaceResponse> result = new ArrayList<>();
@@ -125,11 +125,44 @@ public class OpinionService {
       return -1;
     }).collect(Collectors.toList());
 
-    //List<Opinion> -> List<OpinionResponse>
-    for (Opinion opinion : opinionList) {
-      OpinionWithPlaceResponse responseDto = OpinionMapper.INSTANCE.toWithPlaceResponseDto(opinion, s3UserUrlContext);
-      List<OpinionImageContent> sortedImgEntityList = sortImgEntityByKeyIndex(opinion.getOpinionImageContentList());
-      sortedImgEntityList.stream().forEach( (imgEntity) -> bindingDownloadUrls(responseDto, imgEntity) );
+    //List<Opinion> -> List<OpinionWithPlaceResponse>
+    for (Opinion opinionEntity : opinionList) {
+      OpinionWithPlaceResponse responseDto = OpinionMapper.INSTANCE.toWithPlaceResponseDto(opinionEntity, s3UrlOpinionContext);
+      result.add(responseDto);
+    }
+
+    return result;
+  }
+
+  /**
+   * 특정 사용자의 모든 답변 조회
+   * @param userId 답변을 조회할 사용자 ID
+   * @param pageRequest 페이징
+   * @return
+   * @throws NotFoundException 여행On ID 가 존재하지 않을 경우
+   */
+  @Transactional(readOnly = true)
+  public List<OpinionWithPlaceResponse> inquiryOpinionsByUserId(long userId, PageRequest pageRequest) throws NotFoundException {
+    List<Opinion> opinionList;
+    Long pagingLastItemId = pageRequest.getLastItemId();
+    int pagingSize = pageRequest.getSize();
+    List<OpinionWithPlaceResponse> result = new ArrayList<>();
+
+    //사용자 조회
+    userRepository.findById(userId).orElseThrow(
+        () -> new NotFoundException(NotFoundCode.NO_INFO, "존재하지 않는 사용자 ID 입니다.")
+    );
+
+    //답변 조회
+    if (pagingLastItemId == null) { //페이징할 lastItemId 가 null 인 경우
+      opinionList = opinionRepository.findByUserIdOrderByIdDesc(userId, Long.MAX_VALUE, pagingSize);
+    } else { //페이징할 lastItemId가 존재하는 경우
+      opinionList = opinionRepository.findByUserIdOrderByIdDesc(userId, pagingLastItemId, pagingSize);
+    }
+
+    //List<Opinion> -> List<OpinionWithPlaceResponse>
+    for (Opinion opinionEntity : opinionList) {
+      OpinionWithPlaceResponse responseDto = OpinionMapper.INSTANCE.toWithPlaceResponseDto(opinionEntity, s3UrlOpinionContext);
       result.add(responseDto);
     }
 
@@ -230,7 +263,7 @@ public class OpinionService {
 
     //List<Opinion> -> List<OpinionResponse>
     for (Opinion opinion : opinionList) {
-      OpinionResponse responseDto = OpinionMapper.INSTANCE.toResponseDto(opinion, s3UserUrlContext);
+      OpinionResponse responseDto = OpinionMapper.INSTANCE.toResponseDto(opinion, s3UrlOpinionContext);
       List<OpinionImageContent> sortedImgEntityList = sortImgEntityByKeyIndex(opinion.getOpinionImageContentList());
       sortedImgEntityList.stream().forEach( (imgEntity) -> bindingDownloadUrls(responseDto, imgEntity) );
       result.add(responseDto);
