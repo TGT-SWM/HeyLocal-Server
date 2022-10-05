@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 public class PlaceItemDto {
 
@@ -24,7 +25,7 @@ public class PlaceItemDto {
     double lat;
     double lng;
     String link;
-    LocalDateTime arrivalTime;
+    LocalTime arrivalTime;
   }
 
   @Getter
@@ -42,6 +43,6 @@ public class PlaceItemDto {
     double lat;
     double lng;
     String link;
-    LocalDateTime arrivalTime;
+    LocalTime arrivalTime;
   }
 }
