@@ -22,7 +22,8 @@ public enum PlaceCategory {
   FD6("음식점"),
   CE7("카페"),
   HP8("병원"),
-  PM9("약국");
+  PM9("약국"),
+  ETC("기타");
 
   private String value;
 
