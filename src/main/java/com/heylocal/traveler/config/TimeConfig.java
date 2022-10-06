@@ -5,6 +5,14 @@ import org.springframework.context.annotation.Configuration;
 
 import java.time.Clock;
 
+/**
+ * packageName    : com.heylocal.traveler.config
+ * fileName       : TimeConfig
+ * author         : 신우진
+ * date           : 2022/08/29
+ * description    : Clock 객체를 Bean으로 등록하기 위한 Configuration
+ */
+
 @Configuration
 public class TimeConfig {
 	/**

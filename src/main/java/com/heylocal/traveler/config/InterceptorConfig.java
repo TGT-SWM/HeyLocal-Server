@@ -7,6 +7,14 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+/**
+ * packageName    : com.heylocal.traveler.config
+ * fileName       : InterceptorConfig
+ * author         : 우태균
+ * date           : 2022/08/18
+ * description    : Spring Interceptor 사용을 위한 Configuration
+ */
+
 @Configuration
 @RequiredArgsConstructor
 public class InterceptorConfig implements WebMvcConfigurer {
