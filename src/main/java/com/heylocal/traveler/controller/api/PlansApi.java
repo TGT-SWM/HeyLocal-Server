@@ -80,7 +80,6 @@ public interface PlansApi {
 
 	@Operation(summary = "플랜의 장소 목록 수정", description = "플랜의 장소 목록 수정", tags = {"Plans"})
 	@ApiResponses(value = {
-			@ApiResponse(responseCode = "201", description = "플랜의 장소 목록 수정 성공"),
 			@ApiResponse(responseCode = "404", description = "- `NO_INFO`: 플랜이 존재하지 않는 경우", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessageResponse.class)))
 	})
 	@PutMapping("/{planId}/places")
@@ -97,7 +96,7 @@ public interface PlansApi {
 	@PostMapping("/{planId}/places/{day}")
 	void addPlaceFromOpinion(
 			@Parameter(in = ParameterIn.PATH, description = "플랜 ID", required = true) @PathVariable long planId,
-			@Parameter(in = ParameterIn.PATH, description = "일자", required = true) @PathVariable int day,
+			@Parameter(in = ParameterIn.PATH, description = "일자 (1부터 시작)", required = true) @PathVariable int day,
 			@Parameter(in = ParameterIn.DEFAULT, description = "답변 정보", required = true) @RequestBody AddPlaceRequest request
-	);
+	) throws NotFoundException;
 }

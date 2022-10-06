@@ -4,7 +4,9 @@ import com.heylocal.traveler.domain.place.Place;
 import com.heylocal.traveler.domain.plan.DaySchedule;
 import com.heylocal.traveler.domain.plan.Plan;
 import com.heylocal.traveler.domain.plan.list.PlaceItem;
+import com.heylocal.traveler.domain.plan.list.PlaceItemType;
 import com.heylocal.traveler.domain.travelon.TravelOn;
+import com.heylocal.traveler.domain.travelon.opinion.Opinion;
 import com.heylocal.traveler.dto.PlanDto.*;
 import com.heylocal.traveler.exception.BadRequestException;
 import com.heylocal.traveler.exception.ForbiddenException;
@@ -14,10 +16,7 @@ import com.heylocal.traveler.exception.code.ForbiddenCode;
 import com.heylocal.traveler.exception.code.NotFoundCode;
 import com.heylocal.traveler.mapper.PlaceItemMapper;
 import com.heylocal.traveler.mapper.PlanMapper;
-import com.heylocal.traveler.repository.PlaceItemRepository;
-import com.heylocal.traveler.repository.PlaceRepository;
-import com.heylocal.traveler.repository.PlanRepository;
-import com.heylocal.traveler.repository.TravelOnRepository;
+import com.heylocal.traveler.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,6 +38,8 @@ public class PlanService {
 	private final PlaceRepository placeRepository;
 
 	private final PlaceItemRepository placeItemRepository;
+
+	private final OpinionRepository opinionRepository;
 
 	private final RegionService regionService;
 
@@ -276,5 +277,46 @@ public class PlanService {
 			for (PlaceItem placeItem: placeItems)
 				daySchedule.addPlaceItem(placeItem);
 		}
+	}
+
+	/**
+	 * <pre>
+	 * 답변을 채택하여 내 스케줄에 해당 장소를 추가합니다.
+	 * @param planId 플랜 ID
+	 * @param day 일자
+	 * @param opinionId 답변 ID
+	 * </pre>
+	 */
+	@Transactional
+	public void addPlaceFromOpinion(long planId, int day, long opinionId) throws NotFoundException {
+		// 답변 조회, 없으면 throw
+		Optional<Opinion> optOpinion = opinionRepository.findById(opinionId);
+		if (optOpinion.isEmpty())
+			throw new NotFoundException(NotFoundCode.NO_INFO, "존재하지 않는 답변입니다.");
+		Opinion opinion = optOpinion.get();
+
+		// 플랜 조회, 없으면 throw
+		Optional<Plan> optPlan = planRepository.findById(planId);
+		if (optPlan.isEmpty())
+			throw new NotFoundException(NotFoundCode.NO_INFO, "존재하지 않는 플랜입니다.");
+		Plan plan = optPlan.get();
+
+		// day에 해당하는 스케줄이 없으면 throw
+		if (day < 1 || day > plan.getDayScheduleList().size())
+			throw new NotFoundException(NotFoundCode.NO_INFO, "존재하지 않는 스케줄입니다.");
+		DaySchedule daySchedule = plan.getDayScheduleList().get(day - 1);
+
+		// 스케줄에 장소 추가
+		Place place = opinion.getPlace();
+		int itemIndex = daySchedule.getPlaceItemList().size();
+		PlaceItem placeItem = PlaceItem.builder()
+				.type(PlaceItemType.ORIGINAL)
+				.place(place)
+				.itemIndex(itemIndex)
+				.build();
+		daySchedule.addPlaceItem(placeItem);
+
+		// 답변의 채택 카운트 증가
+		opinion.accept();
 	}
 }

@@ -154,4 +154,8 @@ public class Opinion extends BaseTimeEntity {
   public void removeAllOpinionImageContent() {
     this.opinionImageContentList.clear();
   }
+
+  public void accept() {
+    this.countAccept++;
+  }
 }

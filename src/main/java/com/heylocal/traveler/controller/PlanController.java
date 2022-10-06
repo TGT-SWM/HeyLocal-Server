@@ -100,4 +100,18 @@ public class PlanController implements PlansApi {
 	public void updatePlacesInPlan(long planId, PlanSchedulesRequest request) throws NotFoundException {
 		planService.updatePlacesInPlan(planId, request);
 	}
+
+	/**
+	 * <pre>
+	 * 답변을 채택하여 내 스케줄에 해당 장소를 추가합니다.
+	 * @param planId 플랜 ID
+	 * @param day 일자
+	 * @param request 답변 정보
+	 * </pre>
+	 */
+	@Override
+	public void addPlaceFromOpinion(long planId, int day, AddPlaceRequest request) throws NotFoundException {
+		long opinionId = request.getOpinionId();
+		planService.addPlaceFromOpinion(planId, day, opinionId);
+	}
 }
