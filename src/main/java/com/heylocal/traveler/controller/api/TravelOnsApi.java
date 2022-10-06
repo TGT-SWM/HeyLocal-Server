@@ -30,6 +30,14 @@ import java.util.Map;
 
 import static com.heylocal.traveler.domain.travelon.opinion.OpinionImageContent.ImageContentType;
 
+/**
+ * packageName    : com.heylocal.traveler.controller.api
+ * fileName       : TravelOnsApi
+ * author         : 우태균
+ * date           : 2022/08/25
+ * description    : 여행 On API 인터페이스
+ */
+
 @RequestMapping("/travel-ons")
 public interface TravelOnsApi {
     @Operation(summary = "전체 여행 On 조회", description = "전체 여행 On의 목록을 조회합니다.", tags = {"TravelOns"})

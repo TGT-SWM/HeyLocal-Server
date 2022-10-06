@@ -25,6 +25,14 @@ import static com.heylocal.traveler.dto.OpinionDto.*;
 import static com.heylocal.traveler.dto.TravelOnDto.*;
 import static com.heylocal.traveler.dto.aws.S3PresignedUrlDto.OpinionImgUpdateUrl;
 
+/**
+ * packageName    : com.heylocal.traveler.controller
+ * fileName       : TravelOnsController
+ * author         : 우태균
+ * date           : 2022/08/30
+ * description    : 여행 On API 컨트롤러
+ */
+
 @Slf4j
 @Tag(name = "TravelOns")
 @RestController

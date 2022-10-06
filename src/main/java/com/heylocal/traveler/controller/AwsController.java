@@ -11,6 +11,14 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * packageName    : com.heylocal.traveler.controller
+ * fileName       : AwsController
+ * author         : 우태균
+ * date           : 2022/09/23
+ * description    : AWS S3 관련 API 컨트롤러
+ */
+
 @Slf4j
 @Tag(name = "Aws")
 @RestController

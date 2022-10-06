@@ -22,6 +22,14 @@ import org.springframework.web.bind.annotation.*;
 import static com.heylocal.traveler.dto.SignupDto.SignupRequest;
 import static com.heylocal.traveler.dto.SignupDto.UserInfoCheckResponse;
 
+/**
+ * packageName    : com.heylocal.traveler.controller.api
+ * fileName       : SignupApi
+ * author         : 우태균
+ * date           : 2022/08/12
+ * description    : 회원가입 API 인터페이스
+ */
+
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2022-08-12T04:12:44.357Z[GMT]")
 @RequestMapping("/signup")
 public interface SignupApi {

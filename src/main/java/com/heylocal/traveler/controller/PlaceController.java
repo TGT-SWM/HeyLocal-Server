@@ -19,6 +19,14 @@ import static com.heylocal.traveler.dto.PageDto.PageRequest;
 import static com.heylocal.traveler.dto.PlaceDto.PlaceResponse;
 import static com.heylocal.traveler.dto.PlaceDto.PlaceWithOpinionSizeResponse;
 
+/**
+ * packageName    : com.heylocal.traveler.controller
+ * fileName       : PlaceController
+ * author         : 신우진
+ * date           : 2022/09/03
+ * description    : 장소 API 컨트롤러
+ */
+
 @Tag(name = "Places")
 @RestController
 @RequiredArgsConstructor

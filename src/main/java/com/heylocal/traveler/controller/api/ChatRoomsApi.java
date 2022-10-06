@@ -11,6 +11,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
 
+/**
+ * packageName    : com.heylocal.traveler.controller.api
+ * fileName       : ChatRoomsApi
+ * author         : 우태균
+ * date           : 2022/08/12
+ * description    : 채팅 API 인터페이스
+ */
+
 @RequestMapping("/chatrooms")
 public interface ChatRoomsApi {
     @Operation(summary = "채팅방 리스트 조회", description = "사용자가 참여한 채팅방 목록을 조회합니다.", tags = {"ChatRooms"})

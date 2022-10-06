@@ -11,10 +11,13 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 /**
- * <pre>
- * 에러 처리 ControllerAdvice
- * </pre>
+ * packageName    : com.heylocal.traveler.controller.advice
+ * fileName       : ControllerAdvice
+ * author         : 우태균
+ * date           : 2022/08/13
+ * description    : 에러 처리 ControllerAdvice
  */
+
 @RestControllerAdvice
 public class ControllerAdvice {
   @ExceptionHandler(BadRequestException.class)
