@@ -8,6 +8,14 @@ import javax.persistence.PersistenceContext;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * packageName    : com.heylocal.traveler.repository
+ * fileName       : PlaceRepository
+ * author         : 우태균
+ * date           : 2022/09/08
+ * description    : 장소에 대한 레포지터리
+ */
+
 @Repository
 public class PlaceRepository {
   @PersistenceContext

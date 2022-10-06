@@ -8,6 +8,14 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import java.util.Optional;
 
+/**
+ * packageName    : com.heylocal.traveler.repository
+ * fileName       : UserRepository
+ * author         : 우태균
+ * date           : 2022/08/13
+ * description    : 사용자에 대한 레포지터리
+ */
+
 @Repository
 public class UserRepository {
   @PersistenceContext

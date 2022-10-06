@@ -12,8 +12,13 @@ import javax.persistence.PersistenceContext;
 import java.util.Optional;
 
 /**
- * Access Token, Refresh Token Repository
+ * packageName    : com.heylocal.traveler.repository
+ * fileName       : TokenRepository
+ * author         : 우태균
+ * date           : 2022/08/15
+ * description    : Access Token과 Refresh Token에 대한 레포지터리
  */
+
 @Slf4j
 @Repository
 public class TokenRepository {

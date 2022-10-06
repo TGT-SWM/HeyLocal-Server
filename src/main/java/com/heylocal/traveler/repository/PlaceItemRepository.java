@@ -6,6 +6,14 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+/**
+ * packageName    : com.heylocal.traveler.repository
+ * fileName       : PlaceItemRepository
+ * author         : 신우진
+ * date           : 2022/09/16
+ * description    : 스케줄 내 장소 아이템에 대한 레포지터리
+ */
+
 @Repository
 public class PlaceItemRepository {
 	@PersistenceContext

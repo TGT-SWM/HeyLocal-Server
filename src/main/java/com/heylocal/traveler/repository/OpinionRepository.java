@@ -11,6 +11,14 @@ import javax.persistence.TypedQuery;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * packageName    : com.heylocal.traveler.repository
+ * fileName       : OpinionRepository
+ * author         : 우태균
+ * date           : 2022/09/08
+ * description    : 답변에 대한 레포지터리
+ */
+
 @Repository
 public class OpinionRepository {
   @PersistenceContext
