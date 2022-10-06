@@ -7,6 +7,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+/**
+ * packageName    : com.heylocal.traveler.controller
+ * fileName       : ChatRoomController
+ * author         : 신우진
+ * date           : 2022/09/03
+ * description    : 채팅 API 컨트롤러
+ */
+
 @Tag(name = "ChatRooms")
 @RestController
 public class ChatRoomController implements ChatRoomsApi {

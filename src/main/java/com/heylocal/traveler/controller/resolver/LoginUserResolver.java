@@ -12,6 +12,14 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 
 import javax.servlet.http.HttpServletRequest;
 
+/**
+ * packageName    : com.heylocal.traveler.controller.resolver
+ * fileName       : LoginUserResolver
+ * author         : 우태균
+ * date           : 2022/08/18
+ * description    : 로그인 정보 처리를 위한 Argument Resolver
+ */
+
 @Slf4j
 @Component
 @RequiredArgsConstructor

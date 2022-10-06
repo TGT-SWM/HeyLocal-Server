@@ -8,6 +8,14 @@ import javax.persistence.EntityManager;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * packageName    : com.heylocal.traveler.repository
+ * fileName       : PlanRepository
+ * author         : 신우진
+ * date           : 2022/08/29
+ * description    : 플랜에 대한 레포지터리
+ */
+
 @Repository
 @RequiredArgsConstructor
 public class PlanRepository {

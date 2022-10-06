@@ -15,6 +15,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
 
+/**
+ * packageName    : com.heylocal.traveler.controller.api
+ * fileName       : RegionsApi
+ * author         : 신우진
+ * date           : 2022/08/28
+ * description    : 지역 API 인터페이스
+ */
+
 @RequestMapping("/regions")
 public interface RegionsApi {
 	@Operation(summary = "지역 목록 조회", description = "전체 지역 목록을 조회합니다.", tags = {"Regions"})

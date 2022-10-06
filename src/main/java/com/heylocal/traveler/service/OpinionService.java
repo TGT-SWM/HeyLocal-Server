@@ -37,6 +37,14 @@ import static com.heylocal.traveler.dto.OpinionDto.*;
 import static com.heylocal.traveler.dto.PageDto.PageRequest;
 import static com.heylocal.traveler.util.aws.S3ObjectNameFormatter.ObjectNameProperty;
 
+/**
+ * packageName    : com.heylocal.traveler.service
+ * fileName       : OpinionService
+ * author         : 우태균
+ * date           : 2022/09/08
+ * description    : 답변 관련 서비스
+ */
+
 @Slf4j
 @Service
 @RequiredArgsConstructor

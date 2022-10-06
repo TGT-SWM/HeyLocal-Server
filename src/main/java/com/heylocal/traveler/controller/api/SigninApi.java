@@ -24,6 +24,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import static com.heylocal.traveler.dto.SigninDto.SigninRequest;
 import static com.heylocal.traveler.dto.SigninDto.SigninResponse;
 
+/**
+ * packageName    : com.heylocal.traveler.controller.api
+ * fileName       : SigninApi
+ * author         : 우태균
+ * date           : 2022/08/12
+ * description    : 로그인 API 인터페이스
+ */
+
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2022-08-12T04:12:44.357Z[GMT]")
 @RequestMapping("/signin")
 public interface SigninApi {

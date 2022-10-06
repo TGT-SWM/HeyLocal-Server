@@ -26,6 +26,14 @@ import springfox.documentation.annotations.ApiIgnore;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * packageName    : com.heylocal.traveler.controller.api
+ * fileName       : UsersApi
+ * author         : 신우진
+ * date           : 2022/08/28
+ * description    : 사용자 API 인터페이스
+ */
+
 @RequestMapping("/users")
 public interface UsersApi {
 	@Operation(summary = "사용자 프로필 조회", description = "사용자의 프로필을 조회합니다.", tags = {"Users"})

@@ -22,8 +22,13 @@ import static com.heylocal.traveler.dto.AuthTokenDto.TokenPairRequest;
 import static com.heylocal.traveler.dto.AuthTokenDto.TokenPairResponse;
 
 /**
- * 인가 관련 서비스
+ * packageName    : com.heylocal.traveler.service
+ * fileName       : AuthService
+ * author         : 우태균
+ * date           : 2022/08/18
+ * description    : 인증 관련 서비스
  */
+
 @Service
 @RequiredArgsConstructor
 public class AuthService {

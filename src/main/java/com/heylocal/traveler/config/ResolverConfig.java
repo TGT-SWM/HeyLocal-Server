@@ -8,6 +8,14 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.List;
 
+/**
+ * packageName    : com.heylocal.traveler.config
+ * fileName       : ResolverConfig
+ * author         : 우태균
+ * date           : 2022/08/18
+ * description    : Argument Resolver 사용을 위한 Configuration
+ */
+
 @Configuration
 @RequiredArgsConstructor
 public class ResolverConfig implements WebMvcConfigurer {
