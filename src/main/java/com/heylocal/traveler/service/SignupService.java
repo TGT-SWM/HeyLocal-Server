@@ -18,8 +18,13 @@ import java.util.Optional;
 import static com.heylocal.traveler.dto.SignupDto.SignupRequest;
 
 /**
- * 회원가입 관련 서비스
+ * packageName    : com.heylocal.traveler.service
+ * fileName       : SignupService
+ * author         : 우태균
+ * date           : 2022/08/13
+ * description    : 회원가입 관련 서비스
  */
+
 @Service
 @RequiredArgsConstructor
 public class SignupService {

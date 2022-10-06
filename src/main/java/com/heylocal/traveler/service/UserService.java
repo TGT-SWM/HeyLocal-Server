@@ -25,6 +25,14 @@ import java.util.concurrent.ConcurrentHashMap;
 import static com.heylocal.traveler.dto.UserDto.*;
 import static com.heylocal.traveler.dto.UserDto.UserProfileResponse;
 
+/**
+ * packageName    : com.heylocal.traveler.service
+ * fileName       : UserService
+ * author         : 우태균
+ * date           : 2022/10/01
+ * description    : 사용자 관련 서비스
+ */
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
