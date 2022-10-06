@@ -43,7 +43,7 @@ public class Opinion extends BaseTimeEntity {
   private TravelOn travelOn;
 
   @Column(nullable = false)
-  private Integer countAccept;
+  private Integer countAccept; // TODO: 삭제
 
   // [일반]
   @Enumerated(EnumType.STRING)
@@ -160,7 +160,10 @@ public class Opinion extends BaseTimeEntity {
     this.opinionImageContentList.clear();
   }
 
-  public void accept() {
-    this.countAccept++;
+  public void registerPlaceItem(PlaceItem placeItem) {
+    this.placeItemList.add(placeItem);
+    if (placeItem.getOpinion() != this) {
+      placeItem.registerOpinion(this);
+    }
   }
 }

@@ -316,7 +316,7 @@ public class PlanService {
 				.build();
 		daySchedule.addPlaceItem(placeItem);
 
-		// 답변의 채택 카운트 증가
-		opinion.accept();
+		// 답변 채택
+		opinion.registerPlaceItem(placeItem);
 	}
 }

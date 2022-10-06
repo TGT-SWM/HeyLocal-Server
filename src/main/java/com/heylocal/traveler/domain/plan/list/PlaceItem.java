@@ -61,4 +61,11 @@ public class PlaceItem extends BaseTimeEntity {
     if (!daySchedule.getPlaceItemList().contains(this)) // O(N) 시간 소요 문제
       daySchedule.addPlaceItem(this);
   }
+
+  public void registerOpinion(Opinion opinion) {
+    this.opinion = opinion;
+    if (!opinion.getPlaceItemList().contains(this)) {
+      opinion.registerPlaceItem(this);
+    }
+  }
 }
