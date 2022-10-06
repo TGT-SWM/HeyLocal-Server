@@ -3,6 +3,7 @@ package com.heylocal.traveler.domain.travelon.opinion;
 import com.heylocal.traveler.domain.BaseTimeEntity;
 import com.heylocal.traveler.domain.Region;
 import com.heylocal.traveler.domain.place.Place;
+import com.heylocal.traveler.domain.plan.list.PlaceItem;
 import com.heylocal.traveler.domain.travelon.TravelOn;
 import com.heylocal.traveler.domain.user.User;
 import lombok.*;
@@ -95,6 +96,10 @@ public class Opinion extends BaseTimeEntity {
   @Builder.Default
   @OneToMany(mappedBy = "opinion", fetch = FetchType.LAZY)
   private List<OpinionImageContent> opinionImageContentList = new ArrayList<>();
+
+  @Builder.Default
+  @OneToMany(mappedBy = "opinion", fetch = FetchType.LAZY)
+  private List<PlaceItem> placeItemList = new ArrayList<>();
 
   public void setTravelOn(TravelOn travelOn) {
     if (this.travelOn != null) {

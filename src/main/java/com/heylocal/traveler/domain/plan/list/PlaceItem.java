@@ -3,6 +3,7 @@ package com.heylocal.traveler.domain.plan.list;
 import com.heylocal.traveler.domain.BaseTimeEntity;
 import com.heylocal.traveler.domain.place.Place;
 import com.heylocal.traveler.domain.plan.DaySchedule;
+import com.heylocal.traveler.domain.travelon.opinion.Opinion;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -45,6 +46,9 @@ public class PlaceItem extends BaseTimeEntity {
   private Long originalPlaceId; // 현재 대체장소일때, 원장소의 id
 
   private LocalTime arrivalTime; // 도착 시간
+
+  @ManyToOne
+  private Opinion opinion;
 
   /**
    * <pre>
