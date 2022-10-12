@@ -32,6 +32,6 @@ public interface RegionsApi {
 	})
 	@GetMapping()
 	List<RegionResponse> getRegions(
-			@Parameter(in = ParameterIn.QUERY, description = "조회할 City의 State\n\n만약 아무 값도 전달하지 않는다면, 모든 지역을 조회한다.", required = false) String state
+			@Parameter(in = ParameterIn.QUERY, description = "조회할 Region의 ID\n\n만약 아무 값도 전달하지 않는다면, 모든 지역을 조회한다.", required = false) Long regionId
 	) throws NotFoundException;
 }

@@ -68,6 +68,8 @@ class RegionServiceTest {
     );
   }
 
+  //TODO - inquiryRegions(long regionId)
+
   @Test
   @DisplayName("주소 -> Region 매핑 - 성공 케이스")
   void getRegionByAddressSucceedTest() throws BadRequestException {
