@@ -3,7 +3,6 @@ package com.heylocal.traveler.mapper.context;
 import com.amazonaws.HttpMethod;
 import com.heylocal.traveler.domain.profile.UserProfile;
 import com.heylocal.traveler.domain.user.User;
-import com.heylocal.traveler.dto.UserDto;
 import com.heylocal.traveler.util.aws.S3PresignUrlProvider;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -11,7 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import static com.heylocal.traveler.dto.UserDto.*;
+import static com.heylocal.traveler.dto.UserDto.UserProfileResponse;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.willReturn;

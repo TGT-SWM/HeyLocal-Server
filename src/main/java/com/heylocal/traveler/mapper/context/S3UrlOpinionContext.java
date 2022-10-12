@@ -17,8 +17,9 @@ import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.stream.Collectors;
 
-import static com.heylocal.traveler.dto.OpinionDto.*;
-import static com.heylocal.traveler.dto.UserDto.*;
+import static com.heylocal.traveler.dto.OpinionDto.OpinionResponse;
+import static com.heylocal.traveler.dto.OpinionDto.OpinionWithPlaceResponse;
+import static com.heylocal.traveler.dto.UserDto.UserProfileResponse;
 
 @Component
 @RequiredArgsConstructor
