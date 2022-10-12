@@ -1,3 +1,11 @@
+/**
+ * packageName    : com.heylocal.traveler.dto
+ * fileName       : SearchDto
+ * author         : 신우진
+ * date           : 2022/08/28
+ * description    : 검색 관련 DTO
+ */
+
 package com.heylocal.traveler.dto;
 
 import com.heylocal.traveler.dto.TravelOnDto.TravelOnSimpleResponse;

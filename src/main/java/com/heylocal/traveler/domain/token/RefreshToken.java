@@ -1,3 +1,11 @@
+/**
+ * packageName    : com.heylocal.traveler.domain.token
+ * fileName       : RefreshToken
+ * author         : 우태균
+ * date           : 2022/09/19
+ * description    : 사용자 인가 Refresh Token 엔티티
+ */
+
 package com.heylocal.traveler.domain.token;
 
 import com.heylocal.traveler.domain.BaseTimeEntity;
@@ -11,9 +19,6 @@ import lombok.experimental.SuperBuilder;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-/**
- * Refresh Token 엔티티
- */
 @Entity
 @Table(name = "REFRESH_TOKEN")
 @NoArgsConstructor

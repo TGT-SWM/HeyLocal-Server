@@ -1,9 +1,15 @@
+/**
+ * packageName    : com.heylocal.traveler.domain.place
+ * fileName       : PlaceCategory
+ * author         : 우태균
+ * date           : 2022/10/06
+ * description    : 장소 종류 ENUM,
+ *                  카카오 장소 검색 API 기반의 장소 카테고리,
+ *                  https://developers.kakao.com/docs/latest/ko/local/dev-guide#search-by-category-request-category-group-code
+ */
+
 package com.heylocal.traveler.domain.place;
 
-/**
- * 카카오 장소 검색 API 기반의 장소 카테고리
- * - https://developers.kakao.com/docs/latest/ko/local/dev-guide#search-by-category-request-category-group-code
- */
 public enum PlaceCategory {
   MT1("대형마트"),
   CS2("편의점"),

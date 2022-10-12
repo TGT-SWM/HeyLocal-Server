@@ -1,3 +1,11 @@
+/**
+ * packageName    : com.heylocal.traveler.domain.travelon
+ * fileName       : TravelOn
+ * author         : 우태균
+ * date           : 2022/09/20
+ * description    : 여행On 엔티티
+ */
+
 package com.heylocal.traveler.domain.travelon;
 
 import com.heylocal.traveler.domain.BaseTimeEntity;
@@ -19,10 +27,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-/**
- * 여행 On
- */
 
 @Entity
 @Table(name = "TRAVEL_ON")

@@ -1,3 +1,11 @@
+/**
+ * packageName    : com.heylocal.traveler.util.jwt
+ * fileName       : JwtTokenProvider
+ * author         : 우태균
+ * date           : 2022/08/21
+ * description    : Access·Refresh Token 생성 클래스
+ */
+
 package com.heylocal.traveler.util.jwt;
 
 import io.jsonwebtoken.Header;
@@ -8,9 +16,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.Date;
 
-/**
- * Access·Refresh Token 생성 클래스
- */
 @Component
 public class JwtTokenProvider {
   private final String secretKey;

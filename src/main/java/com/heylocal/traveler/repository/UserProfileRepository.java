@@ -1,11 +1,3 @@
-package com.heylocal.traveler.repository;
-
-import com.heylocal.traveler.domain.profile.UserProfile;
-import org.springframework.stereotype.Repository;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
 /**
  * packageName    : com.heylocal.traveler.repository
  * fileName       : UserProfileRepository
@@ -13,6 +5,14 @@ import javax.persistence.PersistenceContext;
  * date           : 2022/08/24
  * description    : 사용자 프로필에 대한 레포지터리
  */
+
+package com.heylocal.traveler.repository;
+
+import com.heylocal.traveler.domain.profile.UserProfile;
+import org.springframework.stereotype.Repository;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 @Repository
 public class UserProfileRepository {

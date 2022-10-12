@@ -1,3 +1,11 @@
+/**
+ * packageName    : com.heylocal.traveler.domain.travelon.list
+ * fileName       : HopeAccommodation
+ * author         : 우태균
+ * date           : 2022/09/19
+ * description    : 여행On 질문 항목 - 선호 숙소 엔티티
+ */
+
 package com.heylocal.traveler.domain.travelon.list;
 
 import com.heylocal.traveler.domain.BaseTimeEntity;
@@ -9,10 +17,6 @@ import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
-
-/**
- * 희망 숙소 유형 목록
- */
 
 @Entity
 @Table(name = "HOPE_ACCOMMODATION")

@@ -1,3 +1,11 @@
+/**
+ * packageName    : com.heylocal.traveler.mapper
+ * fileName       : HopeFoodMapper
+ * author         : 우태균
+ * date           : 2022/09/19
+ * description    : HopeFood 엔티티 관련 Mapper
+ */
+
 package com.heylocal.traveler.mapper;
 
 import com.heylocal.traveler.domain.travelon.TravelOn;

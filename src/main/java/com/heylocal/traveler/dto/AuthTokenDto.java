@@ -1,3 +1,11 @@
+/**
+ * packageName    : com.heylocal.traveler.dto
+ * fileName       : AuthTokenDto
+ * author         : 우태균
+ * date           : 2022/08/21
+ * description    : 인증·인가 토큰 관련 DTO
+ */
+
 package com.heylocal.traveler.dto;
 
 import lombok.*;

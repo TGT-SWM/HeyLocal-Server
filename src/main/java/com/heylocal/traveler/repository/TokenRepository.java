@@ -1,3 +1,11 @@
+/**
+ * packageName    : com.heylocal.traveler.repository
+ * fileName       : TokenRepository
+ * author         : 우태균
+ * date           : 2022/08/15
+ * description    : Access Token과 Refresh Token에 대한 레포지터리
+ */
+
 package com.heylocal.traveler.repository;
 
 import com.heylocal.traveler.domain.token.AccessToken;
@@ -10,14 +18,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import java.util.Optional;
-
-/**
- * packageName    : com.heylocal.traveler.repository
- * fileName       : TokenRepository
- * author         : 우태균
- * date           : 2022/08/15
- * description    : Access Token과 Refresh Token에 대한 레포지터리
- */
 
 @Slf4j
 @Repository

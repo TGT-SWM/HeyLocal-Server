@@ -1,3 +1,11 @@
+/**
+ * packageName    : com.heylocal.traveler.domain.travelon.opinion
+ * fileName       : CafeMoodType
+ * author         : 우태균
+ * date           : 2022/09/15
+ * description    : 여행On 답변 항목 - 카페 분위기 종류 ENUM
+ */
+
 package com.heylocal.traveler.domain.travelon.opinion;
 
 /**

@@ -1,3 +1,11 @@
+/**
+ * packageName    : com.heylocal.traveler.domain
+ * fileName       : BaseTimeEntity
+ * author         : 우태균
+ * date           : 2022/08/14
+ * description    : 모든 엔티티가 상속받는 생성일·수정일 엔티티
+ */
+
 package com.heylocal.traveler.domain;
 
 import lombok.AllArgsConstructor;

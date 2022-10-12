@@ -1,8 +1,13 @@
+/**
+ * packageName    : com.heylocal.traveler.domain.travelon
+ * fileName       : SnsTasteType
+ * author         : 우태균
+ * date           : 2022/08/24
+ * description    : 여행On 질문 항목 - SNS 관련 취향 종류 ENUM
+ */
+
 package com.heylocal.traveler.domain.travelon;
 
-/**
- * SNS 여부
- */
 public enum SnsTasteType {
   YES("SNS 유명 장소"), NO("SNS 안함");
 

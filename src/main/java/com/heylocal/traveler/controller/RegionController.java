@@ -1,3 +1,11 @@
+/**
+ * packageName    : com.heylocal.traveler.controller
+ * fileName       : RegionController
+ * author         : 신우진
+ * date           : 2022/09/03
+ * description    : 지역 API 컨트롤러
+ */
+
 package com.heylocal.traveler.controller;
 
 import com.heylocal.traveler.controller.api.RegionsApi;
@@ -11,14 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.heylocal.traveler.dto.RegionDto.RegionResponse;
-
-/**
- * packageName    : com.heylocal.traveler.controller
- * fileName       : RegionController
- * author         : 신우진
- * date           : 2022/09/03
- * description    : 지역 API 컨트롤러
- */
 
 @Tag(name = "Regions")
 @RestController

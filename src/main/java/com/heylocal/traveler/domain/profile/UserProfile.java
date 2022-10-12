@@ -1,3 +1,11 @@
+/**
+ * packageName    : com.heylocal.traveler.domain.profile
+ * fileName       : UserProfile
+ * author         : 우태균
+ * date           : 2022/10/02
+ * description    : 사용자 프로필 엔티티
+ */
+
 package com.heylocal.traveler.domain.profile;
 
 import com.heylocal.traveler.domain.BaseTimeEntity;
@@ -11,10 +19,6 @@ import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
-
-/**
- * 사용자 프로필
- */
 
 @Entity
 @Table(name = "USER_PROFILE")

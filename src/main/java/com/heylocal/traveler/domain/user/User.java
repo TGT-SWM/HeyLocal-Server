@@ -1,3 +1,11 @@
+/**
+ * packageName    : com.heylocal.traveler.domain.user
+ * fileName       : User
+ * author         : 우태균
+ * date           : 2022/10/01
+ * description    : 서비스 사용자 엔티티
+ */
+
 package com.heylocal.traveler.domain.user;
 
 import com.heylocal.traveler.domain.BaseTimeEntity;
@@ -14,10 +22,6 @@ import lombok.experimental.SuperBuilder;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
-
-/**
- * 사용자 & 관리자 클래스
- */
 
 @Entity
 @Table(name = "USER")

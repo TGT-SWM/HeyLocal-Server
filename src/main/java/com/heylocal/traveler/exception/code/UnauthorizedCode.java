@@ -1,10 +1,13 @@
+/**
+ * packageName    : com.heylocal.traveler.exception.code
+ * fileName       : UnauthorizedCode
+ * author         : 우태균
+ * date           : 2022/08/20
+ * description    : 인가 관련 오류 코드 ENUM
+ */
+
 package com.heylocal.traveler.exception.code;
 
-/**
- * <pre>
- * 인가 관련 오류 코드
- * <pre/>
- */
 public enum UnauthorizedCode implements ErrorCode {
   NO_HTTP_HEADER_VALUE("Authorization HTTP 헤더에 값이 없습니다."),
   NOT_STARTS_WITH_BEARER("Authorization HTTP 헤더의 값은 Bearer 로 시작해야 합니다."),

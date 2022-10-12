@@ -1,3 +1,11 @@
+/**
+ * packageName    : com.heylocal.traveler.service
+ * fileName       : PlaceService
+ * author         : 우태균
+ * date           : 2022/09/29
+ * description    : 장소 관련 서비스
+ */
+
 package com.heylocal.traveler.service;
 
 import com.heylocal.traveler.domain.place.Place;
@@ -15,14 +23,6 @@ import java.util.stream.Collectors;
 
 import static com.heylocal.traveler.dto.PlaceDto.PlaceResponse;
 import static com.heylocal.traveler.dto.PlaceDto.PlaceWithOpinionSizeResponse;
-
-/**
- * packageName    : com.heylocal.traveler.service
- * fileName       : PlaceService
- * author         : 우태균
- * date           : 2022/09/29
- * description    : 장소 관련 서비스
- */
 
 @Service
 @RequiredArgsConstructor

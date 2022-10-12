@@ -1,3 +1,11 @@
+/**
+ * packageName    : com.heylocal.traveler.config
+ * fileName       : SecurityConfig
+ * author         : 우태균
+ * date           : 2022/08/12
+ * description    : Spring Security의 Configuration
+ */
+
 package com.heylocal.traveler.config;
 
 import org.springframework.context.annotation.Bean;
@@ -7,14 +15,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
-/**
- * packageName    : com.heylocal.traveler.config
- * fileName       : SecurityConfig
- * author         : 우태균
- * date           : 2022/08/12
- * description    : Spring Security의 Configuration
- */
 
 @Configuration
 @EnableWebSecurity

@@ -1,3 +1,11 @@
+/**
+ * packageName    : com.heylocal.traveler.config
+ * fileName       : SwaggerConfig
+ * author         : 우태균
+ * date           : 2022/08/12
+ * description    : Swagger 문서 생성을 위한 Configuration
+ */
+
 package com.heylocal.traveler.config;
 
 import com.fasterxml.classmate.TypeResolver;
@@ -20,14 +28,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-/**
- * packageName    : com.heylocal.traveler.config
- * fileName       : SwaggerConfig
- * author         : 우태균
- * date           : 2022/08/12
- * description    : Swagger 문서 생성을 위한 Configuration
- */
 
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2022-08-12T04:12:44.357Z[GMT]")
 @Configuration

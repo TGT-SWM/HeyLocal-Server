@@ -1,3 +1,11 @@
+/**
+ * packageName    : com.heylocal.traveler.mapper.context
+ * fileName       : S3UrlUserContext
+ * author         : 우태균
+ * date           : 2022/10/02
+ * description    : 사용자, 프로필에 관련 이미지의 S3 접근 URL을 바인딩하는 Mapping Context
+ */
+
 package com.heylocal.traveler.mapper.context;
 
 import com.amazonaws.HttpMethod;

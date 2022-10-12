@@ -1,3 +1,11 @@
+/**
+ * packageName    : com.heylocal.traveler.controller
+ * fileName       : SigninController
+ * author         : 우태균
+ * date           : 2022/08/15
+ * description    : 로그인 API 컨트롤러
+ */
+
 package com.heylocal.traveler.controller;
 
 import com.heylocal.traveler.controller.api.SigninApi;
@@ -14,14 +22,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import static com.heylocal.traveler.dto.SigninDto.SigninRequest;
 import static com.heylocal.traveler.dto.SigninDto.SigninResponse;
-
-/**
- * packageName    : com.heylocal.traveler.controller
- * fileName       : SigninController
- * author         : 우태균
- * date           : 2022/08/15
- * description    : 로그인 API 컨트롤러
- */
 
 @Slf4j
 @Tag(name = "Signin")

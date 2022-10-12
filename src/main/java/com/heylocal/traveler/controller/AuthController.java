@@ -1,3 +1,11 @@
+/**
+ * packageName    : com.heylocal.traveler.controller
+ * fileName       : AuthController
+ * author         : 우태균
+ * date           : 2022/08/21
+ * description    : 인증 API 컨트롤러
+ */
+
 package com.heylocal.traveler.controller;
 
 import com.heylocal.traveler.controller.api.AuthApi;
@@ -13,14 +21,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import static com.heylocal.traveler.dto.AuthTokenDto.TokenPairRequest;
 import static com.heylocal.traveler.dto.AuthTokenDto.TokenPairResponse;
-
-/**
- * packageName    : com.heylocal.traveler.controller
- * fileName       : AuthController
- * author         : 우태균
- * date           : 2022/08/21
- * description    : 인증 API 컨트롤러
- */
 
 @Tag(name = "Auth")
 @RestController

@@ -1,3 +1,11 @@
+/**
+ * packageName    : com.heylocal.traveler.domain.plan
+ * fileName       : Plan
+ * author         : 우태균
+ * date           : 2022/09/26
+ * description    : 여행 계획표 엔티티
+ */
+
 package com.heylocal.traveler.domain.plan;
 
 import com.heylocal.traveler.domain.BaseTimeEntity;
@@ -11,10 +19,6 @@ import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-
-/**
- * 여행
- */
 
 @Entity
 @Table(name = "PLAN")

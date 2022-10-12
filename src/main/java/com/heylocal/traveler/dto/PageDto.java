@@ -1,3 +1,11 @@
+/**
+ * packageName    : com.heylocal.traveler.dto
+ * fileName       : PageDto
+ * author         : 신우진
+ * date           : 2022/09/29
+ * description    : 페이지 처리 관련 DTO
+ */
+
 package com.heylocal.traveler.dto;
 
 import io.swagger.annotations.ApiParam;

@@ -1,3 +1,11 @@
+/**
+ * packageName    : com.heylocal.traveler.controller.api
+ * fileName       : PlacesApi
+ * author         : 신우진
+ * date           : 2022/08/28
+ * description    : 장소 API 인터페이스
+ */
+
 package com.heylocal.traveler.controller.api;
 
 import com.heylocal.traveler.dto.OpinionDto;
@@ -16,14 +24,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
-
-/**
- * packageName    : com.heylocal.traveler.controller.api
- * fileName       : PlacesApi
- * author         : 신우진
- * date           : 2022/08/28
- * description    : 장소 API 인터페이스
- */
 
 @RequestMapping("/places")
 public interface PlacesApi {

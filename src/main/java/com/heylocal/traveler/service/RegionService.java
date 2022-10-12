@@ -1,3 +1,11 @@
+/**
+ * packageName    : com.heylocal.traveler.service
+ * fileName       : RegionService
+ * author         : 우태균
+ * date           : 2022/09/06
+ * description    : 지역 관련 서비스
+ */
+
 package com.heylocal.traveler.service;
 
 import com.heylocal.traveler.domain.Region;
@@ -16,14 +24,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.heylocal.traveler.dto.RegionDto.RegionResponse;
-
-/**
- * packageName    : com.heylocal.traveler.service
- * fileName       : RegionService
- * author         : 우태균
- * date           : 2022/09/06
- * description    : 지역 관련 서비스
- */
 
 @Service
 @RequiredArgsConstructor

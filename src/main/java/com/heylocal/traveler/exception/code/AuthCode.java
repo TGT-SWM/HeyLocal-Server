@@ -1,10 +1,13 @@
+/**
+ * packageName    : com.heylocal.traveler.exception.code
+ * fileName       : AuthCode
+ * author         : 우태균
+ * date           : 2022/08/21
+ * description    : 인가 관련 오류 코드 ENUM
+ */
+
 package com.heylocal.traveler.exception.code;
 
-/**
- * <pre>
- * 인가 관련 오류 코드
- * </pre>
- */
 public enum AuthCode implements ErrorCode {
   NOT_EXIST_REFRESH_TOKEN("존재하지 않는 Refresh Token 입니다."),
   EXPIRED_REFRESH_TOKEN("만료된 Refresh Token 입니다."),

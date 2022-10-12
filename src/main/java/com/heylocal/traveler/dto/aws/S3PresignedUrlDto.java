@@ -1,3 +1,11 @@
+/**
+ * packageName    : com.heylocal.traveler.dto.aws
+ * fileName       : S3PresignedUrlDto
+ * author         : 우태균
+ * date           : 2022/09/27
+ * description    : AWS S3에 접근할 수 있는 Presigned URL 관련 DTO
+ */
+
 package com.heylocal.traveler.dto.aws;
 
 import io.swagger.v3.oas.annotations.media.Schema;

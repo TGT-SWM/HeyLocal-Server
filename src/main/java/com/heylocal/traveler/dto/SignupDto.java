@@ -1,3 +1,11 @@
+/**
+ * packageName    : com.heylocal.traveler.dto
+ * fileName       : SignupDto
+ * author         : 우태균
+ * date           : 2022/08/20
+ * description    : 회원가입 관련 DTO
+ */
+
 package com.heylocal.traveler.dto;
 
 import lombok.*;

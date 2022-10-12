@@ -1,3 +1,11 @@
+/**
+ * packageName    : com.heylocal.traveler.util.aws
+ * fileName       : S3PresignUrlProvider
+ * author         : 우태균
+ * date           : 2022/09/24
+ * description    : AWS S3에 접근할 수 있는 Presigned URL 을 제공하는 클래스
+ */
+
 package com.heylocal.traveler.util.aws;
 
 import com.amazonaws.HttpMethod;

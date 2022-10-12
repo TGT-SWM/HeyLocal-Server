@@ -1,3 +1,11 @@
+/**
+ * packageName    : com.heylocal.traveler.exception.code
+ * fileName       : NotFoundCode
+ * author         : 우태균
+ * date           : 2022/08/21
+ * description    : Not Found 관련 오류 코드 ENUM
+ */
+
 package com.heylocal.traveler.exception.code;
 
 public enum NotFoundCode implements ErrorCode {

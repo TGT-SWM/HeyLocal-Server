@@ -1,3 +1,11 @@
+/**
+ * packageName    : com.heylocal.traveler.dto
+ * fileName       : UserDto
+ * author         : 우태균
+ * date           : 2022/10/12
+ * description    : 서비스 사용자 관련 DTO
+ */
+
 package com.heylocal.traveler.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;

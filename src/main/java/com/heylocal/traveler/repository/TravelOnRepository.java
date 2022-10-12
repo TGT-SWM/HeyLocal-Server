@@ -1,3 +1,11 @@
+/**
+ * packageName    : com.heylocal.traveler.repository
+ * fileName       : TravelOnRepository
+ * author         : 우태균
+ * date           : 2022/08/30
+ * description    : 여행 On에 대한 레포지터리
+ */
+
 package com.heylocal.traveler.repository;
 
 import com.heylocal.traveler.domain.Region;
@@ -11,14 +19,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.heylocal.traveler.dto.TravelOnDto.TravelOnSortType;
-
-/**
- * packageName    : com.heylocal.traveler.repository
- * fileName       : TravelOnRepository
- * author         : 우태균
- * date           : 2022/08/30
- * description    : 여행 On에 대한 레포지터리
- */
 
 @Repository
 @RequiredArgsConstructor

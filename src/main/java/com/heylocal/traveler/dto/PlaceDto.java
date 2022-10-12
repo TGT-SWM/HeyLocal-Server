@@ -1,3 +1,11 @@
+/**
+ * packageName    : com.heylocal.traveler.dto
+ * fileName       : PlaceDto
+ * author         : 우태균
+ * date           : 2022/10/12
+ * description    : 장소 관련 DTO
+ */
+
 package com.heylocal.traveler.dto;
 
 import com.heylocal.traveler.domain.place.PlaceCategory;

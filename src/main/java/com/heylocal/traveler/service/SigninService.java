@@ -1,3 +1,11 @@
+/**
+ * packageName    : com.heylocal.traveler.service
+ * fileName       : SigninService
+ * author         : 우태균
+ * date           : 2022/08/15
+ * description    : 로그인 관련 서비스
+ */
+
 package com.heylocal.traveler.service;
 
 import com.heylocal.traveler.domain.token.AccessToken;
@@ -22,14 +30,6 @@ import java.util.Optional;
 
 import static com.heylocal.traveler.dto.SigninDto.SigninRequest;
 import static com.heylocal.traveler.dto.SigninDto.SigninResponse;
-
-/**
- * packageName    : com.heylocal.traveler.service
- * fileName       : SigninService
- * author         : 우태균
- * date           : 2022/08/15
- * description    : 로그인 관련 서비스
- */
 
 @Slf4j
 @Service

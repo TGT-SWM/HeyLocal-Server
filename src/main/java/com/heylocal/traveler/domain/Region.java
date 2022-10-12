@@ -1,3 +1,11 @@
+/**
+ * packageName    : com.heylocal.traveler.domain
+ * fileName       : Region
+ * author         : 우태균
+ * date           : 2022/10/02
+ * description    : 시·도, 시 지역 엔티티
+ */
+
 package com.heylocal.traveler.domain;
 
 import com.heylocal.traveler.domain.place.Place;
@@ -9,10 +17,6 @@ import lombok.*;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
-
-/**
- * 시/도, 시
- */
 
 @Entity
 @Table(name = "REGION")

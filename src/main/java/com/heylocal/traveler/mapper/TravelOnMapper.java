@@ -1,3 +1,11 @@
+/**
+ * packageName    : com.heylocal.traveler.mapper
+ * fileName       : TravelOnMapper
+ * author         : 우태균
+ * date           : 2022/10/04
+ * description    : TravelOn 엔티티 관련 Mapper
+ */
+
 package com.heylocal.traveler.mapper;
 
 import com.heylocal.traveler.domain.Region;

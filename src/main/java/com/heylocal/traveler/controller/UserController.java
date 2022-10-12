@@ -1,3 +1,11 @@
+/**
+ * packageName    : com.heylocal.traveler.controller
+ * fileName       : UserController
+ * author         : 신우진
+ * date           : 2022/09/03
+ * description    : 사용자 API 컨트롤러
+ */
+
 package com.heylocal.traveler.controller;
 
 import com.heylocal.traveler.controller.api.UsersApi;
@@ -28,14 +36,6 @@ import java.util.regex.Pattern;
 import static com.heylocal.traveler.dto.OpinionDto.OpinionWithPlaceResponse;
 import static com.heylocal.traveler.dto.UserDto.UserProfileRequest;
 import static com.heylocal.traveler.dto.UserDto.UserProfileResponse;
-
-/**
- * packageName    : com.heylocal.traveler.controller
- * fileName       : UserController
- * author         : 신우진
- * date           : 2022/09/03
- * description    : 사용자 API 컨트롤러
- */
 
 @Tag(name = "Users")
 @RestController

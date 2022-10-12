@@ -1,3 +1,11 @@
+/**
+ * packageName    : com.heylocal.traveler.config
+ * fileName       : InterceptorConfig
+ * author         : 우태균
+ * date           : 2022/08/18
+ * description    : Spring Interceptor 등록 Configuration
+ */
+
 package com.heylocal.traveler.config;
 
 import com.heylocal.traveler.interceptor.auth.AuthInterceptor;
@@ -6,14 +14,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-
-/**
- * packageName    : com.heylocal.traveler.config
- * fileName       : InterceptorConfig
- * author         : 우태균
- * date           : 2022/08/18
- * description    : Spring Interceptor 사용을 위한 Configuration
- */
 
 @Configuration
 @RequiredArgsConstructor

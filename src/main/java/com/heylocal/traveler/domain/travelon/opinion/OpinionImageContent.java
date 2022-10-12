@@ -1,3 +1,11 @@
+/**
+ * packageName    : com.heylocal.traveler.domain.travelon.opinion
+ * fileName       : OpinionImageContent
+ * author         : 우태균
+ * date           : 2022/09/04
+ * description    : 여행On 답변에 포함되는 이미지 엔티티
+ */
+
 package com.heylocal.traveler.domain.travelon.opinion;
 
 import com.heylocal.traveler.domain.BaseTimeEntity;
@@ -9,9 +17,6 @@ import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
 
-/**
- * 답변에 포함되는 이미지
- */
 @Entity
 @Table(name = "OPINION_IMAGE_CONTENT")
 @NoArgsConstructor

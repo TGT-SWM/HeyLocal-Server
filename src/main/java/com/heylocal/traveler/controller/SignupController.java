@@ -1,3 +1,11 @@
+/**
+ * packageName    : com.heylocal.traveler.controller
+ * fileName       : SignupController
+ * author         : 신우진
+ * date           : 2022/08/13
+ * description    : 회원가입 API 컨트롤러
+ */
+
 package com.heylocal.traveler.controller;
 
 import com.heylocal.traveler.controller.api.SignupApi;
@@ -17,14 +25,6 @@ import java.util.regex.Pattern;
 
 import static com.heylocal.traveler.dto.SignupDto.SignupRequest;
 import static com.heylocal.traveler.dto.SignupDto.UserInfoCheckResponse;
-
-/**
- * packageName    : com.heylocal.traveler.controller
- * fileName       : SignupController
- * author         : 신우진
- * date           : 2022/08/13
- * description    : 회원가입 API 컨트롤러
- */
 
 @Slf4j
 @Tag(name = "Signup")

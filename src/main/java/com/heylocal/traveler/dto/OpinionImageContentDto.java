@@ -1,3 +1,11 @@
+/**
+ * packageName    : com.heylocal.traveler.dto
+ * fileName       : OpinionImageContentDto
+ * author         : 우태균
+ * date           : 2022/09/26
+ * description    : 여행On 답변에 포함되는 이미지 관련 DTO
+ */
+
 package com.heylocal.traveler.dto;
 
 import io.swagger.annotations.ApiModelProperty;

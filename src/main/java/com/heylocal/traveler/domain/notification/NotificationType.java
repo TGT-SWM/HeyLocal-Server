@@ -1,3 +1,11 @@
+/**
+ * packageName    : com.heylocal.traveler.domain.notification
+ * fileName       : NotificationType
+ * author         : 우태균
+ * date           : 2022/08/24
+ * description    : 알림 종류 ENUM
+ */
+
 package com.heylocal.traveler.domain.notification;
 
 /**

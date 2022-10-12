@@ -1,3 +1,11 @@
+/**
+ * packageName    : com.heylocal.traveler.domain.travelon
+ * fileName       : TravelTypeGroup
+ * author         : 우태균
+ * date           : 2022/09/19
+ * description    : 여행On 질문 항목 - 여행 성향 엔티티
+ */
+
 package com.heylocal.traveler.domain.travelon;
 
 import com.heylocal.traveler.domain.BaseTimeEntity;
@@ -9,9 +17,6 @@ import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
 
-/**
- * 여행 성향 모음
- */
 @Entity
 @Table(name = "TRAVEL_TYPE_GROUP")
 @NoArgsConstructor

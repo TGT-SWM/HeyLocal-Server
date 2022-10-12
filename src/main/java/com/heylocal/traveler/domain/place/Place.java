@@ -1,3 +1,11 @@
+/**
+ * packageName    : com.heylocal.traveler.domain.place
+ * fileName       : Place
+ * author         : 우태균
+ * date           : 2022/09/19
+ * description    : 장소 엔티티
+ */
+
 package com.heylocal.traveler.domain.place;
 
 import com.heylocal.traveler.domain.BaseTimeEntity;

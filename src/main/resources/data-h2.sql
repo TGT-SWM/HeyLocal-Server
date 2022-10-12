@@ -1,3 +1,10 @@
+-- ====================== Header ======================
+-- fileName       : data-h2.sql
+-- author         : 우태균
+-- date           : 2022/09/08
+-- description    : 개발용 초기 데이터 DML 스크립트
+-- ====================================================
+
 -- 지역 정보 INSERT
 INSERT INTO `REGION`(`ID`, `STATE`, `CITY`) VALUES(0, '서울특별시','종로구');
 INSERT INTO `REGION`(`ID`, `STATE`, `CITY`) VALUES(1, '서울특별시','중구');
