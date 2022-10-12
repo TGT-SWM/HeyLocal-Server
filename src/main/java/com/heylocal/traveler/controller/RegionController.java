@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.heylocal.traveler.dto.RegionDto.RegionResponse;
@@ -31,13 +32,14 @@ public class RegionController implements RegionsApi {
 	 * @throws NotFoundException
 	 */
 	@Override
-	public List<RegionResponse> getRegions(String state) throws NotFoundException {
+	public List<RegionResponse> getRegions(Long regionId) throws NotFoundException {
 		List<RegionResponse> response;
 
-		if (state == null || state.isEmpty()) { //만약 state가 없다면
+		if (regionId == null) { //만약 id가 없다면
 			response = regionService.inquiryAllRegions();
-		} else { //만약 state가 있다면
-			response = regionService.inquiryRegions(state);
+		} else { //만약 id가 있다면
+			response = new ArrayList<>();
+			response.add(regionService.inquiryRegions(regionId));
 		}
 
 		return response;

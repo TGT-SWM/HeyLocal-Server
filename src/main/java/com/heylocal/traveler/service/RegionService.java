@@ -50,6 +50,26 @@ public class RegionService {
   }
 
   /**
+   * id 로 Region 조회
+   * @param regionId
+   * @return
+   * @throws NotFoundException
+   */
+  @Transactional(readOnly = true)
+  public RegionResponse inquiryRegions(long regionId) throws NotFoundException {
+    RegionResponse response;
+    Optional<Region> regionOptional = regionRepository.findById(regionId);
+
+    if (regionOptional.isEmpty()) {
+      throw new NotFoundException(NotFoundCode.NO_INFO, "해당 지역 id가 존재하지 않습니다.");
+    }
+
+    response = RegionMapper.INSTANCE.toResponseDto(regionOptional.get());
+
+    return response;
+  }
+
+  /**
    * 모든 Region 조회
    * @return
    */
