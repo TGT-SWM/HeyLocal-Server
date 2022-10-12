@@ -628,7 +628,7 @@ class OpinionServiceTest {
         .address("myAddress")
         .lat(10)
         .lng(10)
-        .kakaoLink("myLink")
+        .link("myLink")
         .build();
   }
 
@@ -641,7 +641,7 @@ class OpinionServiceTest {
         .address(address)
         .lat(10)
         .lng(10)
-        .kakaoLink("myLink")
+        .link("myLink")
         .build();
   }
 

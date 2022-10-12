@@ -326,7 +326,7 @@ class OpinionImgContentServiceTest {
         .address("myAddress")
         .lat(10)
         .lng(10)
-        .kakaoLink("myLink")
+        .link("myLink")
         .build();
   }
 }
