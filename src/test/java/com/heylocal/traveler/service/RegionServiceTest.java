@@ -13,6 +13,7 @@ import org.mockito.MockitoAnnotations;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.eq;
@@ -68,7 +69,32 @@ class RegionServiceTest {
     );
   }
 
-  //TODO - inquiryRegions(long regionId)
+  @Test
+  @DisplayName("id 로 Region 조회")
+  void inquiryRegionsByIdTest() throws NotFoundException {
+    //GIVEN
+    long existRegionId = 1L;
+    long notExistRegionId = 2L;
+
+    //Mock 행동 정의 - regionRepository
+    String state = "myState";
+    String city = "myCity";
+    Region region = Region.builder().id(existRegionId).state(state).city(city).build();
+    willReturn(Optional.of(region)).given(regionRepository).findById(existRegionId);
+    willReturn(Optional.empty()).given(regionRepository).findById(notExistRegionId);
+
+    //WHEN
+    RegionDto.RegionResponse succeedResult = regionService.inquiryRegions(existRegionId);
+
+    //THEN
+    assertAll(
+        //성공 케이스 - 유효한 id로 조회시
+        () -> assertEquals(state, succeedResult.getState()),
+        () -> assertEquals(city, succeedResult.getCity()),
+        //실패 케이스 - 존재하지 않는 id로 조회시
+        () -> assertThrows(NotFoundException.class, () -> regionService.inquiryRegions(notExistRegionId))
+    );
+  }
 
   @Test
   @DisplayName("주소 -> Region 매핑 - 성공 케이스")

@@ -32,27 +32,26 @@ class RegionControllerTest {
   @DisplayName("State 관련 Region 조회 핸들러")
   void getRegionsTest() throws NotFoundException {
     //GIVEN
-    String existState = "exitState";
-    String notExistState = "notExistState";
+    long notExistRegionId = -1;
+    long regionId = 260;
 
     //Mock 행동 정의 - regionService
-    willThrow(NotFoundException.class).given(regionService).inquiryRegions(eq(notExistState));
+    willThrow(NotFoundException.class).given(regionService).inquiryRegions(notExistRegionId);
 
     //WHEN
-    List<RegionDto.RegionResponse> succeedResult = regionController.getRegions(existState);
+    List<RegionDto.RegionResponse> succeedResult = regionController.getRegions(regionId);
 
     //THEN
     assertAll(
-        //성공 케이스 - 1 - 정상 state 로 요청 시
-        () -> assertDoesNotThrow(() -> regionController.getRegions(existState)),
+        //성공 케이스 - 1 - 정상 id 로 요청 시
+        () -> assertDoesNotThrow(() -> regionController.getRegions(regionId)),
         //성공 케이스 - 2 - 빈 state 로 요청 시
         () -> {
           regionController.getRegions(null);
-          regionController.getRegions("");
-          then(regionService).should(times(2)).inquiryAllRegions();
+          then(regionService).should(times(1)).inquiryAllRegions();
         },
-        //실패 케이스 - 1 - 존재하지 않는 state 으로 요청 시
-        () -> assertThrows(NotFoundException.class, () -> regionController.getRegions(notExistState))
+        //실패 케이스 - 1 - 존재하지 않는 id 으로 요청 시
+        () -> assertThrows(NotFoundException.class, () -> regionController.getRegions(notExistRegionId))
     );
   }
 }
