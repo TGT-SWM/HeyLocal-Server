@@ -65,4 +65,16 @@ public interface UserMapper {
     int count = userProfile.getUser().getOpinionList().stream().mapToInt(Opinion::getCountAccept).sum();
     userProfileResponse.setAcceptedOpinionCount(count);
   }
+
+  @AfterMapping
+  default void countTotalOpinion(User user, @MappingTarget UserProfileResponse userProfileResponse) {
+    int count = user.getOpinionList().size();
+    userProfileResponse.setTotalOpinionCount(count);
+  }
+
+  @AfterMapping
+  default void countTotalOpinion(UserProfile userProfile, @MappingTarget UserProfileResponse userProfileResponse) {
+    int count = userProfile.getUser().getOpinionList().size();
+    userProfileResponse.setTotalOpinionCount(count);
+  }
 }

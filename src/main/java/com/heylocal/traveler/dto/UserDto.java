@@ -42,6 +42,7 @@ public class UserDto {
 		private long ranking;
 		private RegionResponse activityRegion;
 		private int acceptedOpinionCount;
+		private int totalOpinionCount;
 	}
 
 	@Getter
