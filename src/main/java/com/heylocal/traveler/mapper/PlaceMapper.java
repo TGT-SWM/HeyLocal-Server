@@ -16,17 +16,14 @@ public interface PlaceMapper {
   @Mapping(target = "id", source = "placeRequest.id")
   @Mapping(target = "opinionList", ignore = true)
   @Mapping(target = "placeItemList", ignore = true)
-  @Mapping(target = "link", source = "placeRequest.kakaoLink")
   @Mapping(target = "region", source = "region")
   @Mapping(target = "createdDate", ignore = true)
   @Mapping(target = "modifiedDate", ignore = true)
   Place toEntity(PlaceRequest placeRequest, Region region);
 
   @Named("toPlaceResponseDto")
-  @Mapping(target = "kakaoLink", source = "link")
   PlaceResponse toPlaceResponseDto(Place place);
 
-  @Mapping(target = "kakaoLink", source = "link")
   @Mapping(target = "opinionSize", expression = "java(place.getOpinionList().size())")
   PlaceWithOpinionSizeResponse toPlaceWithOpinionSizeResponseDto(Place place);
 
@@ -47,6 +44,5 @@ public interface PlaceMapper {
   @Mapping(target = "lat", source = "lat")
   @Mapping(target = "lng", source = "lng")
   @Mapping(target = "thumbnailUrl", source = "thumbnailUrl")
-  @Mapping(target = "link", source = "kakaoLink")
   void updatePlace(PlaceRequest placeRequest, @MappingTarget Place place);
 }
