@@ -12,6 +12,7 @@ import lombok.experimental.SuperBuilder;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -111,6 +112,8 @@ public class OpinionDto {
 		@Builder.Default
 		private List<String> photoSpotImgDownloadImgUrl = new ArrayList<>();
 		private int countAccept;
+		private LocalDateTime createdDate;
+		private LocalDateTime modifiedDate;
 
 		//공통 질문
 		private EvaluationDegree facilityCleanliness;
