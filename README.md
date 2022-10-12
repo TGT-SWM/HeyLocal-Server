@@ -25,7 +25,7 @@
 │   ├── main : 메인 소스코드
 └   └── test : 테스트 소스코드
 ``` 
-패키지 구조는 아래 md 파일 참고
+패키지 구조는 아래 md 파일 참고  
 [PACKAGE.md](https://github.com/TGT-SWM/HeyLocal-Server/blob/main/src/PACKAGE.md)
 
 <br/>
