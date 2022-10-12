@@ -5,10 +5,8 @@ import lombok.*;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 
-import static com.heylocal.traveler.dto.RegionDto.RegionRequest;
 import static com.heylocal.traveler.dto.RegionDto.RegionResponse;
 
 public class UserDto {
@@ -42,6 +40,7 @@ public class UserDto {
 		private long ranking;
 		private RegionResponse activityRegion;
 		private int acceptedOpinionCount;
+		private int totalOpinionCount;
 	}
 
 	@Getter

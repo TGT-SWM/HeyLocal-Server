@@ -4,14 +4,11 @@ import com.heylocal.traveler.domain.Region;
 import com.heylocal.traveler.domain.profile.UserProfile;
 import com.heylocal.traveler.domain.travelon.opinion.Opinion;
 import com.heylocal.traveler.domain.user.User;
-import com.heylocal.traveler.dto.UserDto;
 import com.heylocal.traveler.mapper.context.S3UrlUserContext;
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
 
 import static com.heylocal.traveler.dto.UserDto.*;
-import static com.heylocal.traveler.dto.UserDto.UserProfileResponse;
-import static com.heylocal.traveler.dto.UserDto.UserResponse;
 
 @Mapper(uses = {RegionMapper.class}, builder = @Builder(disableBuilder = true))
 public interface UserMapper {
@@ -64,5 +61,17 @@ public interface UserMapper {
   default void countAcceptedOpinion(UserProfile userProfile, @MappingTarget UserProfileResponse userProfileResponse) {
     int count = userProfile.getUser().getOpinionList().stream().mapToInt(Opinion::getCountAccept).sum();
     userProfileResponse.setAcceptedOpinionCount(count);
+  }
+
+  @AfterMapping
+  default void countTotalOpinion(User user, @MappingTarget UserProfileResponse userProfileResponse) {
+    int count = user.getOpinionList().size();
+    userProfileResponse.setTotalOpinionCount(count);
+  }
+
+  @AfterMapping
+  default void countTotalOpinion(UserProfile userProfile, @MappingTarget UserProfileResponse userProfileResponse) {
+    int count = userProfile.getUser().getOpinionList().size();
+    userProfileResponse.setTotalOpinionCount(count);
   }
 }

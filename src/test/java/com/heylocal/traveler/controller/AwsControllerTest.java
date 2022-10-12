@@ -1,7 +1,5 @@
 package com.heylocal.traveler.controller;
 
-import com.heylocal.traveler.dto.aws.S3ObjectDto;
-import com.heylocal.traveler.exception.NotFoundException;
 import com.heylocal.traveler.service.OpinionImgContentService;
 import com.heylocal.traveler.service.UserService;
 import com.heylocal.traveler.util.aws.SnsMessageParser;

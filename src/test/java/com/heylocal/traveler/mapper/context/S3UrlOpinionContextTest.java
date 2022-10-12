@@ -4,8 +4,6 @@ import com.amazonaws.HttpMethod;
 import com.heylocal.traveler.domain.travelon.opinion.Opinion;
 import com.heylocal.traveler.domain.travelon.opinion.OpinionImageContent;
 import com.heylocal.traveler.domain.user.User;
-import com.heylocal.traveler.dto.OpinionDto;
-import com.heylocal.traveler.dto.UserDto;
 import com.heylocal.traveler.util.aws.S3ObjectNameFormatter;
 import com.heylocal.traveler.util.aws.S3PresignUrlProvider;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,16 +12,14 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.util.ArrayList;
 import java.util.Map;
-import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static com.heylocal.traveler.dto.OpinionDto.*;
-import static com.heylocal.traveler.dto.UserDto.*;
-import static com.heylocal.traveler.util.aws.S3ObjectNameFormatter.*;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.anyString;
+import static com.heylocal.traveler.dto.OpinionDto.OpinionWithPlaceResponse;
+import static com.heylocal.traveler.dto.UserDto.UserProfileResponse;
+import static com.heylocal.traveler.util.aws.S3ObjectNameFormatter.ObjectNameProperty;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.willReturn;
 

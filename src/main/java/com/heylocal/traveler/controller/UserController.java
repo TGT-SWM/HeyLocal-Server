@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-import static com.heylocal.traveler.dto.OpinionDto.*;
+import static com.heylocal.traveler.dto.OpinionDto.OpinionWithPlaceResponse;
 import static com.heylocal.traveler.dto.UserDto.UserProfileRequest;
 import static com.heylocal.traveler.dto.UserDto.UserProfileResponse;
 

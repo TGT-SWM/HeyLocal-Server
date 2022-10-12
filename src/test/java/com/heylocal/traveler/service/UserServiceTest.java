@@ -26,7 +26,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import static com.heylocal.traveler.dto.UserDto.UserProfileResponse;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.willReturn;
 
 class UserServiceTest {
