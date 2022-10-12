@@ -47,7 +47,7 @@ public class PlaceDto {
 		private String thumbnailUrl;
 		@ApiModelProperty(value = "카카오 장소 검색 API 에서 응답받은 카카오맵 link", required = true)
 		@NotEmpty
-		private String kakaoLink;
+		private String link;
 	}
 
 	@Getter
@@ -66,7 +66,7 @@ public class PlaceDto {
 		private double lng;
 		private RegionResponse region;
 		private String thumbnailUrl;
-		private String kakaoLink;
+		private String link;
 	}
 
 	@Getter

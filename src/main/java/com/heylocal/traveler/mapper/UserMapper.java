@@ -18,6 +18,7 @@ public interface UserMapper {
   @Mapping(target = "nickname", source = "userProfile.user.nickname")
   @Mapping(target = "userId", source = "userProfile.user.id")
   @Mapping(target = "acceptedOpinionCount", ignore = true)
+  @Mapping(target = "totalOpinionCount", ignore = true)
   @Mapping(target = "profileImgDownloadUrl", ignore = true)
   UserProfileResponse toUserProfileResponseDto(UserProfile userProfile, long ranking, @Context S3UrlUserContext s3UserUrlContext);
 
@@ -26,6 +27,7 @@ public interface UserMapper {
   @Mapping(target = "userId", source = "userProfile.user.id")
   @Mapping(target = "ranking", ignore = true)
   @Mapping(target = "acceptedOpinionCount", ignore = true)
+  @Mapping(target = "totalOpinionCount", ignore = true)
   @Mapping(target = "profileImgDownloadUrl", ignore = true)
   UserProfileResponse toUserProfileResponseDto(UserProfile userProfile, @Context S3UrlUserContext s3UserUrlContext);
 
@@ -36,6 +38,7 @@ public interface UserMapper {
   @Mapping(target = "userId", source = "user.id")
   @Mapping(target = "ranking", ignore = true)
   @Mapping(target = "acceptedOpinionCount", ignore = true)
+  @Mapping(target = "totalOpinionCount", ignore = true)
   @Mapping(target = "profileImgDownloadUrl", ignore = true)
   UserProfileResponse toUserProfileResponseDto(User user, @Context S3UrlUserContext s3UserUrlContext);
 
