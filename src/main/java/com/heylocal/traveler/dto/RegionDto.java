@@ -1,3 +1,11 @@
+/**
+ * packageName    : com.heylocal.traveler.dto
+ * fileName       : RegionDto
+ * author         : 우태균
+ * date           : 2022/09/01
+ * description    : 시·도, 시 지역 관련 DTO
+ */
+
 package com.heylocal.traveler.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;

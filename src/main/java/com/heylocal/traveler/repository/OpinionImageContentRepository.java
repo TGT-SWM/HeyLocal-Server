@@ -1,3 +1,11 @@
+/**
+ * packageName    : com.heylocal.traveler.repository
+ * fileName       : OpinionImageContentRepository
+ * author         : 우태균
+ * date           : 2022/09/23
+ * description    : 답변 이미지에 대한 레포지터리
+ */
+
 package com.heylocal.traveler.repository;
 
 import com.heylocal.traveler.domain.travelon.opinion.OpinionImageContent;
@@ -7,14 +15,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import java.util.Optional;
-
-/**
- * packageName    : com.heylocal.traveler.repository
- * fileName       : OpinionImageContentRepository
- * author         : 우태균
- * date           : 2022/09/23
- * description    : 답변 이미지에 대한 레포지터리
- */
 
 @Repository
 public class OpinionImageContentRepository {

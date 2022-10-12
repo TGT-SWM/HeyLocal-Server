@@ -1,3 +1,11 @@
+/**
+ * packageName    : com.heylocal.traveler.controller.api
+ * fileName       : UsersApi
+ * author         : 신우진
+ * date           : 2022/08/28
+ * description    : 사용자 API 인터페이스
+ */
+
 package com.heylocal.traveler.controller.api;
 
 import com.heylocal.traveler.dto.ErrorMessageResponse;
@@ -24,14 +32,6 @@ import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.List;
 import java.util.Map;
-
-/**
- * packageName    : com.heylocal.traveler.controller.api
- * fileName       : UsersApi
- * author         : 신우진
- * date           : 2022/08/28
- * description    : 사용자 API 인터페이스
- */
 
 @RequestMapping("/users")
 public interface UsersApi {

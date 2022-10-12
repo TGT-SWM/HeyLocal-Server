@@ -1,3 +1,11 @@
+/**
+ * packageName    : com.heylocal.traveler.controller.api
+ * fileName       : AwsApi
+ * author         : 우태균
+ * date           : 2022/09/23
+ * description    : AWS S3 접근을 위한 API 인터페이스
+ */
+
 package com.heylocal.traveler.controller.api;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -8,14 +16,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-
-/**
- * packageName    : com.heylocal.traveler.controller.api
- * fileName       : AwsApi
- * author         : 우태균
- * date           : 2022/09/23
- * description    : AWS S3 접근을 위한 API 인터페이스
- */
 
 @RequestMapping("/aws/sns")
 public interface AwsApi {

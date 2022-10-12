@@ -1,3 +1,11 @@
+/**
+ * packageName    : com.heylocal.traveler.dto
+ * fileName       : ChatRoomDto
+ * author         : 신우진
+ * date           : 2022/08/28
+ * description    : 채팅방 관련 DTO
+ */
+
 package com.heylocal.traveler.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;

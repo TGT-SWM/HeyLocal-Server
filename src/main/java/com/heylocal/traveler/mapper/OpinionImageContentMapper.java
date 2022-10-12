@@ -1,3 +1,11 @@
+/**
+ * packageName    : com.heylocal.traveler.mapper
+ * fileName       : OpinionImageContentMapper
+ * author         : 우태균
+ * date           : 2022/09/23
+ * description    : OpinionImageContent 엔티티 관련 Mapper
+ */
+
 package com.heylocal.traveler.mapper;
 
 import com.heylocal.traveler.domain.travelon.opinion.Opinion;

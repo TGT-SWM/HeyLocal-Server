@@ -1,3 +1,11 @@
+/**
+ * packageName    : com.heylocal.traveler.domain.plan.list
+ * fileName       : PlaceItem
+ * author         : 우태균
+ * date           : 2022/10/06
+ * description    : 여행 일정표의 방문 장소 엔티티
+ */
+
 package com.heylocal.traveler.domain.plan.list;
 
 import com.heylocal.traveler.domain.BaseTimeEntity;

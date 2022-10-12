@@ -1,3 +1,11 @@
+/**
+ * packageName    : com.heylocal.traveler.dto
+ * fileName       : PlanDto
+ * author         : 신우진
+ * date           : 2022/09/27
+ * description    : 여행 일정표 관련 DTO
+ */
+
 package com.heylocal.traveler.dto;
 
 import com.heylocal.traveler.dto.PlaceItemDto.PlaceItemRequest;

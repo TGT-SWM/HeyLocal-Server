@@ -1,3 +1,11 @@
+/**
+ * packageName    : com.heylocal.traveler.domain.notification
+ * fileName       : Notification
+ * author         : 우태균
+ * date           : 2022/09/19
+ * description    : 알림 엔티티
+ */
+
 package com.heylocal.traveler.domain.notification;
 
 import com.heylocal.traveler.domain.BaseTimeEntity;

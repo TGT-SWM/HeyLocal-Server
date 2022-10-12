@@ -1,3 +1,11 @@
+/**
+ * packageName    : com.heylocal.traveler.domain.article
+ * fileName       : Article
+ * author         : 우태균
+ * date           : 2022/09/19
+ * description    : 게시글 엔티티
+ */
+
 package com.heylocal.traveler.domain.article;
 
 import com.heylocal.traveler.domain.BaseTimeEntity;

@@ -1,3 +1,11 @@
+/**
+ * packageName    : com.heylocal.traveler.mapper
+ * fileName       : UserMapper
+ * author         : 우태균
+ * date           : 2022/10/12
+ * description    : User, UserProfile 엔티티 관련 Mapper
+ */
+
 package com.heylocal.traveler.mapper;
 
 import com.heylocal.traveler.domain.Region;

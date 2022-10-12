@@ -1,3 +1,11 @@
+/**
+ * packageName    : com.heylocal.traveler.util.jwt
+ * fileName       : JwtTokenParser
+ * author         : 우태균
+ * date           : 2022/08/17
+ * description    : Jwt Token 파싱 및 유효성 검증 클래스
+ */
+
 package com.heylocal.traveler.util.jwt;
 
 import com.heylocal.traveler.util.date.LocalDateTimeTransformer;

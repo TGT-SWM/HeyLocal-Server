@@ -1,3 +1,11 @@
+/**
+ * packageName    : com.heylocal.traveler.dto
+ * fileName       : TravelMemberDto
+ * author         : 우태균
+ * date           : 2022/09/14
+ * description    : 여행On 질문 항목 - 동행인 관련 DTO
+ */
+
 package com.heylocal.traveler.dto;
 
 import com.heylocal.traveler.domain.travelon.list.MemberType;

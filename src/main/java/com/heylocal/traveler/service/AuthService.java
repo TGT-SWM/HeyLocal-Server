@@ -1,3 +1,11 @@
+/**
+ * packageName    : com.heylocal.traveler.service
+ * fileName       : AuthService
+ * author         : 우태균
+ * date           : 2022/08/18
+ * description    : 인증·인가 관련 서비스
+ */
+
 package com.heylocal.traveler.service;
 
 import com.heylocal.traveler.domain.token.AccessToken;
@@ -20,14 +28,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import static com.heylocal.traveler.dto.AuthTokenDto.TokenPairRequest;
 import static com.heylocal.traveler.dto.AuthTokenDto.TokenPairResponse;
-
-/**
- * packageName    : com.heylocal.traveler.service
- * fileName       : AuthService
- * author         : 우태균
- * date           : 2022/08/18
- * description    : 인증 관련 서비스
- */
 
 @Service
 @RequiredArgsConstructor

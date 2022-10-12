@@ -1,3 +1,11 @@
+/**
+ * packageName    : com.heylocal.traveler.controller.api
+ * fileName       : PlansApi
+ * author         : 신우진
+ * date           : 2022/08/28
+ * description    : 플랜 API 인터페이스
+ */
+
 package com.heylocal.traveler.controller.api;
 
 import com.heylocal.traveler.dto.ErrorMessageResponse;
@@ -17,14 +25,6 @@ import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.List;
-
-/**
- * packageName    : com.heylocal.traveler.controller.api
- * fileName       : PlansApi
- * author         : 신우진
- * date           : 2022/08/28
- * description    : 플랜 API 인터페이스
- */
 
 @RequestMapping("/plans")
 public interface PlansApi {

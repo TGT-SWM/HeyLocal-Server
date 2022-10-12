@@ -1,3 +1,11 @@
+/**
+ * packageName    : com.heylocal.traveler.controller.advice
+ * fileName       : ControllerAdvice
+ * author         : 우태균
+ * date           : 2022/08/13
+ * description    : 에러 처리 ControllerAdvice
+ */
+
 package com.heylocal.traveler.controller.advice;
 
 import com.heylocal.traveler.dto.ErrorMessageResponse;
@@ -9,14 +17,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-
-/**
- * packageName    : com.heylocal.traveler.controller.advice
- * fileName       : ControllerAdvice
- * author         : 우태균
- * date           : 2022/08/13
- * description    : 에러 처리 ControllerAdvice
- */
 
 @RestControllerAdvice
 public class ControllerAdvice {

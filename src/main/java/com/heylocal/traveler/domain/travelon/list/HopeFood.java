@@ -1,3 +1,11 @@
+/**
+ * packageName    : com.heylocal.traveler.domain.travelon.list
+ * fileName       : HopeFood
+ * author         : 우태균
+ * date           : 2022/09/19
+ * description    : 여행On 질문 항목 - 희망 음식 엔티티
+ */
+
 package com.heylocal.traveler.domain.travelon.list;
 
 import com.heylocal.traveler.domain.BaseTimeEntity;

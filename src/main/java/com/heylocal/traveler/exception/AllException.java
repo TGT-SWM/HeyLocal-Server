@@ -1,12 +1,15 @@
+/**
+ * packageName    : com.heylocal.traveler.exception
+ * fileName       : AllException
+ * author         : 우태균
+ * date           : 2022/08/31
+ * description    : 모든 커스텀 예외 클래스가 상속받아야 하는 클래스
+ */
+
 package com.heylocal.traveler.exception;
 
 import com.heylocal.traveler.exception.code.ErrorCode;
 
-/**
- * <pre>
- * 모든 예외는 이 클래스를 상속받아야 함
- * <pre/>
- */
 public class AllException extends Exception {
   private ErrorCode code;
   private String description;

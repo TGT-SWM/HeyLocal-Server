@@ -1,3 +1,11 @@
+/**
+ * packageName    : com.heylocal.traveler.domain.plan
+ * fileName       : DaySchedule
+ * author         : 우태균
+ * date           : 2022/09/26
+ * description    : 여행 계획표의 하루 스케줄 엔티티
+ */
+
 package com.heylocal.traveler.domain.plan;
 
 import com.heylocal.traveler.domain.BaseTimeEntity;
@@ -10,9 +18,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * 특정 일자 (하루) 스케줄표
- */
 @Entity
 @Table(name = "DAY_SCHEDULE")
 @NoArgsConstructor

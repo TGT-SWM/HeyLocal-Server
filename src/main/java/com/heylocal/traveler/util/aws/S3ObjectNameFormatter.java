@@ -1,3 +1,11 @@
+/**
+ * packageName    : com.heylocal.traveler.util.aws
+ * fileName       : S3ObjectNameFormatter
+ * author         : 우태균
+ * date           : 2022/10/01
+ * description    : 포맷에 맞춰 S3의 Object 이름을 생성하는 클래스
+ */
+
 package com.heylocal.traveler.util.aws;
 
 import lombok.extern.slf4j.Slf4j;
@@ -8,9 +16,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import static com.heylocal.traveler.domain.travelon.opinion.OpinionImageContent.ImageContentType;
 
-/**
- * 포맷에 맞춰 S3의 Object 이름을 생성하는 클래스
- */
 @Slf4j
 @Component
 public class S3ObjectNameFormatter {

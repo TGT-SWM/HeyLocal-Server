@@ -1,3 +1,11 @@
+/**
+ * packageName    : com.heylocal.traveler.domain.travelon.list
+ * fileName       : TravelMember
+ * author         : 우태균
+ * date           : 2022/09/19
+ * description    : 여행On 질문 항목 - 동행인 엔티티
+ */
+
 package com.heylocal.traveler.domain.travelon.list;
 
 import com.heylocal.traveler.domain.BaseTimeEntity;
@@ -10,9 +18,6 @@ import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
 
-/**
- * 여행 동행인 목록
- */
 @Entity
 @Table(name = "TRAVEL_MEMBER")
 @NoArgsConstructor

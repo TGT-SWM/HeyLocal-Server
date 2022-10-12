@@ -1,11 +1,3 @@
-package com.heylocal.traveler.repository;
-
-import com.heylocal.traveler.domain.plan.list.PlaceItem;
-import org.springframework.stereotype.Repository;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
 /**
  * packageName    : com.heylocal.traveler.repository
  * fileName       : PlaceItemRepository
@@ -13,6 +5,14 @@ import javax.persistence.PersistenceContext;
  * date           : 2022/09/16
  * description    : 스케줄 내 장소 아이템에 대한 레포지터리
  */
+
+package com.heylocal.traveler.repository;
+
+import com.heylocal.traveler.domain.plan.list.PlaceItem;
+import org.springframework.stereotype.Repository;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 @Repository
 public class PlaceItemRepository {

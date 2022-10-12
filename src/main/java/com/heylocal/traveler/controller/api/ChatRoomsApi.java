@@ -1,3 +1,11 @@
+/**
+ * packageName    : com.heylocal.traveler.controller.api
+ * fileName       : ChatRoomsApi
+ * author         : 우태균
+ * date           : 2022/08/12
+ * description    : 채팅 API 인터페이스
+ */
+
 package com.heylocal.traveler.controller.api;
 
 import com.heylocal.traveler.dto.ChatRoomDto.ChatMessageResponse;
@@ -10,14 +18,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
-
-/**
- * packageName    : com.heylocal.traveler.controller.api
- * fileName       : ChatRoomsApi
- * author         : 우태균
- * date           : 2022/08/12
- * description    : 채팅 API 인터페이스
- */
 
 @RequestMapping("/chatrooms")
 public interface ChatRoomsApi {

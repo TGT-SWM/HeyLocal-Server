@@ -1,3 +1,11 @@
+/**
+ * packageName    : com.heylocal.traveler.domain.travelon.opinion
+ * fileName       : Opinion
+ * author         : 우태균
+ * date           : 2022/10/01
+ * description    : 여행On 답변
+ */
+
 package com.heylocal.traveler.domain.travelon.opinion;
 
 import com.heylocal.traveler.domain.BaseTimeEntity;
@@ -12,9 +20,6 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * 여행On 의 답변(의견)
- */
 @Entity
 @Table(name = "OPINION")
 @NoArgsConstructor

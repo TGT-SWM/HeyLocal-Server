@@ -1,3 +1,11 @@
+/**
+ * packageName    : com.heylocal.traveler.domain.chat
+ * fileName       : ChatRoom
+ * author         : 우태균
+ * date           : 2022/09/19
+ * description    : 채팅방 엔티티
+ */
+
 package com.heylocal.traveler.domain.chat;
 
 import com.heylocal.traveler.domain.BaseTimeEntity;

@@ -1,3 +1,10 @@
+# ====================== Header ======================
+# fileName       : deploy.sh
+# author         : 우태균
+# date           : 2022/08/08
+# description    : 배포 스크립트
+# ====================================================
+
 echo "> 현재 구동 중인 RunToU 애플리케이션 pid 확인" >> /home/ec2-user/app/log/heylocal/deploy.log
 
 CURRENT_PID=$(pgrep -f '.jar$')

@@ -1,3 +1,10 @@
+# ====================== Header ======================
+# fileName       : appspec.yml
+# author         : 우태균
+# date           : 2022/08/07
+# description    : AWS CodeDeploy 배포 스크립트
+# ====================================================
+
 version: 0.0
 os: linux
 files:

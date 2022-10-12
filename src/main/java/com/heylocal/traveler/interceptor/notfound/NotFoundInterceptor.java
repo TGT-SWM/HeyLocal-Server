@@ -1,3 +1,11 @@
+/**
+ * packageName    : com.heylocal.traveler.interceptor.notfound
+ * fileName       : NotFoundInterceptor
+ * author         : 우태균
+ * date           : 2022/09/20
+ * description    : 잘못된 URL 접근 오류 처리 인터셉터
+ */
+
 package com.heylocal.traveler.interceptor.notfound;
 
 import com.fasterxml.jackson.databind.ObjectMapper;

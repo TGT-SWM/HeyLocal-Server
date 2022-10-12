@@ -1,3 +1,11 @@
+/**
+ * packageName    : com.heylocal.traveler.service
+ * fileName       : SignupService
+ * author         : 우태균
+ * date           : 2022/08/13
+ * description    : 회원가입 관련 서비스
+ */
+
 package com.heylocal.traveler.service;
 
 import com.heylocal.traveler.domain.profile.UserProfile;
@@ -16,14 +24,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Optional;
 
 import static com.heylocal.traveler.dto.SignupDto.SignupRequest;
-
-/**
- * packageName    : com.heylocal.traveler.service
- * fileName       : SignupService
- * author         : 우태균
- * date           : 2022/08/13
- * description    : 회원가입 관련 서비스
- */
 
 @Service
 @RequiredArgsConstructor

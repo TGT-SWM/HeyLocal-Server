@@ -1,3 +1,11 @@
+/**
+ * packageName    : com.heylocal.traveler.dto
+ * fileName       : TravelTypeGroupDto
+ * author         : 우태균
+ * date           : 2022/09/05
+ * description    : 여행On 질문 항목 - 여행 취향 관련 DTO
+ */
+
 package com.heylocal.traveler.dto;
 
 import com.heylocal.traveler.domain.travelon.ActivityTasteType;

@@ -1,3 +1,11 @@
+/**
+ * packageName    : com.heylocal.traveler.dto
+ * fileName       : TravelOnDto
+ * author         : 우태균
+ * date           : 2022/09/19
+ * description    : 여행On 관련 DTO
+ */
+
 package com.heylocal.traveler.dto;
 
 import com.heylocal.traveler.domain.travelon.TransportationType;

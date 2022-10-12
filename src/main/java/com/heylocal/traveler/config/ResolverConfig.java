@@ -1,3 +1,11 @@
+/**
+ * packageName    : com.heylocal.traveler.config
+ * fileName       : ResolverConfig
+ * author         : 우태균
+ * date           : 2022/08/18
+ * description    : Argument Resolver 등록 Configuration
+ */
+
 package com.heylocal.traveler.config;
 
 import com.heylocal.traveler.controller.resolver.LoginUserResolver;
@@ -7,14 +15,6 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.List;
-
-/**
- * packageName    : com.heylocal.traveler.config
- * fileName       : ResolverConfig
- * author         : 우태균
- * date           : 2022/08/18
- * description    : Argument Resolver 사용을 위한 Configuration
- */
 
 @Configuration
 @RequiredArgsConstructor

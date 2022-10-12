@@ -1,3 +1,11 @@
+/**
+ * packageName    : com.heylocal.traveler.controller.api
+ * fileName       : TravelOnsApi
+ * author         : 우태균
+ * date           : 2022/08/25
+ * description    : 여행 On API 인터페이스
+ */
+
 package com.heylocal.traveler.controller.api;
 
 import com.heylocal.traveler.dto.ErrorMessageResponse;
@@ -29,14 +37,6 @@ import java.util.List;
 import java.util.Map;
 
 import static com.heylocal.traveler.domain.travelon.opinion.OpinionImageContent.ImageContentType;
-
-/**
- * packageName    : com.heylocal.traveler.controller.api
- * fileName       : TravelOnsApi
- * author         : 우태균
- * date           : 2022/08/25
- * description    : 여행 On API 인터페이스
- */
 
 @RequestMapping("/travel-ons")
 public interface TravelOnsApi {

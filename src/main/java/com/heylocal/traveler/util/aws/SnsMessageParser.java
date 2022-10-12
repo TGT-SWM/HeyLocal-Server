@@ -1,3 +1,11 @@
+/**
+ * packageName    : com.heylocal.traveler.util.aws
+ * fileName       : SnsMessageParser
+ * author         : 우태균
+ * date           : 2022/10/02
+ * description    : AWS Simple Notification Service (SNS)가 요청한 데이터를 파싱하는 클래스
+ */
+
 package com.heylocal.traveler.util.aws;
 
 import org.springframework.stereotype.Component;

@@ -1,3 +1,11 @@
+/**
+ * packageName    : com.heylocal.traveler.service
+ * fileName       : PlanService
+ * author         : 신우진
+ * date           : 2022/08/29
+ * description    : 플랜 관련 서비스
+ */
+
 package com.heylocal.traveler.service;
 
 import com.heylocal.traveler.domain.place.Place;
@@ -28,14 +36,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
-/**
- * packageName    : com.heylocal.traveler.service
- * fileName       : PlanService
- * author         : 신우진
- * date           : 2022/08/29
- * description    : 플랜 관련 서비스
- */
 
 @Service
 @RequiredArgsConstructor

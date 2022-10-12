@@ -1,3 +1,11 @@
+/**
+ * packageName    : com.heylocal.traveler.mapper
+ * fileName       : DayScheduleMapper
+ * author         : 우태균
+ * date           : 2022/09/21
+ * description    : DaySchedule 엔티티 관련 Mapper
+ */
+
 package com.heylocal.traveler.mapper;
 
 import com.heylocal.traveler.domain.plan.DaySchedule;

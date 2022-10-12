@@ -1,3 +1,11 @@
+/**
+ * packageName    : com.heylocal.traveler.service
+ * fileName       : OpinionImgContentService
+ * author         : 우태균
+ * date           : 2022/09/23
+ * description    : 여행On의 답변의 이미지 관련 서비스
+ */
+
 package com.heylocal.traveler.service;
 
 import com.amazonaws.HttpMethod;
@@ -24,14 +32,6 @@ import static com.heylocal.traveler.domain.travelon.opinion.OpinionImageContent.
 import static com.heylocal.traveler.dto.OpinionImageContentDto.ImageContentQuantity;
 import static com.heylocal.traveler.dto.aws.S3PresignedUrlDto.OpinionImgUpdateUrl;
 import static com.heylocal.traveler.util.aws.S3ObjectNameFormatter.ObjectNameProperty;
-
-/**
- * packageName    : com.heylocal.traveler.service
- * fileName       : OpinionImgContentService
- * author         : 우태균
- * date           : 2022/09/23
- * description    : 답변의 이미지 관련 서비스
- */
 
 @Slf4j
 @Service

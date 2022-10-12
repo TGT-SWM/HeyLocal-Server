@@ -1,3 +1,11 @@
+/**
+ * packageName    : com.heylocal.traveler.mapper
+ * fileName       : OpinionMapper
+ * author         : 우태균
+ * date           : 2022/10/04
+ * description    : Opinion 엔티티 관련 Mapper
+ */
+
 package com.heylocal.traveler.mapper;
 
 import com.heylocal.traveler.domain.Region;
@@ -12,10 +20,6 @@ import org.mapstruct.factory.Mappers;
 
 import static com.heylocal.traveler.dto.OpinionDto.*;
 
-/**
- * target에 Lombok 의 @Builder 를 사용하면 @AfterMapping 이 제대로 동작하지 않는 버그가 존재함.
- * 따라서, builder = @Builder(disableBuilder = true) 를 설정함.
- */
 @Mapper(uses = {UserMapper.class, PlaceMapper.class}, imports = {OpinionImageContent.class}, builder = @Builder(disableBuilder = true))
 public interface OpinionMapper {
   OpinionMapper INSTANCE = Mappers.getMapper(OpinionMapper.class);

@@ -1,3 +1,11 @@
+/**
+ * packageName    : com.heylocal.traveler.interceptor.auth
+ * fileName       : AuthInterceptor
+ * author         : 우태균
+ * date           : 2022/09/20
+ * description    : 인가 처리 인터셉터
+ */
+
 package com.heylocal.traveler.interceptor.auth;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -18,9 +26,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.NoSuchElementException;
 
-/**
- * 인가 관련 인터셉터
- */
 @Component
 @RequiredArgsConstructor
 public class AuthInterceptor implements HandlerInterceptor {

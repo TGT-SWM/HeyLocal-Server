@@ -1,3 +1,11 @@
+/**
+ * packageName    : com.heylocal.traveler.exception.code
+ * fileName       : SigninCode
+ * author         : 우태균
+ * date           : 2022/08/25
+ * description    : 회원가입 관련 오류 코드 ENUM
+ */
+
 package com.heylocal.traveler.exception.code;
 
 /**

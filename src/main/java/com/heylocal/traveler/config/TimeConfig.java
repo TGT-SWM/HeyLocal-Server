@@ -1,10 +1,3 @@
-package com.heylocal.traveler.config;
-
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-
-import java.time.Clock;
-
 /**
  * packageName    : com.heylocal.traveler.config
  * fileName       : TimeConfig
@@ -12,6 +5,13 @@ import java.time.Clock;
  * date           : 2022/08/29
  * description    : Clock 객체를 Bean으로 등록하기 위한 Configuration
  */
+
+package com.heylocal.traveler.config;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+import java.time.Clock;
 
 @Configuration
 public class TimeConfig {

@@ -1,3 +1,11 @@
+/**
+ * packageName    : com.heylocal.traveler.domain.travelon.list
+ * fileName       : FoodType
+ * author         : 우태균
+ * date           : 2022/08/24
+ * description    : 여행On 질문 항목 - 음식 종류 ENUM
+ */
+
 package com.heylocal.traveler.domain.travelon.list;
 
 /**

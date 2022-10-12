@@ -1,3 +1,11 @@
+/**
+ * packageName    : com.heylocal.traveler.service
+ * fileName       : TravelOnService
+ * author         : 우태균
+ * date           : 2022/08/30
+ * description    : 여행 On 관련 서비스
+ */
+
 package com.heylocal.traveler.service;
 
 import com.heylocal.traveler.domain.Region;
@@ -24,14 +32,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.heylocal.traveler.dto.TravelOnDto.*;
-
-/**
- * packageName    : com.heylocal.traveler.service
- * fileName       : TravelOnService
- * author         : 우태균
- * date           : 2022/08/30
- * description    : 여행 On 관련 서비스
- */
 
 @Slf4j
 @Service
