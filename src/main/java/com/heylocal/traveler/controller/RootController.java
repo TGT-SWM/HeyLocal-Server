@@ -9,10 +9,12 @@
 package com.heylocal.traveler.controller;
 
 import com.heylocal.traveler.controller.api.RootApi;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+@RestController
 public class RootController implements RootApi {
   @Override
   public Map<String, String> home() {
