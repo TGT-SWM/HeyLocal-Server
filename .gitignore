@@ -126,3 +126,4 @@ Temporary Items
 /src/main/resources/stage-db.properties
 /src/main/resources/auth-secret.properties
 /src/main/resources/aws-key.properties
+/src/main/resources/production-db.properties
