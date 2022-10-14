@@ -33,7 +33,7 @@ fi
 echo "> 새 애플리케이션 배포" >> /home/ec2-user/app/log/heylocal/deploy.log
 nohup java -jar \
   -Dspring.config.location=/home/ec2-user/app/src/main/resources/ \
-  -Dspring.profiles.active=$SPRING_PROFILES_ACTIVE \
+  -Dspring.profiles.active="$SPRING_PROFILES_ACTIVE" \
   /home/ec2-user/app/build/libs/heylocal-traveler-*-SNAPSHOT.jar \
   >> /home/ec2-user/app/log/heylocal/application.log 2>&1 &
 
