@@ -39,9 +39,10 @@ public class AwsController implements AwsApi {
   @Override
   public void saveOpinionImgMessage(String request) throws Exception {
     //String -> AwsSnsRequest 객체
-    S3ObjectDto s3ObjectDto = mapToOpinionImgS3ObjectDto(request);
-
-    opinionImgContentService.saveOpinionImageContent(s3ObjectDto);
+//    S3ObjectDto s3ObjectDto = mapToOpinionImgS3ObjectDto(request);
+//
+//    opinionImgContentService.saveOpinionImageContent(s3ObjectDto);
+    log.info(request);
   }
 
   /**
@@ -55,11 +56,12 @@ public class AwsController implements AwsApi {
   @Override
   public void deleteOpinionImgMessage(String request) throws Exception {
     //String -> AwsSnsRequest 객체
-    S3ObjectDto s3ObjectDto = mapToOpinionImgS3ObjectDto(request);
-
-    long targetImgEntityId = opinionImgContentService.inquiryOpinionImgContentId(s3ObjectDto.getKey());
-
-    opinionImgContentService.removeImgEntityFromDb(targetImgEntityId);
+//    S3ObjectDto s3ObjectDto = mapToOpinionImgS3ObjectDto(request);
+//
+//    long targetImgEntityId = opinionImgContentService.inquiryOpinionImgContentId(s3ObjectDto.getKey());
+//
+//    opinionImgContentService.removeImgEntityFromDb(targetImgEntityId);
+    log.info(request);
   }
 
   /**
@@ -73,9 +75,10 @@ public class AwsController implements AwsApi {
   @Override
   public void saveProfileImgMessage(String request) throws Exception {
     //String -> AwsSnsRequest 객체
-    S3ObjectDto s3ObjectDto = mapToProfileImgS3ObjectDto(request);
-
-    userService.saveProfileObjectKey(s3ObjectDto);
+//    S3ObjectDto s3ObjectDto = mapToProfileImgS3ObjectDto(request);
+//
+//    userService.saveProfileObjectKey(s3ObjectDto);
+    log.info(request);
   }
 
   /**
@@ -89,9 +92,10 @@ public class AwsController implements AwsApi {
   @Override
   public void deleteProfileImgMessage(String request) throws Exception {
     //String -> AwsSnsRequest 객체
-    S3ObjectDto s3ObjectDto = mapToProfileImgS3ObjectDto(request);
-
-    userService.removeProfileObjectKey(s3ObjectDto);
+//    S3ObjectDto s3ObjectDto = mapToProfileImgS3ObjectDto(request);
+//
+//    userService.removeProfileObjectKey(s3ObjectDto);
+    log.info(request);
   }
 
   private S3ObjectDto mapToOpinionImgS3ObjectDto(String request) throws Exception {
