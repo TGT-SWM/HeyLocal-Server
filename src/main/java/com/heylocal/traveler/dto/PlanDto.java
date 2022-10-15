@@ -98,4 +98,14 @@ public class PlanDto {
 		LocalDate date;
 		List<PlaceItemResponse> places;
 	}
+
+	@Getter
+	@Setter
+	@NoArgsConstructor
+	@AllArgsConstructor
+	@Builder
+	@Schema(description = "장소 정보 응답 DTO")
+	public static class AddPlaceRequest {
+		Long opinionId;
+	}
 }

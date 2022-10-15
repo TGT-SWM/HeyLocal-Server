@@ -63,4 +63,8 @@ public class UserProfile extends BaseTimeEntity {
   public void releaseActivityRegion() {
     this.activityRegion = null;
   }
+
+  public void increaseKnowHowBy(int amount) {
+    knowHow += amount;
+  }
 }

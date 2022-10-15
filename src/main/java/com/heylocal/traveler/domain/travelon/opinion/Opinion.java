@@ -11,6 +11,7 @@ package com.heylocal.traveler.domain.travelon.opinion;
 import com.heylocal.traveler.domain.BaseTimeEntity;
 import com.heylocal.traveler.domain.Region;
 import com.heylocal.traveler.domain.place.Place;
+import com.heylocal.traveler.domain.plan.list.PlaceItem;
 import com.heylocal.traveler.domain.travelon.TravelOn;
 import com.heylocal.traveler.domain.user.User;
 import lombok.*;
@@ -19,6 +20,7 @@ import lombok.experimental.SuperBuilder;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "OPINION")
@@ -45,9 +47,6 @@ public class Opinion extends BaseTimeEntity {
 
   @ManyToOne(optional = false, fetch = FetchType.LAZY)
   private TravelOn travelOn;
-
-  @Column(nullable = false)
-  private Integer countAccept;
 
   // [일반]
   @Enumerated(EnumType.STRING)
@@ -100,6 +99,10 @@ public class Opinion extends BaseTimeEntity {
   @Builder.Default
   @OneToMany(mappedBy = "opinion", fetch = FetchType.LAZY)
   private List<OpinionImageContent> opinionImageContentList = new ArrayList<>();
+
+  @Builder.Default
+  @OneToMany(mappedBy = "opinion", fetch = FetchType.LAZY)
+  private List<PlaceItem> placeItemList = new ArrayList<>();
 
   public void setTravelOn(TravelOn travelOn) {
     if (this.travelOn != null) {
@@ -158,5 +161,19 @@ public class Opinion extends BaseTimeEntity {
 
   public void removeAllOpinionImageContent() {
     this.opinionImageContentList.clear();
+  }
+
+  public void registerPlaceItem(PlaceItem placeItem) {
+    this.placeItemList.add(placeItem);
+    if (placeItem.getOpinion() != this) {
+      placeItem.registerOpinion(this);
+    }
+  }
+
+  public int getCountAccept() {
+    return (int) placeItemList.stream()
+            .map(placeItem -> placeItem.getSchedule().getPlan())
+            .collect(Collectors.toSet()) // 플랜이 같으면 채택 1회로 카운트
+            .size();
   }
 }
