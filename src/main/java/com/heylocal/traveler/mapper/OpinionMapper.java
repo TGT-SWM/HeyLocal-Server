@@ -7,7 +7,6 @@ import com.heylocal.traveler.domain.travelon.opinion.Opinion;
 import com.heylocal.traveler.domain.travelon.opinion.OpinionImageContent;
 import com.heylocal.traveler.domain.user.User;
 import com.heylocal.traveler.mapper.context.S3UrlOpinionContext;
-import com.heylocal.traveler.mapper.context.S3UrlUserContext;
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
 
@@ -29,7 +28,6 @@ public interface OpinionMapper {
   @Mapping(target = "author", source = "author")
   @Mapping(target = "region", source = "region")
   @Mapping(target = "opinionImageContentList", ignore = true)
-  @Mapping(target = "countAccept", constant = "0")
   Opinion toEntity(NewOpinionRequestRequest newOpinionRequest, Place place, User author, TravelOn travelOn, Region region);
 
   @Mapping(target = "generalImgDownloadImgUrl", ignore = true)
@@ -38,6 +36,7 @@ public interface OpinionMapper {
   @Mapping(target = "photoSpotImgDownloadImgUrl", ignore = true)
   @Mapping(target = "place", qualifiedByName = "toPlaceResponseDto")
   @Mapping(target = "author", qualifiedByName = "toUserProfileResponseDtoByUserWithoutContext")
+  @Mapping(target = "countAccept", ignore = true)
   OpinionWithPlaceResponse toWithPlaceResponseDto(Opinion opinion, @Context S3UrlOpinionContext s3UrlOpinionContext);
 
   @InheritConfiguration(name = "toWithPlaceResponseDto")
@@ -46,6 +45,7 @@ public interface OpinionMapper {
   @Mapping(target = "drinkAndDessertImgDownloadImgUrl", ignore = true)
   @Mapping(target = "photoSpotImgDownloadImgUrl", ignore = true)
   @Mapping(target = "author", qualifiedByName = "toUserProfileResponseDtoByUserWithoutContext")
+  @Mapping(target = "countAccept", ignore = true)
   OpinionResponse toResponseDto(Opinion opinion, @Context S3UrlOpinionContext s3UrlOpinionContext);
 
   @Mapping(target = "id", ignore = true)
@@ -65,4 +65,13 @@ public interface OpinionMapper {
     opinion.removeAllOpinionImageContent();
   }
 
+  @AfterMapping
+  default void addCountAcceptToDto(@MappingTarget OpinionResponse response, Opinion opinion) {
+    response.setCountAccept(opinion.getAcceptedCount());
+  }
+
+  @AfterMapping
+  default void addCountAcceptToDto(@MappingTarget OpinionWithPlaceResponse response, Opinion opinion) {
+    response.setCountAccept(opinion.getAcceptedCount());
+  }
 }
