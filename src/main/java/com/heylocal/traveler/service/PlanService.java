@@ -48,7 +48,7 @@ public class PlanService {
 	private final Clock clock;
 
 
-	private static final int KNOWHOW_INCREASE_ACCEPTED = 200; // 채택 시 얻는 노하우
+	public static final int KNOWHOW_INCREASE_ACCEPTED = 200; // 채택 시 얻는 노하우
 
 	/**
 	 * <pre>
