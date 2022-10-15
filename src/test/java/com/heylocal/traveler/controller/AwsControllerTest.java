@@ -4,6 +4,7 @@ import com.heylocal.traveler.service.OpinionImgContentService;
 import com.heylocal.traveler.service.UserService;
 import com.heylocal.traveler.util.aws.SnsMessageParser;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -29,6 +30,7 @@ class AwsControllerTest {
     awsController = new AwsController(opinionImgContentService, userService, snsMessageParser);
   }
 
+  @Disabled
   @Test
   @DisplayName("AWS SNS 가 답변 이미지 등록 요청을 보내는 Callback 핸들러")
   void saveOpinionImgMessageTest() throws Exception {
@@ -53,6 +55,7 @@ class AwsControllerTest {
 
   }
 
+  @Disabled
   @Test
   @DisplayName("AWS SNS 가 답변 이미지 삭제 요청을 보내는 Callback 핸들러")
   void deleteOpinionImgMessageTest() throws Exception {
@@ -71,6 +74,7 @@ class AwsControllerTest {
     assertDoesNotThrow(() -> awsController.deleteOpinionImgMessage(requestMessage));
   }
 
+  @Disabled
   @Test
   @DisplayName("프로필 이미지 Object Key 저장 핸들러")
   void saveProfileImgMessageTest() throws Exception {
@@ -93,6 +97,7 @@ class AwsControllerTest {
     );
   }
 
+  @Disabled
   @Test
   @DisplayName("프로필 이미지 Object Key 제거 핸들러")
   void deleteProfileImgMessageTest() throws Exception {
