@@ -243,8 +243,8 @@ class OpinionRepositoryTest {
         .region(travelOn.getRegion())
         .place(place)
         .facilityCleanliness(EvaluationDegree.GOOD)
-        .canParking(true)
-        .waiting(false)
+        .canParking(EvaluationDegree.GOOD)
+        .waiting(EvaluationDegree.GOOD)
         .costPerformance(EvaluationDegree.GOOD)
         .build();
 
@@ -266,8 +266,8 @@ class OpinionRepositoryTest {
         .region(travelOn.getRegion())
         .place(place)
         .facilityCleanliness(EvaluationDegree.GOOD)
-        .canParking(true)
-        .waiting(false)
+        .canParking(EvaluationDegree.GOOD)
+        .waiting(EvaluationDegree.GOOD)
         .costPerformance(EvaluationDegree.GOOD)
         .build();
 
