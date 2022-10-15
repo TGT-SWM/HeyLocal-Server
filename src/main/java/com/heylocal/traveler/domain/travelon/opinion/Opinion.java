@@ -12,6 +12,7 @@ import lombok.experimental.SuperBuilder;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 여행On 의 답변(의견)
@@ -166,7 +167,8 @@ public class Opinion extends BaseTimeEntity {
 
   public int getCountAccept() {
     return (int) placeItemList.stream()
-            .distinct()
-            .count();
+            .map(placeItem -> placeItem.getSchedule().getPlan())
+            .collect(Collectors.toSet()) // 플랜이 같으면 채택 1회로 카운트
+            .size();
   }
 }
