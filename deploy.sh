@@ -19,15 +19,18 @@ else
   sleep 5
 fi
 
-echo "> NGINX 프로세스 pid 확인" >> /home/ec2-user/app/log/heylocal/deploy.log
+# 테스트 서버인 경우, nginx 구동
+if [ "$SPRING_PROFILES_ACTIVE" = "stage" ]; then
+  echo "> NGINX 프로세스 pid 확인" >> /home/ec2-user/app/log/heylocal/deploy.log
 
-NGINX_PID=$(pgrep -f nginx)
+  NGINX_PID=$(pgrep -f nginx)
 
-if [ -z "$NGINX_PID" ]; then
-  echo "> 현재 NGINX가 실행 중이지 않습니다. 따라서, NGINX를 실행합니다." >> /home/ec2-user/app/log/heylocal/deploy.log
-  sudo service nginx start
-else
-  echo "> 이미 NGINX가 실행 중입니다." >> /home/ec2-user/app/log/heylocal/deploy.log
+  if [ -z "$NGINX_PID" ]; then
+    echo "> 현재 NGINX가 실행 중이지 않습니다. 따라서, NGINX를 실행합니다." >> /home/ec2-user/app/log/heylocal/deploy.log
+    sudo service nginx start
+  else
+    echo "> 이미 NGINX가 실행 중입니다." >> /home/ec2-user/app/log/heylocal/deploy.log
+  fi
 fi
 
 echo "> 새 애플리케이션 배포" >> /home/ec2-user/app/log/heylocal/deploy.log
