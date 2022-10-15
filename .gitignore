@@ -128,3 +128,4 @@ Temporary Items
 /src/main/resources/production-db.properties
 /src/main/resources/aws-key-stage.properties
 /src/main/resources/aws-key-production.properties
+/src/main/resources/aws-key-local.properties
