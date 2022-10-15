@@ -32,6 +32,7 @@ public interface OpinionMapper {
   @Mapping(target = "author", source = "author")
   @Mapping(target = "region", source = "region")
   @Mapping(target = "opinionImageContentList", ignore = true)
+  @Mapping(target = "countAccept", constant = "0")
   Opinion toEntity(NewOpinionRequestRequest newOpinionRequest, Place place, User author, TravelOn travelOn, Region region);
 
   @Mapping(target = "generalImgDownloadImgUrl", ignore = true)
