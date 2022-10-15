@@ -27,6 +27,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -306,9 +307,22 @@ public class PlanService {
 		Plan plan = optPlan.get();
 
 		// day에 해당하는 스케줄이 없으면 throw
-		if (day < 1 || day > plan.getDayScheduleList().size())
+		List<DaySchedule> daySchedules = plan.getDayScheduleList();
+		if (day < 1 || day > daySchedules.size())
 			throw new NotFoundException(NotFoundCode.NO_INFO, "존재하지 않는 스케줄입니다.");
-		DaySchedule daySchedule = plan.getDayScheduleList().get(day - 1);
+		DaySchedule daySchedule = daySchedules.get(day - 1);
+
+		// 노하우 지급
+		// 의견이 이미 해당 플랜에 채택된 적이 있다면, 노하우를 지급하지 않음
+		Set<Opinion> opinionsOfPlan = daySchedules.stream()
+				.flatMap(schedule -> schedule.getPlaceItemList().stream())
+				.map(PlaceItem::getOpinion)
+				.collect(Collectors.toSet());
+
+		if (!opinionsOfPlan.contains(opinion)) {
+			UserProfile userProfile = opinion.getAuthor().getUserProfile();
+			userProfile.increaseKnowHowBy(KNOWHOW_INCREASE_ACCEPTED);
+		}
 
 		// 스케줄에 장소 추가
 		Place place = opinion.getPlace();
@@ -322,9 +336,5 @@ public class PlanService {
 
 		// 답변 채택
 		opinion.registerPlaceItem(placeItem);
-
-		// 노하우 추가
-		UserProfile userProfile = opinion.getAuthor().getUserProfile();
-		userProfile.increaseKnowHowBy(KNOWHOW_INCREASE_ACCEPTED);
 	}
 }
