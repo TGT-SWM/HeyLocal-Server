@@ -67,11 +67,11 @@ public interface OpinionMapper {
 
   @AfterMapping
   default void addCountAcceptToDto(@MappingTarget OpinionResponse response, Opinion opinion) {
-    response.setCountAccept(opinion.getAcceptedCount());
+    response.setCountAccept(opinion.getCountAccept());
   }
 
   @AfterMapping
   default void addCountAcceptToDto(@MappingTarget OpinionWithPlaceResponse response, Opinion opinion) {
-    response.setCountAccept(opinion.getAcceptedCount());
+    response.setCountAccept(opinion.getCountAccept());
   }
 }

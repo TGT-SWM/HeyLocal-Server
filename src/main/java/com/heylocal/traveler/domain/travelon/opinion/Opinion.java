@@ -164,7 +164,7 @@ public class Opinion extends BaseTimeEntity {
     }
   }
 
-  public int getAcceptedCount() {
+  public int getCountAccept() {
     return (int) placeItemList.stream()
             .distinct()
             .count();
