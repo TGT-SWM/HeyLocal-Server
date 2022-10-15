@@ -11,6 +11,7 @@ package com.heylocal.traveler.domain.plan.list;
 import com.heylocal.traveler.domain.BaseTimeEntity;
 import com.heylocal.traveler.domain.place.Place;
 import com.heylocal.traveler.domain.plan.DaySchedule;
+import com.heylocal.traveler.domain.travelon.opinion.Opinion;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -53,6 +54,9 @@ public class PlaceItem extends BaseTimeEntity {
 
   private LocalTime arrivalTime; // 도착 시간
 
+  @ManyToOne
+  private Opinion opinion;
+
   /**
    * <pre>
    * 해당 DaySchedule에 PlaceItem을 추가합니다.
@@ -63,5 +67,12 @@ public class PlaceItem extends BaseTimeEntity {
     this.schedule = daySchedule;
     if (!daySchedule.getPlaceItemList().contains(this)) // O(N) 시간 소요 문제
       daySchedule.addPlaceItem(this);
+  }
+
+  public void registerOpinion(Opinion opinion) {
+    this.opinion = opinion;
+    if (!opinion.getPlaceItemList().contains(this)) {
+      opinion.registerPlaceItem(this);
+    }
   }
 }

@@ -12,7 +12,10 @@ import com.heylocal.traveler.domain.place.Place;
 import com.heylocal.traveler.domain.plan.DaySchedule;
 import com.heylocal.traveler.domain.plan.Plan;
 import com.heylocal.traveler.domain.plan.list.PlaceItem;
+import com.heylocal.traveler.domain.plan.list.PlaceItemType;
+import com.heylocal.traveler.domain.profile.UserProfile;
 import com.heylocal.traveler.domain.travelon.TravelOn;
+import com.heylocal.traveler.domain.travelon.opinion.Opinion;
 import com.heylocal.traveler.dto.PlanDto.*;
 import com.heylocal.traveler.exception.BadRequestException;
 import com.heylocal.traveler.exception.ForbiddenException;
@@ -22,10 +25,7 @@ import com.heylocal.traveler.exception.code.ForbiddenCode;
 import com.heylocal.traveler.exception.code.NotFoundCode;
 import com.heylocal.traveler.mapper.PlaceItemMapper;
 import com.heylocal.traveler.mapper.PlanMapper;
-import com.heylocal.traveler.repository.PlaceItemRepository;
-import com.heylocal.traveler.repository.PlaceRepository;
-import com.heylocal.traveler.repository.PlanRepository;
-import com.heylocal.traveler.repository.TravelOnRepository;
+import com.heylocal.traveler.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,6 +35,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -48,9 +49,14 @@ public class PlanService {
 
 	private final PlaceItemRepository placeItemRepository;
 
+	private final OpinionRepository opinionRepository;
+
 	private final RegionService regionService;
 
 	private final Clock clock;
+
+
+	public static final int KNOWHOW_INCREASE_ACCEPTED = 200; // 채택 시 얻는 노하우
 
 	/**
 	 * <pre>
@@ -284,5 +290,59 @@ public class PlanService {
 			for (PlaceItem placeItem: placeItems)
 				daySchedule.addPlaceItem(placeItem);
 		}
+	}
+
+	/**
+	 * <pre>
+	 * 답변을 채택하여 내 스케줄에 해당 장소를 추가합니다.
+	 * @param planId 플랜 ID
+	 * @param day 일자
+	 * @param opinionId 답변 ID
+	 * </pre>
+	 */
+	@Transactional
+	public void addPlaceFromOpinion(long planId, int day, long opinionId) throws NotFoundException {
+		// 답변 조회, 없으면 throw
+		Optional<Opinion> optOpinion = opinionRepository.findById(opinionId);
+		if (optOpinion.isEmpty())
+			throw new NotFoundException(NotFoundCode.NO_INFO, "존재하지 않는 답변입니다.");
+		Opinion opinion = optOpinion.get();
+
+		// 플랜 조회, 없으면 throw
+		Optional<Plan> optPlan = planRepository.findById(planId);
+		if (optPlan.isEmpty())
+			throw new NotFoundException(NotFoundCode.NO_INFO, "존재하지 않는 플랜입니다.");
+		Plan plan = optPlan.get();
+
+		// day에 해당하는 스케줄이 없으면 throw
+		List<DaySchedule> daySchedules = plan.getDayScheduleList();
+		if (day < 1 || day > daySchedules.size())
+			throw new NotFoundException(NotFoundCode.NO_INFO, "존재하지 않는 스케줄입니다.");
+		DaySchedule daySchedule = daySchedules.get(day - 1);
+
+		// 노하우 지급
+		// 의견이 이미 해당 플랜에 채택된 적이 있다면, 노하우를 지급하지 않음
+		Set<Opinion> opinionsOfPlan = daySchedules.stream()
+				.flatMap(schedule -> schedule.getPlaceItemList().stream())
+				.map(PlaceItem::getOpinion)
+				.collect(Collectors.toSet());
+
+		if (!opinionsOfPlan.contains(opinion)) {
+			UserProfile userProfile = opinion.getAuthor().getUserProfile();
+			userProfile.increaseKnowHowBy(KNOWHOW_INCREASE_ACCEPTED);
+		}
+
+		// 스케줄에 장소 추가
+		Place place = opinion.getPlace();
+		int itemIndex = daySchedule.getPlaceItemList().size();
+		PlaceItem placeItem = PlaceItem.builder()
+				.type(PlaceItemType.ORIGINAL)
+				.place(place)
+				.itemIndex(itemIndex)
+				.build();
+		daySchedule.addPlaceItem(placeItem);
+
+		// 답변 채택
+		opinion.registerPlaceItem(placeItem);
 	}
 }

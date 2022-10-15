@@ -6,7 +6,9 @@ import com.heylocal.traveler.domain.place.PlaceCategory;
 import com.heylocal.traveler.domain.plan.DaySchedule;
 import com.heylocal.traveler.domain.plan.Plan;
 import com.heylocal.traveler.domain.plan.list.PlaceItem;
+import com.heylocal.traveler.domain.profile.UserProfile;
 import com.heylocal.traveler.domain.travelon.TravelOn;
+import com.heylocal.traveler.domain.travelon.opinion.Opinion;
 import com.heylocal.traveler.domain.user.User;
 import com.heylocal.traveler.dto.PlaceItemDto;
 import com.heylocal.traveler.dto.PlaceItemDto.PlaceItemRequest;
@@ -17,6 +19,7 @@ import com.heylocal.traveler.dto.PlanDto.ScheduleRequest;
 import com.heylocal.traveler.exception.BadRequestException;
 import com.heylocal.traveler.exception.ForbiddenException;
 import com.heylocal.traveler.exception.NotFoundException;
+import com.heylocal.traveler.repository.OpinionRepository;
 import com.heylocal.traveler.repository.PlaceRepository;
 import com.heylocal.traveler.repository.PlanRepository;
 import com.heylocal.traveler.repository.TravelOnRepository;
@@ -36,6 +39,7 @@ import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -51,6 +55,9 @@ class PlanServiceTest {
 
 	@Mock
 	private TravelOnRepository travelOnRepository;
+
+	@Mock
+	private OpinionRepository opinionRepository;
 
 	@Mock
 	private RegionService regionService;
@@ -386,5 +393,57 @@ class PlanServiceTest {
 				() -> assertThrows(NotFoundException.class, () -> planService.updatePlacesInPlan(notExistPlanId, planSchedulesRequest))
 		);
 
+	}
+
+	@Test
+	@DisplayName("답변을 채택하여 내 스케줄에 해당 장소를 추가")
+	void addPlaceFromOpinion() throws NotFoundException {
+		// GIVEN
+		long planId = 1L;
+		int day = 1;
+		long opinionId = 1L;
+
+		// GIVEN - opinion
+		int knowHow = 0;
+		UserProfile profile = UserProfile.builder()
+				.knowHow(knowHow)
+				.build();
+		User author = User.builder()
+				.userProfile(profile)
+				.build();
+		Opinion opinion = Opinion.builder()
+				.author(author)
+				.build();
+		given(opinionRepository.findById(opinionId)).willReturn(Optional.of(opinion));
+
+		// GIVEN - plan
+		List<DaySchedule> daySchedules = new ArrayList<>();
+		daySchedules.add(DaySchedule.builder()
+				.build());
+		Plan plan = Plan.builder()
+				.dayScheduleList(daySchedules)
+				.build();
+		given(planRepository.findById(planId)).willReturn(Optional.of(plan));
+
+		// WHEN
+		planService.addPlaceFromOpinion(planId, day, opinionId);
+
+		// THEN
+		assertAll(
+				// 성공 케이스 - 1 - 노하우 지급
+				() -> Assertions
+						.assertThat(profile.getKnowHow())
+						.isEqualTo(knowHow + PlanService.KNOWHOW_INCREASE_ACCEPTED),
+				// 성공 케이스 - 2 - 답변 채택
+				() -> Assertions
+						.assertThat(daySchedules.get(day - 1).getPlaceItemList().stream().map(PlaceItem::getOpinion).collect(Collectors.toSet()))
+						.contains(opinion),
+				// 실패 케이스 - 1 - 해당 답변이 없어 예외 발생
+				() -> assertThrows(NotFoundException.class, () -> planService.addPlaceFromOpinion(planId, day, opinionId + 1)),
+				// 실패 케이스 - 2 - 해당 플랜이 없어 예외 발생
+				() -> assertThrows(NotFoundException.class, () -> planService.addPlaceFromOpinion(planId + 1, day, opinionId)),
+				// 실패 케이스 - 3 - 해당 day의 스케줄이 없어 예외 발생
+				() -> assertThrows(NotFoundException.class, () -> planService.addPlaceFromOpinion(planId, day + 1, opinionId))
+		);
 	}
 }
