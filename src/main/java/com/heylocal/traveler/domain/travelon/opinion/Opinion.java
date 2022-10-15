@@ -53,11 +53,13 @@ public class Opinion extends BaseTimeEntity {
   @Column(nullable = false)
   private EvaluationDegree facilityCleanliness; //시설이 청결한가요
 
+  @Enumerated(EnumType.STRING)
   @Column(nullable = false)
-  private Boolean canParking; //주차장이 있나요
+  private EvaluationDegree canParking; //주차장이 있나요
 
+  @Enumerated(EnumType.STRING)
   @Column(nullable = false)
-  private Boolean waiting; //웨이팅이 있나요
+  private EvaluationDegree waiting; //웨이팅이 있나요
 
   @Enumerated(EnumType.STRING)
   @Column(nullable = false)
