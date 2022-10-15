@@ -61,9 +61,9 @@ public class OpinionDto {
 		@NotNull
 		private EvaluationDegree costPerformance;
 		@ApiModelProperty("주차장이 있나요")
-		private boolean canParking;
+		private EvaluationDegree canParking;
 		@ApiModelProperty("웨이팅이 있나요")
-		private boolean waiting;
+		private EvaluationDegree waiting;
 
 		//음식점 전용 항목
 		@ApiModelProperty("식당 분위기가 어떤가요")
@@ -126,8 +126,8 @@ public class OpinionDto {
 		//공통 질문
 		private EvaluationDegree facilityCleanliness;
 		private EvaluationDegree costPerformance;
-		private Boolean canParking;
-		private Boolean waiting;
+		private EvaluationDegree canParking;
+		private EvaluationDegree waiting;
 
 		//음식점 전용 항목
 		private RestaurantMoodType restaurantMoodType;
