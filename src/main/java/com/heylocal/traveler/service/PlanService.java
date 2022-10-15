@@ -5,6 +5,7 @@ import com.heylocal.traveler.domain.plan.DaySchedule;
 import com.heylocal.traveler.domain.plan.Plan;
 import com.heylocal.traveler.domain.plan.list.PlaceItem;
 import com.heylocal.traveler.domain.plan.list.PlaceItemType;
+import com.heylocal.traveler.domain.profile.UserProfile;
 import com.heylocal.traveler.domain.travelon.TravelOn;
 import com.heylocal.traveler.domain.travelon.opinion.Opinion;
 import com.heylocal.traveler.dto.PlanDto.*;
@@ -44,6 +45,9 @@ public class PlanService {
 	private final RegionService regionService;
 
 	private final Clock clock;
+
+
+	private static final int KNOWHOW_INCREASE_ACCEPTED = 200; // 채택 시 얻는 노하우
 
 	/**
 	 * <pre>
@@ -318,5 +322,9 @@ public class PlanService {
 
 		// 답변 채택
 		opinion.registerPlaceItem(placeItem);
+
+		// 노하우 추가
+		UserProfile userProfile = opinion.getAuthor().getUserProfile();
+		userProfile.increaseKnowHowBy(KNOWHOW_INCREASE_ACCEPTED);
 	}
 }
