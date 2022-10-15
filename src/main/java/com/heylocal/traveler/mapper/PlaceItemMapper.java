@@ -26,6 +26,7 @@ public interface PlaceItemMapper {
   @Mapping(target = "type", expression = "java(PlaceItemType.ORIGINAL)")
   @Mapping(target = "place", expression = "java(PlaceMapper.INSTANCE.toEntity(placeItemRequest))")
   @Mapping(target = "originalPlaceId", ignore = true)
+  @Mapping(target = "opinion", ignore = true)
   PlaceItem toPlaceItemEntity(PlaceItemDto.PlaceItemRequest placeItemRequest);
 
   @Mapping(target = "name", source = "placeItem.place.name")
