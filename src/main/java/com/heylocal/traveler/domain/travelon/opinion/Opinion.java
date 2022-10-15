@@ -166,4 +166,10 @@ public class Opinion extends BaseTimeEntity {
       placeItem.registerOpinion(this);
     }
   }
+
+  public int getAcceptedCount() {
+    return (int) placeItemList.stream()
+            .distinct()
+            .count();
+  }
 }
