@@ -312,7 +312,7 @@ class OpinionImgContentServiceTest {
         .place(place)
         .facilityCleanliness(EvaluationDegree.GOOD)
         .costPerformance(EvaluationDegree.GOOD)
-        .waiting(false)
+        .waiting(EvaluationDegree.GOOD)
         .coffeeType(CoffeeType.BITTER)
         .build();
   }
