@@ -10,6 +10,7 @@ package com.heylocal.traveler.domain.plan;
 
 import com.heylocal.traveler.domain.BaseTimeEntity;
 import com.heylocal.traveler.domain.Region;
+import com.heylocal.traveler.domain.travelon.TransportationType;
 import com.heylocal.traveler.domain.travelon.TravelOn;
 import com.heylocal.traveler.domain.user.User;
 import lombok.*;
@@ -49,6 +50,10 @@ public class Plan extends BaseTimeEntity {
 
   @Column(nullable = false)
   private LocalDate travelEndDate;
+
+  @Enumerated(EnumType.STRING)
+  @Column(nullable = false)
+  private TransportationType transportationType;
 
   //양방향 설정
 
