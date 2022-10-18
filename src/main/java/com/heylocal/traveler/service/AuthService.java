@@ -8,14 +8,15 @@
 
 package com.heylocal.traveler.service;
 
-import com.heylocal.traveler.domain.redis.AccessToken;
-import com.heylocal.traveler.domain.redis.RefreshToken;
+import com.heylocal.traveler.domain.token.AccessToken;
+import com.heylocal.traveler.domain.token.RefreshToken;
 import com.heylocal.traveler.domain.user.User;
 import com.heylocal.traveler.dto.LoginUser;
 import com.heylocal.traveler.exception.TokenException;
 import com.heylocal.traveler.exception.UnauthorizedException;
 import com.heylocal.traveler.exception.code.AuthCode;
 import com.heylocal.traveler.exception.code.TokenCode;
+import com.heylocal.traveler.exception.code.UnauthorizedCode;
 import com.heylocal.traveler.repository.UserRepository;
 import com.heylocal.traveler.repository.redis.AccessTokenRedisRepository;
 import com.heylocal.traveler.repository.redis.RefreshTokenRedisRepository;
@@ -26,8 +27,6 @@ import io.jsonwebtoken.ExpiredJwtException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import javax.persistence.NoResultException;
 
 import static com.heylocal.traveler.dto.AuthTokenDto.TokenPairRequest;
 import static com.heylocal.traveler.dto.AuthTokenDto.TokenPairResponse;
@@ -83,7 +82,8 @@ public class AuthService {
     storedRefreshToken = validateRefreshToken(request, userId);
 
     //request 받은 AccessToken과 DB에 저장된 AccessToken의 값이 같은지 확인
-    storedAccessToken = accessTokenRedisRepository.findByUserId(storedRefreshToken.getUserId());
+    storedAccessToken = accessTokenRedisRepository.findByUserId(storedRefreshToken.getUserId())
+        .orElseThrow(() -> new UnauthorizedException(UnauthorizedCode.EXPIRED_TOKEN));
     isSameAccessTokenValue(storedAccessToken, request.getAccessToken());
 
     //조회한 AccessToken이 정말 만료되었는지 확인
@@ -127,11 +127,9 @@ public class AuthService {
     RefreshToken storedRefreshToken;
 
     //Refresh Token 조회
-    try {
-      storedRefreshToken = refreshTokenRedisRepository.findByUserId(userId);
-    } catch (NoResultException e) { //만약 해당 Refresh Token을 Redis에서 조회하지 못했다면
-      throw new UnauthorizedException(AuthCode.EXPIRED_REFRESH_TOKEN);
-    }
+    storedRefreshToken = refreshTokenRedisRepository.findByUserId(userId).orElseThrow(
+            () -> new UnauthorizedException(AuthCode.EXPIRED_REFRESH_TOKEN)
+    );
 
     //Refresh Token 값이 정확한지 비교
     if ( !request.getRefreshToken().equals(storedRefreshToken.getTokenValue()) ) {

@@ -8,8 +8,8 @@
 
 package com.heylocal.traveler.service;
 
-import com.heylocal.traveler.domain.redis.AccessToken;
-import com.heylocal.traveler.domain.redis.RefreshToken;
+import com.heylocal.traveler.domain.token.AccessToken;
+import com.heylocal.traveler.domain.token.RefreshToken;
 import com.heylocal.traveler.domain.user.User;
 import com.heylocal.traveler.domain.user.UserRole;
 import com.heylocal.traveler.exception.UnauthorizedException;

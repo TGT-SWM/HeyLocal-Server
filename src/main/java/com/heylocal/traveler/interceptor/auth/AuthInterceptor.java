@@ -9,6 +9,7 @@
 package com.heylocal.traveler.interceptor.auth;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.heylocal.traveler.domain.token.AccessToken;
 import com.heylocal.traveler.dto.ErrorMessageResponse;
 import com.heylocal.traveler.exception.UnauthorizedException;
 import com.heylocal.traveler.exception.code.UnauthorizedCode;
@@ -22,11 +23,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
-import javax.persistence.NoResultException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
@@ -64,9 +65,8 @@ public class AuthInterceptor implements HandlerInterceptor {
 
     //DB에도 존재하는지 확인
     long userId = claims.get("userPk", Long.class);
-    try {
-      accessTokenRedisRepository.findByUserId(userId);
-    } catch (NoResultException e) {
+    Optional<AccessToken> accessTokenOptional = accessTokenRedisRepository.findByUserId(userId);
+    if (accessTokenOptional.isEmpty()) {
       responseError(response, UnauthorizedCode.EXPIRED_TOKEN);
       return false;
     }

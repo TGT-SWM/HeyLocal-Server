@@ -8,19 +8,17 @@
 
 package com.heylocal.traveler.repository.redis;
 
-import com.heylocal.traveler.domain.redis.AccessToken;
-import com.heylocal.traveler.domain.redis.RefreshToken;
+import com.heylocal.traveler.domain.token.AccessToken;
 import com.heylocal.traveler.mapper.AccessTokenMapper;
-import com.heylocal.traveler.mapper.RefreshTokenMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.NoResultException;
 import java.lang.reflect.Field;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 @Repository
@@ -53,19 +51,19 @@ public class AccessTokenRedisRepository {
    * @param userId accessToken 의 id
    * @return
    */
-  public AccessToken findByUserId(long userId) throws NoResultException {
+  public Optional<AccessToken> findByUserId(long userId) {
     HashOperations<String, String, String> hashOperations = redisTemplate.opsForHash();
     String key = getKey(userId);
     Map<String, String> rawResult = hashOperations.entries(key);
 
     if (rawResult.size() == 0) {
-      throw new NoResultException("해당 userId를 갖는 Access Token을 찾을 수 없습니다.");
+      return Optional.empty();
     }
 
     //RefreshToken 으로 변환
     AccessToken accessToken = AccessTokenMapper.INSTANCE.mapToEntity(rawResult);
 
-    return accessToken;
+    return Optional.of(accessToken);
   }
 
   /**
