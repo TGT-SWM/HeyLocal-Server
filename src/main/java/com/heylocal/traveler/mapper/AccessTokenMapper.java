@@ -9,10 +9,12 @@
 package com.heylocal.traveler.mapper;
 
 import com.heylocal.traveler.domain.redis.AccessToken;
+import com.heylocal.traveler.domain.redis.RefreshToken;
 import org.mapstruct.Builder;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
+import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -36,5 +38,21 @@ public interface AccessTokenMapper {
     result.put("createdDate", createdDate);
 
     return result;
+  }
+
+  default AccessToken mapToEntity(Map<String, String> entries) {
+    long userId = Long.parseLong(entries.get("userId"));
+    String tokenValue = entries.get("tokenValue");
+    long timeoutSec = Long.parseLong(entries.get("timeoutSec"));
+    long refreshTokenId = Long.parseLong(entries.get("refreshTokenId"));
+    LocalDateTime createdDate = LocalDateTime.parse(entries.get("createdDate"));
+
+    return AccessToken.builder()
+        .userId(userId)
+        .tokenValue(tokenValue)
+        .timeoutSec(timeoutSec)
+        .refreshTokenId(refreshTokenId)
+        .createdDate(createdDate)
+        .build();
   }
 }

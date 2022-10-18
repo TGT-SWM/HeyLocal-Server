@@ -151,7 +151,6 @@ public class SigninService {
   private void saveTokenPairToDb(long userId, String accessTokenValue, String refreshTokenValue) {
     AccessToken accessToken;
     RefreshToken refreshToken;
-    long accessExpirationSec = jwtTokenProvider.getAccessTokenValidMilliSec() / 1000;
     long refreshExpirationSec = jwtTokenProvider.getRefreshTokenValidMilliSec() / 1000;
 
     //유저 id 확인
@@ -163,7 +162,7 @@ public class SigninService {
     accessToken = AccessToken.builder()
         .userId(userId)
         .tokenValue(accessTokenValue)
-        .timeoutSec(accessExpirationSec)
+        .timeoutSec(refreshExpirationSec) //최대시간만큼 설정해야하므로 Refresh 토큰 만료일로 설정
         .build();
     refreshToken = RefreshToken.builder()
         .userId(userId)

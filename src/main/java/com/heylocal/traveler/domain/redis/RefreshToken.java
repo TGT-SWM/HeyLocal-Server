@@ -37,4 +37,8 @@ public class RefreshToken {
       accessToken.associateRefreshToken(this);
     }
   }
+
+  public void updateTokenValue(String newTokenValue) {
+    this.tokenValue = newTokenValue;
+  }
 }

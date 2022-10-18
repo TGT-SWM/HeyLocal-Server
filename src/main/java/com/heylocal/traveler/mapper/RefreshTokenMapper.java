@@ -13,6 +13,7 @@ import org.mapstruct.Builder;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
+import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -36,5 +37,21 @@ public interface RefreshTokenMapper {
     result.put("createdDate", createdDate);
 
     return result;
+  }
+
+  default RefreshToken mapToEntity(Map<String, String> entries) {
+    long userId = Long.parseLong(entries.get("userId"));
+    String tokenValue = entries.get("tokenValue");
+    long timeoutSec = Long.parseLong(entries.get("timeoutSec"));
+    long accessTokenId = Long.parseLong(entries.get("accessTokenId"));
+    LocalDateTime createdDate = LocalDateTime.parse(entries.get("createdDate"));
+
+    return RefreshToken.builder()
+        .userId(userId)
+        .tokenValue(tokenValue)
+        .timeoutSec(timeoutSec)
+        .accessTokenId(accessTokenId)
+        .createdDate(createdDate)
+        .build();
   }
 }
