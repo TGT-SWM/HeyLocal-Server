@@ -2,21 +2,21 @@
  * packageName    : com.heylocal.traveler.service
  * fileName       : SigninService
  * author         : 우태균
- * date           : 2022/08/15
+ * date           : 2022/10/18
  * description    : 로그인 관련 서비스
  */
 
 package com.heylocal.traveler.service;
 
-import com.heylocal.traveler.domain.token.AccessToken;
-import com.heylocal.traveler.domain.token.RefreshToken;
+import com.heylocal.traveler.domain.redis.AccessToken;
+import com.heylocal.traveler.domain.redis.RefreshToken;
 import com.heylocal.traveler.domain.user.User;
 import com.heylocal.traveler.domain.user.UserRole;
 import com.heylocal.traveler.exception.UnauthorizedException;
 import com.heylocal.traveler.exception.code.SigninCode;
-import com.heylocal.traveler.repository.TokenRepository;
 import com.heylocal.traveler.repository.UserRepository;
-import com.heylocal.traveler.util.jwt.JwtTokenParser;
+import com.heylocal.traveler.repository.redis.AccessTokenRedisRepository;
+import com.heylocal.traveler.repository.redis.RefreshTokenRedisRepository;
 import com.heylocal.traveler.util.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,8 +24,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.NoResultException;
-import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static com.heylocal.traveler.dto.SigninDto.SigninRequest;
@@ -37,10 +35,10 @@ import static com.heylocal.traveler.dto.SigninDto.SigninResponse;
 public class SigninService {
 
   private final UserRepository userRepository;
-  private final TokenRepository tokenRepository;
+  private final AccessTokenRedisRepository accessTokenRedisRepository;
+  private final RefreshTokenRedisRepository refreshTokenRedisRepository;
   private final PasswordEncoder passwordEncoder;
   private final JwtTokenProvider jwtTokenProvider;
-  private final JwtTokenParser jwtTokenParser;
 
   /**
    * 로그인 메서드
@@ -125,19 +123,19 @@ public class SigninService {
    * <pre>
    * Access Token, Refresh Token 발급 메서드
    * </pre>
-   * @param id 사용자(여행자)의 pk값
+   * @param userId 사용자(여행자)의 pk값
    * @return Access Token, Refresh Token 이 담긴 배열
    */
-  private String[] issueTokens(long id) {
+  private String[] issueTokens(long userId) {
     String accessTokenValue;
     String refreshTokenValue;
 
     //토큰 발급
-    accessTokenValue = jwtTokenProvider.createAccessToken(id);
-    refreshTokenValue = jwtTokenProvider.createRefreshToken(id);
+    accessTokenValue = jwtTokenProvider.createAccessToken(userId);
+    refreshTokenValue = jwtTokenProvider.createRefreshToken(userId);
 
     //토큰 DB 저장
-    saveTokenPairToDb(id, accessTokenValue, refreshTokenValue);
+    saveTokenPairToDb(userId, accessTokenValue, refreshTokenValue);
 
     return new String[]{accessTokenValue, refreshTokenValue};
   }
@@ -151,32 +149,31 @@ public class SigninService {
    * @param refreshTokenValue Refresh Token 값
    */
   private void saveTokenPairToDb(long userId, String accessTokenValue, String refreshTokenValue) {
-    User user;
     AccessToken accessToken;
     RefreshToken refreshToken;
-    LocalDateTime refreshExpiration;
-    LocalDateTime accessExpiration;
+    long accessExpirationSec = jwtTokenProvider.getAccessTokenValidMilliSec() / 1000;
+    long refreshExpirationSec = jwtTokenProvider.getRefreshTokenValidMilliSec() / 1000;
 
-    accessExpiration = jwtTokenParser.extractExpiration(accessTokenValue);
-    refreshExpiration = jwtTokenParser.extractExpiration(refreshTokenValue);
-    user = userRepository.findById(userId).orElseThrow(
+    //유저 id 확인
+    userRepository.findById(userId).orElseThrow(
         () -> new IllegalArgumentException("User 를 찾을 수 없습니다.")
     );
+
+    //토큰 생성
     accessToken = AccessToken.builder()
+        .userId(userId)
         .tokenValue(accessTokenValue)
-        .expiredDateTime(accessExpiration)
+        .timeoutSec(accessExpirationSec)
         .build();
     refreshToken = RefreshToken.builder()
+        .userId(userId)
         .tokenValue(refreshTokenValue)
-        .expiredDateTime(refreshExpiration)
+        .timeoutSec(refreshExpirationSec)
         .build();
+    accessToken.associateRefreshToken(refreshToken);
 
-    try {
-      tokenRepository.removeTokenPairByUserId(userId); //기존 토큰들이 있다면 제거
-    } catch (NoResultException e) {
-      //ignored (관련 토큰을 가지고 있지 않아도, 문제될 것이 없으므로 무시)
-    }
-
-    tokenRepository.saveTokenPair(user, refreshToken, accessToken);
+    //토큰 저장
+    accessTokenRedisRepository.save(accessToken);
+    refreshTokenRedisRepository.save(refreshToken);
   }
 }

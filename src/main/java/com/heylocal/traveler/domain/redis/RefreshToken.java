@@ -20,6 +20,7 @@ public class RefreshToken {
   @TimeToLive
   private Long timeoutSec;
   private Long accessTokenId;
+  @Builder.Default
   private LocalDateTime createdDate = LocalDateTime.now();
 
   public RefreshToken(Long userId, String tokenValue, Long timeoutSec, Long accessTokenId) {
@@ -27,5 +28,12 @@ public class RefreshToken {
     this.tokenValue = tokenValue;
     this.timeoutSec = timeoutSec;
     this.accessTokenId = accessTokenId;
+  }
+
+  public void associateAccessToken(AccessToken accessToken) {
+    this.accessTokenId = accessToken.getUserId();
+    if (accessToken.getRefreshTokenId() != this.getUserId()) {
+      accessToken.associateRefreshToken(this);
+    }
   }
 }
