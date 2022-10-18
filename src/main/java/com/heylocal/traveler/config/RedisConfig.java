@@ -15,6 +15,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
+import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.transaction.PlatformTransactionManager;
 
 @Configuration
 @RequiredArgsConstructor
@@ -35,6 +38,9 @@ public class RedisConfig {
   public RedisTemplate<?, ?> redisTemplate() {
     RedisTemplate<?, ?> redisTemplate = new RedisTemplate<>();
     redisTemplate.setConnectionFactory(redisConnectionFactory());
+
+    redisTemplate.setDefaultSerializer(new StringRedisSerializer()); //직렬화 방식
+
     redisTemplate.setEnableTransactionSupport(true); //트랜잭션 처리 설정
     return redisTemplate;
   }
