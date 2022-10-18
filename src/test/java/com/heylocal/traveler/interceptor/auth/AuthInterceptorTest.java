@@ -1,7 +1,7 @@
 package com.heylocal.traveler.interceptor.auth;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.heylocal.traveler.domain.redis.AccessToken;
+import com.heylocal.traveler.domain.token.AccessToken;
 import com.heylocal.traveler.repository.redis.AccessTokenRedisRepository;
 import com.heylocal.traveler.util.jwt.JwtTokenParser;
 import io.jsonwebtoken.Claims;

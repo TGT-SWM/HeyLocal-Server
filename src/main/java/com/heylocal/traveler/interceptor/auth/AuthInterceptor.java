@@ -9,7 +9,7 @@
 package com.heylocal.traveler.interceptor.auth;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.heylocal.traveler.domain.redis.AccessToken;
+import com.heylocal.traveler.domain.token.AccessToken;
 import com.heylocal.traveler.dto.ErrorMessageResponse;
 import com.heylocal.traveler.exception.UnauthorizedException;
 import com.heylocal.traveler.exception.code.UnauthorizedCode;

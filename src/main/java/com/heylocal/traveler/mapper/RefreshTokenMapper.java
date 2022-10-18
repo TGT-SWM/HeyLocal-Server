@@ -8,7 +8,7 @@
 
 package com.heylocal.traveler.mapper;
 
-import com.heylocal.traveler.domain.redis.RefreshToken;
+import com.heylocal.traveler.domain.token.RefreshToken;
 import org.mapstruct.Builder;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;

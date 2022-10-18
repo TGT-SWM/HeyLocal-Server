@@ -8,7 +8,7 @@
 
 package com.heylocal.traveler.repository.redis;
 
-import com.heylocal.traveler.domain.redis.RefreshToken;
+import com.heylocal.traveler.domain.token.RefreshToken;
 import com.heylocal.traveler.mapper.RefreshTokenMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
