@@ -20,6 +20,7 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.NoResultException;
 import java.lang.reflect.Field;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 @Repository
@@ -47,19 +48,19 @@ public class RefreshTokenRedisRepository {
    * @param userId refreshToken의 id
    * @return
    */
-  public RefreshToken findByUserId(long userId) throws NoResultException {
+  public Optional<RefreshToken> findByUserId(long userId) {
     HashOperations<String, String, String> hashOperations = redisTemplate.opsForHash();
     String key = getKey(userId);
     Map<String, String> rawResult = hashOperations.entries(key);
 
     if (rawResult.size() == 0) {
-      throw new NoResultException("해당 userId를 갖는 Refresh Token을 찾을 수 없습니다.");
+      return Optional.empty();
     }
 
     //RefreshToken 으로 변환
     RefreshToken refreshToken = RefreshTokenMapper.INSTANCE.mapToEntity(rawResult);
 
-    return refreshToken;
+    return Optional.of(refreshToken);
   }
 
   /**

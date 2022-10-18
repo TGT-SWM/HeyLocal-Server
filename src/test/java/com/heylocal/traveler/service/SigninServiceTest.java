@@ -3,11 +3,12 @@ package com.heylocal.traveler.service;
 import com.heylocal.traveler.domain.user.User;
 import com.heylocal.traveler.domain.user.UserRole;
 import com.heylocal.traveler.exception.UnauthorizedException;
-import com.heylocal.traveler.repository.TokenRepository;
 import com.heylocal.traveler.repository.UserRepository;
-import com.heylocal.traveler.util.jwt.JwtTokenParser;
+import com.heylocal.traveler.repository.redis.AccessTokenRedisRepository;
+import com.heylocal.traveler.repository.redis.RefreshTokenRedisRepository;
 import com.heylocal.traveler.util.jwt.JwtTokenProvider;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -26,16 +27,16 @@ import static org.mockito.BDDMockito.willReturn;
 
 class SigninServiceTest {
   @Mock private UserRepository userRepository;
-  @Mock private TokenRepository tokenRepository;
+  @Mock private AccessTokenRedisRepository accessTokenRedisRepository;
+  @Mock private RefreshTokenRedisRepository refreshTokenRedisRepository;
   @Mock private PasswordEncoder passwordEncoder;
   @Mock private JwtTokenProvider jwtTokenProvider;
-  @Mock private JwtTokenParser jwtTokenParser;
   private SigninService signinService;
 
   @BeforeEach
   void setUp() {
     MockitoAnnotations.openMocks(this); //여러 test code 실행 시, mock 객체의 정의된 행동이 꼬일 수 있으므로 초기화한다.
-    this.signinService = new SigninService(userRepository, tokenRepository, passwordEncoder, jwtTokenProvider, jwtTokenParser);
+    this.signinService = new SigninService(userRepository, accessTokenRedisRepository, refreshTokenRedisRepository,  passwordEncoder, jwtTokenProvider);
   }
 
   @Test
@@ -93,8 +94,8 @@ class SigninServiceTest {
     willReturn(refreshTokenValue).given(jwtTokenProvider).createRefreshToken(existId);
 
     //Mock 행동 정의 - jwtTokenParser
-    willReturn(accessExpiration).given(jwtTokenParser).extractExpiration(eq(accessTokenValue));
-    willReturn(refreshExpiration).given(jwtTokenParser).extractExpiration(eq(refreshTokenValue));
+//    willReturn(accessExpiration).given(jwtTokenParser).extractExpiration(eq(accessTokenValue));
+//    willReturn(refreshExpiration).given(jwtTokenParser).extractExpiration(eq(refreshTokenValue));
 
     //WHEN
     SigninResponse succeedResponse = signinService.signin(succeedRequest);

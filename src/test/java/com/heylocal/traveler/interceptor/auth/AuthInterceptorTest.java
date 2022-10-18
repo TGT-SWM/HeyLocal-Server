@@ -1,6 +1,8 @@
 package com.heylocal.traveler.interceptor.auth;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.heylocal.traveler.domain.redis.AccessToken;
+import com.heylocal.traveler.repository.redis.AccessTokenRedisRepository;
 import com.heylocal.traveler.util.jwt.JwtTokenParser;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -29,6 +31,8 @@ import static org.mockito.BDDMockito.willThrow;
 @ExtendWith(MockitoExtension.class)
 class AuthInterceptorTest {
   @Mock
+  private AccessTokenRedisRepository accessTokenRedisRepository;
+  @Mock
   private ObjectMapper objectMapper;
   @Mock
   private JwtTokenParser jwtTokenParser;
@@ -37,7 +41,7 @@ class AuthInterceptorTest {
   @BeforeEach
   void setUp() {
     MockitoAnnotations.openMocks(this);
-    this.authInterceptor = new AuthInterceptor(objectMapper, jwtTokenParser);
+    this.authInterceptor = new AuthInterceptor(accessTokenRedisRepository, objectMapper, jwtTokenParser);
   }
 
   @Test
@@ -58,6 +62,9 @@ class AuthInterceptorTest {
 
     //Mock 행동 정의 - HttpServletRequest
     willReturn(validAuthHeaderValue).given(request).getHeader(eq("Authorization"));
+
+    //Mock 행동 정의 - accessTokenRedisRepository
+    willReturn(Optional.of(new AccessToken())).given(accessTokenRedisRepository).findByUserId(validUserId);
 
     //WHEN
     boolean result = authInterceptor.preHandle(request, response, null);
