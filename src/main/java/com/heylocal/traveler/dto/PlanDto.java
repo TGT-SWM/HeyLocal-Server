@@ -8,6 +8,7 @@
 
 package com.heylocal.traveler.dto;
 
+import com.heylocal.traveler.domain.travelon.TransportationType;
 import com.heylocal.traveler.dto.PlaceItemDto.PlaceItemRequest;
 import com.heylocal.traveler.dto.PlaceItemDto.PlaceItemResponse;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -54,6 +55,7 @@ public class PlanDto {
 		// String regionThumbUrl;
 		LocalDate startDate;
 		LocalDate endDate;
+		TransportationType transportationType;
 	}
 
 	@Getter
