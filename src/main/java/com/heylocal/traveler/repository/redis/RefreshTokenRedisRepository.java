@@ -8,7 +8,6 @@
 
 package com.heylocal.traveler.repository.redis;
 
-import com.heylocal.traveler.domain.redis.AccessToken;
 import com.heylocal.traveler.domain.redis.RefreshToken;
 import com.heylocal.traveler.mapper.RefreshTokenMapper;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +16,6 @@ import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.NoResultException;
 import java.lang.reflect.Field;
 import java.util.Map;
 import java.util.Optional;

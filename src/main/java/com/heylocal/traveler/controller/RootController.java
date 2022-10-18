@@ -9,11 +9,6 @@
 package com.heylocal.traveler.controller;
 
 import com.heylocal.traveler.controller.api.RootApi;
-import com.heylocal.traveler.domain.redis.RefreshToken;
-import com.heylocal.traveler.repository.redis.RefreshTokenRedisRepository;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;

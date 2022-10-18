@@ -8,7 +8,6 @@ import com.heylocal.traveler.repository.redis.AccessTokenRedisRepository;
 import com.heylocal.traveler.repository.redis.RefreshTokenRedisRepository;
 import com.heylocal.traveler.util.jwt.JwtTokenProvider;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;

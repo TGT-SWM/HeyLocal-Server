@@ -28,8 +28,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.NoResultException;
-
 import static com.heylocal.traveler.dto.AuthTokenDto.TokenPairRequest;
 import static com.heylocal.traveler.dto.AuthTokenDto.TokenPairResponse;
 
