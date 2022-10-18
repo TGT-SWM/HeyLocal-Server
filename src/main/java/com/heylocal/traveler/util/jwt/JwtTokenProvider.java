@@ -11,11 +11,13 @@ package com.heylocal.traveler.util.jwt;
 import io.jsonwebtoken.Header;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
 
+@Getter
 @Component
 public class JwtTokenProvider {
   private final String secretKey;
