@@ -61,7 +61,6 @@ public interface AccessTokenMapper {
       String fieldName = field.getName();
       field.setAccessible(true); //private 필드 접근 허용
 
-      //String 형으로 변환
       if (fieldType.equals(Long.class)) { //Long 타입인 경우
         Long fieldValue = Long.parseLong(entries.get(fieldName));
         field.set(result, fieldValue);
