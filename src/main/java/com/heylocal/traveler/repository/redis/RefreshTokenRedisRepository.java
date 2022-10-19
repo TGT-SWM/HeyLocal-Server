@@ -63,21 +63,6 @@ public class RefreshTokenRedisRepository {
 
   /**
    * redis 에서 제거하는 메서드
-   * @param refreshToken 제거할 RefreshToken
-   */
-  public void remove(RefreshToken refreshToken) {
-    HashOperations<String, String, String> hashOperations = redisTemplate.opsForHash();
-    String key = getKey(refreshToken.getUserId());
-    Field[] declaredFields = RefreshToken.class.getDeclaredFields();
-
-    for (Field field : declaredFields) {
-      String fieldName = field.getName();
-      hashOperations.delete(key, fieldName);
-    }
-  }
-
-  /**
-   * redis 에서 제거하는 메서드
    * @param userId 제거할 RefreshToken 의 id
    */
   public void removeByUserId(long userId) {

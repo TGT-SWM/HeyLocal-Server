@@ -68,21 +68,6 @@ public class AccessTokenRedisRepository {
 
   /**
    * redis 에서 제거하는 메서드
-   * @param accessToken 제거할 AccessToken
-   */
-  public void remove(AccessToken accessToken) {
-    HashOperations<String, String, String> hashOperations = redisTemplate.opsForHash();
-    String key = getKey(accessToken.getUserId());
-    Field[] declaredFields = AccessToken.class.getDeclaredFields();
-
-    for (Field field : declaredFields) {
-      String fieldName = field.getName();
-      hashOperations.delete(key, fieldName);
-    }
-  }
-
-  /**
-   * redis 에서 제거하는 메서드
    * @param userId 제거할 AccessToken 의 id
    */
   public void removeByUserId(long userId) {
