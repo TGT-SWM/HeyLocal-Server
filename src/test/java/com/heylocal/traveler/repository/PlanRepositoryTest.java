@@ -140,6 +140,7 @@ class PlanRepositoryTest {
 				.region(travelOn.getRegion())
 				.travelStartDate(travelOn.getTravelStartDate())
 				.travelEndDate(travelOn.getTravelEndDate())
+				.transportationType(TransportationType.PUBLIC)
 				.build();
 	}
 

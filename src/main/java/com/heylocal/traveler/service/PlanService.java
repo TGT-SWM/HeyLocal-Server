@@ -152,6 +152,7 @@ public class PlanService {
 				.region(travelOn.getRegion())
 				.travelStartDate(travelOn.getTravelStartDate())
 				.travelEndDate(travelOn.getTravelEndDate())
+				.transportationType(travelOn.getTransportationType())
 				.build();
 		daySchedules.forEach(plan::addDaySchedule); // DaySchedule 추가
 		planRepository.save(plan); // 저장
