@@ -1,4 +1,4 @@
-package com.heylocal.traveler;
+package config;
 
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.AnonymousAWSCredentials;

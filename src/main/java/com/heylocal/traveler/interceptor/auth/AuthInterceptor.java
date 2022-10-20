@@ -2,16 +2,18 @@
  * packageName    : com.heylocal.traveler.interceptor.auth
  * fileName       : AuthInterceptor
  * author         : 우태균
- * date           : 2022/09/20
+ * date           : 2022/10/18
  * description    : 인가 처리 인터셉터
  */
 
 package com.heylocal.traveler.interceptor.auth;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.heylocal.traveler.domain.token.AccessToken;
 import com.heylocal.traveler.dto.ErrorMessageResponse;
 import com.heylocal.traveler.exception.UnauthorizedException;
 import com.heylocal.traveler.exception.code.UnauthorizedCode;
+import com.heylocal.traveler.repository.redis.AccessTokenRedisRepository;
 import com.heylocal.traveler.util.jwt.JwtTokenParser;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -25,10 +27,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
 public class AuthInterceptor implements HandlerInterceptor {
+  private final AccessTokenRedisRepository accessTokenRedisRepository;
   private final ObjectMapper objectMapper;
   private final JwtTokenParser jwtTokenParser;
 
@@ -59,11 +63,19 @@ public class AuthInterceptor implements HandlerInterceptor {
       return false;
     }
 
+    //DB에도 존재하는지 확인
+    long userId = claims.get("userPk", Long.class);
+    Optional<AccessToken> accessTokenOptional = accessTokenRedisRepository.findByUserId(userId);
+    if (accessTokenOptional.isEmpty()) {
+      responseError(response, UnauthorizedCode.EXPIRED_TOKEN);
+      return false;
+    }
+
     /*
      * Request 객체의 attribute 에 로그인한 사용자의 id값(pk) 담기.
      * 스프링 Argument Resolver 에서 사용될 수 있도록, HttpServletRequest 객체에 추가해야 한다.
      */
-    request.setAttribute("userId", claims.get("userPk", Long.class));
+    request.setAttribute("userId", userId);
     return true;
   }
 

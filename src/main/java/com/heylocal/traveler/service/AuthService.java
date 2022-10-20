@@ -16,8 +16,10 @@ import com.heylocal.traveler.exception.TokenException;
 import com.heylocal.traveler.exception.UnauthorizedException;
 import com.heylocal.traveler.exception.code.AuthCode;
 import com.heylocal.traveler.exception.code.TokenCode;
-import com.heylocal.traveler.repository.TokenRepository;
+import com.heylocal.traveler.exception.code.UnauthorizedCode;
 import com.heylocal.traveler.repository.UserRepository;
+import com.heylocal.traveler.repository.redis.AccessTokenRedisRepository;
+import com.heylocal.traveler.repository.redis.RefreshTokenRedisRepository;
 import com.heylocal.traveler.util.jwt.JwtTokenParser;
 import com.heylocal.traveler.util.jwt.JwtTokenProvider;
 import io.jsonwebtoken.Claims;
@@ -33,7 +35,8 @@ import static com.heylocal.traveler.dto.AuthTokenDto.TokenPairResponse;
 @RequiredArgsConstructor
 public class AuthService {
   private final UserRepository userRepository;
-  private final TokenRepository tokenRepository;
+  private final AccessTokenRedisRepository accessTokenRedisRepository;
+  private final RefreshTokenRedisRepository refreshTokenRedisRepository;
   private final JwtTokenParser jwtTokenParser;
   private final JwtTokenProvider jwtTokenProvider;
 
@@ -68,14 +71,20 @@ public class AuthService {
     AccessToken storedAccessToken;
     long userId = 0L;
 
-    //Refresh Token 검증
-    storedRefreshToken = validateRefreshToken(request);
+    //전달받은 Refresh Token 이 만료되었는지 확인
+    String requestRefreshToken = request.getRefreshToken();
+    isExpiredRefreshToken(requestRefreshToken);
 
     //Refresh Token 으로부터 userPk 추출
-    userId = getUserIdFromRefreshToken(storedRefreshToken);
+    userId = getUserIdFromRefreshTokenValue(request.getRefreshToken());
+
+    //Refresh Token 검증
+    storedRefreshToken = validateRefreshToken(request, userId);
 
     //request 받은 AccessToken과 DB에 저장된 AccessToken의 값이 같은지 확인
-    storedAccessToken = isSameAccessTokenValue(storedRefreshToken.getAccessToken(), request.getAccessToken());
+    storedAccessToken = accessTokenRedisRepository.findByUserId(storedRefreshToken.getUserId())
+        .orElseThrow(() -> new UnauthorizedException(UnauthorizedCode.EXPIRED_TOKEN));
+    isSameAccessTokenValue(storedAccessToken, request.getAccessToken());
 
     //조회한 AccessToken이 정말 만료되었는지 확인
     validateExpiredAccessToken(storedAccessToken);
@@ -87,11 +96,21 @@ public class AuthService {
     //새로운 Access Token, Refresh Token 으로 업데이트
     storedAccessToken.updateTokenValue(newAccessTokenValue);
     storedRefreshToken.updateTokenValue(newRefreshTokenValue);
+    accessTokenRedisRepository.save(storedAccessToken);
+    refreshTokenRedisRepository.save(storedRefreshToken);
 
     return TokenPairResponse.builder()
         .accessToken(newAccessTokenValue)
         .refreshToken(newRefreshTokenValue)
         .build();
+  }
+
+  private void isExpiredRefreshToken(String requestRefreshToken) throws UnauthorizedException {
+    try {
+      jwtTokenParser.parseJwtToken(requestRefreshToken);
+    } catch (ExpiredJwtException expiredJwtException) {
+      throw new UnauthorizedException(AuthCode.EXPIRED_REFRESH_TOKEN);
+    }
   }
 
   /**
@@ -104,19 +123,17 @@ public class AuthService {
    * @return DB에 저장된 Refresh Token 엔티티
    * @throws UnauthorizedException 검증 실패시
    */
-  private RefreshToken validateRefreshToken(TokenPairRequest request) throws UnauthorizedException {
+  private RefreshToken validateRefreshToken(TokenPairRequest request, long userId) throws UnauthorizedException {
     RefreshToken storedRefreshToken;
 
     //Refresh Token 조회
-    storedRefreshToken = tokenRepository.findRefreshTokenByValue(request.getRefreshToken()).orElseThrow(
-        () -> new UnauthorizedException(AuthCode.NOT_EXIST_REFRESH_TOKEN)
+    storedRefreshToken = refreshTokenRedisRepository.findByUserId(userId).orElseThrow(
+            () -> new UnauthorizedException(AuthCode.EXPIRED_REFRESH_TOKEN)
     );
 
-    //Refresh Token 이 만료되었는지 확인
-    try {
-      jwtTokenParser.parseJwtToken(storedRefreshToken.getTokenValue());
-    } catch (ExpiredJwtException expiredJwtException) {
-      throw new UnauthorizedException(AuthCode.EXPIRED_REFRESH_TOKEN);
+    //Refresh Token 값이 정확한지 비교
+    if ( !request.getRefreshToken().equals(storedRefreshToken.getTokenValue()) ) {
+      throw new UnauthorizedException(AuthCode.NOT_EXIST_REFRESH_TOKEN);
     }
 
     return storedRefreshToken;
@@ -124,12 +141,12 @@ public class AuthService {
 
   /**
    * Refresh Token 에 담긴 사용자 id(pk)값을 추출하는 메서드
-   * @param refreshToken 추출할 토큰 엔티티
+   * @param refreshTokenValue RefreshToken 값
    * @return 추출한 사용자 id(pk)
    * @throws UnauthorizedException 존재하지 않는 토큰 값일 경우
    */
-  private long getUserIdFromRefreshToken(RefreshToken refreshToken) throws UnauthorizedException {
-    Claims claims = jwtTokenParser.parseJwtToken(refreshToken.getTokenValue())
+  private long getUserIdFromRefreshTokenValue(String refreshTokenValue) throws UnauthorizedException {
+    Claims claims = jwtTokenParser.parseJwtToken(refreshTokenValue)
         .orElseThrow(
             () -> new UnauthorizedException(AuthCode.NOT_EXIST_REFRESH_TOKEN)
         );
@@ -145,8 +162,10 @@ public class AuthService {
    * @throws UnauthorizedException
    */
   private AccessToken isSameAccessTokenValue(AccessToken storedAccessToken, String requestAccessToken) throws UnauthorizedException {
-    if (!storedAccessToken.getTokenValue().equals(requestAccessToken)) {
-      tokenRepository.removeTokenPairByAccessValue(storedAccessToken.getTokenValue()); //비정상 접근이므로, 모든 토큰 쌍 제거
+    if (!storedAccessToken.getTokenValue().equals(requestAccessToken)) { //비정상 접근이므로, 모든 토큰 쌍 제거
+      Long userId = storedAccessToken.getUserId();
+      accessTokenRedisRepository.removeByUserId(userId);
+      refreshTokenRedisRepository.removeByUserId(userId);
       throw new UnauthorizedException(AuthCode.NOT_MATCH_PAIR);
     }
     return storedAccessToken;
@@ -166,8 +185,10 @@ public class AuthService {
     } catch (ExpiredJwtException expiredJwtException) {
       isExpiredAccessToken = true;
     }
-    if (!isExpiredAccessToken) {
-      tokenRepository.removeTokenPairByAccessValue(accessToken.getTokenValue()); //비정상 접근이므로, 모든 토큰 쌍 제거
+    if (!isExpiredAccessToken) { //비정상 접근이므로, 모든 토큰 쌍 제거
+      Long userId = accessToken.getUserId();
+      accessTokenRedisRepository.removeByUserId(userId);
+      refreshTokenRedisRepository.removeByUserId(userId);
       throw new UnauthorizedException(AuthCode.NOT_EXPIRED_ACCESS_TOKEN);
     }
   }

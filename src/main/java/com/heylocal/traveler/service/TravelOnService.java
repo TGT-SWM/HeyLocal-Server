@@ -158,6 +158,7 @@ public class TravelOnService {
     if (plan != null) {
       plan.updateTravelStartDate(request.getTravelStartDate());
       plan.updateTravelEndDate(request.getTravelEndDate());
+      plan.updateTransportationType(request.getTransportationType());
     }
   }
 

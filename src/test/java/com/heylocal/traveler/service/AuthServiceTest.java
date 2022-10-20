@@ -8,8 +8,9 @@ import com.heylocal.traveler.dto.LoginUser;
 import com.heylocal.traveler.exception.TokenException;
 import com.heylocal.traveler.exception.UnauthorizedException;
 import com.heylocal.traveler.exception.code.AuthCode;
-import com.heylocal.traveler.repository.TokenRepository;
 import com.heylocal.traveler.repository.UserRepository;
+import com.heylocal.traveler.repository.redis.AccessTokenRedisRepository;
+import com.heylocal.traveler.repository.redis.RefreshTokenRedisRepository;
 import com.heylocal.traveler.util.jwt.JwtTokenParser;
 import com.heylocal.traveler.util.jwt.JwtTokenProvider;
 import io.jsonwebtoken.Claims;
@@ -36,7 +37,9 @@ class AuthServiceTest {
   @Mock
   private UserRepository userRepository;
   @Mock
-  private TokenRepository tokenRepository;
+  private AccessTokenRedisRepository accessTokenRedisRepository;
+  @Mock
+  private RefreshTokenRedisRepository refreshTokenRedisRepository;
   @Mock
   private JwtTokenParser jwtTokenParser;
   @Mock
@@ -46,7 +49,7 @@ class AuthServiceTest {
   @BeforeEach
   void setUp() {
     MockitoAnnotations.openMocks(this); //여러 test code 실행 시, mock 객체의 정의된 행동이 꼬일 수 있으므로 초기화한다.
-    authService = new AuthService(userRepository, tokenRepository, jwtTokenParser, jwtTokenProvider);
+    authService = new AuthService(userRepository, accessTokenRedisRepository, refreshTokenRedisRepository, jwtTokenParser, jwtTokenProvider);
   }
 
   @Test
@@ -93,17 +96,19 @@ class AuthServiceTest {
     //만료된 Access Token
     String expiredAccessTokenValue = "expiredAccessTokenValue";
     AccessToken expiredAccessToken = AccessToken.builder()
-        .id(10)
+        .userId(userPk)
         .tokenValue(expiredAccessTokenValue)
-        .expiredDateTime(LocalDateTime.now().minusHours(2))
+        .timeoutSec(1L)
+        .createdDate(LocalDateTime.now())
         .build();
 
     //만료되지 않은 Refresh Token
     String notExpiredRefreshTokenValue = "notExpiredRefreshTokenValue";
     RefreshToken notExpiredRefreshToken = RefreshToken.builder()
-        .id(11)
+        .userId(userPk)
         .tokenValue(notExpiredRefreshTokenValue)
-        .expiredDateTime(LocalDateTime.now().plusWeeks(2))
+        .timeoutSec(10000000L)
+        .createdDate(LocalDateTime.now())
         .build();
 
     notExpiredRefreshToken.associateAccessToken(expiredAccessToken);
@@ -127,11 +132,11 @@ class AuthServiceTest {
     willThrow(ExpiredJwtException.class).given(jwtTokenParser).parseJwtToken(eq(expiredAccessTokenValue));
 
 
-    //Mock 행동 정의 - TokenRepository.findRefreshTokenByValue
-    willReturn(Optional.of(notExpiredRefreshToken)).given(tokenRepository).findRefreshTokenByValue(eq(notExpiredRefreshTokenValue));
+    //Mock 행동 정의 - refreshTokenRedisRepository.findByUserId
+    willReturn(Optional.of(notExpiredRefreshToken)).given(refreshTokenRedisRepository).findByUserId(eq(userPk));
 
-    //Mock 행동 정의 - TokenRepository.findAccessTokenByValue
-    willReturn(Optional.of(expiredAccessToken)).given(tokenRepository).findAccessTokenByValue(eq(expiredAccessTokenValue));
+    //Mock 행동 정의 - accessTokenRedisRepository.findByUserId
+    willReturn(Optional.of(expiredAccessToken)).given(accessTokenRedisRepository).findByUserId(eq(userPk));
 
     //WHEN
     TokenPairResponse response = authService.reissueTokenPair(succeedReissueRequest);
@@ -160,8 +165,14 @@ class AuthServiceTest {
         .refreshToken(notExistRefreshTokenValue)
         .build();
 
+    //Mock 행동 정의 - JwtTokenParser.parseJwtToken
+    Claims claimValue = new DefaultClaims();
+    claimValue.put("userPk", userPk);
+    willReturn(Optional.of(claimValue)).given(jwtTokenParser).parseJwtToken(eq(existAccessTokenValue));
+    willReturn(Optional.of(claimValue)).given(jwtTokenParser).parseJwtToken(eq(notExistRefreshTokenValue));
+
     //Mock 행동 정의 - TokenRepository.findRefreshTokenByValue
-    willReturn(Optional.empty()).given(tokenRepository).findRefreshTokenByValue(eq(notExistRefreshTokenValue));
+    willReturn(Optional.empty()).given(refreshTokenRedisRepository).findByUserId(eq(userPk));
 
     //WHEN
 
@@ -169,59 +180,6 @@ class AuthServiceTest {
     assertThrows(UnauthorizedException.class,
         () -> authService.reissueTokenPair(failReissueRequest),
         AuthCode.NOT_EXIST_REFRESH_TOKEN.getDescription()
-    );
-  }
-
-  @Test
-  @DisplayName("토큰 쌍 재발급 - 재발급 실패 - Access·Refresh Token이 매치되지 않는 경우")
-  void reissueTokenPairTestFailNotMatchedToken() {
-    //GIVEN
-    long userPk = 1L;
-
-    //notExpiredRefreshTokenValue 와 매치되는 만료된 Access Token
-    String expiredAccessTokenValue = "expiredAccessTokenValue";
-    AccessToken expiredAccessToken = AccessToken.builder()
-        .id(10)
-        .tokenValue(expiredAccessTokenValue)
-        .expiredDateTime(LocalDateTime.now().minusHours(2))
-        .build();
-    //notExpiredRefreshTokenValue 와 매치되지 않는 Access Token
-    String notMatchedAccessTokenValue = "notMatchedAccessTokenValue";
-    AccessToken notMatchedAccessToken = AccessToken.builder()
-        .id(14)
-        .tokenValue(notMatchedAccessTokenValue)
-        .expiredDateTime(LocalDateTime.now().plusHours(2))
-        .build();
-    //만료되지 않은 Refresh Token
-    String notExpiredRefreshTokenValue = "notExpiredRefreshTokenValue";
-    RefreshToken notExpiredRefreshToken = RefreshToken.builder()
-        .id(11)
-        .tokenValue(notExpiredRefreshTokenValue)
-        .expiredDateTime(LocalDateTime.now().plusWeeks(2))
-        .build();
-
-    notExpiredRefreshToken.associateAccessToken(expiredAccessToken);
-
-    TokenPairRequest failReissueRequest = TokenPairRequest.builder()
-        .accessToken(notMatchedAccessTokenValue)
-        .refreshToken(notExpiredRefreshTokenValue)
-        .build();
-
-    //Mock 행동 정의 - JwtTokenParser.parseJwtToken
-    Claims claimValue = new DefaultClaims();
-    claimValue.put("userPk", userPk);
-    willReturn(Optional.of(claimValue)).given(jwtTokenParser).parseJwtToken(eq(notExpiredRefreshTokenValue));
-
-
-    //Mock 행동 정의 - TokenRepository.findRefreshTokenByValue
-    willReturn(Optional.of(notExpiredRefreshToken)).given(tokenRepository).findRefreshTokenByValue(eq(notExpiredRefreshTokenValue));
-
-    //WHEN
-
-    //THEN
-    assertThrows(UnauthorizedException.class,
-        () -> authService.reissueTokenPair(failReissueRequest),
-        AuthCode.NOT_MATCH_PAIR.getDescription()
     );
   }
 
@@ -234,16 +192,18 @@ class AuthServiceTest {
     //만료되지 않은 Access Token
     String notExpiredAccessTokenValue = "notExpiredAccessTokenValue";
     AccessToken notExpiredAccessToken = AccessToken.builder()
-        .id(12)
+        .userId(userPk)
         .tokenValue(notExpiredAccessTokenValue)
-        .expiredDateTime(LocalDateTime.now().plusHours(2))
+        .timeoutSec(10000000L)
+        .createdDate(LocalDateTime.now())
         .build();
     //만료되지 않은 Refresh Token
     String notExpiredRefreshTokenValue = "notExpiredRefreshTokenValue";
     RefreshToken notExpiredRefreshToken = RefreshToken.builder()
-        .id(11)
+        .userId(userPk)
         .tokenValue(notExpiredRefreshTokenValue)
-        .expiredDateTime(LocalDateTime.now().plusWeeks(2))
+        .timeoutSec(10000000L)
+        .createdDate(LocalDateTime.now())
         .build();
 
     notExpiredRefreshToken.associateAccessToken(notExpiredAccessToken);
@@ -260,8 +220,11 @@ class AuthServiceTest {
     willReturn(Optional.of(claimValue)).given(jwtTokenParser).parseJwtToken(eq(notExpiredAccessTokenValue));
 
 
-    //Mock 행동 정의 - TokenRepository.findRefreshTokenByValue
-    willReturn(Optional.of(notExpiredRefreshToken)).given(tokenRepository).findRefreshTokenByValue(eq(notExpiredRefreshTokenValue));
+    //Mock 행동 정의 - accessTokenRedisRepository.findByUserId
+    willReturn(Optional.of(notExpiredAccessToken)).given(accessTokenRedisRepository).findByUserId(eq(userPk));
+
+    //Mock 행동 정의 - refreshTokenRedisRepository.findByUserId
+    willReturn(Optional.of(notExpiredRefreshToken)).given(refreshTokenRedisRepository).findByUserId(eq(userPk));
 
     //WHEN
 
@@ -281,16 +244,18 @@ class AuthServiceTest {
     //만료된 Access Token
     String expiredAccessTokenValue = "expiredAccessTokenValue";
     AccessToken expiredAccessToken = AccessToken.builder()
-        .id(10)
+        .userId(userPk)
         .tokenValue(expiredAccessTokenValue)
-        .expiredDateTime(LocalDateTime.now().minusHours(2))
+        .timeoutSec(1L)
+        .createdDate(LocalDateTime.now())
         .build();
     //만료된 Refresh Token
     String expiredRefreshTokenValue = "expiredRefreshTokenValue";
     RefreshToken expiredRefreshToken = RefreshToken.builder()
-        .id(13)
+        .userId(userPk)
         .tokenValue(expiredRefreshTokenValue)
-        .expiredDateTime(LocalDateTime.now().minusHours(5))
+        .timeoutSec(10000000L)
+        .createdDate(LocalDateTime.now())
         .build();
 
     expiredRefreshToken.associateAccessToken(expiredAccessToken);
@@ -302,10 +267,6 @@ class AuthServiceTest {
 
     //Mock 행동 정의 - JwtTokenParser.parseJwtToken
     willThrow(ExpiredJwtException.class).given(jwtTokenParser).parseJwtToken(expiredRefreshTokenValue);
-
-
-    //Mock 행동 정의 - TokenRepository.findRefreshTokenByValue
-    willReturn(Optional.of(expiredRefreshToken)).given(tokenRepository).findRefreshTokenByValue(eq(expiredRefreshTokenValue));
 
     //WHEN
 
