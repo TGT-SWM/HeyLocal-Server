@@ -2,7 +2,7 @@
  * packageName    : com.heylocal.traveler.repository.redis
  * fileName       : RefreshTokenRedisRepository
  * author         : 우태균
- * date           : 2022/10/18
+ * date           : 2022/10/19
  * description    : RefreshToken 레디스 엔티티에 대한 레포지터리
  */
 
@@ -35,7 +35,13 @@ public class RefreshTokenRedisRepository {
   public void save(RefreshToken refreshToken) {
     HashOperations<String, String, String> hashOperations = redisTemplate.opsForHash();
     String key = getKey(refreshToken.getUserId());
-    Map<String, String> mapRefreshToken = RefreshTokenMapper.INSTANCE.entityToMap(refreshToken);
+    Map<String, String> mapRefreshToken;
+
+    try {
+      mapRefreshToken = RefreshTokenMapper.INSTANCE.entityToMap(refreshToken);
+    } catch (IllegalAccessException e) {
+      throw new RuntimeException(e.getMessage());
+    }
 
     hashOperations.putAll(key, mapRefreshToken);
     redisTemplate.expire(key, refreshTokenValidMilliSec, TimeUnit.MILLISECONDS);
@@ -50,30 +56,20 @@ public class RefreshTokenRedisRepository {
     HashOperations<String, String, String> hashOperations = redisTemplate.opsForHash();
     String key = getKey(userId);
     Map<String, String> rawResult = hashOperations.entries(key);
+    RefreshToken refreshToken;
 
     if (rawResult.size() == 0) {
       return Optional.empty();
     }
 
     //RefreshToken 으로 변환
-    RefreshToken refreshToken = RefreshTokenMapper.INSTANCE.mapToEntity(rawResult);
+    try {
+      refreshToken = RefreshTokenMapper.INSTANCE.mapToEntity(rawResult);
+    } catch (IllegalAccessException e) {
+      throw new RuntimeException(e.getMessage());
+    }
 
     return Optional.of(refreshToken);
-  }
-
-  /**
-   * redis 에서 제거하는 메서드
-   * @param refreshToken 제거할 RefreshToken
-   */
-  public void remove(RefreshToken refreshToken) {
-    HashOperations<String, String, String> hashOperations = redisTemplate.opsForHash();
-    String key = getKey(refreshToken.getUserId());
-    Field[] declaredFields = RefreshToken.class.getDeclaredFields();
-
-    for (Field field : declaredFields) {
-      String fieldName = field.getName();
-      hashOperations.delete(key, fieldName);
-    }
   }
 
   /**

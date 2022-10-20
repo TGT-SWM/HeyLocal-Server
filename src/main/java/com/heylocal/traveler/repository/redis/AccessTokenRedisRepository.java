@@ -2,7 +2,7 @@
  * packageName    : com.heylocal.traveler.repository.redis
  * fileName       : AccessTokenRedisRepository
  * author         : 우태균
- * date           : 2022/10/18
+ * date           : 2022/10/19
  * description    : AccessToken 레디스 엔티티에 대한 레포지터리
  */
 
@@ -35,7 +35,13 @@ public class AccessTokenRedisRepository {
   public void save(AccessToken accessToken) {
     HashOperations<String, String, String> hashOperations = redisTemplate.opsForHash();
     String key = getKey(accessToken.getUserId());
-    Map<String, String> mapAccessToken = AccessTokenMapper.INSTANCE.entityToMap(accessToken);
+    Map<String, String> mapAccessToken;
+
+    try {
+      mapAccessToken = AccessTokenMapper.INSTANCE.entityToMap(accessToken);
+    } catch (IllegalAccessException e) {
+      throw new RuntimeException(e.getMessage());
+    }
 
     hashOperations.putAll(key, mapAccessToken);
 
@@ -55,30 +61,20 @@ public class AccessTokenRedisRepository {
     HashOperations<String, String, String> hashOperations = redisTemplate.opsForHash();
     String key = getKey(userId);
     Map<String, String> rawResult = hashOperations.entries(key);
+    AccessToken accessToken;
 
     if (rawResult.size() == 0) {
       return Optional.empty();
     }
 
     //RefreshToken 으로 변환
-    AccessToken accessToken = AccessTokenMapper.INSTANCE.mapToEntity(rawResult);
+    try {
+      accessToken = AccessTokenMapper.INSTANCE.mapToEntity(rawResult);
+    } catch (IllegalAccessException e) {
+      throw new RuntimeException(e.getMessage());
+    }
 
     return Optional.of(accessToken);
-  }
-
-  /**
-   * redis 에서 제거하는 메서드
-   * @param accessToken 제거할 AccessToken
-   */
-  public void remove(AccessToken accessToken) {
-    HashOperations<String, String, String> hashOperations = redisTemplate.opsForHash();
-    String key = getKey(accessToken.getUserId());
-    Field[] declaredFields = AccessToken.class.getDeclaredFields();
-
-    for (Field field : declaredFields) {
-      String fieldName = field.getName();
-      hashOperations.delete(key, fieldName);
-    }
   }
 
   /**
