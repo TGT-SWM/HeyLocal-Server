@@ -53,8 +53,8 @@ class SignupServiceTest {
         .build();
 
     //Mock 행동 정의
-    willReturn(Optional.empty()).given(userRepository).findByAccountId(eq(newAccountId)); //newAccountId 전달 시, Optional.empty() 반환
-    willReturn(Optional.of(existUser)).given(userRepository).findByAccountId(eq(existAccountId)); //existAccountId 전달 시, 기존의 user 반환
+    willReturn(Optional.empty()).given(userRepository).findByAccountIdWithoutAnonymized(eq(newAccountId)); //newAccountId 전달 시, Optional.empty() 반환
+    willReturn(Optional.of(existUser)).given(userRepository).findByAccountIdWithoutAnonymized(eq(existAccountId)); //existAccountId 전달 시, 기존의 user 반환
 
     //WHEN
     UserInfoCheckResponse notExistResult = signupService.checkAccountIdExist(newAccountId);

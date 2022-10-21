@@ -12,7 +12,9 @@ import com.amazonaws.HttpMethod;
 import com.heylocal.traveler.domain.Region;
 import com.heylocal.traveler.domain.profile.UserProfile;
 import com.heylocal.traveler.domain.user.User;
+import com.heylocal.traveler.domain.user.UserRole;
 import com.heylocal.traveler.dto.LoginUser;
+import com.heylocal.traveler.dto.UserDto;
 import com.heylocal.traveler.dto.aws.S3ObjectDto;
 import com.heylocal.traveler.exception.NotFoundException;
 import com.heylocal.traveler.exception.code.NotFoundCode;
@@ -33,6 +35,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
+import static com.heylocal.traveler.dto.UserDto.*;
 import static com.heylocal.traveler.dto.UserDto.UserProfileRequest;
 import static com.heylocal.traveler.dto.UserDto.UserProfileResponse;
 
@@ -186,6 +189,36 @@ public class UserService {
   }
 
   /**
+   * 사용자 ID(pk)로 조회하는 메서드
+   * @param userId 조회할 id
+   * @return
+   * @throws NotFoundException 존재하지 않는 ID(pk)인 경우
+   */
+  @Transactional(readOnly = true)
+  public UserResponse inquiryUser(long userId) throws NotFoundException {
+    User user = userRepository.findById(userId).orElseThrow(
+        () -> new NotFoundException(NotFoundCode.NO_INFO, "존재하지 않는 사용자 ID입니다.")
+    );
+
+    return UserMapper.INSTANCE.toUserResponseDto(user);
+  }
+
+  /**
+   * 해당 사용자의 정보를 익명화하는 메서드
+   * @param userId 익명화할 사용자 ID(pk)
+   */
+  @Transactional
+  public void anonymizeUser(long userId) throws NotFoundException {
+    User targetUser = userRepository.findById(userId).orElseThrow(
+        () -> new NotFoundException(NotFoundCode.NO_INFO, "존재하지 않는 사용자 ID입니다.")
+    );
+
+    //익명화
+    targetUser.setNickname("알 수 없는 사용자");
+    targetUser.setUserRole(UserRole.ANONYMIZED);
+  }
+
+  /**
    * Object Key(Name)으로 사용자 프로필 엔티티를 조회하는 메서드
    * @param s3ObjectDto
    * @return
@@ -234,4 +267,5 @@ public class UserService {
 
     return true;
   }
+
 }

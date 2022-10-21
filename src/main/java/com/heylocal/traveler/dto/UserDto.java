@@ -8,6 +8,7 @@
 
 package com.heylocal.traveler.dto;
 
+import com.heylocal.traveler.domain.user.UserRole;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import org.hibernate.validator.constraints.Length;
@@ -41,6 +42,7 @@ public class UserDto {
 	@Schema(description = "사용자 프로필 응답 DTO")
 	public static class UserProfileResponse {
 		private long userId;
+		private UserRole userRole;
 		private String introduce;
 		private String nickname;
 		private String profileImgDownloadUrl;

@@ -81,7 +81,7 @@ public class SigninService {
   private User checkAccountId(String accountId) throws UnauthorizedException {
     Optional<User> userByAccountId;
 
-    userByAccountId = userRepository.findByAccountId(accountId);
+    userByAccountId = userRepository.findByAccountIdWithoutAnonymized(accountId);
     if (userByAccountId.isEmpty()) {
       throw new UnauthorizedException(SigninCode.NOT_EXIST_SIGNIN_ACCOUNT_ID);
     }

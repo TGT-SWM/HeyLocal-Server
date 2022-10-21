@@ -13,6 +13,7 @@ import com.heylocal.traveler.dto.LoginUser;
 import com.heylocal.traveler.dto.PageDto;
 import com.heylocal.traveler.dto.PageDto.PageRequest;
 import com.heylocal.traveler.dto.TravelOnDto.TravelOnSimpleResponse;
+import com.heylocal.traveler.dto.UserDto;
 import com.heylocal.traveler.exception.BadRequestException;
 import com.heylocal.traveler.exception.ForbiddenException;
 import com.heylocal.traveler.exception.NotFoundException;
@@ -34,6 +35,7 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 import static com.heylocal.traveler.dto.OpinionDto.OpinionWithPlaceResponse;
+import static com.heylocal.traveler.dto.UserDto.*;
 import static com.heylocal.traveler.dto.UserDto.UserProfileRequest;
 import static com.heylocal.traveler.dto.UserDto.UserProfileResponse;
 
@@ -130,6 +132,23 @@ public class UserController implements UsersApi {
 	@Override
 	public List<UserProfileResponse> getRanking() {
 		return userService.inquiryUserProfileByKnowHowDesc();
+	}
+
+	/**
+	 * 회원탈퇴 핸들러
+	 * @param userId
+	 */
+	@Override
+	public void deleteUser(long userId, LoginUser loginUser) throws NotFoundException, ForbiddenException {
+		//유효한 id 인지 조회
+		UserResponse user = userService.inquiryUser(userId);
+
+		//로그인한 사용자와 다른 id 라면
+		if (user.getId() != loginUser.getId()) {
+			throw new ForbiddenException(ForbiddenCode.NO_PERMISSION, "다른 계정을 삭제할 수 없습니다.");
+		}
+
+
 	}
 
 	/**
