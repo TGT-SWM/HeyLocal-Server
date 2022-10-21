@@ -177,8 +177,8 @@ public class UserService {
   @Transactional(readOnly = true)
   public List<UserProfileResponse> inquiryUserProfileByKnowHowDesc() {
     int size = 30;
-    List<UserProfile> findResult = userProfileRepository.findSortedByKnowHowDesc(size);
-    List<UserProfileResponse> result = findResult.stream()
+    List<UserProfile> entityResult = userProfileRepository.findSortedByKnowHowDesc(size);
+    List<UserProfileResponse> result = entityResult.stream()
         .map((item) -> UserMapper.INSTANCE.toUserProfileResponseDto(item, s3UserUrlContext))
         .collect(Collectors.toList());
 
