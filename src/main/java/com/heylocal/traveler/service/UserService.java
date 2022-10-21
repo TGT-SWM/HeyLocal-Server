@@ -216,6 +216,9 @@ public class UserService {
     //익명화
     targetUser.setNickname("알 수 없는 사용자");
     targetUser.setUserRole(UserRole.ANONYMIZED);
+    targetUser.getUserProfile().setIntroduce(null);
+    targetUser.getUserProfile().setKnowHow(0);
+    targetUser.getUserProfile().releaseActivityRegion();
   }
 
   /**

@@ -432,4 +432,6 @@ class UserServiceTest {
         () -> assertEquals(userId, result.get(0).getUserId())
     );
   }
+
+  // TODO - anonymizeUser
 }

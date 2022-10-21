@@ -20,6 +20,7 @@ import com.heylocal.traveler.exception.NotFoundException;
 import com.heylocal.traveler.exception.code.BadRequestCode;
 import com.heylocal.traveler.exception.code.ForbiddenCode;
 import com.heylocal.traveler.exception.code.SignupCode;
+import com.heylocal.traveler.service.AuthService;
 import com.heylocal.traveler.service.OpinionService;
 import com.heylocal.traveler.service.TravelOnService;
 import com.heylocal.traveler.service.UserService;
@@ -48,6 +49,7 @@ public class UserController implements UsersApi {
 	private final TravelOnService travelOnService;
 	private final UserService userService;
 	private final OpinionService opinionService;
+	private final AuthService authService;
 	private final BindingErrorMessageProvider errorMessageProvider;
 
 	/**
@@ -148,7 +150,11 @@ public class UserController implements UsersApi {
 			throw new ForbiddenException(ForbiddenCode.NO_PERMISSION, "다른 계정을 삭제할 수 없습니다.");
 		}
 
+		//사용자 익명화
+		userService.anonymizeUser(userId);
 
+		//Redis에서 토큰 제거 (로그아웃 처리)
+		authService.removeTokens(userId);
 	}
 
 	/**

@@ -105,6 +105,16 @@ public class AuthService {
         .build();
   }
 
+  /**
+   * 사용자 ID에 해당하는 토큰을 제거하는 메서드
+   * @param userId
+   */
+  @Transactional
+  public void removeTokens(long userId) {
+    accessTokenRedisRepository.removeByUserId(userId);
+    refreshTokenRedisRepository.removeByUserId(userId);
+  }
+
   private void isExpiredRefreshToken(String requestRefreshToken) throws UnauthorizedException {
     try {
       jwtTokenParser.parseJwtToken(requestRefreshToken);

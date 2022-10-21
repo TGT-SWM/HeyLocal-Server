@@ -7,6 +7,7 @@ import com.heylocal.traveler.dto.UserDto;
 import com.heylocal.traveler.exception.BadRequestException;
 import com.heylocal.traveler.exception.ForbiddenException;
 import com.heylocal.traveler.exception.NotFoundException;
+import com.heylocal.traveler.service.AuthService;
 import com.heylocal.traveler.service.OpinionService;
 import com.heylocal.traveler.service.TravelOnService;
 import com.heylocal.traveler.service.UserService;
@@ -34,6 +35,8 @@ class UserControllerTest {
 	private UserService userService;
 	@Mock
 	private OpinionService opinionService;
+	@Mock
+	private AuthService authService;
 	@Mock
 	private BindingErrorMessageProvider errorMessageProvider;
 	@Mock
@@ -236,4 +239,6 @@ class UserControllerTest {
 	  //THEN
 	  assertDoesNotThrow(() -> userController.getRanking());
 	}
+
+	// TODO - deleteUser
 }
