@@ -225,4 +225,15 @@ class UserControllerTest {
 		);
 
 	}
+
+	@Test
+	@DisplayName("랭킹 조회 핸들러")
+	void getRankingTest() {
+	  //GIVEN
+
+	  //WHEN
+
+	  //THEN
+	  assertDoesNotThrow(() -> userController.getRanking());
+	}
 }

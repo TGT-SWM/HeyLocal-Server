@@ -11,6 +11,8 @@ import org.springframework.context.annotation.Import;
 
 import javax.persistence.EntityManager;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @Import({UserProfileRepository.class})
@@ -52,6 +54,50 @@ class UserProfileRepositoryTest {
         () -> assertSame(user, userProfile.getUser()),
         //성공 케이스 - 3 - 프로필의 노하우 필드가 제대로 설정되었는지 확인
         () -> assertEquals(knowHow, userProfile.getKnowHow())
+    );
+  }
+
+  @Test
+  @DisplayName("노하우 순으로 조회")
+  void findSortedByKnowHowDescTest() {
+    //GIVEN
+    User user1 = User.builder()
+        .accountId("accountId1")
+        .password("encodedPw1")
+        .nickname("nickname1")
+        .userRole(UserRole.TRAVELER)
+        .build();
+    User user2 = User.builder()
+        .accountId("accountId2")
+        .password("encodedPw2")
+        .nickname("nickname2")
+        .userRole(UserRole.TRAVELER)
+        .build();
+    em.persist(user1);
+    em.persist(user2);
+    int knowHow1 = 1000;
+    int knowHow2 = 2000;
+    UserProfile userProfile1 = UserProfile.builder()
+        .user(user1)
+        .knowHow(knowHow1)
+        .build();
+    UserProfile userProfile2 = UserProfile.builder()
+        .user(user2)
+        .knowHow(knowHow2)
+        .build();
+
+    em.persist(userProfile1);
+    em.persist(userProfile2);
+
+    //WHEN
+    List<UserProfile> result = userProfileRepository.findSortedByKnowHowDesc(2);
+
+    //THEN
+    assertAll(
+        //성공 케이스
+        () -> assertSame(2, result.size()),
+        () -> assertEquals(knowHow2, result.get(0).getKnowHow()),
+        () -> assertEquals(knowHow1, result.get(1).getKnowHow())
     );
   }
 }

@@ -11,6 +11,7 @@ import com.heylocal.traveler.dto.aws.S3ObjectDto;
 import com.heylocal.traveler.exception.NotFoundException;
 import com.heylocal.traveler.mapper.context.S3UrlUserContext;
 import com.heylocal.traveler.repository.RegionRepository;
+import com.heylocal.traveler.repository.UserProfileRepository;
 import com.heylocal.traveler.repository.UserRepository;
 import com.heylocal.traveler.util.aws.S3ObjectNameFormatter;
 import com.heylocal.traveler.util.aws.S3PresignUrlProvider;
@@ -20,19 +21,22 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static com.heylocal.traveler.dto.UserDto.UserProfileResponse;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.willReturn;
 
 class UserServiceTest {
   @Mock
   private UserRepository userRepository;
+  @Mock
+  private UserProfileRepository userProfileRepository;
   @Mock
   private RegionRepository regionRepository;
   @Mock
@@ -46,7 +50,7 @@ class UserServiceTest {
   @BeforeEach
   void setUp() {
     MockitoAnnotations.openMocks(this);
-    userService = new UserService(userRepository, regionRepository, s3UserUrlContext, s3PresignUrlProvider, s3ObjectNameFormatter);
+    userService = new UserService(userRepository, userProfileRepository, regionRepository, s3UserUrlContext, s3PresignUrlProvider, s3ObjectNameFormatter);
   }
 
   @Test
@@ -394,5 +398,38 @@ class UserServiceTest {
 
     //THEN
     assertThrows(NotFoundException.class, () -> userService.removeProfileObjectKey(s3ObjectDto));
+  }
+
+  @Test
+  @DisplayName("노하우 내림차순 프로필 조회")
+  void inquiryUserProfileByKnowHowDescTest() {
+    //GIVEN
+    long userId = 1l;
+    User user = User.builder()
+        .id(userId)
+        .accountId("accountId1")
+        .password("encodedPw1")
+        .nickname("nickname1")
+        .userRole(UserRole.TRAVELER)
+        .build();
+    UserProfile userProfile = UserProfile.builder()
+        .user(user)
+        .knowHow(1000)
+        .build();
+
+    //Mock 행동 정의 - userProfileRepository
+    List<UserProfile> userProfileList = new ArrayList<>();
+    userProfileList.add(userProfile);
+    willReturn(userProfileList).given(userProfileRepository).findSortedByKnowHowDesc(anyInt());
+
+    //WHEN
+    List<UserProfileResponse> result = userService.inquiryUserProfileByKnowHowDesc();
+
+    //THEN
+    assertAll(
+        //성공 케이스
+        () -> assertEquals(1, result.size()),
+        () -> assertEquals(userId, result.get(0).getUserId())
+    );
   }
 }
