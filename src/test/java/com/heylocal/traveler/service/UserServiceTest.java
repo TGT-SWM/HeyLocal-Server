@@ -11,6 +11,7 @@ import com.heylocal.traveler.dto.aws.S3ObjectDto;
 import com.heylocal.traveler.exception.NotFoundException;
 import com.heylocal.traveler.mapper.context.S3UrlUserContext;
 import com.heylocal.traveler.repository.RegionRepository;
+import com.heylocal.traveler.repository.UserProfileRepository;
 import com.heylocal.traveler.repository.UserRepository;
 import com.heylocal.traveler.util.aws.S3ObjectNameFormatter;
 import com.heylocal.traveler.util.aws.S3PresignUrlProvider;
@@ -34,6 +35,8 @@ class UserServiceTest {
   @Mock
   private UserRepository userRepository;
   @Mock
+  private UserProfileRepository userProfileRepository;
+  @Mock
   private RegionRepository regionRepository;
   @Mock
   private S3UrlUserContext s3UserUrlContext;
@@ -46,7 +49,7 @@ class UserServiceTest {
   @BeforeEach
   void setUp() {
     MockitoAnnotations.openMocks(this);
-    userService = new UserService(userRepository, regionRepository, s3UserUrlContext, s3PresignUrlProvider, s3ObjectNameFormatter);
+    userService = new UserService(userRepository, userProfileRepository, regionRepository, s3UserUrlContext, s3PresignUrlProvider, s3ObjectNameFormatter);
   }
 
   @Test

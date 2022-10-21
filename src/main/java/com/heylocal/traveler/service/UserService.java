@@ -19,6 +19,7 @@ import com.heylocal.traveler.exception.code.NotFoundCode;
 import com.heylocal.traveler.mapper.UserMapper;
 import com.heylocal.traveler.mapper.context.S3UrlUserContext;
 import com.heylocal.traveler.repository.RegionRepository;
+import com.heylocal.traveler.repository.UserProfileRepository;
 import com.heylocal.traveler.repository.UserRepository;
 import com.heylocal.traveler.util.aws.S3ObjectNameFormatter;
 import com.heylocal.traveler.util.aws.S3PresignUrlProvider;
@@ -27,8 +28,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 import static com.heylocal.traveler.dto.UserDto.UserProfileRequest;
 import static com.heylocal.traveler.dto.UserDto.UserProfileResponse;
@@ -38,6 +41,7 @@ import static com.heylocal.traveler.dto.UserDto.UserProfileResponse;
 @RequiredArgsConstructor
 public class UserService {
   private final UserRepository userRepository;
+  private final UserProfileRepository userProfileRepository;
   private final RegionRepository regionRepository;
   private final S3UrlUserContext s3UserUrlContext;
   private final S3PresignUrlProvider s3PresignUrlProvider;
@@ -164,6 +168,21 @@ public class UserService {
 
     //해당 프로필 엔티티에서 Object Key(Name) 제거
     targetProfile.setImageObjectKeyName(null);
+  }
+
+  /**
+   * 노하우 내림차순으로 UserProfile 을 조회하는 메서드
+   * @return
+   */
+  @Transactional(readOnly = true)
+  public List<UserProfileResponse> inquiryUserProfileByKnowHowDesc() {
+    int size = 30;
+    List<UserProfile> findResult = userProfileRepository.findSortedByKnowHowDesc(size);
+    List<UserProfileResponse> result = findResult.stream()
+        .map((item) -> UserMapper.INSTANCE.toUserProfileResponseDto(item, s3UserUrlContext))
+        .collect(Collectors.toList());
+
+    return result;
   }
 
   /**

@@ -124,11 +124,12 @@ public class UserController implements UsersApi {
 	}
 
 	/**
-	 * @return
+	 * 노하우 랭킹을 조회하는 핸들러
+	 * @return 랭킹 순위
 	 */
 	@Override
 	public List<UserProfileResponse> getRanking() {
-		return null;
+		return userService.inquiryUserProfileByKnowHowDesc();
 	}
 
 	/**
