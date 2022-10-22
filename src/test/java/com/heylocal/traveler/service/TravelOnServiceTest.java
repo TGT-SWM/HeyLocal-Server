@@ -135,8 +135,8 @@ class TravelOnServiceTest {
   }
 
   @Test
-  @DisplayName("모든 여행On 조회 - 지역 관계 없이 조회")
-  void inquirySimpleTravelOnsTestWithoutRegion() {
+  @DisplayName("모든 여행On 조회 - 검색어·지역 관계 없이 조회")
+  void inquirySimpleTravelOnsTestWithoutRegionAndKeyword() {
     //GIVEN
     AllTravelOnGetRequest opinionOptionIsNullRequest = getAllTravelOnRequest();
     AllTravelOnGetRequest withOpinionOptionRequest = getAllTravelOnRequest();
@@ -172,8 +172,8 @@ class TravelOnServiceTest {
   }
 
   @Test
-  @DisplayName("모든 여행On 조회 - Region을 기준으로 조회")
-  void inquirySimpleTravelOnsTestWithStateCity() {
+  @DisplayName("모든 여행On 조회 - 검색어 무관, Region을 기준으로 조회")
+  void inquirySimpleTravelOnsTestWithRegionWithoutKeyword() {
     //GIVEN
     AllTravelOnGetRequest wrongRegionRequest = getAllTravelOnRequest();
     AllTravelOnGetRequest opinionOptionIsNullRequest = getAllTravelOnRequest();
@@ -222,6 +222,9 @@ class TravelOnServiceTest {
             () -> travelOnService.inquirySimpleTravelOns(wrongRegionRequest))
     );
   }
+
+  // TODO - inquirySimpleTravelOns : 검색어와 Region으로 조회
+  // TODO - inquirySimpleTravelOns : Region 무관, 검색어로 조회
 
   @Test
   @DisplayName("모든 여행 On 조회 - 사용자 ID를 기준으로 조회")
