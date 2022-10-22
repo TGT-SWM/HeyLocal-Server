@@ -126,7 +126,6 @@ public class SignupController implements SignupApi {
    * @throws BadRequestException 조건에 부합하지 않는다면, 발생하는 예외
    */
   private boolean validateNicknameFormat(String nickname) throws BadRequestException {
-    log.info(nicknamePattern);
     if (!Pattern.matches(nicknamePattern, nickname)) {
       throw new BadRequestException(SignupCode.WRONG_NICKNAME_FORMAT);
     }
