@@ -574,12 +574,284 @@ class TravelOnRepositoryTest {
     );
   }
 
-  // TODO - findAllByKeyword
-  // TODO - findHasOpinionByKeyword
-  // TODO - findNoOpinionByKeyword
-  // TODO - findAllByRegionAndKeyword
-  // TODO - findHasOpinionByRegionAndKeyword
-  // TODO - findNoOpinionByRegionAndKeyword
+  @Test
+  @DisplayName("모든 여행On을 키워드로 조회")
+  void findAllByKeywordTest() {
+    //GIVEN
+    User author = User.builder()
+        .accountId("testAccountId")
+        .password("testPassword")
+        .nickname("testNickname")
+        .userRole(UserRole.TRAVELER)
+        .build();
+    em.persist(author);
+
+    String stateA = "stateA";
+    String city1A = "city1A";
+    String stateB = "stateB";
+    String city1B = "city1B";
+
+    //여행On 저장
+    String titleKeyword = "title keyword";
+    String descriptionKeyword = "description keyword";
+
+    TravelOn travelOnWithKeyword = saveTravelOn(author, stateA, city1A, LocalDateTime.now().minusHours(4), 1);
+    travelOnWithKeyword.setTitle(titleKeyword);
+    travelOnWithKeyword.setDescription(descriptionKeyword);
+
+    TravelOn travelOnNoKeyword = saveTravelOn(author, stateB, city1B, LocalDateTime.now().minusHours(4), 1);
+    travelOnNoKeyword.setTitle("no keyword");
+    travelOnNoKeyword.setDescription("no keyword");
+
+    //WHEN
+    List<TravelOn> resultByTitleKeyword = travelOnRepository.findAllByKeyword(titleKeyword, null, 10, TravelOnSortType.DATE);
+    List<TravelOn> resultByDescriptionKeyword = travelOnRepository.findAllByKeyword(descriptionKeyword, null, 10, TravelOnSortType.DATE);
+
+    //THEN
+    assertAll(
+        //성공 케이스 - 타이틀 키워드
+        () -> assertSame(1, resultByTitleKeyword.size()),
+        () -> assertSame(travelOnWithKeyword, resultByTitleKeyword.get(0)),
+        //성공 케이스 - description 키워드
+        () -> assertSame(1, resultByDescriptionKeyword.size()),
+        () -> assertSame(travelOnWithKeyword, resultByDescriptionKeyword.get(0))
+    );
+  }
+
+  @Test
+  @DisplayName("답변이 있는 여행On을 키워드로 조회")
+  void findHasOpinionByKeywordTest() {
+    //GIVEN
+    User author = User.builder()
+        .accountId("testAccountId")
+        .password("testPassword")
+        .nickname("testNickname")
+        .userRole(UserRole.TRAVELER)
+        .build();
+    em.persist(author);
+
+    String stateA = "stateA";
+    String city1A = "city1A";
+    String stateB = "stateB";
+    String city1B = "city1B";
+
+    //여행On 저장
+    String titleKeyword = "title keyword";
+    String descriptionKeyword = "description keyword";
+
+    TravelOn travelOnWithKeywordAndOpinion = saveTravelOn(author, stateA, city1A, LocalDateTime.now().minusHours(4), 1);
+    travelOnWithKeywordAndOpinion.setTitle(titleKeyword);
+    travelOnWithKeywordAndOpinion.setDescription(descriptionKeyword);
+    saveAnotherOpinion(travelOnWithKeywordAndOpinion);
+
+    TravelOn travelOnWithKeywordNoOpinion = saveTravelOn(author, stateB, city1B, LocalDateTime.now().minusHours(4), 1);
+    travelOnWithKeywordNoOpinion.setTitle(titleKeyword);
+    travelOnWithKeywordNoOpinion.setDescription(descriptionKeyword);
+
+    //WHEN
+    List<TravelOn> resultByTitleKeyword = travelOnRepository.findHasOpinionByKeyword(titleKeyword, null, 10, TravelOnSortType.DATE);
+    List<TravelOn> resultByDescriptionKeyword = travelOnRepository.findHasOpinionByKeyword(descriptionKeyword, null, 10, TravelOnSortType.DATE);
+
+    //THEN
+    assertAll(
+        //성공 케이스 - 타이틀 키워드
+        () -> assertSame(1, resultByTitleKeyword.size()),
+        () -> assertSame(travelOnWithKeywordAndOpinion, resultByTitleKeyword.get(0)),
+        //성공 케이스 - description 키워드
+        () -> assertSame(1, resultByDescriptionKeyword.size()),
+        () -> assertSame(travelOnWithKeywordAndOpinion, resultByDescriptionKeyword.get(0))
+    );
+  }
+
+  @Test
+  @DisplayName("답변이 없는 여행On을 키워드로 조회")
+  void findNoOpinionByKeywordTest() {
+    //GIVEN
+    User author = User.builder()
+        .accountId("testAccountId")
+        .password("testPassword")
+        .nickname("testNickname")
+        .userRole(UserRole.TRAVELER)
+        .build();
+    em.persist(author);
+
+    String stateA = "stateA";
+    String city1A = "city1A";
+    String stateB = "stateB";
+    String city1B = "city1B";
+
+    //여행On 저장
+    String titleKeyword = "title keyword";
+    String descriptionKeyword = "description keyword";
+
+    TravelOn travelOnWithKeywordAndOpinion = saveTravelOn(author, stateA, city1A, LocalDateTime.now().minusHours(4), 1);
+    travelOnWithKeywordAndOpinion.setTitle(titleKeyword);
+    travelOnWithKeywordAndOpinion.setDescription(descriptionKeyword);
+    saveAnotherOpinion(travelOnWithKeywordAndOpinion);
+
+    TravelOn travelOnWithKeywordNoOpinion = saveTravelOn(author, stateB, city1B, LocalDateTime.now().minusHours(4), 1);
+    travelOnWithKeywordNoOpinion.setTitle(titleKeyword);
+    travelOnWithKeywordNoOpinion.setDescription(descriptionKeyword);
+
+    //WHEN
+    List<TravelOn> resultByTitleKeyword = travelOnRepository.findNoOpinionByKeyword(titleKeyword, null, 10, TravelOnSortType.DATE);
+    List<TravelOn> resultByDescriptionKeyword = travelOnRepository.findNoOpinionByKeyword(descriptionKeyword, null, 10, TravelOnSortType.DATE);
+
+    //THEN
+    assertAll(
+        //성공 케이스 - 타이틀 키워드
+        () -> assertSame(1, resultByTitleKeyword.size()),
+        () -> assertSame(travelOnWithKeywordNoOpinion, resultByTitleKeyword.get(0)),
+        //성공 케이스 - description 키워드
+        () -> assertSame(1, resultByDescriptionKeyword.size()),
+        () -> assertSame(travelOnWithKeywordNoOpinion, resultByDescriptionKeyword.get(0))
+    );
+  }
+
+  @Test
+  @DisplayName("모든 여행On을 지역·키워드로 조회")
+  void findAllByRegionAndKeywordTest() {
+    //GIVEN
+    User author = User.builder()
+        .accountId("testAccountId")
+        .password("testPassword")
+        .nickname("testNickname")
+        .userRole(UserRole.TRAVELER)
+        .build();
+    em.persist(author);
+
+    String stateA = "stateA";
+    String city1A = "city1A";
+    String stateB = "stateB";
+    String city1B = "city1B";
+
+    //여행On 저장
+    String titleKeyword = "title keyword";
+    String descriptionKeyword = "description keyword";
+
+    TravelOn travelOnOfRegionA = saveTravelOn(author, stateA, city1A, LocalDateTime.now().minusHours(4), 1);
+    travelOnOfRegionA.setTitle(titleKeyword);
+    travelOnOfRegionA.setDescription(descriptionKeyword);
+    saveAnotherOpinion(travelOnOfRegionA);
+
+    TravelOn travelOnOfRegionB = saveTravelOn(author, stateB, city1B, LocalDateTime.now().minusHours(4), 1);
+    travelOnOfRegionB.setTitle(titleKeyword);
+    travelOnOfRegionB.setDescription(descriptionKeyword);
+
+    //Region
+    Region regionA = travelOnOfRegionA.getRegion();
+    Region regionB = travelOnOfRegionB.getRegion();
+
+    //WHEN
+    List<TravelOn> resultOfRegionA = travelOnRepository.findAllByRegionAndKeyword(regionA, titleKeyword, null, 10, TravelOnSortType.DATE);
+    List<TravelOn> resultOfRegionB = travelOnRepository.findAllByRegionAndKeyword(regionB, descriptionKeyword, null, 10, TravelOnSortType.DATE);
+
+    //THEN
+    assertAll(
+        //성공 케이스 - 타이틀 키워드
+        () -> assertSame(1, resultOfRegionA.size()),
+        () -> assertSame(travelOnOfRegionA, resultOfRegionA.get(0)),
+        //성공 케이스 - description 키워드
+        () -> assertSame(1, resultOfRegionB.size()),
+        () -> assertSame(travelOnOfRegionB, resultOfRegionB.get(0))
+    );
+  }
+
+  @Test
+  @DisplayName("답변이 있는 여행On을 지역·키워드로 조회")
+  void findHasOpinionByRegionAndKeywordTest() {
+    //GIVEN
+    User author = User.builder()
+        .accountId("testAccountId")
+        .password("testPassword")
+        .nickname("testNickname")
+        .userRole(UserRole.TRAVELER)
+        .build();
+    em.persist(author);
+
+    String stateA = "stateA";
+    String city1A = "city1A";
+    String stateB = "stateB";
+    String city1B = "city1B";
+
+    //여행On 저장
+    String titleKeyword = "title keyword";
+    String descriptionKeyword = "description keyword";
+
+    TravelOn travelOnOfRegionA = saveTravelOn(author, stateA, city1A, LocalDateTime.now().minusHours(4), 1);
+    travelOnOfRegionA.setTitle(titleKeyword);
+    travelOnOfRegionA.setDescription(descriptionKeyword);
+    saveAnotherOpinion(travelOnOfRegionA);
+
+    TravelOn travelOnOfRegionB = saveTravelOn(author, stateB, city1B, LocalDateTime.now().minusHours(4), 1);
+    travelOnOfRegionB.setTitle(titleKeyword);
+    travelOnOfRegionB.setDescription(descriptionKeyword);
+
+    //Region
+    Region regionA = travelOnOfRegionA.getRegion();
+    Region regionB = travelOnOfRegionB.getRegion();
+
+    //WHEN
+    List<TravelOn> resultOfRegionAHasOpinion = travelOnRepository.findHasOpinionByRegionAndKeyword(regionA, titleKeyword, null, 10, TravelOnSortType.DATE);
+    List<TravelOn> resultOfRegionBNoOpinion = travelOnRepository.findHasOpinionByRegionAndKeyword(regionB, descriptionKeyword, null, 10, TravelOnSortType.DATE);
+
+    //THEN
+    assertAll(
+        //성공 케이스 - 타이틀 키워드
+        () -> assertSame(1, resultOfRegionAHasOpinion.size()),
+        () -> assertSame(travelOnOfRegionA, resultOfRegionAHasOpinion.get(0)),
+        //성공 케이스 - description 키워드
+        () -> assertSame(0, resultOfRegionBNoOpinion.size())
+    );
+  }
+
+  @Test
+  @DisplayName("답변이 없는 여행On을 지역·키워드로 조회")
+  void findNoOpinionByRegionAndKeywordTest() {
+    //GIVEN
+    User author = User.builder()
+        .accountId("testAccountId")
+        .password("testPassword")
+        .nickname("testNickname")
+        .userRole(UserRole.TRAVELER)
+        .build();
+    em.persist(author);
+
+    String stateA = "stateA";
+    String city1A = "city1A";
+    String stateB = "stateB";
+    String city1B = "city1B";
+
+    //여행On 저장
+    String titleKeyword = "title keyword";
+    String descriptionKeyword = "description keyword";
+
+    TravelOn travelOnOfRegionA = saveTravelOn(author, stateA, city1A, LocalDateTime.now().minusHours(4), 1);
+    travelOnOfRegionA.setTitle(titleKeyword);
+    travelOnOfRegionA.setDescription(descriptionKeyword);
+    saveAnotherOpinion(travelOnOfRegionA);
+
+    TravelOn travelOnOfRegionB = saveTravelOn(author, stateB, city1B, LocalDateTime.now().minusHours(4), 1);
+    travelOnOfRegionB.setTitle(titleKeyword);
+    travelOnOfRegionB.setDescription(descriptionKeyword);
+
+    //Region
+    Region regionA = travelOnOfRegionA.getRegion();
+    Region regionB = travelOnOfRegionB.getRegion();
+
+    //WHEN
+    List<TravelOn> resultOfRegionAHasOpinion = travelOnRepository.findNoOpinionByRegionAndKeyword(regionA, titleKeyword, null, 10, TravelOnSortType.DATE);
+    List<TravelOn> resultOfRegionBNoOpinion = travelOnRepository.findNoOpinionByRegionAndKeyword(regionB, descriptionKeyword, null, 10, TravelOnSortType.DATE);
+
+    //THEN
+    assertAll(
+        //성공 케이스 - 타이틀 키워드
+        () -> assertSame(0, resultOfRegionAHasOpinion.size()),
+        //성공 케이스 - description 키워드
+        () -> assertSame(1, resultOfRegionBNoOpinion.size()),
+        () -> assertSame(travelOnOfRegionB, resultOfRegionBNoOpinion.get(0))
+    );
+  }
 
   /**
    * <pre>

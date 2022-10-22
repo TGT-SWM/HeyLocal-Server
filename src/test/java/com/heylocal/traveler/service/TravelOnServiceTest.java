@@ -223,8 +223,103 @@ class TravelOnServiceTest {
     );
   }
 
-  // TODO - inquirySimpleTravelOns : 검색어와 Region으로 조회
-  // TODO - inquirySimpleTravelOns : Region 무관, 검색어로 조회
+  @Test
+  @DisplayName("모든 여행On 조회 - 검색어와 Region으로 조회")
+  void inquirySimpleTravelOnsTestByKeywordAndRegion() {
+    //GIVEN
+    AllTravelOnGetRequest wrongRegionRequest = getAllTravelOnRequest();
+    AllTravelOnGetRequest opinionOptionIsNullRequest = getAllTravelOnRequest();
+    AllTravelOnGetRequest withOpinionOptionRequest = getAllTravelOnRequest();
+    AllTravelOnGetRequest noOpinionOptionRequest = getAllTravelOnRequest();
+
+    long wrongRegionId = -1L;
+    long existRegionId = 1L;
+    String keyword = "keyword";
+    wrongRegionRequest.setRegionId(wrongRegionId);
+    wrongRegionRequest.setKeyword(keyword);
+    opinionOptionIsNullRequest.setWithOpinions(null);
+    opinionOptionIsNullRequest.setRegionId(existRegionId);
+    opinionOptionIsNullRequest.setKeyword(keyword);
+    withOpinionOptionRequest.setWithOpinions(true);
+    withOpinionOptionRequest.setRegionId(existRegionId);
+    withOpinionOptionRequest.setKeyword(keyword);
+    noOpinionOptionRequest.setWithOpinions(false);
+    noOpinionOptionRequest.setRegionId(existRegionId);
+    noOpinionOptionRequest.setKeyword(keyword);
+
+    //Mock 행동 정의 - RegionRepository
+    Region region = Region.builder()
+        .id(existRegionId)
+        .state("myState")
+        .city("myCity")
+        .build();
+    willReturn(Optional.of(region)).given(regionRepository).findById(existRegionId);
+
+    //WHEN
+
+    //THEN
+    assertAll(
+        //답변 여부 무관
+        () -> {
+          travelOnService.inquirySimpleTravelOns(opinionOptionIsNullRequest);
+          then(travelOnRepository).should(times(1)).findAllByRegionAndKeyword(any(Region.class), anyString(), any(), anyInt(), any(TravelOnSortType.class));
+        },
+        //답변 있는 것만
+        () -> {
+          travelOnService.inquirySimpleTravelOns(withOpinionOptionRequest);
+          then(travelOnRepository).should(times(1)).findHasOpinionByRegionAndKeyword(any(Region.class), anyString(), any(), anyInt(), any(TravelOnSortType.class));
+        },
+        //답변 없는 것만
+        () -> {
+          travelOnService.inquirySimpleTravelOns(noOpinionOptionRequest);
+          then(travelOnRepository).should(times(1)).findNoOpinionByRegionAndKeyword(any(Region.class), anyString(), any(), anyInt(), any(TravelOnSortType.class));
+        },
+        //없는 Region 인 경우
+        () -> assertThrows(NotFoundException.class,
+            () -> travelOnService.inquirySimpleTravelOns(wrongRegionRequest))
+    );
+  }
+
+  @Test
+  @DisplayName("모든 여행On 조회 - Region 무관, 검색어로 조회")
+  void inquirySimpleTravelOnsTestByKeywordWithoutRegion() {
+    //GIVEN
+    AllTravelOnGetRequest opinionOptionIsNullRequest = getAllTravelOnRequest();
+    AllTravelOnGetRequest withOpinionOptionRequest = getAllTravelOnRequest();
+    AllTravelOnGetRequest noOpinionOptionRequest = getAllTravelOnRequest();
+
+    String keyword = "keyword";
+    opinionOptionIsNullRequest.setWithOpinions(null);
+    opinionOptionIsNullRequest.setRegionId(null);
+    opinionOptionIsNullRequest.setKeyword(keyword);
+    withOpinionOptionRequest.setWithOpinions(true);
+    withOpinionOptionRequest.setRegionId(null);
+    withOpinionOptionRequest.setKeyword(keyword);
+    noOpinionOptionRequest.setWithOpinions(false);
+    noOpinionOptionRequest.setRegionId(null);
+    noOpinionOptionRequest.setKeyword(keyword);
+
+    //WHEN
+
+    //THEN
+    assertAll(
+        //답변 여부 무관
+        () -> {
+          travelOnService.inquirySimpleTravelOns(opinionOptionIsNullRequest);
+          then(travelOnRepository).should(times(1)).findAllByKeyword(anyString(), anyLong(), anyInt(), any(TravelOnSortType.class));
+        },
+        //답변 있는 것만
+        () -> {
+          travelOnService.inquirySimpleTravelOns(withOpinionOptionRequest);
+          then(travelOnRepository).should(times(1)).findHasOpinionByKeyword(anyString(), anyLong(), anyInt(), any(TravelOnSortType.class));
+        },
+        //답변 없는 것만
+        () -> {
+          travelOnService.inquirySimpleTravelOns(noOpinionOptionRequest);
+          then(travelOnRepository).should(times(1)).findNoOpinionByKeyword(anyString(), anyLong(), anyInt(), any(TravelOnSortType.class));
+        }
+    );
+  }
 
   @Test
   @DisplayName("모든 여행 On 조회 - 사용자 ID를 기준으로 조회")
