@@ -44,7 +44,7 @@ public class SignupService {
     boolean isExist;
     Optional<User> result;
 
-    result = userRepository.findByAccountId(accountId);
+    result = userRepository.findByAccountIdWithoutAnonymized(accountId);
     isExist = result.isPresent();
 
 

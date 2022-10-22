@@ -97,8 +97,8 @@ class UserRepositoryTest {
     em.persist(user);
 
     //WHEN
-    Optional<User> existResult = userRepository.findByAccountId(existAccountId);
-    Optional<User> notExistResult = userRepository.findByAccountId(notExistAccountId);
+    Optional<User> existResult = userRepository.findByAccountIdWithoutAnonymized(existAccountId);
+    Optional<User> notExistResult = userRepository.findByAccountIdWithoutAnonymized(notExistAccountId);
 
     //THEN
     assertAll(

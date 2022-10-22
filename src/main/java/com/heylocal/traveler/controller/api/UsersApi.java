@@ -76,4 +76,11 @@ public interface UsersApi {
 	@Operation(summary = "랭킹 목록 조회", description = "랭킹 상위 N명의 사용자 목록을 조회합니다.", tags = {"Users"})
 	@GetMapping("/ranking")
 	List<UserProfileResponse> getRanking();
+
+	@Operation(summary = "회원탈퇴", tags = {"Users"})
+	@DeleteMapping("/{userId}")
+	void deleteUser(
+			@Parameter(in = ParameterIn.PATH, description = "사용자 ID", required = true) @PathVariable long userId,
+			@ApiIgnore LoginUser loginUser
+	) throws NotFoundException, ForbiddenException;
 }

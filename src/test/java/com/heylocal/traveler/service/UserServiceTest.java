@@ -29,6 +29,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import static com.heylocal.traveler.dto.UserDto.UserProfileResponse;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.AdditionalMatchers.not;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.willReturn;
 
@@ -430,6 +431,35 @@ class UserServiceTest {
         //성공 케이스
         () -> assertEquals(1, result.size()),
         () -> assertEquals(userId, result.get(0).getUserId())
+    );
+  }
+
+  @Test
+  @DisplayName("유저 익명화")
+  void anonymizeUserTest() throws NotFoundException {
+    //GIVEN
+    long userId = 1L;
+    UserProfile userProfile = UserProfile.builder().activityRegion(Region.builder().build()).build();
+    User user = User.builder().id(userId).build();
+    user.setUserProfile(userProfile);
+
+    //Mock 행동 정의 - userRepository
+    willReturn(Optional.of(user)).given(userRepository).findById(userId);
+    willReturn(Optional.empty()).given(userRepository).findById(not(eq(userId)));
+
+    //WHEN
+    userService.anonymizeUser(userId);
+
+    //THEN
+    assertAll(
+        //성공 케이스
+        () -> assertEquals("알 수 없는 사용자", user.getNickname()),
+        () -> assertSame(UserRole.ANONYMIZED, user.getUserRole()),
+        () -> assertNull(user.getUserProfile().getIntroduce()),
+        () -> assertSame(0, user.getUserProfile().getKnowHow()),
+        () -> assertNull(user.getUserProfile().getActivityRegion()),
+        //실패 케이스
+        () -> assertThrows(NotFoundException.class, () -> userService.anonymizeUser(1000))
     );
   }
 }

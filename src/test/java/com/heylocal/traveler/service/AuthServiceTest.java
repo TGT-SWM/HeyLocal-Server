@@ -276,4 +276,16 @@ class AuthServiceTest {
         AuthCode.EXPIRED_REFRESH_TOKEN.getDescription()
     );
   }
+
+  @Test
+  @DisplayName("인가 토큰 제거")
+  void removeTokensTest() {
+    //GIVEN
+    long userId = 1L;
+
+    //WHEN
+
+    //THEN
+    assertDoesNotThrow(() -> authService.removeTokens(userId));
+  }
 }
