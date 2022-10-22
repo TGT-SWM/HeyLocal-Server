@@ -25,6 +25,7 @@ import org.springframework.validation.BindingResult;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.heylocal.traveler.dto.UserDto.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
 
@@ -112,7 +113,7 @@ class UserControllerTest {
 		long targetUserId = 1L;
 		LoginUser loginUser = LoginUser.builder().id(targetUserId).build();
 		String validNickname = "validNickname";
-		UserDto.UserProfileRequest request = UserDto.UserProfileRequest.builder()
+		UserProfileRequest request = UserProfileRequest.builder()
 				.nickname(validNickname)
 				.build();
 
@@ -136,7 +137,7 @@ class UserControllerTest {
 		long targetUserId = 1L;
 		LoginUser loginUser = LoginUser.builder().id(2L).build();
 		String validNickname = "validNickname";
-		UserDto.UserProfileRequest request = UserDto.UserProfileRequest.builder()
+		UserProfileRequest request = UserProfileRequest.builder()
 				.nickname(validNickname)
 				.build();
 
@@ -157,7 +158,7 @@ class UserControllerTest {
 		LoginUser loginUser = LoginUser.builder().id(2L).build();
 		String validNickname = "validNickname";
 		int invalidRegionId = -1;
-		UserDto.UserProfileRequest request = UserDto.UserProfileRequest.builder()
+		UserProfileRequest request = UserProfileRequest.builder()
 				.activityRegionId(invalidRegionId)
 				.nickname(validNickname)
 				.build();
@@ -184,7 +185,7 @@ class UserControllerTest {
 		long targetUserId = 1L;
 		LoginUser loginUser = LoginUser.builder().id(2L).build();
 		String invalidNickname = "invalidNickname!@#$$%";
-		UserDto.UserProfileRequest request = UserDto.UserProfileRequest.builder()
+		UserProfileRequest request = UserProfileRequest.builder()
 				.nickname(invalidNickname)
 				.build();
 
@@ -240,5 +241,21 @@ class UserControllerTest {
 	  assertDoesNotThrow(() -> userController.getRanking());
 	}
 
-	// TODO - deleteUser
+	@Test
+	@DisplayName("회원탈퇴")
+	void deleteUserTest() throws NotFoundException, ForbiddenException {
+	  //GIVEN
+		long userId = 1L;
+		LoginUser loginUser = LoginUser.builder().id(userId).build();
+
+		//Mock 행동 정의 - userService
+		UserResponse userResponse = UserResponse.builder().id(userId).build();
+		willReturn(userResponse).given(userService).inquiryUser(userId);
+
+	  //WHEN
+
+	  //THEN
+		//성공 케이스
+		assertDoesNotThrow(() -> userController.deleteUser(userId, loginUser));
+	}
 }
