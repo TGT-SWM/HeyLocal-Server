@@ -54,6 +54,10 @@ public class UserProfile extends BaseTimeEntity {
 
   public void setActivityRegion(Region activityRegion) {
     Region tmp = this.activityRegion;
+
+    //만약 동일한 region을 전달받은 경우
+    if (tmp == activityRegion) return;
+
     this.activityRegion = activityRegion;
     if (tmp != null && tmp.getActivityUser().contains(this)) {
       tmp.removeActivityUser(this);
