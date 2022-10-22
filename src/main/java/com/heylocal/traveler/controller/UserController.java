@@ -44,7 +44,7 @@ import static com.heylocal.traveler.dto.UserDto.UserProfileResponse;
 @RestController
 @RequiredArgsConstructor
 public class UserController implements UsersApi {
-	@Value("${heylocal.signup.pattern.nickname}")
+	@Value("#{propertiesToUft8['heylocal.signup.pattern.nickname']}") //UTF-8로 값 가져오기
 	private String nicknamePattern;
 	private final TravelOnService travelOnService;
 	private final UserService userService;
