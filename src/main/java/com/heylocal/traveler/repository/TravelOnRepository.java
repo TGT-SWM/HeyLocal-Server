@@ -197,6 +197,92 @@ public class TravelOnRepository {
   }
 
   /**
+   * 여행 On 을 Region 과 키워드로 조회하는 메서드
+   * @param region 관련 지역
+   * @param keyword 키워드
+   * @param lastItemId 클라이언트가 마지막으로 받은 아이템의 id(pk)
+   * @param size 페이지당 아이템 개수
+   * @param sortType 정렬기준
+   * @return
+   */
+  public List<TravelOn> findAllByRegionAndKeyword(Region region, String keyword, Long lastItemId, int size, TravelOnSortType sortType) {
+    List<TravelOn> result;
+    String jpql = "select t from TravelOn t" +
+        " where (t.region = :region" +
+        " and (t.title like :keyword1" +
+          " or t.description like :keyword2))" +
+        " and " + getPaginationCondition("t", sortType, lastItemId);
+
+    jpql = appendJpqlWithOrderBy(jpql, sortType);
+    result = em.createQuery(jpql, TravelOn.class)
+        .setParameter("region", region)
+        .setParameter("keyword1", "%" + keyword + "%")
+        .setParameter("keyword2", "%" + keyword + "%")
+        .setMaxResults(size)
+        .getResultList();
+
+    return result;
+  }
+
+  /**
+   * 답변이 있는 여행 On 을 Region 과 키워드로 조회하는 메서드
+   * @param region 관련 지역
+   * @param keyword 키워드
+   * @param lastItemId 클라이언트가 마지막으로 받은 아이템의 id(pk)
+   * @param size 페이지당 아이템 개수
+   * @param sortType 정렬기준
+   * @return
+   */
+  public List<TravelOn> findHasOpinionByRegionAndKeyword(Region region, String keyword, Long lastItemId, int size, TravelOnSortType sortType) {
+    List<TravelOn> result;
+    String jpql = "select t from TravelOn t" +
+        " where ((t.region = :region" +
+        " and t.opinionList.size > 0)" +
+        " and (t.title like :keyword1" +
+        " or t.description like :keyword2))" +
+        " and " + getPaginationCondition("t", sortType, lastItemId);
+
+    jpql = appendJpqlWithOrderBy(jpql, sortType);
+    result = em.createQuery(jpql, TravelOn.class)
+        .setParameter("region", region)
+        .setParameter("keyword1", "%" + keyword + "%")
+        .setParameter("keyword2", "%" + keyword + "%")
+        .setMaxResults(size)
+        .getResultList();
+
+    return result;
+  }
+
+  /**
+   * 답변이 없는 여행 On 을 Region 과 키워드로 조회하는 메서드
+   * @param region 관련 지역
+   * @param keyword 키워드
+   * @param lastItemId 클라이언트가 마지막으로 받은 아이템의 id(pk)
+   * @param size 페이지당 아이템 개수
+   * @param sortType 정렬기준
+   * @return
+   */
+  public List<TravelOn> findNoOpinionByRegionAndKeyword(Region region, String keyword, Long lastItemId, int size, TravelOnSortType sortType) {
+    List<TravelOn> result;
+    String jpql = "select t from TravelOn t" +
+        " where ((t.region = :region" +
+        " and t.opinionList.size = 0)" +
+        " and (t.title like :keyword1" +
+        " or t.description like :keyword2))" +
+        " and " + getPaginationCondition("t", sortType, lastItemId);
+
+    jpql = appendJpqlWithOrderBy(jpql, sortType);
+    result = em.createQuery(jpql, TravelOn.class)
+        .setParameter("region", region)
+        .setParameter("keyword1", "%" + keyword + "%")
+        .setParameter("keyword2", "%" + keyword + "%")
+        .setMaxResults(size)
+        .getResultList();
+
+    return result;
+  }
+
+  /**
    * 여행 On 을 Region.state 로 조회하는 메서드
    * @param state 관련 지역
    * @param lastItemId 클라이언트가 마지막으로 받은 아이템의 id(pk)
@@ -218,6 +304,84 @@ public class TravelOnRepository {
 
     return result;
   }
+
+  /**
+   * 키워드로 모두 조회
+   * @param keyword
+   * @param lastItemId
+   * @param size
+   * @param sortType
+   * @return
+   */
+  public List<TravelOn> findAllByKeyword(String keyword, Long lastItemId, int size, TravelOnSortType sortType) {
+    List<TravelOn> result;
+    String jpql = "select t from TravelOn t" +
+        " where (t.title like :keyword1" +
+        " or t.description like :keyword2)" +
+        " and " + getPaginationCondition("t", sortType, lastItemId);
+
+    jpql = appendJpqlWithOrderBy(jpql, sortType);
+    result = em.createQuery(jpql, TravelOn.class)
+        .setParameter("keyword1", "%" + keyword + "%")
+        .setParameter("keyword2", "%" + keyword + "%")
+        .setMaxResults(size)
+        .getResultList();
+
+    return result;
+  }
+
+  /**
+   * 답변이 있는 것 중, 키워드로 조회
+   * @param keyword 키워드
+   * @param lastItemId 클라이언트가 마지막으로 받은 아이템의 id(pk)
+   * @param size 페이지당 아이템 개수
+   * @param sortType 정렬기준
+   * @return
+   */
+  public List<TravelOn> findHasOpinionByKeyword(String keyword, Long lastItemId, int size, TravelOnSortType sortType) {
+    List<TravelOn> result;
+    String jpql = "select t from TravelOn t" +
+        " where ((t.title like :keyword1" +
+        " or t.description like :keyword2)" +
+        " and t.opinionList.size > 0)" +
+        " and " + getPaginationCondition("t", sortType, lastItemId);
+
+    jpql = appendJpqlWithOrderBy(jpql, sortType);
+    result = em.createQuery(jpql, TravelOn.class)
+        .setParameter("keyword1", "%" + keyword + "%")
+        .setParameter("keyword2", "%" + keyword + "%")
+        .setMaxResults(size)
+        .getResultList();
+
+    return result;
+  }
+
+  /**
+   * 답변이 없는 것 중, 키워드로 조회
+   * @param keyword
+   * @param lastItemId 클라이언트가 마지막으로 받은 아이템의 id(pk)
+   * @param size 페이지당 아이템 개수
+   * @param sortType 정렬기준
+   * @return
+   */
+  public List<TravelOn> findNoOpinionByKeyword(String keyword, Long lastItemId, int size, TravelOnSortType sortType) {
+    List<TravelOn> result;
+    String jpql = "select t from TravelOn t" +
+        " where ((t.title like :keyword1" +
+        " or t.description like :keyword2)" +
+        " and t.opinionList.size = 0)" +
+        " and " + getPaginationCondition("t", sortType, lastItemId);
+
+    jpql = appendJpqlWithOrderBy(jpql, sortType);
+    result = em.createQuery(jpql, TravelOn.class)
+        .setParameter("keyword1", "%" + keyword + "%")
+        .setParameter("keyword2", "%" + keyword + "%")
+        .setMaxResults(size)
+        .getResultList();
+
+    return result;
+  }
+
 
   /**
    * 답변이 있는 여행 On 을 Region.state 로 조회하는 메서드
