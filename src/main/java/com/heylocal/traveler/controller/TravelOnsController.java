@@ -168,6 +168,7 @@ public class TravelOnsController implements TravelOnsApi {
       throw new BadRequestException(BadRequestCode.BAD_INPUT_FORM, fieldErrMsg);
     }
 
+    //답변 작성
     newOpinionId = opinionService.addNewOpinion(travelOnId, request, loginUser);
 
     return opinionImgContentService.getUploadPresignedUrl(request.getQuantity(), travelOnId, newOpinionId);

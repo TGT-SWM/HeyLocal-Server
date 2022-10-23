@@ -3,7 +3,6 @@ package com.heylocal.traveler.controller;
 import com.heylocal.traveler.dto.LoginUser;
 import com.heylocal.traveler.dto.PageDto.PageRequest;
 import com.heylocal.traveler.dto.TravelOnDto.TravelOnSimpleResponse;
-import com.heylocal.traveler.dto.UserDto;
 import com.heylocal.traveler.exception.BadRequestException;
 import com.heylocal.traveler.exception.ForbiddenException;
 import com.heylocal.traveler.exception.NotFoundException;
@@ -25,7 +24,8 @@ import org.springframework.validation.BindingResult;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.heylocal.traveler.dto.UserDto.*;
+import static com.heylocal.traveler.dto.UserDto.UserProfileRequest;
+import static com.heylocal.traveler.dto.UserDto.UserResponse;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
 

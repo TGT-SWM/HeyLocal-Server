@@ -1,7 +1,7 @@
 package com.heylocal.traveler.repository.redis;
 
-import config.EmbeddedRedisConfig;
 import com.heylocal.traveler.domain.token.RefreshToken;
+import config.EmbeddedRedisConfig;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

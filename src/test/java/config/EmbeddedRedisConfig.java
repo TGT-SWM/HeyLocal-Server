@@ -3,7 +3,6 @@ package config;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.TestConfiguration;
-import org.springframework.data.redis.support.collections.RedisProperties;
 import redis.embedded.RedisServer;
 
 import javax.annotation.PostConstruct;

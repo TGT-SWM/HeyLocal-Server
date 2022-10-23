@@ -14,7 +14,6 @@ import com.heylocal.traveler.domain.profile.UserProfile;
 import com.heylocal.traveler.domain.user.User;
 import com.heylocal.traveler.domain.user.UserRole;
 import com.heylocal.traveler.dto.LoginUser;
-import com.heylocal.traveler.dto.UserDto;
 import com.heylocal.traveler.dto.aws.S3ObjectDto;
 import com.heylocal.traveler.exception.NotFoundException;
 import com.heylocal.traveler.exception.code.NotFoundCode;
@@ -36,8 +35,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 import static com.heylocal.traveler.dto.UserDto.*;
-import static com.heylocal.traveler.dto.UserDto.UserProfileRequest;
-import static com.heylocal.traveler.dto.UserDto.UserProfileResponse;
 
 @Slf4j
 @Service

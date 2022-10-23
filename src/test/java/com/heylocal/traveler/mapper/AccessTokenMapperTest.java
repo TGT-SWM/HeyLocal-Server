@@ -8,7 +8,8 @@ import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class AccessTokenMapperTest {
   private AccessTokenMapper accessTokenMapper = AccessTokenMapper.INSTANCE;
