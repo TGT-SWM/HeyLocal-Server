@@ -13,7 +13,6 @@ import com.heylocal.traveler.dto.LoginUser;
 import com.heylocal.traveler.dto.PageDto;
 import com.heylocal.traveler.dto.PageDto.PageRequest;
 import com.heylocal.traveler.dto.TravelOnDto.TravelOnSimpleResponse;
-import com.heylocal.traveler.dto.UserDto;
 import com.heylocal.traveler.exception.BadRequestException;
 import com.heylocal.traveler.exception.ForbiddenException;
 import com.heylocal.traveler.exception.NotFoundException;
@@ -37,8 +36,6 @@ import java.util.regex.Pattern;
 
 import static com.heylocal.traveler.dto.OpinionDto.OpinionWithPlaceResponse;
 import static com.heylocal.traveler.dto.UserDto.*;
-import static com.heylocal.traveler.dto.UserDto.UserProfileRequest;
-import static com.heylocal.traveler.dto.UserDto.UserProfileResponse;
 
 @Tag(name = "Users")
 @RestController

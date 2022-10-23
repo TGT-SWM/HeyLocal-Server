@@ -18,7 +18,6 @@ import com.heylocal.traveler.exception.code.ForbiddenCode;
 import com.heylocal.traveler.service.OpinionImgContentService;
 import com.heylocal.traveler.service.OpinionService;
 import com.heylocal.traveler.service.TravelOnService;
-import com.heylocal.traveler.service.UserService;
 import com.heylocal.traveler.util.error.BindingErrorMessageProvider;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
