@@ -106,6 +106,9 @@ public class OpinionService {
     newOpinion = OpinionMapper.INSTANCE.toEntity(request, requestPlace, opinionAuthor, travelOn, regionOfRequestPlace);
     opinionRepository.save(newOpinion);
 
+    //노하우 지급
+    opinionAuthor.getUserProfile().increaseKnowHowBy(50);
+
     return newOpinion.getId();
   }
 
