@@ -87,7 +87,8 @@ class OpinionServiceTest {
     TravelOn travelOn = getTravelOn(travelOnId, region);
     long userId = 3L;
     LoginUser loginUser = LoginUser.builder().id(userId).build();
-    User author = User.builder().id(userId).accountId("myAccountId").nickname("myNickname").password("myPassword123!").userRole(UserRole.TRAVELER).build();
+    UserProfile userProfile = UserProfile.builder().knowHow(0).build();
+    User author = User.builder().id(userId).accountId("myAccountId").nickname("myNickname").password("myPassword123!").userRole(UserRole.TRAVELER).userProfile(userProfile).build();
     Place existPlace = PlaceMapper.INSTANCE.toEntity(placeRequest, region);
 
     //Mock 행동 정의 - travelOnRepository
