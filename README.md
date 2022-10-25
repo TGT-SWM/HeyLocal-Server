@@ -35,7 +35,8 @@
 <span><img src="https://img.shields.io/badge/java-007396?style=for-the-badge&logo=java&logoColor=white"></span>
 <span><img src="https://img.shields.io/badge/springboot-6DB33F?style=for-the-badge&logo=springboot&logoColor=white"></span>
 <span><img src="https://img.shields.io/badge/mariadb-003545?style=for-the-badge&logo=mariadb&logoColor=white"></span>
-<span><img src="https://img.shields.io/badge/aws-232F3E?style=for-the-badge&logo=&logoColor=white"></span>
+<span><img src="https://img.shields.io/badge/redis-DC382D?style=for-the-badge&logo=redis&logoColor=white"></span>
+<span><img src="https://img.shields.io/badge/aws-232F3E?style=for-the-badge&logo=amazonaws&logoColor=white"></span>
 
 ### 개발 환경
 - 개발 운영체제 : macOS Monterey 12.6
