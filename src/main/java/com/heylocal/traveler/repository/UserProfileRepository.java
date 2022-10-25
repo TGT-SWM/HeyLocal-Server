@@ -37,7 +37,7 @@ public class UserProfileRepository {
    */
   public List<UserProfile> findSortedByKnowHowDesc(int size) {
     String jpql = "select u from UserProfile u" +
-        " order by u.knowHow desc";
+        " order by u.knowHow desc, u.user.opinionList.size desc";
     List<UserProfile> resultList = em.createQuery(jpql, UserProfile.class)
         .setMaxResults(size)
         .getResultList();
