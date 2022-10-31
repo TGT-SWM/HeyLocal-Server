@@ -9,6 +9,8 @@
 package com.heylocal.traveler.controller;
 
 import com.heylocal.traveler.controller.api.PlacesApi;
+import com.heylocal.traveler.dto.OpinionDto;
+import com.heylocal.traveler.dto.OpinionDto.OpinionWithPlaceResponse;
 import com.heylocal.traveler.exception.BadRequestException;
 import com.heylocal.traveler.exception.NotFoundException;
 import com.heylocal.traveler.exception.code.BadRequestCode;
@@ -53,14 +55,14 @@ public class PlaceController implements PlacesApi {
 	 * @return
 	 */
 	@Override
-	public List<OpinionResponse> getPlaceOpinions(long placeId, PageRequest pageRequest,
-																												 BindingResult bindingResult) throws BadRequestException {
+	public List<OpinionWithPlaceResponse> getPlaceOpinions(long placeId, PageRequest pageRequest,
+														   BindingResult bindingResult) throws BadRequestException {
 		if (bindingResult.hasFieldErrors()) {
 			String errMsg = errorMessageProvider.getFieldErrMsg(bindingResult);
 			throw new BadRequestException(BadRequestCode.BAD_INPUT_FORM, errMsg);
 		}
 
-		List<OpinionResponse> opinionResponseList = opinionService.inquiryOpinionsByPlace(placeId, pageRequest);
+		List<OpinionWithPlaceResponse> opinionResponseList = opinionService.inquiryOpinionsByPlace(placeId, pageRequest);
 		return opinionResponseList;
 	}
 

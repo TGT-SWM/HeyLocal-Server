@@ -598,7 +598,7 @@ class OpinionServiceTest {
     willReturn(opinionList).given(opinionRepository).findByPlaceId(placeId, null, 2);
 
     //WHEN
-    List<OpinionDto.OpinionResponse> result = opinionService.inquiryOpinionsByPlace(placeId, pageRequest);
+    List<OpinionDto.OpinionWithPlaceResponse> result = opinionService.inquiryOpinionsByPlace(placeId, pageRequest);
 
     //THEN
     assertAll(

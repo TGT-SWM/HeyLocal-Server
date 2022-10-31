@@ -35,7 +35,7 @@ public interface PlacesApi {
 
 	@Operation(summary = "장소에 대한 답변 조회", description = "장소에 대한 여행 On 답변 목록을 조회합니다.", tags = {"Places"})
 	@GetMapping("/{placeId}/opinions")
-	List<OpinionDto.OpinionResponse> getPlaceOpinions(
+	List<OpinionDto.OpinionWithPlaceResponse> getPlaceOpinions(
 			@Parameter(in = ParameterIn.PATH, description = "장소 ID", required = true) @PathVariable long placeId,
 			@Parameter(in = ParameterIn.QUERY, description = "페이징", required = true) @Validated PageRequest pageRequest,
 			BindingResult bindingResult
