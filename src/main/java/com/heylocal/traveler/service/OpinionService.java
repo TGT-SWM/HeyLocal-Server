@@ -264,8 +264,8 @@ public class OpinionService {
    * @return
    */
   @Transactional(readOnly = true)
-  public List<OpinionResponse> inquiryOpinionsByPlace(long placeId, PageRequest pageRequest) {
-    List<OpinionResponse> result = new ArrayList<>();
+  public List<OpinionWithPlaceResponse> inquiryOpinionsByPlace(long placeId, PageRequest pageRequest) {
+    List<OpinionWithPlaceResponse> result = new ArrayList<>();
     Long lastItemId = pageRequest.getLastItemId();
     int size = pageRequest.getSize();
 
@@ -274,7 +274,7 @@ public class OpinionService {
 
     //List<Opinion> -> List<OpinionResponse>
     for (Opinion opinion : opinionList) {
-      OpinionResponse responseDto = OpinionMapper.INSTANCE.toWithPlaceResponseDto(opinion, s3UrlOpinionContext);
+      OpinionWithPlaceResponse responseDto = OpinionMapper.INSTANCE.toWithPlaceResponseDto(opinion, s3UrlOpinionContext);
       List<OpinionImageContent> sortedImgEntityList = sortImgEntityByKeyIndex(opinion.getOpinionImageContentList());
       sortedImgEntityList.stream().forEach( (imgEntity) -> bindingDownloadUrls(responseDto, imgEntity) );
       result.add(responseDto);
