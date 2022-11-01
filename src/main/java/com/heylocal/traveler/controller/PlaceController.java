@@ -9,6 +9,7 @@
 package com.heylocal.traveler.controller;
 
 import com.heylocal.traveler.controller.api.PlacesApi;
+import com.heylocal.traveler.dto.MenuDto;
 import com.heylocal.traveler.dto.OpinionDto;
 import com.heylocal.traveler.dto.OpinionDto.OpinionWithPlaceResponse;
 import com.heylocal.traveler.exception.BadRequestException;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+import static com.heylocal.traveler.dto.MenuDto.*;
 import static com.heylocal.traveler.dto.OpinionDto.OpinionResponse;
 import static com.heylocal.traveler.dto.PageDto.PageRequest;
 import static com.heylocal.traveler.dto.PlaceDto.PlaceResponse;
@@ -46,6 +48,11 @@ public class PlaceController implements PlacesApi {
 	public PlaceResponse getPlace(long placeId) throws NotFoundException {
 		PlaceResponse response = placeService.inquiryPlace(placeId);
 		return response;
+	}
+
+	@Override
+	public List<MenuResponse> getPlaceMenu(long placeId) throws NotFoundException, BadRequestException {
+		return placeService.inquiryMenu(placeId);
 	}
 
 	/**

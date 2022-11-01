@@ -8,12 +8,22 @@
 
 package com.heylocal.traveler.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.heylocal.traveler.domain.place.Place;
+import com.heylocal.traveler.domain.place.PlaceCategory;
+import com.heylocal.traveler.dto.MenuDto;
+import com.heylocal.traveler.exception.BadRequestException;
 import com.heylocal.traveler.exception.NotFoundException;
+import com.heylocal.traveler.exception.code.BadRequestCode;
 import com.heylocal.traveler.exception.code.NotFoundCode;
 import com.heylocal.traveler.mapper.PlaceMapper;
 import com.heylocal.traveler.repository.PlaceRepository;
+import com.heylocal.traveler.util.http.HttpClient;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,13 +31,19 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.heylocal.traveler.dto.MenuDto.*;
 import static com.heylocal.traveler.dto.PlaceDto.PlaceResponse;
 import static com.heylocal.traveler.dto.PlaceDto.PlaceWithOpinionSizeResponse;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class PlaceService {
+  @Value("${crawling.server.url.menu}")
+  private String crawlingMenuUrl;
   private final PlaceRepository placeRepository;
+  private final HttpClient httpClient;
+  private final ObjectMapper objectMapper;
 
   /**
    * 장소 ID 로 장소를 조회하는 메서드
@@ -65,6 +81,43 @@ public class PlaceService {
     result = findResult.stream().map(PlaceMapper.INSTANCE::toPlaceWithOpinionSizeResponseDto).collect(Collectors.toList());
 
     return result;
+  }
+
+  /**
+   * 장소(음식점·카페)의 메뉴 정보를 조회하는 메서드
+   * @param placeId 조회할 장소 ID
+   * @return
+   */
+  public List<MenuResponse> inquiryMenu(long placeId) throws NotFoundException, BadRequestException {
+    String crawlingResult = null;
+    canInquiryMenu(placeId); //메뉴를 조회할 수 있는지 검사
+
+    //크롤링 서버에서 응답 받기
+    try {
+      crawlingResult = httpClient.get(crawlingMenuUrl + "?placeId=" + placeId);
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
+
+    //String(JSON) -> List<MenuResponse>
+    List<MenuResponse> menuResponse = null;
+    try {
+      menuResponse = objectMapper.readValue(crawlingResult, new TypeReference<>() {});
+    } catch (JsonProcessingException e) {
+      throw new RuntimeException(e);
+    }
+
+    return menuResponse;
+  }
+
+  private void canInquiryMenu(long placeId) throws NotFoundException, BadRequestException {
+    Place place = placeRepository.findById(placeId).orElseThrow(
+        () -> new NotFoundException(NotFoundCode.NO_INFO, "존재하지 않는 장소 ID 입니다.")
+    );
+    PlaceCategory category = place.getCategory();
+    if (category != PlaceCategory.FD6 && category != PlaceCategory.CE7) {
+      throw new BadRequestException(BadRequestCode.BAD_INPUT_FORM, "음식점이나 카페만 메뉴를 조회할 수 있습니다.");
+    }
   }
 
 }

@@ -8,6 +8,7 @@
 
 package com.heylocal.traveler.controller.api;
 
+import com.heylocal.traveler.dto.MenuDto;
 import com.heylocal.traveler.dto.OpinionDto;
 import com.heylocal.traveler.dto.PageDto.PageRequest;
 import com.heylocal.traveler.dto.PlaceDto;
@@ -32,6 +33,12 @@ public interface PlacesApi {
 	PlaceResponse getPlace(
 			@Parameter(in = ParameterIn.PATH, description = "장소 ID", required = true) @PathVariable long placeId
 	) throws NotFoundException;
+
+	@Operation(summary = "장소 메뉴 조회", description = "장소(음식점·카페)에 대한 메뉴 정보를 조회합니다.", tags = {"Places"})
+	@GetMapping("/{placeId}/menu")
+	List<MenuDto.MenuResponse> getPlaceMenu(
+			@Parameter(in = ParameterIn.PATH, description = "장소 ID", required = true) @PathVariable long placeId
+	) throws NotFoundException, BadRequestException;
 
 	@Operation(summary = "장소에 대한 답변 조회", description = "장소에 대한 여행 On 답변 목록을 조회합니다.", tags = {"Places"})
 	@GetMapping("/{placeId}/opinions")
