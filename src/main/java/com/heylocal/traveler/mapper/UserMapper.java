@@ -23,6 +23,7 @@ public interface UserMapper {
   UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);
 
   @Named("toUserProfileResponseDtoByUserProfileAndRankingWithContext")
+  @Mapping(target = "userRole", source = "userProfile.user.userRole")
   @Mapping(target = "nickname", source = "userProfile.user.nickname")
   @Mapping(target = "userId", source = "userProfile.user.id")
   @Mapping(target = "acceptedOpinionCount", ignore = true)
@@ -31,6 +32,7 @@ public interface UserMapper {
   UserProfileResponse toUserProfileResponseDto(UserProfile userProfile, long ranking, @Context S3UrlUserContext s3UserUrlContext);
 
   @Named("toUserProfileResponseDtoByUserProfileWithContext")
+  @Mapping(target = "userRole", source = "userProfile.user.userRole")
   @Mapping(target = "nickname", source = "userProfile.user.nickname")
   @Mapping(target = "userId", source = "userProfile.user.id")
   @Mapping(target = "ranking", ignore = true)

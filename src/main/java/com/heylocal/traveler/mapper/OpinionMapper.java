@@ -34,6 +34,7 @@ public interface OpinionMapper {
   @Mapping(target = "opinionImageContentList", ignore = true)
   Opinion toEntity(NewOpinionRequestRequest newOpinionRequest, Place place, User author, TravelOn travelOn, Region region);
 
+  @Mapping(target = "travelOnId", source = "opinion.travelOn.id")
   @Mapping(target = "generalImgDownloadImgUrl", ignore = true)
   @Mapping(target = "foodImgDownloadImgUrl", ignore = true)
   @Mapping(target = "drinkAndDessertImgDownloadImgUrl", ignore = true)
@@ -44,6 +45,7 @@ public interface OpinionMapper {
   OpinionWithPlaceResponse toWithPlaceResponseDto(Opinion opinion, @Context S3UrlOpinionContext s3UrlOpinionContext);
 
   @InheritConfiguration(name = "toWithPlaceResponseDto")
+  @Mapping(target = "travelOnId", source = "opinion.travelOn.id")
   @Mapping(target = "generalImgDownloadImgUrl", ignore = true)
   @Mapping(target = "foodImgDownloadImgUrl", ignore = true)
   @Mapping(target = "drinkAndDessertImgDownloadImgUrl", ignore = true)

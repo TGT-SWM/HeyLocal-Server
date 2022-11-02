@@ -74,12 +74,23 @@ public class TravelOnService {
     List<TravelOn> travelOnList;
     List<TravelOnSimpleResponse> response;
     Long regionId = request.getRegionId();
+    String keyword = request.getKeyword();
 
-    if (regionId == null) { //지역 관계없이 조회하는 경우
-      travelOnList = findWithoutRegion(request);
+    if (keyword == null || keyword.isEmpty()) {     //키워드가 없는 경우
+      if (regionId == null) {                       //지역 관계없이 조회하는 경우
+        travelOnList = findWithoutRegionAndKeyword(request);
 
-    } else { //Region을 기준으로 조회하는 경우
-      travelOnList = findByRegion(request);
+      } else {                                      //Region을 기준으로 조회하는 경우
+        travelOnList = findByRegionWithoutKeyword(request);
+      }
+
+    } else {                                        //키워드가 있는 경우
+      if (regionId == null) {                       //지역 관계없이 조회하는 경우
+        travelOnList = findByKeywordWithoutRegion(request);
+
+      } else {                                      //Region을 기준으로 조회하는 경우
+        travelOnList = findByRegionAndKeyword(request);
+      }
     }
 
     //List<TravelOn> -> List<TravelOnSimpleResponse>
@@ -208,7 +219,13 @@ public class TravelOnService {
     travelOnRepository.remove(target);
   }
 
-  private List<TravelOn> findByRegion(AllTravelOnGetRequest request) throws NotFoundException {
+  /**
+   * 지역으로 조회, 키워드에 관계없이 조회하는 메서드
+   * @param request
+   * @return
+   * @throws NotFoundException
+   */
+  private List<TravelOn> findByRegionWithoutKeyword(AllTravelOnGetRequest request) throws NotFoundException {
     List<TravelOn> result;
     Boolean withOpinions;
     TravelOnSortType sortBy;
@@ -238,7 +255,12 @@ public class TravelOnService {
     return result;
   }
 
-  private List<TravelOn> findWithoutRegion(AllTravelOnGetRequest request) {
+  /**
+   * 지역과 키워드에 관계없이 조회하는 메서드
+   * @param request
+   * @return
+   */
+  private List<TravelOn> findWithoutRegionAndKeyword(AllTravelOnGetRequest request) {
     List<TravelOn> result;
     Boolean withOpinions;
     TravelOnSortType sortBy;
@@ -257,6 +279,74 @@ public class TravelOnService {
       result = travelOnRepository.findHasOpinion(lastItemId, size, sortBy);
     } else {
       result = travelOnRepository.findNoOpinion(lastItemId, size, sortBy);
+    }
+
+    return result;
+  }
+
+  /**
+   * 지역에 관계없이 조회, 키워드로 조회하는 메서드
+   * @param request
+   * @return
+   */
+  private List<TravelOn> findByKeywordWithoutRegion(AllTravelOnGetRequest request) {
+    List<TravelOn> result;
+    Boolean withOpinions;
+    TravelOnSortType sortBy;
+    Long lastItemId;
+    int size;
+    String keyword;
+
+    //초기화
+    withOpinions = request.getWithOpinions();
+    sortBy = request.getSortBy();
+    lastItemId = request.getPageRequest().getLastItemId();
+    size = request.getPageRequest().getSize();
+    keyword = request.getKeyword();
+
+    if (withOpinions == null) {
+      result = travelOnRepository.findAllByKeyword(keyword, lastItemId, size, sortBy);
+    } else if (withOpinions) {
+      result = travelOnRepository.findHasOpinionByKeyword(keyword, lastItemId, size, sortBy);
+    } else {
+      result = travelOnRepository.findNoOpinionByKeyword(keyword, lastItemId, size, sortBy);
+    }
+
+    return result;
+  }
+
+  /**
+   * 지역과 키워드로 조회하는 메서드
+   * @param request
+   * @return
+   */
+  private List<TravelOn> findByRegionAndKeyword(AllTravelOnGetRequest request) throws NotFoundException {
+    List<TravelOn> result;
+    Boolean withOpinions;
+    TravelOnSortType sortBy;
+    long regionId;
+    Long lastItemId;
+    int size;
+    String keyword;
+
+    //초기화
+    withOpinions = request.getWithOpinions();
+    sortBy = request.getSortBy();
+    regionId = request.getRegionId();
+    lastItemId = request.getPageRequest().getLastItemId();
+    size = request.getPageRequest().getSize();
+    keyword = request.getKeyword();
+
+    Region region = regionRepository.findById(regionId).orElseThrow(
+        () -> new NotFoundException(NotFoundCode.NO_INFO, "존재하지 않는 Region ID 입니다.")
+    );
+
+    if (withOpinions == null) {
+      result = travelOnRepository.findAllByRegionAndKeyword(region, keyword, lastItemId, size, sortBy);
+    } else if (withOpinions) {
+      result = travelOnRepository.findHasOpinionByRegionAndKeyword(region, keyword, lastItemId, size, sortBy);
+    } else {
+      result = travelOnRepository.findNoOpinionByRegionAndKeyword(region, keyword, lastItemId, size, sortBy);
     }
 
     return result;

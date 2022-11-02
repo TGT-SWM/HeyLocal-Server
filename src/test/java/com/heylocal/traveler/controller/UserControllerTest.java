@@ -3,10 +3,10 @@ package com.heylocal.traveler.controller;
 import com.heylocal.traveler.dto.LoginUser;
 import com.heylocal.traveler.dto.PageDto.PageRequest;
 import com.heylocal.traveler.dto.TravelOnDto.TravelOnSimpleResponse;
-import com.heylocal.traveler.dto.UserDto;
 import com.heylocal.traveler.exception.BadRequestException;
 import com.heylocal.traveler.exception.ForbiddenException;
 import com.heylocal.traveler.exception.NotFoundException;
+import com.heylocal.traveler.service.AuthService;
 import com.heylocal.traveler.service.OpinionService;
 import com.heylocal.traveler.service.TravelOnService;
 import com.heylocal.traveler.service.UserService;
@@ -24,6 +24,8 @@ import org.springframework.validation.BindingResult;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.heylocal.traveler.dto.UserDto.UserProfileRequest;
+import static com.heylocal.traveler.dto.UserDto.UserResponse;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
 
@@ -34,6 +36,8 @@ class UserControllerTest {
 	private UserService userService;
 	@Mock
 	private OpinionService opinionService;
+	@Mock
+	private AuthService authService;
 	@Mock
 	private BindingErrorMessageProvider errorMessageProvider;
 	@Mock
@@ -109,7 +113,7 @@ class UserControllerTest {
 		long targetUserId = 1L;
 		LoginUser loginUser = LoginUser.builder().id(targetUserId).build();
 		String validNickname = "validNickname";
-		UserDto.UserProfileRequest request = UserDto.UserProfileRequest.builder()
+		UserProfileRequest request = UserProfileRequest.builder()
 				.nickname(validNickname)
 				.build();
 
@@ -133,7 +137,7 @@ class UserControllerTest {
 		long targetUserId = 1L;
 		LoginUser loginUser = LoginUser.builder().id(2L).build();
 		String validNickname = "validNickname";
-		UserDto.UserProfileRequest request = UserDto.UserProfileRequest.builder()
+		UserProfileRequest request = UserProfileRequest.builder()
 				.nickname(validNickname)
 				.build();
 
@@ -154,7 +158,7 @@ class UserControllerTest {
 		LoginUser loginUser = LoginUser.builder().id(2L).build();
 		String validNickname = "validNickname";
 		int invalidRegionId = -1;
-		UserDto.UserProfileRequest request = UserDto.UserProfileRequest.builder()
+		UserProfileRequest request = UserProfileRequest.builder()
 				.activityRegionId(invalidRegionId)
 				.nickname(validNickname)
 				.build();
@@ -181,7 +185,7 @@ class UserControllerTest {
 		long targetUserId = 1L;
 		LoginUser loginUser = LoginUser.builder().id(2L).build();
 		String invalidNickname = "invalidNickname!@#$$%";
-		UserDto.UserProfileRequest request = UserDto.UserProfileRequest.builder()
+		UserProfileRequest request = UserProfileRequest.builder()
 				.nickname(invalidNickname)
 				.build();
 
@@ -224,5 +228,34 @@ class UserControllerTest {
 				() -> assertThrows(BadRequestException.class, () -> userController.getUserOpinions(targetUserId, invalidPageRequest, bindingResult))
 		);
 
+	}
+
+	@Test
+	@DisplayName("랭킹 조회 핸들러")
+	void getRankingTest() {
+	  //GIVEN
+
+	  //WHEN
+
+	  //THEN
+	  assertDoesNotThrow(() -> userController.getRanking());
+	}
+
+	@Test
+	@DisplayName("회원탈퇴")
+	void deleteUserTest() throws NotFoundException, ForbiddenException {
+	  //GIVEN
+		long userId = 1L;
+		LoginUser loginUser = LoginUser.builder().id(userId).build();
+
+		//Mock 행동 정의 - userService
+		UserResponse userResponse = UserResponse.builder().id(userId).build();
+		willReturn(userResponse).given(userService).inquiryUser(userId);
+
+	  //WHEN
+
+	  //THEN
+		//성공 케이스
+		assertDoesNotThrow(() -> userController.deleteUser(userId, loginUser));
 	}
 }

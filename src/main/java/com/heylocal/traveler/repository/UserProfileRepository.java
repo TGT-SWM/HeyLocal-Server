@@ -13,6 +13,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.util.List;
 
 @Repository
 public class UserProfileRepository {
@@ -27,5 +28,19 @@ public class UserProfileRepository {
   public UserProfile saveUserProfile(UserProfile userProfile) {
     em.persist(userProfile);
     return userProfile;
+  }
+
+  /**
+   * 사용자 프로필을 노하우 순으로 조회하는 메서드
+   * @param size 조회할 아이템 개수
+   * @return
+   */
+  public List<UserProfile> findSortedByKnowHowDesc(int size) {
+    String jpql = "select u from UserProfile u" +
+        " order by u.knowHow desc, u.user.opinionList.size desc";
+    List<UserProfile> resultList = em.createQuery(jpql, UserProfile.class)
+        .setMaxResults(size)
+        .getResultList();
+    return resultList;
   }
 }

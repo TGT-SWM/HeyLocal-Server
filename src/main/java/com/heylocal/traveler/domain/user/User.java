@@ -32,7 +32,7 @@ public class User extends BaseTimeEntity {
   @Id @GeneratedValue
   private long id;
 
-  @Column(length = 20, nullable = false, unique = true)
+  @Column(length = 20, nullable = false)
   private String accountId;
 
   @Column(nullable = false)

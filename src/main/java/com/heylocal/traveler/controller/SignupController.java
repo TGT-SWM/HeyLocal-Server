@@ -39,7 +39,7 @@ public class SignupController implements SignupApi {
   private String accountIdPattern;
   @Value("${heylocal.signup.pattern.password}")
   private String passwordPattern;
-  @Value("${heylocal.signup.pattern.nickname}")
+  @Value("#{propertiesToUft8['heylocal.signup.pattern.nickname']}") //UTF-8로 값 가져오기
   private String nicknamePattern;
 
   /**
@@ -119,7 +119,7 @@ public class SignupController implements SignupApi {
   /**
    * <pre>
    * 닉네임 형식 검증
-   * 숫자 + 영어 조합, 2자 이상, 20자 이하
+   * 숫자 + 영어/한글 조합, 2자 이상, 20자 이하
    * </pre>
    * @param nickname 검증할 닉네임
    * @return 조건에 부합하면 true 반환

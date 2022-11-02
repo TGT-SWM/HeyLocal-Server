@@ -49,8 +49,8 @@ public class UserRepository {
    * @param accountId
    * @return
    */
-  public Optional<User> findByAccountId(String accountId) {
-    String jpql = "select u from User u where u.accountId = :accountId";
+  public Optional<User> findByAccountIdWithoutAnonymized(String accountId) {
+    String jpql = "select u from User u where u.accountId = :accountId and u.userRole <> 'ANONYMIZED'";
     User user;
 
     try {

@@ -1,8 +1,10 @@
 package com.heylocal.traveler.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.heylocal.traveler.domain.place.Place;
 import com.heylocal.traveler.exception.NotFoundException;
 import com.heylocal.traveler.repository.PlaceRepository;
+import com.heylocal.traveler.util.http.HttpClient;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -21,12 +23,16 @@ import static org.mockito.BDDMockito.willReturn;
 class PlaceServiceTest {
   @Mock
   private PlaceRepository placeRepository;
+  @Mock
+  private HttpClient httpClient;
+  @Mock
+  private ObjectMapper objectMapper;
   private PlaceService placeService;
 
   @BeforeEach
   void setUp() {
     MockitoAnnotations.openMocks(this);
-    placeService = new PlaceService(placeRepository);
+    placeService = new PlaceService(placeRepository, httpClient, objectMapper);
   }
 
   @Test

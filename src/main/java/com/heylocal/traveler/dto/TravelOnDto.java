@@ -90,6 +90,8 @@ public class TravelOnDto {
 		private TravelOnSortType sortBy;
 		@ApiParam(value = "페이징", required = true)
 		private PageRequest pageRequest;
+		@ApiParam(value = "검색어 (없는 경우, 전체 조회)", required = false)
+		private String keyword;
 	}
 
 	@Getter

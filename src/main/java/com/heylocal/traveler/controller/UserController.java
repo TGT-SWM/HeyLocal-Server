@@ -19,6 +19,7 @@ import com.heylocal.traveler.exception.NotFoundException;
 import com.heylocal.traveler.exception.code.BadRequestCode;
 import com.heylocal.traveler.exception.code.ForbiddenCode;
 import com.heylocal.traveler.exception.code.SignupCode;
+import com.heylocal.traveler.service.AuthService;
 import com.heylocal.traveler.service.OpinionService;
 import com.heylocal.traveler.service.TravelOnService;
 import com.heylocal.traveler.service.UserService;
@@ -34,18 +35,18 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 import static com.heylocal.traveler.dto.OpinionDto.OpinionWithPlaceResponse;
-import static com.heylocal.traveler.dto.UserDto.UserProfileRequest;
-import static com.heylocal.traveler.dto.UserDto.UserProfileResponse;
+import static com.heylocal.traveler.dto.UserDto.*;
 
 @Tag(name = "Users")
 @RestController
 @RequiredArgsConstructor
 public class UserController implements UsersApi {
-	@Value("${heylocal.signup.pattern.nickname}")
+	@Value("#{propertiesToUft8['heylocal.signup.pattern.nickname']}") //UTF-8로 값 가져오기
 	private String nicknamePattern;
 	private final TravelOnService travelOnService;
 	private final UserService userService;
 	private final OpinionService opinionService;
+	private final AuthService authService;
 	private final BindingErrorMessageProvider errorMessageProvider;
 
 	/**
@@ -124,11 +125,33 @@ public class UserController implements UsersApi {
 	}
 
 	/**
-	 * @return
+	 * 노하우 랭킹을 조회하는 핸들러
+	 * @return 랭킹 순위
 	 */
 	@Override
 	public List<UserProfileResponse> getRanking() {
-		return null;
+		return userService.inquiryUserProfileByKnowHowDesc();
+	}
+
+	/**
+	 * 회원탈퇴 핸들러
+	 * @param userId
+	 */
+	@Override
+	public void deleteUser(long userId, LoginUser loginUser) throws NotFoundException, ForbiddenException {
+		//유효한 id 인지 조회
+		UserResponse user = userService.inquiryUser(userId);
+
+		//로그인한 사용자와 다른 id 라면
+		if (user.getId() != loginUser.getId()) {
+			throw new ForbiddenException(ForbiddenCode.NO_PERMISSION, "다른 계정을 삭제할 수 없습니다.");
+		}
+
+		//사용자 익명화
+		userService.anonymizeUser(userId);
+
+		//Redis에서 토큰 제거 (로그아웃 처리)
+		authService.removeTokens(userId);
 	}
 
 	/**

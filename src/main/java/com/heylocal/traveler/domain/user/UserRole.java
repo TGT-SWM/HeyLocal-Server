@@ -9,7 +9,8 @@
 package com.heylocal.traveler.domain.user;
 
 public enum UserRole {
-  TRAVELER("여행자"), SERVICE_MANAGER("서비스 관리자");
+  TRAVELER("여행자"), SERVICE_MANAGER("서비스 관리자"),
+  ANONYMIZED("익명");
 
   private String value;
 

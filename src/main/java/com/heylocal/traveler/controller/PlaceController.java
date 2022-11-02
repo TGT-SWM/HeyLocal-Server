@@ -9,6 +9,9 @@
 package com.heylocal.traveler.controller;
 
 import com.heylocal.traveler.controller.api.PlacesApi;
+import com.heylocal.traveler.dto.MenuDto;
+import com.heylocal.traveler.dto.OpinionDto;
+import com.heylocal.traveler.dto.OpinionDto.OpinionWithPlaceResponse;
 import com.heylocal.traveler.exception.BadRequestException;
 import com.heylocal.traveler.exception.NotFoundException;
 import com.heylocal.traveler.exception.code.BadRequestCode;
@@ -22,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+import static com.heylocal.traveler.dto.MenuDto.*;
 import static com.heylocal.traveler.dto.OpinionDto.OpinionResponse;
 import static com.heylocal.traveler.dto.PageDto.PageRequest;
 import static com.heylocal.traveler.dto.PlaceDto.PlaceResponse;
@@ -46,6 +50,11 @@ public class PlaceController implements PlacesApi {
 		return response;
 	}
 
+	@Override
+	public List<MenuResponse> getPlaceMenu(long placeId) throws NotFoundException, BadRequestException {
+		return placeService.inquiryMenu(placeId);
+	}
+
 	/**
 	 * 해당 장소를 선택한 답변 목록 조회
 	 * @param placeId
@@ -53,14 +62,14 @@ public class PlaceController implements PlacesApi {
 	 * @return
 	 */
 	@Override
-	public List<OpinionResponse> getPlaceOpinions(long placeId, PageRequest pageRequest,
-																												 BindingResult bindingResult) throws BadRequestException {
+	public List<OpinionWithPlaceResponse> getPlaceOpinions(long placeId, PageRequest pageRequest,
+														   BindingResult bindingResult) throws BadRequestException {
 		if (bindingResult.hasFieldErrors()) {
 			String errMsg = errorMessageProvider.getFieldErrMsg(bindingResult);
 			throw new BadRequestException(BadRequestCode.BAD_INPUT_FORM, errMsg);
 		}
 
-		List<OpinionResponse> opinionResponseList = opinionService.inquiryOpinionsByPlace(placeId, pageRequest);
+		List<OpinionWithPlaceResponse> opinionResponseList = opinionService.inquiryOpinionsByPlace(placeId, pageRequest);
 		return opinionResponseList;
 	}
 

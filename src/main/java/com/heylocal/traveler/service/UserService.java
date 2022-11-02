@@ -12,6 +12,7 @@ import com.amazonaws.HttpMethod;
 import com.heylocal.traveler.domain.Region;
 import com.heylocal.traveler.domain.profile.UserProfile;
 import com.heylocal.traveler.domain.user.User;
+import com.heylocal.traveler.domain.user.UserRole;
 import com.heylocal.traveler.dto.LoginUser;
 import com.heylocal.traveler.dto.aws.S3ObjectDto;
 import com.heylocal.traveler.exception.NotFoundException;
@@ -19,6 +20,7 @@ import com.heylocal.traveler.exception.code.NotFoundCode;
 import com.heylocal.traveler.mapper.UserMapper;
 import com.heylocal.traveler.mapper.context.S3UrlUserContext;
 import com.heylocal.traveler.repository.RegionRepository;
+import com.heylocal.traveler.repository.UserProfileRepository;
 import com.heylocal.traveler.repository.UserRepository;
 import com.heylocal.traveler.util.aws.S3ObjectNameFormatter;
 import com.heylocal.traveler.util.aws.S3PresignUrlProvider;
@@ -27,17 +29,19 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
-import static com.heylocal.traveler.dto.UserDto.UserProfileRequest;
-import static com.heylocal.traveler.dto.UserDto.UserProfileResponse;
+import static com.heylocal.traveler.dto.UserDto.*;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserService {
   private final UserRepository userRepository;
+  private final UserProfileRepository userProfileRepository;
   private final RegionRepository regionRepository;
   private final S3UrlUserContext s3UserUrlContext;
   private final S3PresignUrlProvider s3PresignUrlProvider;
@@ -167,6 +171,54 @@ public class UserService {
   }
 
   /**
+   * 노하우 내림차순으로 UserProfile 을 조회하는 메서드
+   * @return
+   */
+  @Transactional(readOnly = true)
+  public List<UserProfileResponse> inquiryUserProfileByKnowHowDesc() {
+    int size = 30;
+    List<UserProfile> entityResult = userProfileRepository.findSortedByKnowHowDesc(size);
+    List<UserProfileResponse> result = entityResult.stream()
+        .map((item) -> UserMapper.INSTANCE.toUserProfileResponseDto(item, s3UserUrlContext))
+        .collect(Collectors.toList());
+
+    return result;
+  }
+
+  /**
+   * 사용자 ID(pk)로 조회하는 메서드
+   * @param userId 조회할 id
+   * @return
+   * @throws NotFoundException 존재하지 않는 ID(pk)인 경우
+   */
+  @Transactional(readOnly = true)
+  public UserResponse inquiryUser(long userId) throws NotFoundException {
+    User user = userRepository.findById(userId).orElseThrow(
+        () -> new NotFoundException(NotFoundCode.NO_INFO, "존재하지 않는 사용자 ID입니다.")
+    );
+
+    return UserMapper.INSTANCE.toUserResponseDto(user);
+  }
+
+  /**
+   * 해당 사용자의 정보를 익명화하는 메서드
+   * @param userId 익명화할 사용자 ID(pk)
+   */
+  @Transactional
+  public void anonymizeUser(long userId) throws NotFoundException {
+    User targetUser = userRepository.findById(userId).orElseThrow(
+        () -> new NotFoundException(NotFoundCode.NO_INFO, "존재하지 않는 사용자 ID입니다.")
+    );
+
+    //익명화
+    targetUser.setNickname("알 수 없는 사용자");
+    targetUser.setUserRole(UserRole.ANONYMIZED);
+    targetUser.getUserProfile().setIntroduce(null);
+    targetUser.getUserProfile().setKnowHow(0);
+    targetUser.getUserProfile().releaseActivityRegion();
+  }
+
+  /**
    * Object Key(Name)으로 사용자 프로필 엔티티를 조회하는 메서드
    * @param s3ObjectDto
    * @return
@@ -215,4 +267,5 @@ public class UserService {
 
     return true;
   }
+
 }

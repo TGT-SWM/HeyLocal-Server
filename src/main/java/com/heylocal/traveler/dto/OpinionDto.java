@@ -109,6 +109,7 @@ public class OpinionDto {
 	@Schema(description = "여행 On에 대한 답변 응답 DTO")
 	public static class OpinionResponse {
 		private long id;
+		private long travelOnId;
 		private String description;
 		private UserProfileResponse author;
 		@Builder.Default
