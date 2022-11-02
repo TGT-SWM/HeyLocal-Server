@@ -132,3 +132,4 @@ Temporary Items
 /src/main/resources/crawling-url.properties
 /src/main/resources/crawling-url-local.properties
 /src/main/resources/crawling-url-stage.properties
+/src/main/resources/crawling-url-production.properties
