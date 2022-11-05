@@ -87,7 +87,7 @@ class OpinionServiceTest {
     TravelOn travelOn = getTravelOn(travelOnId, region);
     long userId = 3L;
     LoginUser loginUser = LoginUser.builder().id(userId).build();
-    UserProfile userProfile = UserProfile.builder().knowHow(0).build();
+    UserProfile userProfile = UserProfile.builder().knowHow(0).activityRegion(region).build();
     User author = User.builder().id(userId).accountId("myAccountId").nickname("myNickname").password("myPassword123!").userRole(UserRole.TRAVELER).userProfile(userProfile).build();
     Place existPlace = PlaceMapper.INSTANCE.toEntity(placeRequest, region);
 
@@ -164,6 +164,11 @@ class OpinionServiceTest {
     //Mock 행동 정의 - regionService
     willReturn(Optional.empty()).given(regionService).getRegionByAddress(eq(placeAddress));
 
+    //Mock 행동 정의 - userRepository
+    UserProfile userProfile = UserProfile.builder().activityRegion(region).build();
+    User user = User.builder().id(userId).userProfile(userProfile).build();
+    willReturn(Optional.of(user)).given(userRepository).findById(userId);
+
     //WHEN
 
     //THEN
@@ -190,6 +195,11 @@ class OpinionServiceTest {
 
     //Mock 행동 정의 - regionService
     willThrow(BadRequestException.class).given(regionService).getRegionByAddress(eq(placeAddress));
+
+    //Mock 행동 정의 - userRepository
+    UserProfile userProfile = UserProfile.builder().activityRegion(region).build();
+    User user = User.builder().id(userId).userProfile(userProfile).build();
+    willReturn(Optional.of(user)).given(userRepository).findById(userId);
 
     //WHEN
 
@@ -219,10 +229,45 @@ class OpinionServiceTest {
     //Mock 행동 정의 - regionService
     willReturn(Optional.of(regionB)).given(regionService).getRegionByAddress(eq(placeAddress));
 
+    //Mock 행동 정의 - userRepository
+    UserProfile userProfile = UserProfile.builder().activityRegion(regionB).build();
+    User user = User.builder().id(userId).userProfile(userProfile).build();
+    willReturn(Optional.of(user)).given(userRepository).findById(userId);
+
     //WHEN
 
     //THEN
     //실패 케이스 - 1 - 여행On의 지역과 다른 지역의 장소로 답변한 경우
+    assertThrows(ForbiddenException.class, () -> opinionService.addNewOpinion(travelOnId, newOpinionRequest, loginUser));
+  }
+
+  @Test
+  @DisplayName("새 답변 등록 - 여행On의 지역과 사용자의 주 활동 지역이 다른 경우")
+  void addNewOpinionNotSameAuthorRegionTest() throws BadRequestException {
+    //GIVEN
+    long travelOnId = 1L;
+    long placeId = 2L;
+    Region travelOnRegion = getRegionA();
+    Region authorRegion = getRegionB();
+    PlaceRequest placeRequest = getPlaceRequest(placeId);
+    String placeAddress = placeRequest.getAddress();
+    OpinionDto.NewOpinionRequestRequest newOpinionRequest = getOpinionRequest(placeRequest);
+    TravelOn travelOn = getTravelOn(travelOnId, travelOnRegion);
+    long userId = 3L;
+    LoginUser loginUser = LoginUser.builder().id(userId).build();
+
+    //Mock 행동 정의 - travelOnRepository
+    willReturn(Optional.of(travelOn)).given(travelOnRepository).findById(travelOnId);
+
+    //Mock 행동 정의 - userRepository
+    UserProfile userProfile = UserProfile.builder().activityRegion(authorRegion).build();
+    User user = User.builder().id(userId).userProfile(userProfile).build();
+    willReturn(Optional.of(user)).given(userRepository).findById(userId);
+
+    //WHEN
+
+    //THEN
+    //실패 케이스 - 1 - 여행On의 지역과 작성자의 주 활동 지역이 다른 경우
     assertThrows(ForbiddenException.class, () -> opinionService.addNewOpinion(travelOnId, newOpinionRequest, loginUser));
   }
 
