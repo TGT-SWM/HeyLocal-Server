@@ -187,16 +187,12 @@ public class OpinionImgContentService {
         String objectNameOfOpinionImg =
             s3ObjectNameFormatter.getObjectNameOfOpinionImg(targetOpinion.getTravelOn().getId(), opinionId, imgType, objectIndex);
 
-        //존재하는 ObjectKey 인지 확인
-        boolean isExistedKey = savedObjectKeyList.contains(objectNameOfOpinionImg);
-
         //PUT URL 생성
         String putUrl = s3PresignUrlProvider.getPresignedUrl(objectNameOfOpinionImg, HttpMethod.PUT);
-        if (isExistedKey) { /* 이미 존재하는 Object Key Name 이라면, updatePutUrls 필드에 담는다. */
-          updateUrl.getUpdatePutUrls().add(putUrl);
-        } else { /* 존재하지 않는 Object Key Name 이라면, newPutUrls 필드에 담는다. */
-          updateUrl.getNewPutUrls().add(putUrl);
-        }
+        updateUrl.getPutUrls().add(putUrl);
+
+        //존재하는 ObjectKey 인지 확인
+        boolean isExistedKey = savedObjectKeyList.contains(objectNameOfOpinionImg);
 
         //해당 key 를 갖는 OpinionImageContent 엔티티가 없다면 아래 생략
         if (!isExistedKey) continue;

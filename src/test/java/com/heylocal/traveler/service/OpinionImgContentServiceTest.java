@@ -265,20 +265,16 @@ class OpinionImgContentServiceTest {
     assertAll(
         //성공 케이스 - 1 - GENERAL 타입 관련 URL
         () -> assertSame(ImageContentType.GENERAL, result.get(0).getImgType()),
-        () -> assertSame(1, result.get(0).getNewPutUrls().size()),
-        () -> assertSame(2, result.get(0).getUpdatePutUrls().size()),
+        () -> assertSame(3, result.get(0).getPutUrls().size()),
         //성공 케이스 - 2 - RECOMMEND_FOOD 타입 관련 URL
         () -> assertSame(ImageContentType.RECOMMEND_FOOD, result.get(1).getImgType()),
-        () -> assertSame(3, result.get(1).getNewPutUrls().size()),
-        () -> assertSame(0, result.get(1).getUpdatePutUrls().size()),
+        () -> assertSame(3, result.get(1).getPutUrls().size()),
         //성공 케이스 - 3 - RECOMMEND_DRINK_DESSERT 타입 관련 URL
         () -> assertSame(ImageContentType.RECOMMEND_DRINK_DESSERT, result.get(2).getImgType()),
-        () -> assertSame(3, result.get(2).getNewPutUrls().size()),
-        () -> assertSame(0, result.get(2).getUpdatePutUrls().size()),
+        () -> assertSame(3, result.get(2).getPutUrls().size()),
         //성공 케이스 - 4 - PHOTO_SPOT 타입 관련 URL
         () -> assertSame(ImageContentType.PHOTO_SPOT, result.get(3).getImgType()),
-        () -> assertSame(3, result.get(3).getNewPutUrls().size()),
-        () -> assertSame(0, result.get(3).getUpdatePutUrls().size()),
+        () -> assertSame(3, result.get(3).getPutUrls().size()),
         //실패 케이스 - 1 - 존재하지 않는 답변 Id 인 경우
         () -> assertThrows(NotFoundException.class, () -> opinionImgContentService.getUpdatePresignedUrl(notExistOpinionId))
     );
