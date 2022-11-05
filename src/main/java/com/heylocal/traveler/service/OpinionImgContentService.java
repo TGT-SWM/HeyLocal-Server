@@ -187,16 +187,12 @@ public class OpinionImgContentService {
         String objectNameOfOpinionImg =
             s3ObjectNameFormatter.getObjectNameOfOpinionImg(targetOpinion.getTravelOn().getId(), opinionId, imgType, objectIndex);
 
-        //존재하는 ObjectKey 인지 확인
-        boolean isExistedKey = savedObjectKeyList.contains(objectNameOfOpinionImg);
-
         //PUT URL 생성
         String putUrl = s3PresignUrlProvider.getPresignedUrl(objectNameOfOpinionImg, HttpMethod.PUT);
-        if (isExistedKey) { /* 이미 존재하는 Object Key Name 이라면, updatePutUrls 필드에 담는다. */
-          updateUrl.getUpdatePutUrls().add(putUrl);
-        } else { /* 존재하지 않는 Object Key Name 이라면, newPutUrls 필드에 담는다. */
-          updateUrl.getNewPutUrls().add(putUrl);
-        }
+        updateUrl.getPutUrls().add(putUrl);
+
+        //존재하는 ObjectKey 인지 확인
+        boolean isExistedKey = savedObjectKeyList.contains(objectNameOfOpinionImg);
 
         //해당 key 를 갖는 OpinionImageContent 엔티티가 없다면 아래 생략
         if (!isExistedKey) continue;
@@ -241,5 +237,41 @@ public class OpinionImgContentService {
         () -> new NotFoundException(NotFoundCode.NO_INFO, "존재하지 않는 OpinionImageContent ID 입니다.")
     );
     opinionImageContentRepository.remove(imgEntity);
+  }
+
+  /**
+   * S3에 저장된 오브젝트 이름 정렬 (예시. 0.png, 2.png -> 0.png, 1.png)
+   * 예를 들어,
+   * 만약 '0.png','2.png' 로 저장되어 있다면, '0.png','1.png'로 수정
+   */
+  @Transactional
+  public void reorderObjectName(S3ObjectDto deleteObjectDto) throws NotFoundException {
+    String deletedObjectName = deleteObjectDto.getKey();
+
+    //삭제된 오브젝트 이름의 접두어 구하기 (opinions/1/1/GENERAL/0.png -> opinions/1/1/GENERAL/)
+    String objectNamePrefix = deletedObjectName.substring(0, deletedObjectName.length() - 5);
+
+    //해당 접두어와 관련된 존재하는 모든 오브젝트 이름 구하기
+    List<String> relateObjectNameList = s3ClientService.inquiryExistObjectNameByPrefix(objectNamePrefix);
+
+    //답변당 타입별 가질 수 있는 이미지의 최대 갯수(3)만큼 반복
+    //즉, 해당 접두어로 만들 수 있는 오브젝트 이름마다 반복
+    for (int i = 1; i < 3; i++) {
+      String currentName = objectNamePrefix + i + ".png";
+      String frontName = objectNamePrefix + (i-1) + ".png";
+
+      boolean isCurrentExist = relateObjectNameList.contains(currentName); //현재 오브젝트 이름 존재여부
+      boolean isFrontExist = relateObjectNameList.contains(frontName);//앞 순서의 오브젝트 이름 존재여부
+
+      //만약 현재 오브젝트 이름이 존재하고, 앞 순서의 오브젝트 이름이 존재하지 않는다면
+      if (isCurrentExist && !isFrontExist) {
+        s3ClientService.renameObject(currentName, frontName); //오브젝트 이름을 수정 (예시. 1.png -> 0.png)
+
+        //DB에 반영
+        saveOpinionImageContent(new S3ObjectDto(frontName));
+        OpinionImageContent currentEntity = opinionImageContentRepository.findByObjectKeyName(currentName).get();
+        opinionImageContentRepository.remove(currentEntity);
+      }
+    }
   }
 }

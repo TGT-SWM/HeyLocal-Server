@@ -26,9 +26,7 @@ public class S3PresignedUrlDto {
   public static class OpinionImgUpdateUrl {
     private ImageContentType imgType;
     @Builder.Default
-    private List<String> newPutUrls = new ArrayList<>();
-    @Builder.Default
-    private List<String> updatePutUrls = new ArrayList<>();
+    private List<String> putUrls = new ArrayList<>();
     @Builder.Default
     private List<String> deleteUrls = new ArrayList<>();
   }
