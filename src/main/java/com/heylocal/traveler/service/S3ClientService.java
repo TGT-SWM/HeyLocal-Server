@@ -12,9 +12,15 @@
 package com.heylocal.traveler.service;
 
 import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.model.ListObjectsRequest;
+import com.amazonaws.services.s3.model.ObjectListing;
+import com.amazonaws.services.s3.model.S3ObjectSummary;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -29,5 +35,27 @@ public class S3ClientService {
    */
   public void removeObject(String objectKey) {
     amazonS3Client.deleteObject(bucketName, objectKey);
+  }
+
+  /**
+   * 해당 접두어를 갖는 존재하는 모든 오브젝트 키(이름) 조회
+   * @param objectNamePrefix 접두어
+   * @return
+   */
+  public List<String> inquiryExistObjectNameByPrefix(String objectNamePrefix) {
+    ObjectListing objectListing = amazonS3Client.listObjects(bucketName, objectNamePrefix);
+    List<S3ObjectSummary> objectSummaries = objectListing.getObjectSummaries();
+
+    return objectSummaries.stream().map(S3ObjectSummary::getKey).collect(Collectors.toList());
+  }
+
+  /**
+   * 오브젝트 이름을 변경하는 메서드
+   * @param oldKey 현재 이름
+   * @param newKey 새 이름
+   */
+  public void renameObject(String oldKey, String newKey) {
+    amazonS3Client.copyObject(bucketName, oldKey, bucketName, newKey);
+    amazonS3Client.deleteObject(bucketName, oldKey);
   }
 }

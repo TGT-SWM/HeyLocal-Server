@@ -59,7 +59,11 @@ public class AwsController implements AwsApi {
 
     long targetImgEntityId = opinionImgContentService.inquiryOpinionImgContentId(s3ObjectDto.getKey());
 
+    //DB에서 제거
     opinionImgContentService.removeImgEntityFromDb(targetImgEntityId);
+
+    //S3에 저장된 오브젝트 이름 정렬
+    opinionImgContentService.reorderObjectName(s3ObjectDto);
   }
 
   /**

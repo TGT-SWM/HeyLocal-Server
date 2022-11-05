@@ -14,7 +14,10 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
+import java.util.List;
 import java.util.Optional;
+
+import static com.heylocal.traveler.domain.travelon.opinion.OpinionImageContent.*;
 
 @Repository
 public class OpinionImageContentRepository {
@@ -58,6 +61,22 @@ public class OpinionImageContentRepository {
     }
 
     return Optional.ofNullable(entity);
+  }
+
+  /**
+   * 답변ID와 타입으로 조회하는 메서드
+   * @param opinionId 답변 ID
+   * @param type 타입
+   * @return
+   */
+  public List<OpinionImageContent> findByOpinionIdAndType(long opinionId, ImageContentType type) {
+    String jpql = "select o from OpinionImageContent o" +
+        " where o.opinion.id = :opinionId" +
+          " and o.imageContentType = :type";
+    return em.createQuery(jpql, OpinionImageContent.class)
+        .setParameter("opinionId", opinionId)
+        .setParameter("type", type.name())
+        .getResultList();
   }
 
   /**
