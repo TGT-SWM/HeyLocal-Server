@@ -72,19 +72,19 @@ public class TravelOn extends BaseTimeEntity {
 
   @Builder.Default
   @OneToMany(mappedBy = "travelOn", cascade = CascadeType.ALL, orphanRemoval = true)
-  private Set<TravelMember> travelMemberSet = new HashSet<>();
+  private List<TravelMember> travelMemberSet = new ArrayList<>();
 
   @Builder.Default
   @OneToMany(mappedBy = "travelOn", cascade = CascadeType.ALL, orphanRemoval = true)
-  private Set<HopeAccommodation> hopeAccommodationSet = new HashSet<>();
+  private List<HopeAccommodation> hopeAccommodationSet = new ArrayList<>();
 
   @Builder.Default
   @OneToMany(mappedBy = "travelOn", cascade = CascadeType.ALL, orphanRemoval = true)
-  private Set<HopeFood> hopeFoodSet = new HashSet<>();
+  private List<HopeFood> hopeFoodSet = new ArrayList<>();
 
   @Builder.Default
   @OneToMany(mappedBy = "travelOn", cascade = CascadeType.ALL, orphanRemoval = true)
-  private Set<HopeDrink> hopeDrinkSet = new HashSet<>();
+  private List<HopeDrink> hopeDrinkSet = new ArrayList<>();
 
   @OneToOne(mappedBy = "travelOn", cascade = CascadeType.ALL, orphanRemoval = true)
   private TravelTypeGroup travelTypeGroup;
