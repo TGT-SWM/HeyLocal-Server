@@ -59,9 +59,6 @@ public class OpinionService {
   private final S3PresignUrlProvider s3PresignUrlProvider;
   private final S3UrlOpinionContext s3UrlOpinionContext;
 
-  @Value("${cloud.aws.s3.bucket}")
-  private String bucketName;
-
   /**
    * 새 답변(Opinion) 등록
    * @param travelOnId 답변이 등록될 여행On ID
@@ -85,7 +82,16 @@ public class OpinionService {
     //답변이 달릴 여행On 조회
     travelOn = inquiryTravelOn(travelOnId);
 
-    //지역 조회
+    //작성자 조회
+    authorId = loginUser.getId();
+    opinionAuthor = userRepository.findById(authorId).get();
+
+    //여행On의 지역과 작성자의 활동지역이 다르면 거부
+    if ( !isSameRegionOfAuthorAndPlace(travelOn, opinionAuthor) ) {
+      throw new ForbiddenException(ForbiddenCode.NO_PERMISSION, "작성자의 주 활동지역과 여행On의 지역이 같아야 합니다.");
+    }
+
+    //답변 장소의 지역 조회
     requestPlaceAddress = request.getPlace().getAddress();
     regionOfRequestPlace = inquiryRegionByAddress(requestPlaceAddress);
 
@@ -94,10 +100,6 @@ public class OpinionService {
     if (!isSameRegion) {
       throw new ForbiddenException(ForbiddenCode.NO_PERMISSION, "여행On의 지역과 다른 지역의 장소는 등록할 수 없습니다.");
     }
-
-    //작성자 조회
-    authorId = loginUser.getId();
-    opinionAuthor = userRepository.findById(authorId).get();
 
     //장소 저장 및 조회
     requestPlace = inquiryPlaceFromOpinionRequest(request);
@@ -281,6 +283,21 @@ public class OpinionService {
     }
 
     return result;
+  }
+
+  /**
+   * 답변작성자의 주 활동지역과 여행On의 지역이 동일한지 확인하는 메서드
+   * @param travelOn 여행On
+   * @param opinionAuthor 답변 작성자
+   * @return true: 같음, false: 다름
+   */
+  private boolean isSameRegionOfAuthorAndPlace(TravelOn travelOn, User opinionAuthor) {
+    Region authorRegion = opinionAuthor.getUserProfile().getActivityRegion();
+    Region travelOnRegion = travelOn.getRegion();
+    if (authorRegion != travelOnRegion) {
+      return false;
+    }
+    return true;
   }
 
   /**
