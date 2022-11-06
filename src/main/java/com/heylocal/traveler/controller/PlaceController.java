@@ -47,7 +47,7 @@ public class PlaceController implements PlacesApi {
 	}
 
 	@Override
-	public String getPlaceInfo(long placeId) throws NotFoundException, BadRequestException {
+	public String getPlaceInfo(long placeId) throws NotFoundException {
 		return placeService.inquirySubInfo(placeId);
 	}
 
