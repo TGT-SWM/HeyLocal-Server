@@ -10,10 +10,8 @@ package com.heylocal.traveler.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.heylocal.traveler.domain.place.Place;
-import com.heylocal.traveler.domain.place.PlaceCategory;
 import com.heylocal.traveler.exception.BadRequestException;
 import com.heylocal.traveler.exception.NotFoundException;
-import com.heylocal.traveler.exception.code.BadRequestCode;
 import com.heylocal.traveler.exception.code.NotFoundCode;
 import com.heylocal.traveler.mapper.PlaceMapper;
 import com.heylocal.traveler.repository.PlaceRepository;
@@ -84,9 +82,9 @@ public class PlaceService {
    * @param placeId 조회할 장소 ID
    * @return
    */
-  public String inquirySubInfo(long placeId) throws NotFoundException, BadRequestException {
+  public String inquirySubInfo(long placeId) throws NotFoundException {
     String crawlingResult;
-    canInquiryMenu(placeId); //메뉴를 조회할 수 있는지 검사
+    validatePlaceId(placeId); //존재하는 장소 ID 인지 검사
 
     //크롤링 서버에서 응답 받기
     try {
@@ -98,14 +96,10 @@ public class PlaceService {
     return crawlingResult;
   }
 
-  private void canInquiryMenu(long placeId) throws NotFoundException, BadRequestException {
-    Place place = placeRepository.findById(placeId).orElseThrow(
+  private void validatePlaceId(long placeId) throws NotFoundException {
+    placeRepository.findById(placeId).orElseThrow(
         () -> new NotFoundException(NotFoundCode.NO_INFO, "존재하지 않는 장소 ID 입니다.")
     );
-    PlaceCategory category = place.getCategory();
-    if (category != PlaceCategory.FD6 && category != PlaceCategory.CE7) {
-      throw new BadRequestException(BadRequestCode.BAD_INPUT_FORM, "음식점이나 카페만 메뉴를 조회할 수 있습니다.");
-    }
   }
 
 }
