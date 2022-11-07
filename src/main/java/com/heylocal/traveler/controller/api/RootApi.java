@@ -18,10 +18,10 @@ import java.util.Map;
 
 @RequestMapping("/")
 public interface RootApi {
-	@Operation(tags = {"Home"})
+	@Operation(tags = {"Root"})
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "호출 성공"),
 	})
 	@GetMapping()
-	Map<String, String> home();
+	String root();
 }

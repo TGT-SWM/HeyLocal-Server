@@ -29,6 +29,7 @@ public class InterceptorConfig implements WebMvcConfigurer {
         .addPathPatterns("/**")
         .excludePathPatterns("/swagger-ui/**",
             "/swagger-resources/**",
+            "/static/**",
             "/v3/api-docs",
             "/error");
 
@@ -40,6 +41,8 @@ public class InterceptorConfig implements WebMvcConfigurer {
             "/swagger-resources/**",
             "/v3/api-docs",
             "/",
+            "/home",
+            "/static/**",
             "/signup/**",
             "/signin/**",
             "/auth/**",

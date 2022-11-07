@@ -9,17 +9,16 @@
 package com.heylocal.traveler.controller;
 
 import com.heylocal.traveler.controller.api.RootApi;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-@RestController
+@Controller
 public class RootController implements RootApi {
   @Override
-  public Map<String, String> home() {
-    Map<String, String> response = new ConcurrentHashMap<>();
-    response.put("message", "Hello");
-    return response;
+  public String root() {
+    return "redirect:/home";
   }
 }
