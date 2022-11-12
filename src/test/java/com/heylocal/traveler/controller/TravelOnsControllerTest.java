@@ -10,6 +10,8 @@ import com.heylocal.traveler.domain.travelon.list.FoodType;
 import com.heylocal.traveler.domain.travelon.list.MemberType;
 import com.heylocal.traveler.dto.LoginUser;
 import com.heylocal.traveler.dto.OpinionDto;
+import com.heylocal.traveler.dto.PlanDto;
+import com.heylocal.traveler.dto.PlanDto.PlanResponse;
 import com.heylocal.traveler.exception.BadRequestException;
 import com.heylocal.traveler.exception.ForbiddenException;
 import com.heylocal.traveler.exception.NotFoundException;
@@ -19,6 +21,7 @@ import com.heylocal.traveler.service.OpinionImgContentService;
 import com.heylocal.traveler.service.OpinionService;
 import com.heylocal.traveler.service.TravelOnService;
 import com.heylocal.traveler.util.error.BindingErrorMessageProvider;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -131,6 +134,39 @@ class TravelOnsControllerTest {
         () -> assertDoesNotThrow(() -> travelOnsController.getTravelOn(existTravelOnId)),
         //실패 케이스 - 1 - 존재하지 않는 여행On ID를 전달받았을 때
         () -> assertThrows(NotFoundException.class, () -> travelOnsController.getTravelOn(notExistTravelOnId))
+    );
+  }
+
+  @Test
+  @DisplayName("여행 On에 대한 플랜 조회")
+  void getPlanOfTravelOnTest() throws ForbiddenException, NotFoundException {
+    // GIVEN
+    long travelOnId = 1L;
+    LoginUser user = new LoginUser(1L);
+
+    long noPlanTravelOnId = travelOnId + 1;
+    long notExistTravelOnId = travelOnId + 2;
+    LoginUser anotherUser = new LoginUser(user.getId() + 1);
+
+    // Mock 정의
+    PlanResponse resp = PlanResponse.builder()
+            .id(1L)
+            .build();
+
+    willReturn(resp).given(travelOnService).inquiryRelatedPlan(travelOnId, user.getId());
+    willThrow(NotFoundException.class).given(travelOnService).inquiryRelatedPlan(notExistTravelOnId, user.getId());
+    willThrow(ForbiddenException.class).given(travelOnService).inquiryRelatedPlan(travelOnId, anotherUser.getId());
+
+    // WHEN - THEN
+    assertAll(
+            // 성공 케이스 - 1 - 플랜이 존재하는 경우
+            () -> Assertions.assertThat(travelOnsController.getPlanOfTravelOn(travelOnId, user).getId()).isEqualTo(resp.getId()),
+            // 성공 케이스 - 2 - 플랜이 존재하지 않는 경우
+            () -> Assertions.assertThat(travelOnsController.getPlanOfTravelOn(noPlanTravelOnId, user)).isNull(),
+            // 실패 케이스 - 1 - 여행 On이 존재하지 않는 경우
+            () -> assertThrows(NotFoundException.class, () -> travelOnsController.getPlanOfTravelOn(notExistTravelOnId, user)),
+            // 실패 케이스 - 2 - 다른 사용자가 작성한 플랜을 조회하는 경우
+            () -> assertThrows(ForbiddenException.class, () -> travelOnsController.getPlanOfTravelOn(travelOnId, anotherUser))
     );
   }
 
