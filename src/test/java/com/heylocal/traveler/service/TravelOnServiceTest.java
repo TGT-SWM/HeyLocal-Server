@@ -1,6 +1,7 @@
 package com.heylocal.traveler.service;
 
 import com.heylocal.traveler.domain.Region;
+import com.heylocal.traveler.domain.plan.Plan;
 import com.heylocal.traveler.domain.profile.UserProfile;
 import com.heylocal.traveler.domain.travelon.*;
 import com.heylocal.traveler.domain.travelon.list.*;
@@ -9,6 +10,8 @@ import com.heylocal.traveler.domain.user.User;
 import com.heylocal.traveler.domain.user.UserRole;
 import com.heylocal.traveler.dto.LoginUser;
 import com.heylocal.traveler.dto.PageDto.PageRequest;
+import com.heylocal.traveler.dto.PlanDto;
+import com.heylocal.traveler.dto.PlanDto.PlanResponse;
 import com.heylocal.traveler.dto.TravelTypeGroupDto;
 import com.heylocal.traveler.exception.ForbiddenException;
 import com.heylocal.traveler.exception.NotFoundException;
@@ -385,6 +388,51 @@ class TravelOnServiceTest {
         () -> assertDoesNotThrow(() -> travelOnService.inquiryTravelOn(travelOnId)),
         //실패 케이스 - 1 - 존재하지 않는 여행 On 조회
         () -> assertThrows(NotFoundException.class, () -> travelOnService.inquiryTravelOn(notExistTravelOnId))
+    );
+  }
+
+  @Test
+  @DisplayName("여행 On에 대한 플랜 조회")
+  void inquiryRelatedPlanTest() throws ForbiddenException, NotFoundException {
+    // GIVEN
+    long travelOnId = 1L;
+    long userId = 1L;
+
+    long noPlanTravelOnId = travelOnId + 1;
+    long notExistTravelOnId = travelOnId + 2;
+    long anotherUserId = userId + 1;
+
+    // Mock 정의
+    User author = User.builder()
+            .id(userId)
+            .build();
+    Plan plan = Plan.builder()
+            .id(1L)
+            .build();
+    TravelOn travelOnWithPlan = getTravelOn(travelOnId, "TITLE");
+    travelOnWithPlan.setPlan(plan);
+    travelOnWithPlan.setAuthor(author);
+
+    TravelOn travelOnWithoutPlan = getTravelOn(noPlanTravelOnId, "TITLE");
+    travelOnWithoutPlan.setAuthor(author);
+
+    willReturn(Optional.of(travelOnWithPlan)).given(travelOnRepository).findById(travelOnId);
+    willReturn(Optional.of(travelOnWithoutPlan)).given(travelOnRepository).findById(noPlanTravelOnId);
+
+    // WHEN
+    PlanResponse planFoundResp = travelOnService.inquiryRelatedPlan(travelOnId, userId);
+    PlanResponse planNotFoundResp = travelOnService.inquiryRelatedPlan(noPlanTravelOnId, userId);
+
+    // THEN
+    assertAll(
+            // 성공 케이스 - 1 - 생성된 플랜이 있는 경우
+            () -> Assertions.assertThat(planFoundResp.getId()).isEqualTo(plan.getId()),
+            // 성공 케이스 - 2 - 생성된 플랜이 없는 경우
+            () -> Assertions.assertThat(planNotFoundResp).isNull(),
+            // 실패 케이스 - 1 - 해당 ID의 여행 On이 없는 경우
+            () -> assertThrows(NotFoundException.class, () -> travelOnService.inquiryRelatedPlan(notExistTravelOnId, userId)),
+            // 실패 케이스 - 2 - 다른 사용자가 작성한 플랜을 조회하는 경우
+            () -> assertThrows(ForbiddenException.class, () -> travelOnService.inquiryRelatedPlan(travelOnId, anotherUserId))
     );
   }
 
