@@ -10,6 +10,8 @@ package com.heylocal.traveler.controller;
 
 import com.heylocal.traveler.controller.api.TravelOnsApi;
 import com.heylocal.traveler.dto.LoginUser;
+import com.heylocal.traveler.dto.PlanDto;
+import com.heylocal.traveler.dto.PlanDto.PlanResponse;
 import com.heylocal.traveler.exception.BadRequestException;
 import com.heylocal.traveler.exception.ForbiddenException;
 import com.heylocal.traveler.exception.NotFoundException;
@@ -92,6 +94,21 @@ public class TravelOnsController implements TravelOnsApi {
     response = travelOnService.inquiryTravelOn(travelOnId);
 
     return response;
+  }
+
+  /**
+   * @param travelOnId 여행 On ID
+   * @param loginUser 로그인 사용자 정보
+   * @return 해당 여행 On으로 생성된 플랜
+   * @throws ForbiddenException 조회 권한이 없는 경우
+   * @throws NotFoundException 해당 ID의 여행 On이 존재하지 않는 경우
+   */
+  @Override
+  public PlanResponse getPlanOfTravelOn(
+          long travelOnId,
+          LoginUser loginUser
+  ) throws ForbiddenException, NotFoundException {
+    return null;
   }
 
   /**
