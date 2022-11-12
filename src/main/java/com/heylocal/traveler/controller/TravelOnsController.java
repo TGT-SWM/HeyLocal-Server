@@ -108,7 +108,8 @@ public class TravelOnsController implements TravelOnsApi {
           long travelOnId,
           LoginUser loginUser
   ) throws ForbiddenException, NotFoundException {
-    return null;
+    long userId = loginUser.getId();
+    return travelOnService.inquiryRelatedPlan(travelOnId, userId);
   }
 
   /**
