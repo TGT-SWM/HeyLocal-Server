@@ -14,10 +14,13 @@ import com.heylocal.traveler.domain.travelon.TravelOn;
 import com.heylocal.traveler.domain.user.User;
 import com.heylocal.traveler.dto.LoginUser;
 import com.heylocal.traveler.dto.PageDto.PageRequest;
+import com.heylocal.traveler.dto.PlanDto;
+import com.heylocal.traveler.dto.PlanDto.PlanResponse;
 import com.heylocal.traveler.exception.ForbiddenException;
 import com.heylocal.traveler.exception.NotFoundException;
 import com.heylocal.traveler.exception.code.ForbiddenCode;
 import com.heylocal.traveler.exception.code.NotFoundCode;
+import com.heylocal.traveler.mapper.PlanMapper;
 import com.heylocal.traveler.mapper.TravelOnMapper;
 import com.heylocal.traveler.mapper.context.S3UrlUserContext;
 import com.heylocal.traveler.repository.RegionRepository;
@@ -29,6 +32,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.heylocal.traveler.dto.TravelOnDto.*;
@@ -134,6 +138,27 @@ public class TravelOnService {
     response = TravelOnMapper.INSTANCE.toTravelOnResponseDto(travelOn, s3UserUrlContext);
 
     return response;
+  }
+
+  @Transactional
+  public PlanResponse inquiryRelatedPlan(long travelOnId, long userId) throws ForbiddenException, NotFoundException {
+    // 여행 On 조회
+    TravelOn travelOn = travelOnRepository.findById(travelOnId).orElseThrow(
+            () -> new NotFoundException(NotFoundCode.NO_INFO, "존재하지 않는 여행On ID 입니다.")
+    );
+
+    // 조회 권한 검사
+    if (userId != travelOn.getAuthor().getId()) {
+      throw new ForbiddenException(ForbiddenCode.NO_PERMISSION, "작성자만 조회할 수 있습니다.");
+    }
+
+    // 플랜 조회
+    Plan plan = travelOn.getPlan();
+
+    // DTO 변환 후 반환
+    return (plan == null)
+            ? null
+            : PlanMapper.INSTANCE.toPlanResponseDto(plan);
   }
 
   /**
