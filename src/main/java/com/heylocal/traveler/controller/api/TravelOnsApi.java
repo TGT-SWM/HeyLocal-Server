@@ -8,11 +8,9 @@
 
 package com.heylocal.traveler.controller.api;
 
-import com.heylocal.traveler.dto.ErrorMessageResponse;
-import com.heylocal.traveler.dto.LoginUser;
-import com.heylocal.traveler.dto.OpinionDto;
+import com.heylocal.traveler.dto.*;
 import com.heylocal.traveler.dto.OpinionDto.OpinionWithPlaceResponse;
-import com.heylocal.traveler.dto.TravelOnDto;
+import com.heylocal.traveler.dto.PlanDto.PlanResponse;
 import com.heylocal.traveler.dto.TravelOnDto.TravelOnRequest;
 import com.heylocal.traveler.dto.TravelOnDto.TravelOnResponse;
 import com.heylocal.traveler.dto.TravelOnDto.TravelOnSimpleResponse;
@@ -73,6 +71,18 @@ public interface TravelOnsApi {
     TravelOnResponse getTravelOn(
             @Parameter(in = ParameterIn.PATH, description = "여행 On ID", required = true) @PathVariable long travelOnId
     ) throws NotFoundException;
+
+    @Operation(summary = "여행 On의 플랜 조회", description = "해당 여행 On으로 생성된 플랜을 조회합니다.", tags = {"TravelOns"})
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "플랜 조회 성공 시"),
+            @ApiResponse(responseCode = "403", description = "- `NO_PERMISSION`: 조회 권한이 없을 때", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessageResponse.class))),
+            @ApiResponse(responseCode = "404", description = "- `NO_INFO`: 존재하지 않는 여행 On일 때", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessageResponse.class)))
+    })
+    @GetMapping(value = "/{travelOnId}/plan")
+    PlanResponse getPlanOfTravelOn(
+            @Parameter(in = ParameterIn.PATH, description = "여행 On ID", required = true) @PathVariable long travelOnId,
+            @ApiIgnore LoginUser loginUser
+    ) throws ForbiddenException, NotFoundException;
 
     @Operation(summary = "여행 On 수정", description = "여행 On을 수정합니다.", tags = {"TravelOns"})
     @ApiResponses(value = {
