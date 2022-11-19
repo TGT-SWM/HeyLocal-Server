@@ -19,6 +19,7 @@ import com.heylocal.traveler.exception.code.ForbiddenCode;
 import com.heylocal.traveler.exception.code.NotFoundCode;
 import com.heylocal.traveler.service.OpinionImgContentService;
 import com.heylocal.traveler.service.OpinionService;
+import com.heylocal.traveler.service.RegionService;
 import com.heylocal.traveler.service.TravelOnService;
 import com.heylocal.traveler.util.error.BindingErrorMessageProvider;
 import org.assertj.core.api.Assertions;
@@ -54,12 +55,14 @@ class TravelOnsControllerTest {
   private BindingResult bindingResult;
   @Mock
   private OpinionImgContentService opinionImgContentService;
+  @Mock
+  private RegionService regionService;
   private TravelOnsController travelOnsController;
 
   @BeforeEach
   void setUp() {
     MockitoAnnotations.openMocks(this);
-    travelOnsController = new TravelOnsController(messageProvider, travelOnService, opinionService, opinionImgContentService);
+    travelOnsController = new TravelOnsController(messageProvider, travelOnService, opinionService, opinionImgContentService, regionService);
   }
 
   @Test

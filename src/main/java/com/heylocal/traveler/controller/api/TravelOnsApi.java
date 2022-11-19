@@ -169,5 +169,19 @@ public interface TravelOnsApi {
             @Parameter(in = ParameterIn.PATH, description = "답변 ID", required = true) @PathVariable long opinionId,
             @ApiIgnore LoginUser loginUser
     ) throws NotFoundException, ForbiddenException;
+
+    /*
+     * 주소 조회 API
+     */
+    @Operation(summary = "해당 여행On의 지역과 주소 비교", description = "해당 여행On의 지역과 동일한 지역의 주소인지 확인합니다.", tags = {"TravelOns"})
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "답변 조회 성공 시"),
+        @ApiResponse(responseCode = "404", description = "- `NO_INFO`: 존재하지 않는 정보일 때", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessageResponse.class)))
+    })
+    @GetMapping("/{travelOnId}/address")
+    RegionDto.RegionAddressCheckResponse checkAddressRegionWithTravelOn(
+        @Parameter(in = ParameterIn.PATH, description = "여행 On ID", required = true) @PathVariable long travelOnId,
+        @Parameter(in = ParameterIn.QUERY, description = "확인할 주소", required = true) @RequestParam String targetAddress
+    ) throws NotFoundException, BadRequestException;
 }
 
