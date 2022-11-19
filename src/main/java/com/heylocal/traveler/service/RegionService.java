@@ -9,6 +9,7 @@
 package com.heylocal.traveler.service;
 
 import com.heylocal.traveler.domain.Region;
+import com.heylocal.traveler.dto.RegionDto;
 import com.heylocal.traveler.exception.BadRequestException;
 import com.heylocal.traveler.exception.NotFoundException;
 import com.heylocal.traveler.exception.code.BadRequestCode;
@@ -119,5 +120,26 @@ public class RegionService {
       return regionRepository.findByStateKeyword(keyword);
     }
 
+  }
+
+  /**
+   * 해당 Region 의 주소인지 확인하는 메서드
+   * @param address 확인할 주소
+   * @param regionId 비교할 Region의 ID
+   * @return
+   * @throws BadRequestException
+   * @throws NotFoundException
+   */
+  @Transactional(readOnly = true)
+  public RegionDto.RegionAddressCheckResponse checkAddressAsRegion(String address, long regionId) throws BadRequestException, NotFoundException {
+    Region regionByAddress = getRegionByAddress(address).orElseThrow(
+        () -> new NotFoundException(NotFoundCode.NO_INFO, "주소정보가 잘못되었습니다.")
+    );
+
+    boolean isSameRegionAddress = regionByAddress.getId() == regionId;
+
+    return RegionDto.RegionAddressCheckResponse.builder()
+        .isSameRegionAddress(isSameRegionAddress)
+        .build();
   }
 }

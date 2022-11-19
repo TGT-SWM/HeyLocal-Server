@@ -38,4 +38,14 @@ public class RegionDto {
 		private String state;
 		private String city;
 	}
+
+	@Getter
+	@Setter
+	@NoArgsConstructor
+	@AllArgsConstructor
+	@Builder
+	@Schema(description = "특정 주소가 특정 지역의 주소인지 확인하여 응답하는 DTO")
+	public static class RegionAddressCheckResponse {
+		private boolean isSameRegionAddress;
+	}
 }
