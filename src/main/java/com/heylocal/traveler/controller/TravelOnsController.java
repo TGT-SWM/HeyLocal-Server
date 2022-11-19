@@ -10,8 +10,8 @@ package com.heylocal.traveler.controller;
 
 import com.heylocal.traveler.controller.api.TravelOnsApi;
 import com.heylocal.traveler.dto.LoginUser;
-import com.heylocal.traveler.dto.PlanDto;
 import com.heylocal.traveler.dto.PlanDto.PlanResponse;
+import com.heylocal.traveler.dto.RegionDto;
 import com.heylocal.traveler.exception.BadRequestException;
 import com.heylocal.traveler.exception.ForbiddenException;
 import com.heylocal.traveler.exception.NotFoundException;
@@ -19,6 +19,7 @@ import com.heylocal.traveler.exception.code.BadRequestCode;
 import com.heylocal.traveler.exception.code.ForbiddenCode;
 import com.heylocal.traveler.service.OpinionImgContentService;
 import com.heylocal.traveler.service.OpinionService;
+import com.heylocal.traveler.service.RegionService;
 import com.heylocal.traveler.service.TravelOnService;
 import com.heylocal.traveler.util.error.BindingErrorMessageProvider;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -32,6 +33,7 @@ import java.util.Map;
 
 import static com.heylocal.traveler.domain.travelon.opinion.OpinionImageContent.ImageContentType;
 import static com.heylocal.traveler.dto.OpinionDto.*;
+import static com.heylocal.traveler.dto.RegionDto.*;
 import static com.heylocal.traveler.dto.TravelOnDto.*;
 import static com.heylocal.traveler.dto.aws.S3PresignedUrlDto.OpinionImgUpdateUrl;
 
@@ -45,6 +47,7 @@ public class TravelOnsController implements TravelOnsApi {
   private final TravelOnService travelOnService;
   private final OpinionService opinionService;
   private final OpinionImgContentService opinionImgContentService;
+  private final RegionService regionService;
 
   /**
    * 여행On 목록 조회 핸들러
@@ -241,6 +244,19 @@ public class TravelOnsController implements TravelOnsApi {
 
     //답변 엔티티 삭제
     opinionService.removeOpinion(travelOnId, opinionId);
+  }
+
+  /**
+   * 해당 여행On의 지역과 동일한 지역의 주소인지 확인하는 핸들러
+   * @param travelOnId    비교할 여행On Id
+   * @param targetAddress 확인할 주소
+   * @return
+   * @throws NotFoundException
+   */
+  @Override
+  public RegionAddressCheckResponse checkAddressRegionWithTravelOn(long travelOnId, String targetAddress) throws NotFoundException, BadRequestException {
+    TravelOnResponse travelOn = travelOnService.inquiryTravelOn(travelOnId);
+    return regionService.checkAddressAsRegion(targetAddress, travelOn.getRegion().getId());
   }
 
   /**
