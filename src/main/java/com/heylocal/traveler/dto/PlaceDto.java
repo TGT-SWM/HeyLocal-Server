@@ -40,9 +40,9 @@ public class PlaceDto {
 		@ApiModelProperty(value = "장소 이름", required = true)
 		@NotEmpty
 		private String name;
-		@ApiModelProperty(value = "카카오 장소 검색 API 에서 응답받은 장소 도로명 주소", required = true)
-		@NotEmpty
-		private String roadAddress;
+		@Builder.Default
+		@ApiModelProperty(value = "카카오 장소 검색 API 에서 응답받은 장소 도로명 주소", required = false)
+		private String roadAddress = "";
 		@ApiModelProperty(value = "카카오 장소 검색 API 에서 응답받은 장소 구주소", required = true)
 		@NotEmpty
 		private String address;

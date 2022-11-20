@@ -41,8 +41,9 @@ public class Place extends BaseTimeEntity {
   @Column(nullable = false)
   private String name;
 
-  @Column(nullable = false)
-  private String roadAddress; //도로명주소
+  @Builder.Default
+  @Column(nullable = true)
+  private String roadAddress = ""; //도로명주소
 
   @Column(nullable = false)
   private String address; //구주소
