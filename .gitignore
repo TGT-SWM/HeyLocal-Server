@@ -133,3 +133,7 @@ Temporary Items
 /src/main/resources/crawling-url-local.properties
 /src/main/resources/crawling-url-stage.properties
 /src/main/resources/crawling-url-production.properties
+/src/main/resources/lite-production-db.properties
+/src/main/resources/aws-key-stage.properties.properties
+/src/main/resources/aws-key-lite-production.properties
+/src/main/resources/crawling-url-lite-production.properties
