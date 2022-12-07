@@ -19,8 +19,8 @@ else
   sleep 5
 fi
 
-# 테스트 서버인 경우, nginx 구동
-if [ "$SPRING_PROFILES_ACTIVE" = "stage" ]; then
+# 테스트 서버이거나 경량 프로덕션인 경우, nginx 구동
+if [ "$SPRING_PROFILES_ACTIVE" = "stage" ] || [ "$SPRING_PROFILES_ACTIVE" = "lite-production" ]; then
   echo "> NGINX 프로세스 pid 확인" >> /home/ec2-user/app/log/heylocal/deploy.log
 
   NGINX_PID=$(pgrep -f nginx)
