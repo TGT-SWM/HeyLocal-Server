@@ -1,4 +1,4 @@
-name: deploy-stage
+name: deploy-lite-production
 
 on:
   push:
