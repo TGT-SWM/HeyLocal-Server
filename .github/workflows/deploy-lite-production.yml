@@ -1,4 +1,4 @@
-name: deploy-production
+name: deploy-lite-production
 
 on:
   push:
@@ -36,15 +36,15 @@ jobs:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
-          aws-access-key-id: ${{ secrets.ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.ACCESS_KEY_SECRET }}
+          aws-access-key-id: ${{ secrets.LITE_PRODUCTION_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.LITE_PRODUCTION_ACCESS_KEY_SECRET }}
           aws-region: ap-northeast-2
 
       - name: Upload to S3
-        run: aws s3 cp --region ap-northeast-2 ./$GITHUB_SHA.zip s3://heylocal-codedeploy/$GITHUB_SHA.zip
+        run: aws s3 cp --region ap-northeast-2 ./$GITHUB_SHA.zip s3://heylocal-lite-production-codedeploy/$GITHUB_SHA.zip
 
       - name: Code Deploy
-        run: aws deploy create-deployment --application-name heylocal-production
+        run: aws deploy create-deployment --application-name heylocal
           --deployment-config-name CodeDeployDefault.OneAtATime
-          --deployment-group-name heylocal-production-group
-          --s3-location bucket=heylocal-codedeploy,bundleType=zip,key=$GITHUB_SHA.zip
+          --deployment-group-name heylocal-lite-production-codedeploy-DG
+          --s3-location bucket=heylocal-lite-production-codedeploy,bundleType=zip,key=$GITHUB_SHA.zip
