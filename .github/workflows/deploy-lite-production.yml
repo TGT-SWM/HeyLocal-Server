@@ -2,7 +2,7 @@ name: deploy-lite-production
 
 on:
   push:
-    branches: [ lite-production ]
+    branches: [ main ]
 jobs:
   build:
     runs-on: ubuntu-latest
