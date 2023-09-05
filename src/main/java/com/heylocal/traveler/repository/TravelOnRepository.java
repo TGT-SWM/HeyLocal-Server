@@ -93,23 +93,23 @@ public class TravelOnRepository {
    */
   public List<TravelOn> findHasOpinion(Long lastItemId, int size, TravelOnSortType sortType) {
     List<TravelOn> result;
-    List<Long> travelIdList;
+    List<TravelOn> travelList;
 
     //첫번째 쿼리 (TravelOn의 ID만 조회 + Pagination API)
-    String jpql = "select t.id from TravelOn t" +
+    String jpql = "select t from TravelOn t" +
         " where t.opinionList.size > 0" +
         " and " + getPaginationCondition("t", sortType, lastItemId);
     jpql = appendJpqlWithOrderBy(jpql, sortType);
-    travelIdList = em.createQuery(jpql, Long.class)
+    travelList = em.createQuery(jpql, TravelOn.class)
         .setMaxResults(size)
         .getResultList();
 
     //두번째 쿼리 (TravelOn과 Opinion 함께 Fetch Join)
     jpql = "select distinct t from TravelOn t" +
         " join fetch t.opinionList" +
-        " where t.id in :travelOnIdList";
+        " where t in :travelOnList";
     result = em.createQuery(jpql, TravelOn.class)
-        .setParameter("travelOnIdList", travelIdList)
+        .setParameter("travelOnList", travelList)
         .getResultList();
 
     return result;
