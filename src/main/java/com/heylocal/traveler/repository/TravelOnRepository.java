@@ -85,6 +85,7 @@ public class TravelOnRepository {
 
   /**
    * 답변이 있는 여행 On 을 조회하는 메서드
+   * Memory Pagination 방지 로직 적용
    * @param lastItemId 클라이언트가 마지막으로 받은 아이템의 id(pk)
    * @param size 페이지당 아이템 개수
    * @param sortType 정렬기준
@@ -92,13 +93,23 @@ public class TravelOnRepository {
    */
   public List<TravelOn> findHasOpinion(Long lastItemId, int size, TravelOnSortType sortType) {
     List<TravelOn> result;
-    String jpql = "select t from TravelOn t" +
+    List<Long> travelIdList;
+
+    //첫번째 쿼리 (TravelOn의 ID만 조회 + Pagination API)
+    String jpql = "select t.id from TravelOn t" +
         " where t.opinionList.size > 0" +
         " and " + getPaginationCondition("t", sortType, lastItemId);
-
     jpql = appendJpqlWithOrderBy(jpql, sortType);
-    result = em.createQuery(jpql, TravelOn.class)
+    travelIdList = em.createQuery(jpql, Long.class)
         .setMaxResults(size)
+        .getResultList();
+
+    //두번째 쿼리 (TravelOn과 Opinion 함께 Fetch Join)
+    jpql = "select distinct t from TravelOn t" +
+        " join fetch t.opinionList" +
+        " where t.id in :travelOnIdList";
+    result = em.createQuery(jpql, TravelOn.class)
+        .setParameter("travelOnIdList", travelIdList)
         .getResultList();
 
     return result;
